@@ -108,7 +108,7 @@ bool SolidMeshBooleanOperation::intersectTwoFaces(size_t firstIndex, size_t seco
     const auto& firstFace = (*m_firstMesh->triangles())[firstIndex];
     const auto& secondFace = (*m_secondMesh->triangles())[secondIndex];
     int coplanar = 0;
-    if (!tri_tri_intersection_test_3d((double*)(*m_firstMesh->vertices())[firstFace[0]].constData(),
+    if (!tri_tri_intersection_test_3d((double*)(*m_firstMesh->vertices())[firstFace[0]].constData(),//第一个三角形的第一个点
             (double*)(*m_firstMesh->vertices())[firstFace[1]].constData(),
             (double*)(*m_firstMesh->vertices())[firstFace[2]].constData(),
             (double*)(*m_secondMesh->vertices())[secondFace[0]].constData(),
@@ -116,7 +116,8 @@ bool SolidMeshBooleanOperation::intersectTwoFaces(size_t firstIndex, size_t seco
             (double*)(*m_secondMesh->vertices())[secondFace[2]].constData(),
             &coplanar,
             (double*)newEdge.first.constData(),
-            (double*)newEdge.second.constData())) {
+            (double*)newEdge.second.constData())) 
+    {
         return false;
     }
     if (coplanar)
@@ -254,14 +255,19 @@ bool SolidMeshBooleanOperation::addUnintersectedTriangles(const SolidMesh* mesh,
     const std::unordered_set<size_t>& usedFaces,
     std::unordered_map<uint64_t, size_t>* halfEdges)
 {
+    //调整顶点数量 因为相交，所以会有多的顶点
     size_t oldVertexCount = m_newVertices.size();
     const auto& vertices = *mesh->vertices();
     m_newVertices.reserve(m_newVertices.size() + vertices.size());
     m_newVertices.insert(m_newVertices.end(),
         vertices.begin(), vertices.end());
+
     size_t triangleCount = mesh->triangles()->size();
     m_newTriangles.reserve(m_newTriangles.size() + triangleCount - usedFaces.size());
-    for (size_t i = 0; i < triangleCount; ++i) {
+
+    for (size_t i = 0; i < triangleCount; ++i) 
+    {
+        //如果这个三角形是相交的，则忽略
         if (usedFaces.find(i) != usedFaces.end())
             continue;
         const auto& oldTriangle = (*mesh->triangles())[i];
@@ -288,6 +294,7 @@ bool SolidMeshBooleanOperation::addUnintersectedTriangles(const SolidMesh* mesh,
 
 bool SolidMeshBooleanOperation::combine()
 {
+    //查找两个网格相交的AABB盒子 保存在m_potentialIntersectedPairs中
     searchPotentialIntersectedPairs();
 
     struct IntersectedContext {
@@ -308,12 +315,15 @@ bool SolidMeshBooleanOperation::combine()
 
     for (const auto& pair : m_potentialIntersectedPairs) {
         std::pair<Vector3, Vector3> newEdge;
-        if (intersectTwoFaces(pair.first, pair.second, newEdge)) {
+        //判断两个三角形是否相交，如果相交则获取相交的边
+        if (intersectTwoFaces(pair.first, pair.second, newEdge)) 
+        {
             m_firstIntersectedFaces.insert(pair.first);
             m_secondIntersectedFaces.insert(pair.second);
 
             {
                 auto& context = firstTriangleIntersectedContext[pair.first];
+                //为什么是3+
                 size_t firstPointIndex = 3 + addIntersectedPoint(context, newEdge.first);
                 size_t secondPointIndex = 3 + addIntersectedPoint(context, newEdge.second);
                 if (firstPointIndex != secondPointIndex) {

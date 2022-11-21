@@ -55,17 +55,22 @@ void SolidMesh::prepare()
                 (*m_vertices)[it[2]]));
     }
 
+    //申请与三角形个数相等的AABB包围盒
     m_triangleAxisAlignedBoundingBoxes = new std::vector<AxisAlignedBoudingBox>(m_triangles->size());
 
+    //遍历所有三角形 生成AABB包围盒
     for (size_t i = 0; i < m_triangleAxisAlignedBoundingBoxes->size(); ++i) {
         addTriagleToAxisAlignedBoundingBox((*m_triangles)[i], &(*m_triangleAxisAlignedBoundingBoxes)[i]);
         (*m_triangleAxisAlignedBoundingBoxes)[i].updateCenter();
     }
 
+    //所有AABB包围盒的下表索引
     std::vector<size_t> firstGroupOfFacesIn;
     for (size_t i = 0; i < m_triangleAxisAlignedBoundingBoxes->size(); ++i)
         firstGroupOfFacesIn.push_back(i);
 
+    //因为一直传同一个变量进去，所以当有新的更大的盒子生成的时候，原有的就会被更新
+    //所以这里获取的是最外围的包裹整个图形的盒子
     AxisAlignedBoudingBox groupBox;
     for (const auto& i : firstGroupOfFacesIn) {
         addTriagleToAxisAlignedBoundingBox((*m_triangles)[i], &groupBox);

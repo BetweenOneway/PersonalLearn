@@ -36,6 +36,7 @@ AxisAlignedBoudingBoxTree::AxisAlignedBoudingBoxTree(const std::vector<AxisAlign
     m_root->boundingBox = outterBox;
     m_root->boxIndices = boxIndices;
 
+    //为什么要把所有三角形中点相加呢？根节点的中点就是所有中点的均值
     if (!boxIndices.empty()) {
         for (const auto& boxIndex : boxIndices) {
             m_root->center += (*boxes)[boxIndex].center();
@@ -75,22 +76,31 @@ void AxisAlignedBoudingBoxTree::splitNode(Node* node)
     const auto& boxIndices = node->boxIndices;
     if (boxIndices.size() <= m_leafMaxNodeSize)
         return;
+    //获取最外层包围盒
     const auto& splitBox = node->boundingBox;
     const Vector3& lower = splitBox.lowerBound();
     const Vector3& upper = splitBox.upperBound();
+    //分别计算XYZ轴的差值
     for (size_t i = 0; i < 3; ++i)
         m_spans[i] = { i, upper[i] - lower[i] };
+    //获取盒子最长的轴 0=>X 1=>Y 2=>Z
     size_t longestAxis = std::max_element(m_spans.begin(), m_spans.end(), [](const std::pair<size_t, float>& first, const std::pair<size_t, float>& second) {
         return first.second < second.second;
     })->first;
+    //最长边的中心值，也就是划分左右子树的依据 
+    //每次划分依据不一样，有可能是X轴，也有可能是Y轴，也有可能是Z轴
     auto splitPoint = node->center[longestAxis];
+
     node->left = new Node;
     node->right = new Node;
+    //为什么要调整到这么大
     m_boxIndicesOrderList.resize(boxIndices.size() + boxIndices.size() + 2);
+    
     size_t leftOffset = boxIndices.size();
     size_t rightOffset = boxIndices.size() - 1;
     size_t leftCount = 0;
     size_t rightCount = 0;
+    //左侧0-boxIndices.size()-1 右侧boxIndices.size()-2*boxIndices.size()
     for (size_t i = 0; i < boxIndices.size(); ++i) {
         const auto& boxIndex = boxIndices[i];
         const AxisAlignedBoudingBox& box = (*m_boxes)[boxIndex];
@@ -116,6 +126,7 @@ void AxisAlignedBoudingBoxTree::splitNode(Node* node)
 
     size_t middle = leftOffset + leftCount - 1;
 
+    //将划分后的左右AABB盒放入左右子节点中
     for (size_t i = leftOffset; i <= middle; ++i) {
         const auto& boxIndex = m_boxIndicesOrderList[i];
         const AxisAlignedBoudingBox& box = (*m_boxes)[boxIndex];
@@ -133,7 +144,7 @@ void AxisAlignedBoudingBoxTree::splitNode(Node* node)
         node->right->boxIndices.push_back(boxIndex);
         node->right->center += box.center();
     }
-
+    //分别对左右子节点做进一步划分
     node->left->center /= (float)node->left->boxIndices.size();
     splitNode(node->left);
 

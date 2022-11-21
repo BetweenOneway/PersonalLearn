@@ -57,29 +57,46 @@ public:
         const std::vector<AxisAlignedBoudingBox>* secondBoxes,
         std::vector<std::pair<size_t, size_t>>* pairs) const
     {
-        if (first->boundingBox.intersectWith(second->boundingBox)) {
-            if (first->isLeaf()) {
-                if (second->isLeaf()) {
+        //两个AABB盒是否相交
+        if (first->boundingBox.intersectWith(second->boundingBox)) 
+        {
+            if (first->isLeaf()) 
+            {
+                if (second->isLeaf()) 
+                {
+                    //一直找到两个树的叶子节点，判断叶子节点下的所有AABB盒是否存在相交的情况
+                    //如果相交，则保存返回
                     for (const auto& a : first->boxIndices) {
                         for (const auto& b : second->boxIndices) {
-                            if ((*m_boxes)[a].intersectWith((*secondBoxes)[b])) {
+                            if ((*m_boxes)[a].intersectWith((*secondBoxes)[b])) 
+                            {
                                 pairs->push_back(std::make_pair(a, b));
                             }
                         }
                     }
-                } else {
+                } 
+                else 
+                {
                     testNodes(first, second->left, secondBoxes, pairs);
                     testNodes(first, second->right, secondBoxes, pairs);
                 }
-            } else {
-                if (second->isLeaf()) {
+            } 
+            else 
+            {
+                if (second->isLeaf()) 
+                {
                     testNodes(first->left, second, secondBoxes, pairs);
                     testNodes(first->right, second, secondBoxes, pairs);
-                } else {
-                    if (first->boxIndices.size() < second->boxIndices.size()) {
+                } 
+                else 
+                {
+                    if (first->boxIndices.size() < second->boxIndices.size()) 
+                    {
                         testNodes(first, second->left, secondBoxes, pairs);
                         testNodes(first, second->right, secondBoxes, pairs);
-                    } else {
+                    } 
+                    else 
+                    {
                         testNodes(first->left, second, secondBoxes, pairs);
                         testNodes(first->right, second, secondBoxes, pairs);
                     }

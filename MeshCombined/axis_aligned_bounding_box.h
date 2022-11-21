@@ -33,6 +33,7 @@ class AxisAlignedBoudingBox {
 public:
     void update(const Vector3& vertex)
     {
+        //这里循环的是每个顶点的XYZ轴坐标
         for (size_t i = 0; i < 3; ++i) {
             if (vertex[i] > m_max[i])
                 m_max[i] = vertex[i];

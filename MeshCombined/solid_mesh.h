@@ -65,12 +65,15 @@ public:
 private:
     void addTriagleToAxisAlignedBoundingBox(const std::vector<size_t>& triangle, AxisAlignedBoudingBox* box)
     {
+        //这里循环的是三角形的三个顶点
         for (size_t i = 0; i < 3; ++i)
             box->update((*m_vertices)[triangle[i]]);
     }
 
     const std::vector<Vector3>* m_vertices = nullptr;
+    //保存的是组成三角形的顶点再m_vertices中的下标
     const std::vector<std::vector<size_t>>* m_triangles = nullptr;
+    //保存的是每一个三角形的顶点
     std::vector<Vector3>* m_triangleNormals = nullptr;
     AxisAlignedBoudingBoxTree* m_axisAlignedBoundingBoxTree = nullptr;
     std::vector<AxisAlignedBoudingBox>* m_triangleAxisAlignedBoundingBoxes = nullptr;
