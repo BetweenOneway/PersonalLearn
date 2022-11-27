@@ -8,6 +8,9 @@ public:
     void Clear();
     friend float vectorMag(const Vector3& a);
     friend Vector3 operator*(float k, const Vector3& v);
+	friend float distance(const Vector3& start,const Vector3& end);
+	friend Vector3 crossProduct(const Vector3& loper, const Vector3& roper);
+
     Vector3 operator-()const { return Vector3(-x, -y, -z); }
     Vector3 operator*(float a) const;
     Vector3 operator*=(float a);
@@ -18,6 +21,8 @@ public:
     Vector3 operator-(const Vector3& roper) const;
     Vector3 operator-=(const Vector3& loper);
     void normalize();
+	float operator*(const Vector3& roper);
+
 private:
     float x, y, z;
 };

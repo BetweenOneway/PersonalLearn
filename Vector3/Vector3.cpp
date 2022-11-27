@@ -49,7 +49,7 @@ float vectorMag(const Vector3& a)
 //2*v3
 Vector3 operator*(float k, const Vector3& v)
 {
-    return Vector3(v.x * k, v.y * k, v.z * z);
+    return Vector3(v.x * k, v.y * k, v.z * k);
 }
 Vector3 Vector3::operator+(const Vector3& roper) const
 {
@@ -86,4 +86,31 @@ void Vector3::normalize()
         y *= base;
         z *= base;
     }
+}
+//向量点乘
+float Vector3::operator*(const Vector3& roper)
+{
+	return x*roper.x + y*roper.y + z*roper.z;
+}
+
+//计算两点之间的距离
+float distance(const Vector3& start, const Vector3& end)
+{
+	float dx = start.x - end.x;
+	float dy = start.y - end.y;
+	float dz = start.z - end.z;
+
+	return sqrt(dx*dx+dy*dy+dz*dz);
+}
+//向量差乘
+Vector3 crossProduct(const Vector3& loper, const Vector3& roper)
+{
+	return Vector3(loper.y*roper.z - loper.z*roper.y,
+		loper.z*roper.x - loper.x*roper.z,
+		loper.x*roper.y - loper.y*roper.x);
+}
+
+int main()
+{
+	return 0;
 }
