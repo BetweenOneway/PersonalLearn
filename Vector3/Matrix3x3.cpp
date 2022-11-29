@@ -1,14 +1,11 @@
+ï»¿#include "Matrix3x3.h"
+#include "MathUtil.h"
 
-#include "Vector3.h"
-
-class Matrix3x3
+void Matrix3x3::setRotate(int axis, float theta)
 {
-public:
-	float m11, m12, m13;
-	float m21, m22, m23;
-	float m31, m32, m33;
-};
-
+	float s, c;
+	sinCos(s, c, theta);
+}
 Matrix3x3 operator*(const Matrix3x3& loper,const Matrix3x3& roper)
 {
 	Matrix3x3 r;
@@ -31,7 +28,7 @@ Matrix3x3& operator*=(Matrix3x3& loper, const Matrix3x3& roper)
 	loper = loper*roper;
 	return loper;
 }
-//ĞĞÏòÁ¿Òª×ó³Ë vABC
+//è¡Œå‘é‡è¦å·¦ä¹˜ vABC
 Vector3 operator*(Vector3& loper, const Matrix3x3& roper)
 {
 	return Vector3(
@@ -47,7 +44,7 @@ Vector3 operator*=(Vector3& loper, const Matrix3x3& roper)
 	return loper;
 }
 
-//ÁĞÏòÁ¿ÒªÓÒ³Ë CBAv
+//åˆ—å‘é‡è¦å³ä¹˜ CBAv
 Vector3 operator*(const Matrix3x3& loper,Vector3& roper)
 {
 	return Vector3(
