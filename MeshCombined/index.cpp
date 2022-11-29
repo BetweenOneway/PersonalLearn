@@ -65,10 +65,10 @@ bool ReadSTL(const char* szFileName, std::vector<dust3d::Vector3>& vertices, std
 	fin.read(buffer, fileLen);
 
 	unsigned offset = 80;
-	unsigned nVertDataCount = *(unsigned*)(buffer + offset);   //»ñÈ¡nVertDataCount
+	unsigned nVertDataCount = *(unsigned*)(buffer + offset);   //è·å–nVertDataCount
 	offset += sizeof(int32_t);
 
-	//´Ó¶ş½øÖÆÎÄ¼ş¶ÁÈ¡¶¥µãĞÅÏ¢
+	//ä»äºŒè¿›åˆ¶æ–‡ä»¶è¯»å–é¡¶ç‚¹ä¿¡æ¯
 	dust3d::Vector3 pt;
 	vertices.resize(nVertDataCount * 3);
 
@@ -146,22 +146,25 @@ int main()
 {
 	std::vector<dust3d::Vector3> vertices1;
 	std::vector<std::vector<size_t>> faces1;
-
+    //è¯»å†™STLæ–‡ä»¶æœ‰é—®é¢˜
 	std::string inputfile1("./testData/1_split_part_18.stl");
 	ReadSTL(inputfile1.c_str(), vertices1, faces1);
 	dust3d::Mesh mesh1(vertices1,faces1);
+    std::string outFileName("./testData/write_mesh1.stl");
+    WriteSTL(outFileName.c_str(), mesh1);
 
-	std::vector<dust3d::Vector3> vertices2;
-	std::vector<std::vector<size_t>> faces2;
 
-	std::string inputfile2("./testData/1_split_part_0.stl");
-	ReadSTL(inputfile1.c_str(), vertices2, faces2);
-	dust3d::Mesh mesh2(vertices2, faces2);
+	//std::vector<dust3d::Vector3> vertices2;
+	//std::vector<std::vector<size_t>> faces2;
 
-	dust3d::Mesh* combinedMesh = dust3d::MeshCombiner::combine(mesh1, mesh2, dust3d::MeshCombiner::Method::Union);
+	//std::string inputfile2("./testData/1_split_part_0.stl");
+	//ReadSTL(inputfile1.c_str(), vertices2, faces2);
+	//dust3d::Mesh mesh2(vertices2, faces2);
+
+	//dust3d::Mesh* combinedMesh = dust3d::MeshCombiner::combine(mesh1, mesh2, dust3d::MeshCombiner::Method::Union);
 	
-	std::string outFileName("./testData/combined.stl");
-	WriteSTL(outFileName.c_str(), *combinedMesh);
+	//std::string outFileName("./testData/combined.stl");
+	//WriteSTL(outFileName.c_str(), *combinedMesh);
 
 	return 0;
 }
