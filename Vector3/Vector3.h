@@ -23,9 +23,9 @@ public:
     void normalize();
 	float operator*(const Vector3& roper);
 
-	float getX() { return x; }
-	float getY() { return y; }
-	float getZ() { return z; }
+	float getX() const { return x; }
+	float getY() const { return y; }
+	float getZ() const { return z; }
 
 private:
     float x, y, z;

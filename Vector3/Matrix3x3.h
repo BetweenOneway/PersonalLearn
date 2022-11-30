@@ -15,6 +15,9 @@ public:
 	//axis = 1 X轴 axis = 2 Y轴 axis = 3 Z轴
 	//theta rotate degree
 	void setRotate(int axis, float theta);
+	void SetupScale(const Vector3& vec);
+	//n垂直于投影平面(经过原点)的向量
+	void SetupProject(Vector3& n);
 };
 Matrix3x3 operator*(const Matrix3x3& loper, const Matrix3x3& roper);
 Matrix3x3& operator*=(Matrix3x3& loper, const Matrix3x3& roper);

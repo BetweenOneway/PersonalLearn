@@ -1,5 +1,29 @@
 #include "Matrix3x3.h"
 #include "MathUtil.h"
+#include <assert.h>
+
+//n垂直于投影平面的向量
+void Matrix3x3::SetupProject(Vector3& n)
+{
+	assert(fabs(n*n-1.0f)<0.01);
+	m11 = 1.0f - n.getX()*n.getX();
+	m22 = 1.0f - n.getY()*n.getY();
+	m33 = 1.0f - n.getZ()*n.getZ();
+
+	m12 = m21 = -n.getX()*n.getY();
+	m13 = m31 = -n.getX()*n.getZ();
+	m23 = m32 = -n.getY()*n.getZ();
+}
+
+/*生成沿XYZ轴的缩放矩阵
+s中保存的是三个轴的缩放系数  
+*/
+void Matrix3x3::SetupScale(const Vector3& s)
+{
+	m11 = s.getX(); m12 = 0.0f; m13 = 0.0f;
+	m21 = 0.0f; m22 = s.getY(); m23 = 0.0f;
+	m31 = 0.0f; m32 = 0.0f; m33 = s.getZ();
+}
 
 /*生成旋转矩阵
 *  axis表示绕哪个轴旋转 1:x;2:y;3:z
