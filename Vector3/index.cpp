@@ -10,6 +10,15 @@ void printMatrix3x3(Matrix3x3& toPrint)
 {
 
 }
+void testReflect()
+{
+	Matrix3x3 m;
+	Vector3 a(10, 20, 30);
+
+	m.SetupReflect(1);
+	Vector3 b = a*m;
+	printVector(b);
+}
 void testScale()
 {
 	Vector3 a(10, 20, 30);

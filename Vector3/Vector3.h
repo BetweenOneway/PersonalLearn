@@ -12,6 +12,7 @@ public:
 	friend Vector3 crossProduct(const Vector3& loper, const Vector3& roper);
 
     Vector3 operator-()const { return Vector3(-x, -y, -z); }
+	//+-*/运算符重载要重写
     Vector3 operator*(float a) const;
     Vector3 operator*=(float a);
     Vector3 operator/(float a) const;

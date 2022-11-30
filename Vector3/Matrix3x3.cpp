@@ -2,6 +2,35 @@
 #include "MathUtil.h"
 #include <assert.h>
 
+void Matrix3x3::SetupReflect(Vector3& n)
+{
+	assert(fabs(n*n-1.0f)<0.01f);
+	float ax = -2.0f*n.getX();
+	float ay = -2.0f*n.getY();
+	float az = -2.0f*n.getZ();
+}
+void Matrix3x3::SetupReflect(int axis)
+{
+	switch (axis)
+	{
+	case 1:
+		m11 = -1.0f; m12 = 0.0f; m13 = 0.0f;
+		m21 = 0.0f; m22 = 1.0f; m23 = 0.0f;
+		m31 = 0.0f; m32 = 0.0f; m33 = 1.0f;
+		break;
+	case 2:
+		m11 = 1.0f; m12 = 0.0f; m13 = 0.0f;
+		m21 = 0.0f; m22 = -1.0f; m23 = 0.0f;
+		m31 = 0.0f; m32 = 0.0f; m33 = 1.0f;
+		break;
+	case 3:
+		m11 = 1.0f; m12 = 0.0f; m13 = 0.0f;
+		m21 = 0.0f; m22 = 1.0f; m23 = 0.0f;
+		m31 = 0.0f; m32 = 0.0f; m33 = -1.0f;
+		break;
+	}
+}
+
 //n垂直于投影平面的向量
 void Matrix3x3::SetupProject(Vector3& n)
 {

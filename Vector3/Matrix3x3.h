@@ -18,6 +18,10 @@ public:
 	void SetupScale(const Vector3& vec);
 	//n垂直于投影平面(经过原点)的向量
 	void SetupProject(Vector3& n);
+	//设置标准轴的镜像
+	void SetupReflect(int axis);
+	//n为垂直于镜像平面的向量
+	void SetupReflect(Vector3& n);
 };
 Matrix3x3 operator*(const Matrix3x3& loper, const Matrix3x3& roper);
 Matrix3x3& operator*=(Matrix3x3& loper, const Matrix3x3& roper);
