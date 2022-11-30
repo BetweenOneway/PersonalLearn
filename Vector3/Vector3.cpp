@@ -110,7 +110,3 @@ Vector3 crossProduct(const Vector3& loper, const Vector3& roper)
 		loper.x*roper.y - loper.y*roper.x);
 }
 
-int main()
-{
-	return 0;
-}

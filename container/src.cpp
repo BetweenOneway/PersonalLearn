@@ -55,9 +55,17 @@ void test3()
 	vecSt.push_back(st2);
 
 }
+
+void test4()
+{
+    vector<vector<int>> vecContainer;
+    //是vecContainer有了30个容量
+    vecContainer.resize(30);
+    return;
+}
 int main()
 {
-	test3();
+	test4();
 	cin.get();
 	return 0;
 }
