@@ -1,10 +1,32 @@
-﻿#include "Matrix3x3.h"
+#include "Matrix3x3.h"
 #include "MathUtil.h"
 
+/*生成旋转矩阵
+*  axis表示绕哪个轴旋转 1:x;2:y;3:z
+* theta表示弧度
+*/
 void Matrix3x3::setRotate(int axis, float theta)
 {
 	float s, c;
 	sinCos(s, c, theta);
+    switch (axis)
+    {
+    case 1:
+        m11 = 1.0f; m12 = 0.0f; m13 = 0.0f;
+        m21 = 0.0f; m22 = c; m23 = s;
+        m31 = 0.0f; m32 = -s; m33 = c;
+        break;
+    case 2:
+        m11 = c; m12 = 0.0f; m13 = -s;
+        m21 = 0.0f; m22 = 1.0f; m23 == 0.0f;
+        m31 = s; m32 = 0.0f; m33 = c;
+        break;
+    case 3:
+        m11 = c; m12 = s; m13 = 0.0f;
+        m21 = -s; m22 = c; m23 = 0.0f;
+        m31 = 0.0f; m32 = 0.0f; m33 = 1.0f;
+        break;
+    }
 }
 Matrix3x3 operator*(const Matrix3x3& loper,const Matrix3x3& roper)
 {
