@@ -220,6 +220,21 @@ bool WriteSTL(const char* szFileName,dust3d::Mesh& mesh)
 	return true;
 }
 
+/*
+* ASCII STL
+* facet normal 是三角面片指向实体外部的法矢量坐标， outer loop 说明随后的3行数据分别是三角面片的3个顶点坐标，3顶点沿指向实体外部的法矢量方向逆时针排列。ASCII格式的STL 文件结构如下：
+solid filename//第一行，"solid"标识+上文件名，文件名可以是任意字符
+facetnormal i j k//第二行，“facetnormal”标识+法线数据i，j，k
+outorloop//第三行，“outorloop”标识
+vertex x y z//第四行，“vertex”标识+第一个顶点数据x，y，z
+vertex x y z//第五行，“vertex”标识+第二个顶点数据
+vertex x y z//第六行，"vertex"标识+第三个顶点数据
+endloop//第七行，“endloop”标识
+endfacet//第八行，"endfacet"标识
+、、、、//其他三角面
+endsolid filename//文件末尾，“endsolid”标识+文件名
+*/
+
 int main()
 {
 	std::vector<dust3d::Vector3> vertices1;
@@ -228,10 +243,6 @@ int main()
 	std::string inputfile1("./testData/1_split_part_18.stl");
 	ReadSTL(inputfile1.c_str(), vertices1, faces1);
 	dust3d::Mesh mesh1(vertices1,faces1);
-    //std::string outFileName("./testData/write_mesh1.stl");
-    //WriteSTL(outFileName.c_str(), vertices1, faces1);
-    //WriteSTL(outFileName.c_str(), mesh1);
-
 
 	std::vector<dust3d::Vector3> vertices2;
 	std::vector<std::vector<size_t>> faces2;
@@ -240,6 +251,7 @@ int main()
 	ReadSTL(inputfile1.c_str(), vertices2, faces2);
 	dust3d::Mesh mesh2(vertices2, faces2);
 
+    //网格合并会报错
 	dust3d::Mesh* combinedMesh = dust3d::MeshCombiner::combine(mesh1, mesh2, dust3d::MeshCombiner::Method::Union);
 	
 	std::string outFileName("./testData/combined.stl");
