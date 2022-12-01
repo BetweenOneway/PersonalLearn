@@ -4,10 +4,20 @@
 
 void Matrix3x3::SetupReflect(Vector3& n)
 {
+	//要求n为单位向量  
 	assert(fabs(n*n-1.0f)<0.01f);
+
 	float ax = -2.0f*n.getX();
 	float ay = -2.0f*n.getY();
 	float az = -2.0f*n.getZ();
+
+	m11 = 1.0f + ax*n.getX();
+	m22 = 1.0f + ay*n.getY();
+	m33 = 1.0f + az*n.getZ();
+
+	m12 = m21 = ax*n.getY();
+	m13 = m31 = ax*n.getZ();
+	m23 = m32 = ay*n.getZ();
 }
 
 void Matrix3x3::SetupReflect(int axis)

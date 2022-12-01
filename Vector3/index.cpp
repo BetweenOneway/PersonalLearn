@@ -10,6 +10,7 @@ void printMatrix3x3(Matrix3x3& toPrint)
 {
 
 }
+
 void testReflect()
 {
 	Matrix3x3 m;
@@ -18,7 +19,12 @@ void testReflect()
 	m.SetupReflect(1);
 	Vector3 b = a*m;
 	printVector(b);
+
+	//垂直于XY平面的向量
+	Vector3 n(0,0,1);
+	m.SetupReflect(n);
 }
+
 void testScale()
 {
 	Vector3 a(10, 20, 30);
@@ -29,6 +35,7 @@ void testScale()
 	Vector3 b = a*m;
 	printVector(b);
 }
+
 void testProject()
 {
 	//投影到XY平面
