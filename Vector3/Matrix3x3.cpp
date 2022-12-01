@@ -111,7 +111,7 @@ Matrix3x3& operator*=(Matrix3x3& loper, const Matrix3x3& roper)
 Vector3 operator*(Vector3& loper, const Matrix3x3& roper)
 {
 	return Vector3(
-		loper.getX()*roper.m11 + loper.getY()*roper.m21+loper.getZ()*roper.m31,
+		loper.getX()*roper.m11 + loper.getY()*roper.m21 + loper.getZ()*roper.m31,
 		loper.getX()*roper.m12 + loper.getY()*roper.m22 + loper.getZ()*roper.m32,
 		loper.getX()*roper.m13 + loper.getY()*roper.m23 + loper.getZ()*roper.m33
 	);
