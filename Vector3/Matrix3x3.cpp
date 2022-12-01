@@ -1,4 +1,4 @@
-#include "Matrix3x3.h"
+﻿#include "Matrix3x3.h"
 #include "MathUtil.h"
 #include <assert.h>
 
@@ -9,6 +9,7 @@ void Matrix3x3::SetupReflect(Vector3& n)
 	float ay = -2.0f*n.getY();
 	float az = -2.0f*n.getZ();
 }
+
 void Matrix3x3::SetupReflect(int axis)
 {
 	switch (axis)
@@ -71,7 +72,7 @@ void Matrix3x3::setRotate(int axis, float theta)
         break;
     case 2:
         m11 = c; m12 = 0.0f; m13 = -s;
-        m21 = 0.0f; m22 = 1.0f; m23 == 0.0f;
+        m21 = 0.0f; m22 = 1.0f; m23 = 0.0f;
         m31 = s; m32 = 0.0f; m33 = c;
         break;
     case 3:
@@ -81,6 +82,7 @@ void Matrix3x3::setRotate(int axis, float theta)
         break;
     }
 }
+
 Matrix3x3 operator*(const Matrix3x3& loper,const Matrix3x3& roper)
 {
 	Matrix3x3 r;
@@ -98,11 +100,13 @@ Matrix3x3 operator*(const Matrix3x3& loper,const Matrix3x3& roper)
 
 	return r;
 }
+
 Matrix3x3& operator*=(Matrix3x3& loper, const Matrix3x3& roper)
 {
 	loper = loper*roper;
 	return loper;
 }
+
 //行向量要左乘 vABC
 Vector3 operator*(Vector3& loper, const Matrix3x3& roper)
 {

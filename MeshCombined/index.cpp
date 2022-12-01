@@ -1,4 +1,4 @@
-﻿#include "MeshCombiner.h"
+#include "MeshCombiner.h"
 
 #include <fstream>
 #include <unordered_map>

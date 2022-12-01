@@ -1,4 +1,4 @@
-#include <math.h>
+﻿#include <math.h>
 #include "Vector3.h"
 
 
@@ -12,7 +12,7 @@ void Vector3::Clear()
     x = y = z = 0.0f;
 }
 
-Vector3 Vector3::operator*(float a)const
+const Vector3 Vector3::operator*(const float a)const
 {
     return Vector3(x * a, y * a, z * a);
 }
@@ -25,20 +25,11 @@ Vector3 Vector3::operator*=(float a)
     return *this;
 }
 
-Vector3 Vector3::operator/(float a)const
+const Vector3 Vector3::operator/(const float a)const
 {
     //因为计算机中乘法比除法快
     float base = 1.0f / a;
     return Vector3(x * base, y * base, z * base);
-}
-
-Vector3 Vector3::operator*(float a)
-{
-    float base = 1.0f / a;
-    x = x * base;
-    y = y * base;
-    z = z * base;
-    return *this;
 }
 
 //计算向量的模（也就是长度）
@@ -51,7 +42,7 @@ Vector3 operator*(float k, const Vector3& v)
 {
     return Vector3(v.x * k, v.y * k, v.z * k);
 }
-Vector3 Vector3::operator+(const Vector3& roper) const
+const Vector3 Vector3::operator+(const Vector3& roper) const
 {
     return Vector3(x + roper.x, y + roper.y, z + roper.z);
 }
@@ -63,7 +54,7 @@ Vector3 Vector3::operator+=(const Vector3& roper)
     return *this;
 }
 
-Vector3 Vector3::operator-(const Vector3& roper) const
+const Vector3 Vector3::operator-(const Vector3& roper) const
 {
     return Vector3(x - roper.x, y - roper.y, z - roper.z);
 }
@@ -88,7 +79,7 @@ void Vector3::normalize()
     }
 }
 //向量点乘
-float Vector3::operator*(const Vector3& roper)
+const float Vector3::operator*(const Vector3& roper) const
 {
 	return x*roper.x + y*roper.y + z*roper.z;
 }
