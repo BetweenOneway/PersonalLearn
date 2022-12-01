@@ -2,6 +2,31 @@
 #include "MathUtil.h"
 #include <assert.h>
 
+void Matrix3x3::SetupShear(int axis, float s, float t)
+{
+	switch (axis)
+	{
+	//用x切变yz
+	case 1:
+		m11 = 1.0f; m12 = s; m13 = t;
+		m21 = 0.0f; m22 = 1.0f; m23 = 0.0f;
+		m31 = 0.0f; m32 = 0.0f; m33 = 1.0f;
+		break;
+	//用y切变xz
+	case 2:
+		m11 = 1.0f; m12 = 0.0f; m13 = 0.0f;
+		m21 = s; m22 = 1.0f; m23 = t;
+		m31 = 0.0f; m32 = 0.0f; m33 = 1.0f;
+		break;
+	//用z切变xy
+	case 3:
+		m11 = 1.0f; m12 = 0.0f; m13 = 0.0f;
+		m21 = 0.0f; m22 = 1.0f; m23 = 0.0f;
+		m31 = s; m32 = t; m33 = 1.0f;
+		break;
+	}
+}
+
 void Matrix3x3::SetupReflect(Vector3& n)
 {
 	//要求n为单位向量  

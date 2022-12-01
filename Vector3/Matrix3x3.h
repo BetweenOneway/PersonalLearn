@@ -22,6 +22,8 @@ public:
 	void SetupReflect(int axis);
 	//n为垂直于镜像平面的向量
 	void SetupReflect(Vector3& n);
+	//axis指坐标轴，s&t表示切变幅度
+	void SetupShear(int axis,float s,float t);
 };
 Matrix3x3 operator*(const Matrix3x3& loper, const Matrix3x3& roper);
 Matrix3x3& operator*=(Matrix3x3& loper, const Matrix3x3& roper);

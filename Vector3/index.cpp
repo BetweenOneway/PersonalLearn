@@ -11,6 +11,17 @@ void printMatrix3x3(Matrix3x3& toPrint)
 
 }
 
+//测试切变
+void testShear()
+{
+	Vector3 a(10, 20, 30);
+	Matrix3x3 m;
+
+	m.SetupShear(1, 1, 2);
+	Vector3 b = a*m;
+	printVector(b);
+}
+
 void testReflect()
 {
 	Matrix3x3 m;
@@ -23,6 +34,8 @@ void testReflect()
 	//垂直于XY平面的向量
 	Vector3 n(0,0,1);
 	m.SetupReflect(n);
+	b = a*m;
+
 }
 
 void testScale()
