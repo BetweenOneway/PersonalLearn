@@ -24,6 +24,8 @@ public:
 	void SetupReflect(Vector3& n);
 	//axis指坐标轴，s&t表示切变幅度
 	void SetupShear(int axis,float s,float t);
+	//求矩阵行列式
+	float determinant();
 };
 Matrix3x3 operator*(const Matrix3x3& loper, const Matrix3x3& roper);
 Matrix3x3& operator*=(Matrix3x3& loper, const Matrix3x3& roper);

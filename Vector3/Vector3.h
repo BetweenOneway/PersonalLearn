@@ -1,4 +1,7 @@
 #pragma once
+#include <vector>
+using namespace std;
+
 class Vector3
 {
 public:

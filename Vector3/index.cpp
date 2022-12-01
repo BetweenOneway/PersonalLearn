@@ -71,6 +71,13 @@ void testRotate()
     b = a * M;
     printVector(b);
 }
+void testDeterminant()
+{
+	Matrix3x3 m;
+	float detM = m.determinant();
+
+}
+
 int main()
 {
     return 0;

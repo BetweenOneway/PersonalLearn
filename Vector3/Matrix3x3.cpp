@@ -2,6 +2,12 @@
 #include "MathUtil.h"
 #include <assert.h>
 
+float Matrix3x3::determinant()
+{
+	return m11*(m22*m33 - m23*m32)
+		+ m12*(m23*m31-m21*m33)
+		+m13*(m21*m32-m22*m31);
+}
 void Matrix3x3::SetupShear(int axis, float s, float t)
 {
 	switch (axis)
