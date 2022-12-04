@@ -196,3 +196,6 @@ Matrix3x3 Matrix3x3::inverse()
 
 	return r;
 }
+
+
+
