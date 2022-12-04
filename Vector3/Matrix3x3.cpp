@@ -173,3 +173,26 @@ Vector3 operator*(const Matrix3x3& loper,Vector3& roper)
 		loper.m31*roper.getX() + loper.m32*roper.getY() + loper.m33*roper.getZ()
 		);
 }
+
+Matrix3x3 Matrix3x3::inverse()
+{
+	float det = determinant();
+	assert(fabs(det)>0.00001f);
+	float oneOverDet = 1.0f / det;
+	
+	Matrix3x3 r;
+
+	r.m11 = (m22*m33 - m23*m32)*oneOverDet;
+	r.m12 = (m13*m23 - m12*m33)*oneOverDet;
+	r.m13 = (m12*m23 - m13*m22)*oneOverDet;
+
+	r.m21 = (m23*m31 - m21*m33)*oneOverDet;
+	r.m22 = (m11*m33 - m13*m31)*oneOverDet;
+	r.m23 = (m13*m21 - m11*m23)*oneOverDet;
+
+	r.m31 = (m21*m32 - m22*m31)*oneOverDet;
+	r.m32 = (m12*m31 - m11*m32)*oneOverDet;
+	r.m33 = (m11*m22 - m12*m21)*oneOverDet;
+
+	return r;
+}

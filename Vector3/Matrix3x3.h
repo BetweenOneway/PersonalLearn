@@ -26,6 +26,8 @@ public:
 	void SetupShear(int axis,float s,float t);
 	//求矩阵行列式
 	float determinant();
+	//计算矩阵的逆
+	Matrix3x3 inverse();
 };
 Matrix3x3 operator*(const Matrix3x3& loper, const Matrix3x3& roper);
 Matrix3x3& operator*=(Matrix3x3& loper, const Matrix3x3& roper);
