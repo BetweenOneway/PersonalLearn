@@ -2,10 +2,24 @@
 #include <vector>
 using namespace std;
 
+class base
+{
+public:
+    base() = delete;
+};
+
 typedef struct _st {
 	int* pint;
 }st_test;
 
+struct st_test1 {
+    int i;
+};
+
+struct st_containClass {
+    base* p;
+    int& ri;
+};
 void test()
 {
 	vector<st_test> vecTest;
@@ -25,8 +39,21 @@ void test()
 	}
 }
 
+void test1()
+{
+    st_test1 st;
+    st.i = 10;
+    cout << st.i << endl;
+}
+
+void test2()
+{
+    st_containClass st;
+    //st.p = new base();
+}
+
 int main()
 {
-	test();
+	test1();
 	return 0;
 }
