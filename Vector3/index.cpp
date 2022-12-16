@@ -7,6 +7,7 @@ void printVector(const Vector3& toPrint)
 {
     cout << toPrint.getX() << toPrint.getY() << toPrint.getZ() << endl;
 }
+
 void printMatrix3x3(Matrix3x3& toPrint)
 {
 
@@ -58,6 +59,7 @@ void testProject()
 	Matrix3x3 m;
 	m.SetupProject(n);
 }
+
 void testRotate()
 {
     Vector3 a(10, 0, 0), b;
@@ -90,12 +92,13 @@ void testDotCross()
 
 void testRay()
 {
-    Ray ray;
-    Vector3 postiveDot(0.0f, 0.0f, 3.0f);
-    Vector3 negativeDot(0.0f, 0.0f, -3.0f);
+    Ray ray({3.0f,4.0f,5.0f} ,{0.0f,0.0f,-1.0f});
+    Vector3 postiveDot(1.0f, 2.0f, 8.0f);
+    Vector3 negativeDot(1.0f, 1.0f, -3.0f);
     cout << ray.GetUnitsLenth(postiveDot) << endl;
     cout << ray.GetUnitsLenth(negativeDot) << endl;
 }
+
 int main()
 {
     testRay();
