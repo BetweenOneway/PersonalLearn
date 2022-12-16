@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 using namespace std;
 #include "Matrix3x3.h"
+#include "Ray.h"
 
 void printVector(const Vector3& toPrint)
 {
@@ -71,6 +72,7 @@ void testRotate()
     b = a * M;
     printVector(b);
 }
+
 void testDeterminant()
 {
 	Matrix3x3 m;
@@ -78,7 +80,25 @@ void testDeterminant()
 
 }
 
+void testDotCross()
+{
+    Vector3 dir1(4,2, 0);
+    Vector3 dir2(0,2,0);
+    cout << "dot = "<<dir1 * dir2 << endl;
+    cout << "Cross product m:" << vectorMag(crossProduct(dir1, dir2)) << endl;;
+}
+
+void testRay()
+{
+    Ray ray;
+    Vector3 postiveDot(0.0f, 0.0f, 3.0f);
+    Vector3 negativeDot(0.0f, 0.0f, -3.0f);
+    cout << ray.GetUnitsLenth(postiveDot) << endl;
+    cout << ray.GetUnitsLenth(negativeDot) << endl;
+}
 int main()
 {
+    testRay();
+    system("pause");
     return 0;
 }

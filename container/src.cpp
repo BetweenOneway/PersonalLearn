@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <algorithm>
 
@@ -61,11 +61,19 @@ void test4()
     vector<vector<int>> vecContainer;
     //是vecContainer有了30个容量
     vecContainer.resize(30);
+
+    vector<int> veci;
+    veci.insert(veci.end(),5);
+    veci.insert(veci.end(), 10);
+
+    //resize数据不会被清空
+    veci.resize(10);
+    veci.clear();
     return;
 }
+
 int main()
 {
 	test4();
-	cin.get();
 	return 0;
 }
