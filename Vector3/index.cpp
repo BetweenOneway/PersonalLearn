@@ -99,9 +99,20 @@ void testRay()
     cout << ray.GetUnitsLenth(negativeDot) << endl;
 }
 
+void testRay2()
+{
+    Ray ray({31.6467190f,-29.206f,8.6169f}, {0.9826f,0.1853f,-0.0f});
+    Vector3 postiveDot(37.5767f, -27.4426f, 6.01461f);
+    Vector3 negativeDot(26.552f,-31.056f,10.0874f);
+    //>0
+    cout << ray.GetUnitsLenth(postiveDot) << endl;
+    //<0
+    cout << ray.GetUnitsLenth(negativeDot) << endl;
+}
+
 int main()
 {
-    testRay();
+    testRay2();
     system("pause");
     return 0;
 }
