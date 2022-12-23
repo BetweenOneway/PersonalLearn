@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <algorithm>
 
@@ -72,8 +72,26 @@ void test4()
     return;
 }
 
+/*
+测试vector不resize / reserve的情况下能否直接插入数据
+结果是可以的
+*/
+void test5()
+{
+    vector<int> vint;
+    for (int i = 0; i < 10; i++)
+    {
+        vint.push_back(i);
+    }
+    for (auto i : vint)
+    {
+        cout << i << "\t";
+    }
+    cout << endl;
+}
 int main()
 {
-	test4();
+	test5();
+    system("pause");
 	return 0;
 }

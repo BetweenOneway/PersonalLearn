@@ -110,9 +110,24 @@ void testRay2()
     cout << ray.GetUnitsLenth(negativeDot) << endl;
 }
 
+void testRayIntersect()
+{
+    Ray ray({0.0f,0.0f,0.0f}, {1.0f,0.0f,0.0f});
+    std::vector<Vector3> posiPoints;
+    std::vector<unsigned> posiSurfIdx;
+    std::vector<Vector3> negaPoints;
+    std::vector<unsigned> negaSurfIdx;
+    ray.GetRayIntersect({ {0.0f,3.0f,0.0f},{-3.0f,-2.0f,0.0f},{3.0f,-2.0f,0.0f} }, &posiPoints, &posiSurfIdx, &negaPoints, &negaSurfIdx);
+
+    if (posiPoints.empty())
+    {
+
+    }
+}
+
 int main()
 {
-    testRay2();
+    testRayIntersect();
     system("pause");
     return 0;
 }
