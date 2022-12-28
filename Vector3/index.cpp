@@ -5,7 +5,7 @@ using namespace std;
 
 void printVector(const Vector3& toPrint)
 {
-    cout << toPrint.getX() << toPrint.getY() << toPrint.getZ() << endl;
+    cout << "(" << toPrint.getX() << "," << toPrint.getY()<<"," << toPrint.getZ() << ")" << endl;
 }
 
 void printMatrix3x3(Matrix3x3& toPrint)
@@ -13,6 +13,12 @@ void printMatrix3x3(Matrix3x3& toPrint)
 
 }
 
+void testVectorAddAndNormal()
+{
+    Vector3 result = (Vector3{ -1,1,0 } + Vector3{ 0,1,0 } + Vector3{ 1,1,0 });
+    result.normalize();
+    printVector(result);
+}
 //测试切变
 void testShear()
 {
@@ -127,7 +133,7 @@ void testRayIntersect()
 
 int main()
 {
-    testRayIntersect();
+    testVectorAddAndNormal();
     system("pause");
     return 0;
 }
