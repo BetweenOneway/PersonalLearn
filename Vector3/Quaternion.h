@@ -23,8 +23,19 @@ public:
     //从四元数提取旋转角和旋转轴
     float getRotationAngle()const;
     Vector3 getRotationAxis() const;
+
+	Quaternion operator*(const Quaternion &a)const;
+	Quaternion& operator*=(const Quaternion &a);
+	//让四元数的模等于1
+	void normalize();
 public:
     float w, x, y, z;
 };
 //单位四元数
 extern const Quaternion kQuaternionIdentity;
+//点乘
+extern float dotProduct(Quaternion &a, const Quaternion &b);
+//计算共轭
+extern Quaternion conjugate(const Quaternion &q);
+//计算四元数的幂
+Quaternion pow(const Quaternion &q, float exponent);
