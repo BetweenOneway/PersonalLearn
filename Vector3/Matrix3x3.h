@@ -1,9 +1,10 @@
 ﻿#pragma once
 #include "Vector3.h"
+#include "MathUtil.h"
 
-const float kPi = 3.1415926f;
-const float k2Pi = kPi * 2.0f;
-const float kPiOver2 = kPi / 2.0f;
+#ifndef __MATRIX3x3_H__
+#define __MATRIX3x3_H__
+
 
 class Matrix3x3
 {
@@ -33,3 +34,5 @@ Matrix3x3 operator*(const Matrix3x3& loper, const Matrix3x3& roper);
 Matrix3x3& operator*=(Matrix3x3& loper, const Matrix3x3& roper);
 Vector3 operator*(Vector3& loper, const Matrix3x3& roper);
 Vector3 operator*(const Matrix3x3& loper, Vector3& roper);
+
+#endif
