@@ -1,7 +1,14 @@
-﻿#include <Windows.h>
+#include <Windows.h>
 #include <stdio.h>
 #include "math.h"
 #include "BSpline.h"
+#include "Spline.h"
+
+#include <cstdio>
+#include <iostream>
+
+using namespace std;
+using namespace SplineSpace;
 
 int testOrigin()
 {
@@ -80,10 +87,53 @@ void testMine()
     return;
 }
 
+void testSpline()
+{
+    //double x0[5] = { 1,2,4,5,6 };		//已知的数据点
+    //double y0[5] = { 1,3,4,2,5 };
+
+    //double x[4] = { 1.5,2.5,3.5,4.5 };	//插值点
+    //double y[4];
+    //double leftBound = 0, RightBound = 0;	//边界导数
+
+    //Spline sp(x0, y0, 5, GivenSecondOrder, leftBound, RightBound);
+    //sp.MultiPointInterp(x, 4, y);			//求x的插值结果y
+    //for (int i = 0; i < 4; i++)
+    //{
+    //    cout << "x=" << x[i] << "=>" << y[i] << endl;
+    //}
+
+    //double x0[3] = { -12.3474464,0.0120483264,12.8443232};		//已知的数据点
+    //double y0[3] = { -2.63052559,3.16588783,-2.34144878 };
+
+    double x0[5] = { -19.0400581,-12.7959490,-0.210696936,13.3248987,19.5304508 };
+    double y0[5] = { -19.3465519,3.17271829,4.98585033,-3.31531453,-22.0727749 };
+    double x[119];	//插值点
+    double y[119];
+    double leftBound = 0, RightBound = 0;	//边界导数
+
+    Spline sp(x0, y0, 5, GivenSecondOrder, leftBound, RightBound);
+    double range = 19.5304508 + 19.0400581;
+    double step = range / 119;
+    for (int i = 0; i < 119; i++)
+    {
+        x[i] = x0[0] + step * i;
+    }
+    sp.MultiPointInterp(x, 119, y);			//求x的插值结果y
+
+    FILE* fp_m_x = fopen("./spline.obj", "wt");
+    for (int i = 0; i < 119; i++)
+    {
+        fprintf(fp_m_x, "v %lf %lf 0.0\n", x[i], y[i]);
+    }
+    fclose(fp_m_x);
+
+}
 int main()
 {
-    testOrigin();
-    testMine();
+    //testOrigin();
+    //testMine();
+    testSpline();
     system("pause");
     return 0;
 }
