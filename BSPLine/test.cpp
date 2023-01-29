@@ -6,6 +6,7 @@
 
 #include <cstdio>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 using namespace SplineSpace;
@@ -49,12 +50,13 @@ int testOrigin()
     return 0;
 }
 
+//在一些数据下（如下所示）会在某点出现断层现象
 void testMine()
 {
-    int num = 3;
-    double x[3] = { 12.8443232,0.0120483264,-12.3474464 };
-    double y[3] = { -2.34144878,3.16588783,-2.63052559 };
-    double z[3] = { 9.64562798,3.19460821,9.64634514 };
+    constexpr int num = 4;
+    double x[num] = { -10.0f,-5.0f,5.0f,10.0f };
+    double y[num] = { -10.0f,0.0f,0.0f,-10.0f };
+    double z[num] = { 0.0f,0.0f,0.0f,0.0f };
 
     CPosition3D* testpt = new CPosition3D[num];
     for (int i = 0; i < num; i++)
@@ -106,29 +108,39 @@ void testSpline()
     //double x0[3] = { -12.3474464,0.0120483264,12.8443232};		//已知的数据点
     //double y0[3] = { -2.63052559,3.16588783,-2.34144878 };
 
-    double x0[5] = { -19.0400581,-12.7959490,-0.210696936,13.3248987,19.5304508 };
-    double y0[5] = { -19.3465519,3.17271829,4.98585033,-3.31531453,-22.0727749 };
-    double x[119];	//插值点
-    double y[119];
+    constexpr int num = 6;
+    
+    //double x0[num] = { -10.0f,-5.0f,-3.0f,-1.0f,3.0f,5.0f,10.0f};
+    //double y0[num] = { -10.0f,0.0f,0.0f,0.0f,0.0f,0.0f,-10.0f };
+
+    double x0[num] = { -10.0f,-5.0f,-4.0f,-2.0f,0.0f,5.0f };
+    double y0[num] = {-10.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
+    //double x0[num] = { -12.0f,-10.0f,0.0f,10.0f,12.0f };
+    //double y0[num] = { -12.0f,-10.0f,0.0f,-10.0f,-12.0f };
+
+    constexpr int insertNum = 119;
+    double x[insertNum];	//插值点
+    double y[insertNum];
     double leftBound = 0, RightBound = 0;	//边界导数
 
-    Spline sp(x0, y0, 5, GivenSecondOrder, leftBound, RightBound);
-    double range = 19.5304508 + 19.0400581;
-    double step = range / 119;
-    for (int i = 0; i < 119; i++)
+    Spline sp(x0, y0, num, GivenSecondOrder, leftBound, RightBound);
+    double range = *max_element(x0, x0 + num) - *min_element(x0, x0 + num);
+    double step = range / insertNum;
+    for (int i = 0; i < insertNum; i++)
     {
         x[i] = x0[0] + step * i;
     }
-    sp.MultiPointInterp(x, 119, y);			//求x的插值结果y
+    sp.MultiPointInterp(x, insertNum, y);			//求x的插值结果y
 
     FILE* fp_m_x = fopen("./spline.obj", "wt");
-    for (int i = 0; i < 119; i++)
+    for (int i = 0; i < insertNum; i++)
     {
         fprintf(fp_m_x, "v %lf %lf 0.0\n", x[i], y[i]);
     }
     fclose(fp_m_x);
 
 }
+
 int main()
 {
     //testOrigin();

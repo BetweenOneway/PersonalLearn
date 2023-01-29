@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 //----------------------------------------------------------------------------
 // 文件名：Spline.h
 //----------------------------------------------------------------------------
@@ -12,11 +12,6 @@
 //				2)给定多个点计算对应插值，可能抛出外插值异常
 //				3)设定插值的输出个数(至少为2),自动在Max(x)和Min(x)之间等间距的输出插值.
 //				x为已知数据自变量序列,可能抛出点数过少异常
-//----------------------------------------------------------------------------
-// 作者： 刘亚彬
-// 创建日期: 2017年2月20日
-// 修改日期：
-//-----------------------------------------------------------------------------
 
 #ifndef _SPLINE_H
 #define _SPLINE_H
@@ -24,7 +19,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#pragma warning (disable:4290)		//vs2010中c++编译器不会对函数抛出异常进行检测，直接忽略这个警告
+//#pragma warning (disable:4290)		//vs2010中c++编译器不会对函数抛出异常进行检测，直接忽略这个警告
 
 //因为里面的类名都比较短,为了防止重名这里用一个命名空间进行包裹
 namespace SplineSpace
@@ -38,7 +33,7 @@ namespace SplineSpace
         const char* GetMessage();
     };
 
-    class SplineInterface		//接口类
+    class SplineInterface
     {
     public:
         //单点插值:
@@ -65,7 +60,7 @@ namespace SplineSpace
         , GivenSecondOrder		//给定二阶导数
     };
 
-    class Spline :public SplineInterface				//实现类
+    class Spline :public SplineInterface
     {
     public:
         //构造函数:
