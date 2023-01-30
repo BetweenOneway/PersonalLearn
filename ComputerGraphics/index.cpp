@@ -4,7 +4,7 @@ using namespace std;
 
 int main()
 {
-    testSpline();
+    testBezier();
     system("pause");
     return 0;
 }

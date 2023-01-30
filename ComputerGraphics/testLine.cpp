@@ -1,15 +1,16 @@
 #include <Windows.h>
 #include <stdio.h>
+#include "Point.h"
 #include "math.h"
 #include "BSpline.h"
 #include "Spline.h"
-
-#include <cstdio>
-#include <iostream>
 #include <algorithm>
+#include "Oper3DFile.h"
 
 using namespace std;
 using namespace SplineSpace;
+
+#include "Bezier.h"
 
 void testSpline()
 {
@@ -61,4 +62,14 @@ void testSpline()
     }
     fclose(fp_m_x);
 
+}
+
+void testBezier()
+{
+    Point3D p1(-10, -10, 10);
+    Point3D p2(-5,0, 3);
+    Point3D p3(0, 0, 0);
+    vector<Point3D> result;
+    Bezier2(p1, p2, p3, 100, result);
+    OBJWritePoints(result, "./test/Bezier.obj");
 }
