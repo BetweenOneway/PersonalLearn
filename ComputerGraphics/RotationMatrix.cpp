@@ -9,4 +9,5 @@ void RotationMatrix::identity()
 
 Vector3 RotationMatrix::inertialToObject(const Vector3& v)const 
 {
+    return Vector3(0,0,0);
 }

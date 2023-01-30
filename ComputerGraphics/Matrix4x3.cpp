@@ -1,4 +1,4 @@
-#include "Matrix4x3.h"
+ï»¿#include "Matrix4x3.h"
 
 Matrix3x3& Matrix4x3::getMatrix3x3()
 {
@@ -7,6 +7,7 @@ Matrix3x3& Matrix4x3::getMatrix3x3()
 Matrix4x3 operator*(const Matrix4x3& loper, const Matrix4x3& roper)
 {
 	//loper.tx*roper.m11;
+    return Matrix4x3();
 }
 void Matrix4x3::zeroTranslation()
 {
@@ -44,7 +45,7 @@ Vector3 Matrix4x3::getTranslation()
 	return Vector3(tx, ty, tz);
 } 
 
-//axis = 1 XÖá axis = 2 YÖá axis = 3 ZÖá
+//axis = 1 Xè½´ axis = 2 Yè½´ axis = 3 Zè½´
 //theta rotate degree
 void Matrix4x3::setRotate(int axis, float theta)
 {
@@ -58,14 +59,14 @@ void Matrix4x3::SetupScale(const Vector3& vec)
 	tx = ty = tz = 0.0f;
 }
 
-//n´¹Ö±ÓÚÍ¶Ó°Æ½Ãæ(¾­¹ıÔ­µã)µÄÏòÁ¿
+//nå‚ç›´äºæŠ•å½±å¹³é¢(ç»è¿‡åŸç‚¹)çš„å‘é‡
 void Matrix4x3::SetupProject(Vector3& n)
 {
 	M3x3.SetupProject(n);
 	tx = ty = tz = 0.0f;
 }
 
-//ÉèÖÃx/y/z=kÆ½ÃæµÄ¾µÏñ
+//è®¾ç½®x/y/z=kå¹³é¢çš„é•œåƒ
 void Matrix4x3::SetupReflect(int axis,int k)
 {
 	M3x3.SetupReflect(axis);
@@ -88,19 +89,19 @@ void Matrix4x3::SetupReflect(int axis,int k)
 		break;
 	}
 }
-//nÎª´¹Ö±ÓÚ¾µÏñÆ½ÃæµÄÏòÁ¿
+//nä¸ºå‚ç›´äºé•œåƒå¹³é¢çš„å‘é‡
 void Matrix4x3::SetupReflect(Vector3& n)
 {
 	M3x3.SetupReflect(n);
 	tx = ty = tz = 0.0f;
 }
-//axisÖ¸×ø±êÖá£¬s&t±íÊ¾ÇĞ±ä·ù¶È
+//axisæŒ‡åæ ‡è½´ï¼Œs&tè¡¨ç¤ºåˆ‡å˜å¹…åº¦
 void Matrix4x3::SetupShear(int axis, float s, float t)
 {
 	M3x3.SetupShear(axis, s, t);
 	tx = ty = tz = 0.0f;
 }
-//Çó¾ØÕóĞĞÁĞÊ½
+//æ±‚çŸ©é˜µè¡Œåˆ—å¼
 float determinant();
-//¼ÆËã¾ØÕóµÄÄæ
+//è®¡ç®—çŸ©é˜µçš„é€†
 Matrix3x3 inverse();

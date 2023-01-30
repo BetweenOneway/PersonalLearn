@@ -1,4 +1,9 @@
 #pragma once
+#include "Vector3.h"
+
+using Point3D = Vector3;
+
+#pragma once
 typedef struct tagPosition
 {
     double  x;
