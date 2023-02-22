@@ -1,6 +1,12 @@
 #include <map>
 #include "Ray.h"
 
+float Ray::GetDistance(const Vector3& point) const {
+    Vector3 diff = point - origin;
+    Vector3 tmp = crossProduct(diff, direction);
+    return vectorMag(tmp);
+}
+
 float Ray::GetUnitsLenth(const Vector3& point) const {
     return direction * (point - origin);
 }
