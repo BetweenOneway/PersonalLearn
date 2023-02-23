@@ -71,6 +71,18 @@ Quaternion Quaternion::operator*(const Quaternion &a)const
 	return result;
 }
 
+Vector3 Quaternion::operator*(const Vector3& v)const
+{
+    Vector3 uv, uuv;
+    Vector3 qvec(x, y, z);
+    uv = crossProduct(qvec, v);
+    uuv = crossProduct(qvec, uv); 
+    uv *= (2.0f * w);
+    uuv *= 2.0f;
+
+    return v + uv + uuv;
+}
+
 Quaternion& Quaternion::operator*=(const Quaternion &a)
 {
 	*this = *this * a;

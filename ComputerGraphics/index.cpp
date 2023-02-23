@@ -2,11 +2,27 @@
 using namespace std;
 #include "testLine.h"
 #include "testRay.h"
+#include "testQuaternion.h"
+
+void Bezier()
+{
+    //testBezier();
+}
+
+void Ray()
+{
+    testGetUnitLengthAndDistance();
+}
+
+void Quaternion()
+{
+    verifyRotateDirection();
+}
 
 int main()
 {
-    //testBezier();
-    testGetUnitLengthAndDistance();
+    
+    Quaternion();
     system("pause");
     return 0;
 }

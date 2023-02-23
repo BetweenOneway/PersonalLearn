@@ -25,6 +25,7 @@ public:
     Vector3 getRotationAxis() const;
 
 	Quaternion operator*(const Quaternion &a)const;
+    Vector3 operator*(const Vector3& v)const;
 	Quaternion& operator*=(const Quaternion &a);
 	//让四元数的模等于1
 	void normalize();
