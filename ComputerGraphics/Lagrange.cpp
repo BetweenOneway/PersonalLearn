@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 using namespace std;
 
@@ -138,11 +138,5 @@ int test2()
 
     cout << "P(" << t << ")=" << p << endl;
 
-    return 0;
-}
-
-int main()
-{
-    test();
     return 0;
 }
