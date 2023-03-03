@@ -13,7 +13,7 @@ void testWriteFileDirNotExist()
     fout.close();
 }
 
-int main()
+int testStream()
 {
     testWriteFileDirNotExist();
     return 0;

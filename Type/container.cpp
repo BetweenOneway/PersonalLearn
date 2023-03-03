@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <algorithm>
 
@@ -99,11 +99,4 @@ void testClear()
     size = vec.size();
     cout << "after clear size=" << size << endl;
 
-}
-
-int main()
-{
-    testClear();
-    system("pause");
-	return 0;
 }

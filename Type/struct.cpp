@@ -52,7 +52,7 @@ void test2()
     //st.p = new base();
 }
 
-int main()
+int testStruct()
 {
 	test1();
 	return 0;

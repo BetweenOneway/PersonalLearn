@@ -20,7 +20,7 @@ private:
 	int m;
 };
 
-int main()
+int testClass()
 {
 	Oper op1(2);
 	Oper op2(3);
