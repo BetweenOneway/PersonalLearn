@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <algorithm>
 #include <vector>
 #include <stack>
@@ -212,6 +212,65 @@ void testPriorityQueue()
     {
         cout << rpq.top() << endl;
         rpq.pop();
+    }
+}
+
+//queue是先进先出队列
+template<typename T1> class RationQueue
+{
+public:
+    RationQueue(unsigned int size)
+    {
+        capacity = size;
+    }
+    unsigned int size()
+    {
+        return capacity;
+    }
+    void push(const T1& val)
+    {
+        while (container.size() >= capacity)
+        {
+            pop();
+        }
+        container.push(val);
+    }
+    void pop()
+    {
+        container.pop();
+    }
+    const T1& front()
+    {
+        return container.front();
+    }
+
+    const T1& back()
+    {
+        return container.back();
+    }
+    bool empty()
+    {
+        return container.empty();
+    }
+private:
+    queue<T1> container;
+    unsigned int capacity;
+};
+void testQueue()
+{
+    RationQueue<int> rq(4);
+    rq.push(1);
+    rq.push(2);
+    rq.push(3);
+    rq.push(4);
+    rq.push(5);
+    rq.push(0);
+
+    int all = rq.size();
+    while (!rq.empty())
+    {
+        cout << rq.front() << endl;
+        rq.pop();
     }
 }
 
