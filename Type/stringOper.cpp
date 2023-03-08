@@ -58,4 +58,5 @@ int testStringOper()
 {
 	test2();
 	cin.get();
+    return 0;
 }

@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -6,6 +6,8 @@
 #include <unordered_map>
 using namespace std;
 #include <Windows.h>
+
+#include "container.h"
 
 enum class Color:int {
     Red,
@@ -294,9 +296,14 @@ void testVectorRange()
     //cout << vi.at(10) << endl;
 }
 
+void testContainer()
+{
+    CONTAINER_TEST::testStack();
+}
+
 int main()
 {
-    testVectorInsert();
+    testContainer();
     system("pause");
     return 0;
 }

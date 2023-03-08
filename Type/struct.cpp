@@ -1,6 +1,9 @@
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 using namespace std;
+#include "struct.h"
+
+namespace STRUCT_TEST {
 
 class base
 {
@@ -17,8 +20,8 @@ struct st_test1 {
 };
 
 struct st_containClass {
-    base* p;
-    int& ri;
+    //base* p;
+    //int& ri;
 };
 void test()
 {
@@ -56,4 +59,7 @@ int testStruct()
 {
 	test1();
 	return 0;
+}
+
+
 }

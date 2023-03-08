@@ -1,8 +1,14 @@
-#include <iostream>
-#include <vector>
+﻿#include <iostream>
 #include <algorithm>
+#include <vector>
+#include <stack>
+#include <deque>
+
 
 using namespace std;
+
+#include "container.h"
+namespace CONTAINER_TEST {
 
 template <typename T>  struct ST {
 	T x;
@@ -98,5 +104,66 @@ void testClear()
     vec.clear();
     size = vec.size();
     cout << "after clear size=" << size << endl;
+
+}
+
+template<typename T1> class RationStack
+{
+public:
+    RationStack(unsigned int size)
+    {
+        capacity = size;
+    }
+    void push(const T1& val)
+    {
+        if (container.size() >= capacity)
+        {
+            container.pop();
+        }
+        container.push(val);
+    }
+    T1& top()
+    {
+        return container.top();
+    }
+    void pop()
+    {
+        if (container.empty())
+        {
+            return;
+        }
+        container.pop();
+    }
+    unsigned int size()
+    {
+        return capacity;
+    }
+private:
+    unsigned int capacity;
+    stack<T1> container;
+};
+
+//栈不支持固定大小
+void testStack()
+{
+    RationStack<int> rs(4);
+    rs.push(1);
+    rs.push(2);
+    rs.push(3);
+    rs.push(4);
+    rs.push(5);
+    int all = rs.size();
+    for (int i = 0; i < all; i++)
+    {
+        cout << rs.top() << endl;
+        rs.pop();
+    }
+}
+
+void testDeque()
+{
+
+}
+
 
 }

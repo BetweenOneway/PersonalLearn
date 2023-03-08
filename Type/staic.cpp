@@ -1,7 +1,7 @@
 #include <iostream>
 
 using namespace std;
-
+namespace STATIC_TEST{
 void useStaic()
 {
 	static int num = 10;
@@ -21,4 +21,5 @@ int testStatic()
 {
 	test();
 	return 0;
+}
 }
