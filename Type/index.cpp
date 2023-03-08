@@ -298,7 +298,8 @@ void testVectorRange()
 
 void testContainer()
 {
-    CONTAINER_TEST::testStack();
+    //CONTAINER_TEST::testStack();
+    CONTAINER_TEST::testPriorityQueue();
 }
 
 int main()

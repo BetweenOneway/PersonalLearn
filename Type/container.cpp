@@ -3,7 +3,7 @@
 #include <vector>
 #include <stack>
 #include <deque>
-
+#include <queue>
 
 using namespace std;
 
@@ -160,10 +160,59 @@ void testStack()
     }
 }
 
-void testDeque()
+template<typename T1> class RationPriorityQueue
 {
+public:
+    RationPriorityQueue(unsigned int size)
+    {
+        capacity = size;
+    }
+    void push(const T1& val)
+    {
+        if (container.size() >= capacity)
+        {
+            container.pop();
+        }
+        container.push(val);
+    }
+    void pop()
+    {
+        if (container.empty())
+        {
+            return;
+        }
+        container.pop();
+    }
+    const T1& top()
+    {
+        return container.top();
+    }
+    unsigned int size()
+    {
+        return capacity;
+    }
 
+private:
+    //对于基础类型 默认是大顶堆
+    //等同于priority_queue<int, vector<int>, less<int> >
+    priority_queue<T1> container;
+    unsigned int capacity;
+};
+
+void testPriorityQueue()
+{
+    RationPriorityQueue<int> rpq(4);
+    rpq.push(1);
+    rpq.push(2);
+    rpq.push(3);
+    rpq.push(4);
+    rpq.push(5);
+    int all = rpq.size();
+    for (int i = 0; i < all; i++)
+    {
+        cout << rpq.top() << endl;
+        rpq.pop();
+    }
 }
-
 
 }
