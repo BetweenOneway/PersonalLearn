@@ -1,4 +1,4 @@
-#include "testQuaternion.h"
+﻿#include "testQuaternion.h"
 #include "Vector3.h"
 #include "Quaternion.h"
 #include "MathUtil.h"
@@ -14,7 +14,7 @@ void verifyRotateDirection()
     //Y轴
     Vector3 axisY(0,1,0);
     Vector3 axisZ(0, 0, 1.0f);
-    //旋转方向是逆时针
+    //旋转方向是逆时针 右手定则
     q.setToRotateAboutAxis(axisZ,(theta) / 180.0f * kPi);
 
     Vector3 dest = (q * src);

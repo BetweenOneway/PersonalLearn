@@ -122,5 +122,8 @@
     <ClInclude Include="testQuaternion.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="testVectorMatrix.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

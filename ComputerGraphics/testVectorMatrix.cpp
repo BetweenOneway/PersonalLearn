@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 using namespace std;
+#include "testVectorMatrix.h"
 #include "Matrix3x3.h"
-#include "Ray.h"
 
 void printVector(const Vector3& toPrint)
 {
@@ -88,24 +88,27 @@ void testDeterminant()
 
 }
 
+//求两个向量的夹角的时候，两个向量是不是单位向量对结果没有影响
 void testDotCross()
 {
     Vector3 dir1(4, 2, 0);
     Vector3 dir2(0, 2, 0);
-    cout << "dot = " << dir1 * dir2 << endl;
-    cout << "Cross product m:" << vectorMag(crossProduct(dir1, dir2)) << endl;
+    cout << "dot = " << dir1 * dir2 << endl;//4
+    cout << "Cross product m:" << vectorMag(crossProduct(dir1, dir2)) << endl;//8
 
     dir1 = Vector3(1, 0, 0);
     dir2 = Vector3(0, -1, 0);
     float dot = dir1 * dir2;
     double theta = dot / (vectorMag(dir1) * vectorMag(dir2));
     double theta1 = acos(theta) * 180.f / kPi;
-    cout << theta1 << endl;
+    cout << theta1 << endl;//90
 
+    dir1 = Vector3(2, 0, 0);
+    dir2 = Vector3(0, -4, 0);
     float dot2 = dir1 * dir2;
     theta = dot2 / (vectorMag(dir1) * vectorMag(dir2));
     theta1 = acos(theta) * 180.f / kPi;
-    cout << theta1 << endl;
+    cout << theta1 << endl;//90
 }
 
 void testCrossProduct()
@@ -120,49 +123,3 @@ void testCrossProduct()
 
 }
 
-void testRay()
-{
-    Ray ray({ 3.0f,4.0f,5.0f }, { 0.0f,0.0f,-1.0f });
-    Vector3 postiveDot(1.0f, 2.0f, 8.0f);
-    Vector3 negativeDot(1.0f, 1.0f, -3.0f);
-    cout << ray.GetUnitsLenth(postiveDot) << endl;
-    cout << ray.GetUnitsLenth(negativeDot) << endl;
-}
-
-void testRay2()
-{
-    //Ray ray({31.6467190f,-29.206f,8.6169f}, {0.9826f,0.1853f,-0.0f});
-    //Vector3 postiveDot(37.5767f, -27.4426f, 6.01461f);
-    //Vector3 negativeDot(26.552f,-31.056f,10.0874f);
-    ////>0
-    //cout << ray.GetUnitsLenth(postiveDot) << endl;
-    ////<0
-    //cout << ray.GetUnitsLenth(negativeDot) << endl;
-
-   /* Ray ray({-15.6635f,0.9091f,10.746f}, {0.6884f,-0.30377f,0.6587f});
-    Vector3 dot(0.0f, 0.0f, 0.0f);
-    cout << ray.GetUnitsLenth(dot) << endl;*/
-
-    Ray ray({ 0.7178,11.6021,1.5157 }, { 0.3230,0.9317,1.5157 });
-    Vector3 dot(0.0f, 0.0f, 0.0f);
-
-    cout << ray.GetUnitsLenth(dot) << endl;
-
-    Vector3 dot1(0.0f, 15.0f, 0.0f);
-    cout << ray.GetUnitsLenth(dot1) << endl;
-}
-
-void testRayIntersect()
-{
-    Ray ray({ 0.0f,0.0f,0.0f }, { 1.0f,0.0f,0.0f });
-    std::vector<Vector3> posiPoints;
-    std::vector<unsigned> posiSurfIdx;
-    std::vector<Vector3> negaPoints;
-    std::vector<unsigned> negaSurfIdx;
-    ray.GetRayIntersect({ {0.0f,3.0f,0.0f},{-3.0f,-2.0f,0.0f},{3.0f,-2.0f,0.0f} }, &posiPoints, &posiSurfIdx, &negaPoints, &negaSurfIdx);
-
-    if (posiPoints.empty())
-    {
-
-    }
-}

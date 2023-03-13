@@ -1,3 +1,6 @@
+﻿# Rules in this file were initially inferred by Visual Studio IntelliCode from the D:\wangwei\Learn codebase based on best match to current usage at 2023/3/13
+# You can modify the rules from these initially generated values to suit your own policies
+# You can learn more about editorconfig here: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
 # Visual Studio 生成了具有 C++ 设置的 .editorconfig 文件。
 root = true
 
@@ -70,7 +73,7 @@ cpp_wrap_preserve_blocks = one_liners
 
 [*]
 end_of_line = lf                    # 行尾 UNIX 格式 LF
-charset = utf-8                     # 文件编码字符集为 UTF-8
+charset = utf-8-bom                 # 文件编码字符集为 UTF-8带签名
 trim_trailing_whitespace = true     # 删除文件末尾空格
 insert_final_newline = true         # 末尾插入新行
 indent_style = space                # 以空格代替 tab
