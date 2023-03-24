@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <algorithm>
 #include <vector>
 #include <stack>
@@ -272,6 +272,20 @@ void testQueue()
         cout << rq.front() << endl;
         rq.pop();
     }
+}
+
+void testVectorInsert()
+{
+    vector<int> v(5, 5);
+    vector<int> v1{1,2,3,4};
+    //[)
+    v.insert(v.begin(), v1.begin(), v1.begin()+3);
+
+    for (auto val : v)
+    {
+        cout << val<<" ";
+    }
+    cout << endl;
 }
 
 }

@@ -106,9 +106,20 @@ void testWString()
 
     const wchar_t* wStr1 = L"12";
     cout << lstrlen(wStr1) << endl;
-    wstring wStr(wstr1, lstrlen(wStr1)+1);
+    wstring wStr(wStr1, lstrlen(wStr1)+1);
     int iFDI = atoi(STR_UnicodeToANSI(wStr.c_str()).c_str());
     cout << iFDI << endl;
+
+    wstring wstr2;
+    wchar_t wt = L'1';
+    wstr2.push_back(wt);
+    wt = L'6';
+    wstr2.push_back(wt);
+
+    iFDI = atoi(STR_UnicodeToANSI(wstr2.c_str()).c_str());
+    cout << iFDI << endl;
+
+
 }
 
 void testDiv()
@@ -300,12 +311,14 @@ void testContainer()
 {
     //CONTAINER_TEST::testStack();
     //CONTAINER_TEST::testPriorityQueue();
-    CONTAINER_TEST::testQueue();
+    //CONTAINER_TEST::testQueue();
+    CONTAINER_TEST::testVectorInsert();
 }
 
 int main()
 {
     testContainer();
+   // testWString();
     system("pause");
     return 0;
 }
