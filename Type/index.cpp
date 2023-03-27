@@ -315,10 +315,18 @@ void testContainer()
     CONTAINER_TEST::testVectorInsert();
 }
 
+void testWired()
+{
+    unsigned int p = 1000;
+    //把值作为了指针的地址
+    void* p1 = (void*)p;
+    cout << p1 << endl;
+}
 int main()
 {
-    testContainer();
+    //testContainer();
    // testWString();
+    testWired();
     system("pause");
     return 0;
 }
