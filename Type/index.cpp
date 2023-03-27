@@ -312,7 +312,8 @@ void testContainer()
     //CONTAINER_TEST::testStack();
     //CONTAINER_TEST::testPriorityQueue();
     //CONTAINER_TEST::testQueue();
-    CONTAINER_TEST::testVectorInsert();
+    //CONTAINER_TEST::testVectorInsert();
+	CONTAINER_TEST::testVectorPointer();
 }
 
 void testWired()

@@ -4,5 +4,6 @@ namespace CONTAINER_TEST {
     void testPriorityQueue();
     void testQueue();
     void testVectorInsert();
+	void testVectorPointer();
 }
 

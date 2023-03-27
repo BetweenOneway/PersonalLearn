@@ -288,4 +288,12 @@ void testVectorInsert()
     cout << endl;
 }
 
+void testVectorPointer()
+{
+	std::vector<int> vi{ 1,2,3 };
+	int* p = &(vi.front());
+
+	cout << p << endl;
+}
+
 }
