@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>clear float</title>
+        <meta charset="utf-8"/>
+        <style>
+            .media-block{
+                background-color: gray;
+                border:solid 1px black;
+            }
+            .media-fig{
+                float:left;
+                width: 30%;
+            }
+            .media-body{
+                float:right;
+                width:65%;
+            }
+            .clear{
+                clear:both;
+            }
+        </style>
+    </head>
+    <body>
+        Hello 
+        <div class="media-block">
+            <img class="media-fig" src="./img/test.JPG" alt="the pic"/>
+            <div class="media-body">
+                <h3>Title of this</h3>
+                <p>Brief description of this</p>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </body>
+</html>

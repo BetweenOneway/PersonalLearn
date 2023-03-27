@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <script src="jquery-3.4.1.js"></script>
+    <script src="test.js"></script>
+  </head>
+  <body>
+    <!--body code-->
+    <div>
+      <ul id='list'>
+        <li id='list-1'>list-1</li>
+        <ul id='list-2'>
+          <li id='list-2-1'>list-2-1</li>
+        </ul>
+      </ul>
+    </div>
+    <div>
+      <input id="test-input" name="email" value="">
+      <select id="test-select" name="city">
+          <option value="BJ" selected>Beijing</option>
+          <option value="SH">Shanghai</option>
+          <option value="SZ">Shenzhen</option>
+      </select>
+      <textarea id="test-textarea">Hello</textarea>
+    </div>
+    <div>
+      <input type="button" onclick="operateDOM()"/>
+    </div>
+  </body>
+</html>

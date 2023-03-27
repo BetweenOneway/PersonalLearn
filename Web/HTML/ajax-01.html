@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function show()
+            {
+                //创建异步对象
+                var xhr = new XMLHttpRequest();
+                console.log(xhr);
+                //绑定监听，接收响应
+                xhr.onreadystatechange=function(){
+                    console.log(xhr.readyState);
+                    if(xhr.readyState==4 && xhr.status == 200)
+                    {
+                        //接收响应  
+                        var result = xhr.responseText;
+                    }
+                }
+                //打开连接创建请求  
+                xhr.open("get","http://127.0.0.1:8080/login",true);
+                //发送请求
+                xhr.send();
+            }
+        </script>
+    </head>
+    <body>
+        <button onclick="show()">click</button>
+    </body>
+</html>
