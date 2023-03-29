@@ -312,7 +312,8 @@ void testContainer()
     //CONTAINER_TEST::testStack();
     //CONTAINER_TEST::testPriorityQueue();
     //CONTAINER_TEST::testQueue();
-    CONTAINER_TEST::testVectorInsert();
+    //CONTAINER_TEST::testVectorInsert();
+    CONTAINER_TEST::testVectorAddress();
 }
 
 void testWired()
@@ -324,9 +325,9 @@ void testWired()
 }
 int main()
 {
-    //testContainer();
+    testContainer();
    // testWString();
-    testWired();
+    //testWired();
     system("pause");
     return 0;
 }

@@ -288,4 +288,15 @@ void testVectorInsert()
     cout << endl;
 }
 
+void testVectorAddress()
+{
+    int i = 6 ,j=5;
+    std::vector<int> vec;
+    vec.push_back(i);
+    vec.push_back(j);
+
+    int* p = &(vec.front());
+    cout << p << endl;
+}
+
 }
