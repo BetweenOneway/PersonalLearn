@@ -1,0 +1,7 @@
+ul,ol{
+	list-style-type:none;
+	list-style-image:url(../img/list_item.JPG);
+}
+a{
+	text-decoration:none;
+}

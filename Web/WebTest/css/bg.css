@@ -1,0 +1,7 @@
+#div1{
+	width:3000px;
+	height:6000px;
+	background-repeat:no-repeat;
+	background-image:url(../img/flower.png);
+	background-position: center left;
+}

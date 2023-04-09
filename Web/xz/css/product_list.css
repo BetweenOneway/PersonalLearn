@@ -1,0 +1,36 @@
+/*灰色 渐变的背景*/
+.my_bg_gray {
+    background:linear-gradient(to bottom,#f0f0f0,#e0e0e0)
+}
+
+/*轮廓清0*/
+.my_input {
+    outline: 0;
+    width:10%;
+}
+
+/*分页条样式*/
+.page-item+.page-item {
+    margin-left:0.5rem;
+}
+.page-link {
+    border-radius:0.5rem !important;
+}
+
+.border-top {
+    border-style:dotted !important;
+}
+
+/*购物车小按钮*/
+.my_input_size {
+    width:0.9rem;
+    height:0.9rem;
+    line-height: 0.6rem;
+    text-align:center;
+    font-size:0.5rem;
+    font-weight:bold;
+}
+
+.w-40 {
+    width: 40%;
+}

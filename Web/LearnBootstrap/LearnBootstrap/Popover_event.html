@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Bootstrap 实例</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="./dist/css/bootstrap.min.css">  
+            <script src="../jquery-3.5.1.js"></script>
+            <script src="./dist/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div clas="container" style="padding: 100px 50px 10px;" >
+            <button type="button" class="btn btn-primary popover-show"        title="Popover title" data-container="body"        data-toggle="popover"        data-content="左侧的 Popover 中的一些内容 —— show 方法">
+               左侧的 Popover
+            </button>
+         
+            </div>
+            <script>
+               $(function () { $('.popover-show').popover('show');});
+               $(function () { $('.popover-show').on('shown.bs.popover', function () {
+               alert("当显示时警告消息");
+            })});
+            </script>
+         </div>
+         
+         </body>
+         </html>

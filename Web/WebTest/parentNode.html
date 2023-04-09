@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<style type="text/css">
+			table{border-collapse:collapse;}
+			table,tr,td{border:1px solid gray;}
+		</style>
+		<script>
+			window.onload = function()
+			{
+				var oTd = document.getElementsByTagName("td");
+				for(var i=0;i<oTd.length;i++)
+				{
+					oTd[i].onclick = function()
+					{
+						var oParent = this.parentNode;
+						
+						oParent.style.color = "white";
+						oParent.style.backgroundColor = "red";
+					};
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<table>
+			<caption>考试成绩表</caption>
+			<tr>
+				<th>姓名</th>
+				<th>语文</th>
+				<th>数学</th>
+				<th>计算机</th>
+			</tr>
+			<tr>
+				<td>小明</td>
+				<td>80</td>
+				<td>80</td>
+				<td>80</td>
+			</tr>
+			<tr>
+				<td>小红</td>
+				<td>90</td>
+				<td>90</td>
+				<td>90</td>
+			</tr>
+			<tr>
+				<td>小杰</td>
+				<td>100</td>
+				<td>100</td>
+				<td>100</td>
+			</tr>
+		</table>
+	</body>
+</html>

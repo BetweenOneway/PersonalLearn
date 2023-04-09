@@ -1,0 +1,15 @@
+
+
+a:link{
+	text-decoration:none;
+	color:red;
+}
+a:hover{
+	text-decoration:underline;
+	color:blue;
+}
+
+a{
+	text-decoration:none;
+	color:yellow;
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script>
+			window.onload = function()
+			{
+				var oBtn = document.getElementById("btn");
+				var oDiv = document.getElementById("div1");
+				var oBtn1 = document.getElementById("btn1");
+				
+				oBtn.onclick = unbind;
+				oBtn1.onclick = bind;
+				function changeColor()
+				{
+					this.style.color = "hotpink";
+				}
+				
+				function bind()
+				{
+					oDiv.addEventListener("click",changeColor,false);
+				}
+				function unbind()
+				{
+					oDiv.removeEventListener("click",changeColor,false);
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="div1">你好，世界</div>
+		<input type="button" id="btn" value="解绑" />
+		<input type="button" id="btn1" value="绑定" />
+	</body>
+</html>

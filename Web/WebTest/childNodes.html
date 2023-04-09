@@ -1,0 +1,22 @@
+<!DOCTYE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<script>
+			window.onload = function()
+			{
+				var oUl = document.getElementById("list");
+				var childNodesLen = oUl.childNodes.length;
+				var childrenLen = oUl.children.length;
+				var oText = oUl.firstChild.nextSibling.nextSibling.textContent;
+				
+				alert(oText);
+			}
+		</script>
+	</head>
+	<body>
+		<ul id="list">
+			<li>HTML</li><li>CSS</li><li>JavaScript</li>
+		</ul>
+	</body>
+</html>

@@ -1,0 +1,14 @@
+/*面包屑导航 改连接符*/
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">"
+}
+.my_img_size {
+    width:28rem;
+    overflow-x:auto;
+}
+.my_img_size img {
+    width: 5.5rem;
+}
+.my_img_size li img {
+    margin-right:0.25rem;
+}

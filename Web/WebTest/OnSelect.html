@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script>
+			window.onload = function()
+			{
+				var oText1 = document.getElementById("txt1");
+				var oText2 = document.getElementById("txt2");
+				
+				oText1.onselect = function()
+				{
+					alert("你选中单行文本框内容");
+				};
+				oText2.onselect = function()
+				{
+					alert("你选中多行文本框内容");
+				};
+			}
+		</script>
+	</head>
+	<body>
+		<input id="txt1" type="text" value="如果我真的存在" />
+		<br />
+		<textarea id="txt2" cols=20 rows="5">如果我真的不存在</textarea>
+	</body>
+</html>

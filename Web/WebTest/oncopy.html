@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<script>
+			window.onload = function()
+			{
+				document.body.oncopy = function()
+				{
+					alert("不允许复制哦！");
+					//如果返回true，则可以复制内容
+					return false;
+				}
+				document.body.onselectstart = function()
+				{
+					alert("不允许选取哦！");
+					return false;
+				}
+				document.oncontextmenu = function()
+				{
+					alert("不允许使用鼠标右键哦！");
+					return false;
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<p>不要用战术上的勤奋来掩饰战略上的懒惰！</p>
+	</body>
+</html>

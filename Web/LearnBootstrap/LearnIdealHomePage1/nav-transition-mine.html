@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>nav transition</title>
+        <meta charset="utf-8" />
+        <style type="text/css">
+            .mynav {
+                margin:5em 0 0 0;
+                height: 1.5em;
+                overflow:hidden;
+            }
+            .mynav li {
+                display:inline-block;
+                transition: .5s; 
+                top: 0; 
+                padding: 0 5px; 
+                position:relative;/*重要top属性对static元素无效*/
+            }
+            .myul {
+                margin:0;
+            }
+            .myli a {
+                display: block; 
+                text-decoration: none;
+            }
+            .mynav li:hover {
+                transition: .5s; 
+                top: -1.5em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="mynav">
+            <ul class="myul">
+                <li class="myli">
+                    <a href="#">首页</a>
+                    <a class="nav-off" href="#">Home</a>
+                </li>
+                <li class="myli">
+                    <a href="#">关于</a>
+                    <a class="nav-off" href="#">About</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+</html>

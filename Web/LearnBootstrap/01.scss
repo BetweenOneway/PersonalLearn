@@ -1,0 +1,67 @@
+#jd_red:#F10215;//创建变量  
+p{
+    color:$jd_red;
+}
+div {
+    background:$jd_red;
+}
+
+
+#content {
+    font-size:32px;
+    div.top {
+        color:#F00;
+        h1 {
+            border:1px solid #F00;
+        }
+        p {
+            margin:2px;
+        }
+    }
+}
+
+@mixin my_border($color,$radius,$outline) {
+    border:1px solid $color;
+    border-radius:$radius;
+    outline:$outline;
+}
+
+div {
+    width: 10px;
+    @include my_border(#0f0,20%,0);
+}
+
+//继承  
+.my_rounded {
+    border:1px solid #F00;
+    border-radius:5px;
+}
+
+.my_shadow {
+    box-shadow:0 0 10px;
+    @extend .my_rounded;
+}
+//==>
+.my_rounded, .my_shadow {
+    border:1px solid #F00;
+    border-radius:5px;
+} 
+.my_shadow {
+    box-shadow:0 0 10px;
+    @extend .my_rounded;
+}
+
+//运算  
+$my-width:5%;
+$my-max-width:$my-width*2;
+$other-width:2rem+1rem;
+
+div {
+    width: $my-max-width;
+    max-width: $other-width;
+}
+
+p::before {
+    content:"Microsoft"+yahei;
+    font-family: A+"rial";
+}

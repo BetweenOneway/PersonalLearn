@@ -1,0 +1,16 @@
+#first{
+	width:120px;
+	height:1600px;
+	border:1px solid gray;
+	line-height:600px;
+	background-color:red;
+}
+#second{
+	position:fixed;
+	top:30px;
+	left:160px;
+	width:60px;
+	height:60px;
+	border:1px solid silver;
+	background-color:hotpink;
+}

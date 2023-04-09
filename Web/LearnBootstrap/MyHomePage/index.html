@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        
+        <title>My Home Page</title>
+        <meta name="Viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="../bootstrap-4.6.0/dist/css/bootstrap.css" />
+        <!--在我自己电脑的fireFox上font awesome无法正常显示-->
+        <link rel="stylesheet" type="text/css" href="../font-awesome-4.7.0/css/font-awesome.css" />
+        <link rel="stylesheet" type="text/css" href="../LearnIdealHomePage2/assets/css/metisMenu.css" />
+        <link rel="stylesheet" type="text/css" href="./main.css"/>
+    </head>
+    <body>
+        <header class="header-transparent">
+            <div class="container-fluid wrapper">
+                <div class="row align-items-center">
+                    <!--logo-->
+                    <div class="col-xl-3 col-lg-6 col-md-11 col-9">
+                        <a class="image-fluid" href="#"><img src="../LearnIdealHomePage2/assets/img/logo/logo-02.png"></a>
+                    </div>
+                    <!--menu-->
+                    <div class="col-xl-6 d-none d-xl-block">
+                        <!--这个居中是指在col中居中-->
+                        <div class="main-menu text-center">
+                            <nav>
+                                <ul>
+                                    <li><a href="index.html">Home<span class="fa fa-angle-down"></span></a></li>
+                                    <li><a href="index.html">Modules<span class="fa fa-angle-down"></span></a></li>
+                                    <li><a href="index.html">Blog<span class="fa fa-angle-down"></span></a></li>
+                                    <li><a href="index.html">About<span class="fa fa-angle-down"></span></a></li>
+                                    <li><a href="index.html">About<span class="fa fa-angle-down"></span></a></li>
+                                    <li><a href="index.html">About<span class="fa fa-angle-down"></span></a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <!--sign in/up-->
+                    <div class="col-xl-3 col-lg-6 col-md-1 col-3">
+                        <div class="header-sign d-lg-flex align-items-center justify-content-between">
+                            <div class="d-none d-lg-block">
+                                <a class="c-btn btn-round" style="margin-right: 10px;">sign in<span class="fa fa-user-circle"></span></a>
+                                <a class="c-btn btn-round">sign up<span class="fa fa-user-circle"></span></a>
+                            </div>
+                            <div id="hamburger-menu" class="d-xl-none d-lg-inline-block">
+                                <a href=""><img src="../LearnIdealHomePage2/assets/img/icon/bar.png"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <aside class="slide-bar">
+                <div class="slide-bar-container">
+                <div class="close-mobile-menu">
+                    <a href="javascript:void(0)"><span class="fa fa-times"></span></a>
+                </div>
+                <nav class="side-mobile-menu">
+                    <ul id="mobile-menu-active">
+                        <li class="has-dropdown">
+                            <a href="index.html">Home</a>
+                            <ul class="sub-menu">
+                                <li><a href="index.html">Home style 1</a></li>
+                                <li><a href="index.html">Home Style 2</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-dropdown">
+                            <!--这里的a标签必须有href，如果没有样式会被Bootstrap样式取代，导致颜色继承 显示不出来
+                            或者通过提升样式等级来显示，如加!important等-->
+                            <a href="index.html">Course</a>
+                            <ul class="sub-menu">
+                                <li><a href="">Course</a></li>
+                                <li><a href="">Course list</a></li>
+                                <li><a href="">Course Details</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="index.html">Events</a>
+                            <ul class="sub-menu">
+                                <li><a href="">Events list</a></li>
+                                <li><a href="">Event Details</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            </aside>
+        </header>
+        <main>
+            <div class="course-area blue-dark-bg slider-height single-slider d-flex">
+                <div class="container wrapper">
+                    <div class="row">
+                        <div class="col-lg-6 offset-lg-3 col-xl-6 offset-xl-3">
+                            <div class="section-title text-center">
+                                <span><span class="fa fa-ellipsis-h"></span>Popular Categories<span class="fa fa-ellipsis-h"></span></span>
+                                <h2>Course Categories</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                            <div class="course-wrapper">
+                                <div class="course-hover-img">
+                                    <img src="../LearnIdealHomePage2/assets/img/course/c-03.png" alt="">
+                                </div>
+                                <div class="course-text-area">
+                                    <div class="course-icon">
+                                        <span class="fa fa-paint-brush"></span>
+                                    </div>
+                                    <h4>Graphics Design</h4>
+                                    <span>Web Design Course</span>
+                                    <div class="course-arrow-btn">
+                                        <a class="arrow-btn"><span class="fa fa-long-arrow-right"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                            <div class="course-wrapper">
+                                <div class="course-hover-img">
+                                    <img src="../LearnIdealHomePage2/assets/img/course/c-03.png" alt="">
+                                </div>
+                                <div class="course-text-area">
+                                    <div class="course-icon">
+                                        <span class="fa fa-paint-brush"></span>
+                                    </div>
+                                    <h4>Graphics Design</h4>
+                                    <span>Web Design Course</span>
+                                    <div class="course-arrow-btn">
+                                        <a class="arrow-btn"><span class="fa fa-long-arrow-right"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                            <div class="course-wrapper">
+                                <div class="course-hover-img">
+                                    <img src="../LearnIdealHomePage2/assets/img/course/c-03.png" alt="">
+                                </div>
+                                <div class="course-text-area">
+                                    <div class="course-icon">
+                                        <span class="fa fa-paint-brush"></span>
+                                    </div>
+                                    <h4>Graphics Design</h4>
+                                    <span>Web Design Course</span>
+                                    <div class="course-arrow-btn">
+                                        <a class="arrow-btn"><span class="fa fa-long-arrow-right"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                            <div class="course-wrapper">
+                                <div class="course-hover-img">
+                                    <img src="../LearnIdealHomePage2/assets/img/course/c-03.png" alt="">
+                                </div>
+                                <div class="course-text-area">
+                                    <div class="course-icon">
+                                        <span class="fa fa-paint-brush"></span>
+                                    </div>
+                                    <h4>Graphics Design</h4>
+                                    <span>Web Design Course</span>
+                                    <div class="course-arrow-btn">
+                                        <a class="arrow-btn"><span class="fa fa-long-arrow-right"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                            <div class="course-wrapper">
+                                <div class="course-hover-img">
+                                    <img src="../LearnIdealHomePage2/assets/img/course/c-03.png" alt="">
+                                </div>
+                                <div class="course-text-area">
+                                    <div class="course-icon">
+                                        <span class="fa fa-paint-brush"></span>
+                                    </div>
+                                    <h4>Graphics Design</h4>
+                                    <span>Web Design Course</span>
+                                    <div class="course-arrow-btn">
+                                        <a class="arrow-btn"><span class="fa fa-long-arrow-right"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                            <div class="course-wrapper">
+                                <div class="course-hover-img">
+                                    <img src="../LearnIdealHomePage2/assets/img/course/c-03.png" alt="">
+                                </div>
+                                <div class="course-text-area">
+                                    <div class="course-icon">
+                                        <span class="fa fa-paint-brush"></span>
+                                    </div>
+                                    <h4>Graphics Design</h4>
+                                    <span>Web Design Course</span>
+                                    <div class="course-arrow-btn">
+                                        <a class="arrow-btn"><span class="fa fa-long-arrow-right"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                            <div class="course-wrapper">
+                                <div class="course-hover-img">
+                                    <img src="../LearnIdealHomePage2/assets/img/course/c-03.png" alt="">
+                                </div>
+                                <div class="course-text-area">
+                                    <div class="course-icon">
+                                        <span class="fa fa-paint-brush"></span>
+                                    </div>
+                                    <h4>Graphics Design</h4>
+                                    <span>Web Design Course</span>
+                                    <div class="course-arrow-btn">
+                                        <a class="arrow-btn"><span class="fa fa-long-arrow-right"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                            <div class="course-wrapper">
+                                <div class="course-hover-img">
+                                    <img src="../LearnIdealHomePage2/assets/img/course/c-03.png" alt="">
+                                </div>
+                                <div class="course-text-area">
+                                    <div class="course-icon">
+                                        <span class="fa fa-paint-brush"></span>
+                                    </div>
+                                    <h4>Graphics Design</h4>
+                                    <span>Web Design Course</span>
+                                    <div class="course-arrow-btn">
+                                        <a class="arrow-btn"><span class="fa fa-long-arrow-right"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--页面底部-->
+            <footer class="footer-area">
+                <div class="container">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+                            <div class="footer-logo">
+                                <a href="#"><img src="../LearnIdealHomePage2/assets/img/logo/footer-01-logo.png" alt=""></a>
+                            </div>
+                        </div>
+                        <div class="col-xl-8 col-lg-8 col-md-8 col-12">
+                            <div class="footer-social-icon text-right">
+                                <a class="active" href="#"><span class="fa fa-weibo"></span>Weibo</a>
+                                <a href="#"><span class="fa fa-wechat"></span>WeChat</a>
+                                <a href="#"><span class="fa fa-qq"></span>QQ</a>
+                                <a href="#"><span class="fa fa-envelope-o"></span>E-Mail</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row"></div>
+                    <div class="copyright-area text-center">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="copyright-text">
+                                    <p>
+                                        Copyright © 2021 Loop All Rights Reserved
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+        <script src="../../Js/jQuery-3.5.0.js"></script>
+        <script src="../LearnIdealHomePage2/assets/js/metisMenu.min.js"></script>
+        <script src="./main.js"></script>
+    </body>
+</html>

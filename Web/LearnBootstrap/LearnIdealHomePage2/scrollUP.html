@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--jquery.scrollUp.min.js的引入一定要在jQuery之后-->
+        <script src="./jquery/jquery-1.10.2.js"></script>
+        <script src="assets/js/jquery.scrollUp.min.js"></script>
+        <script>
+            $(function(){
+                $.scrollUp({
+                    scrollName:'scrollUp',// 元素ID
+                    topDistance:'300',// 顶部距离显示元素之前 (px)
+                    topSpeed:300,// 回到顶部的速度 (ms)
+                    animation:'fade',// 动画类型Fade, slide, none
+                    animationInSpeed:200,
+                    animationOutSpeed:200,
+                    scrollText:'Scroll to top',// 元素文本
+                    activeOverlay:false,// 显示scrollUp的基准线，false为不显示, e.g '#00FFFF'
+                });
+            });
+        </script>
+        <style type="text/css">
+        /*id是默认的 定义到顶部按钮样式*/
+        #scrollUp{
+            height:40px;
+            width:40px;
+            right:50px;
+            bottom:77px;
+            font-size:20px;
+            text-align:center;
+            font-size:20px;
+            line-height:40px
+        }
+        </style>
+    </head>
+    <body>
+        <!--js css function三者缺一不可-->
+        <!--html里面不需要添加scrollup标签-->
+        <div style="height: 500em;background-color: aquamarine;"></div>
+    </body>
+</html>

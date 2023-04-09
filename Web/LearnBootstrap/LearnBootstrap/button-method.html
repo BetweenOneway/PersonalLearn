@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">  
+$(document).ready(function(){ 
+    $("#myButton").click(function(){
+        $(this).button("loading").delay(1000).queue(function() {
+            $(this).button("complete");
+            $(this).dequeue();
+        });        
+    });
+});   
+</script>
+<style type="text/css">
+  .bs-example{
+      margin: 20px;
+    }
+</style>
+</head>
+<body>
+<div class="bs-example">
+    <button type="button" class="btn btn-info" id="myButton" data-complete-text="Loading Completed" autocomplete="off">Click Me</button>
+</div>
+</body>
+</html>
+</html>

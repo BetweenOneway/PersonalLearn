@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<script>
+			window.onload = function()
+			{
+				var op = document.getElementById("content");
+				document.getElementById("txt1").value = op.innerHTML;
+				document.getElementById("txt2").value = op.innerText;
+				op.onclick = function()
+				{
+					alert("Wow !!!");
+				};
+			}
+		</script>
+	</head>
+	<body>
+		<p id="content"><strong style="color:hotpink">绿叶衬红花</strong></p>
+		innerHTML是：<input id="txt1" type="text" size = 50/> <br/>
+		innerTEXT是：<input id="txt2" type="text" />
+	</body>
+</html>
