@@ -313,7 +313,11 @@ void testContainer()
     //CONTAINER_TEST::testPriorityQueue();
     //CONTAINER_TEST::testQueue();
     //CONTAINER_TEST::testVectorInsert();
+<<<<<<< HEAD
 	CONTAINER_TEST::testVectorPointer();
+=======
+    CONTAINER_TEST::testVectorAddress();
+>>>>>>> 0726007fd796ab1223b3dfbca0b982e858a0e3eb
 }
 
 void testWired()
@@ -325,9 +329,9 @@ void testWired()
 }
 int main()
 {
-    //testContainer();
+    testContainer();
    // testWString();
-    testWired();
+    //testWired();
     system("pause");
     return 0;
 }

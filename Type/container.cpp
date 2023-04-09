@@ -288,12 +288,24 @@ void testVectorInsert()
     cout << endl;
 }
 
+<<<<<<< HEAD
 void testVectorPointer()
 {
 	std::vector<int> vi{ 1,2,3 };
 	int* p = &(vi.front());
 
 	cout << p << endl;
+=======
+void testVectorAddress()
+{
+    int i = 6 ,j=5;
+    std::vector<int> vec;
+    vec.push_back(i);
+    vec.push_back(j);
+
+    int* p = &(vec.front());
+    cout << p << endl;
+>>>>>>> 0726007fd796ab1223b3dfbca0b982e858a0e3eb
 }
 
 }
