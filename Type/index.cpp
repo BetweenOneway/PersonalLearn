@@ -327,11 +327,22 @@ void testWired()
     void* p1 = (void*)p;
     cout << p1 << endl;
 }
+
+void testScope()
+{
+    const int num = 10;
+    {
+        const int num = 100;
+        cout << num << endl;
+    }
+    cout << num << endl;
+}
 int main()
 {
-    testContainer();
+    //testContainer();
    // testWString();
     //testWired();
+    testScope();
     system("pause");
     return 0;
 }
