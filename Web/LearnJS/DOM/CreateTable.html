@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>动态创建表格</title>
+        <meta charset="utf-8">
+        <style>
+            table{
+                width:600px;
+                border-collapse: collapse;/*边框的合并*/
+                text-align: center;
+            }
+            td,th{
+                border: 1px solid #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="data">
+            <table>
+                <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>薪资</th>
+                        <th>年龄</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <script>
+            var json=[
+                {"ename":"Tom", "salary":11000, "age":25},
+                {"ename":"John", "salary":13000, "age":28},
+                {"ename":"Mary", "salary":12000, "age":25}
+            ];
+
+            var table = document.querySelector("#data>table");
+
+            var tbody = document.createElement("tbody");
+
+            for(var emp of json)
+            {
+                var tr = document.createElement("tr");
+                for(var key in emp)
+                {
+                    var td = document.createElement("td");
+                    td.innerHTML = emp[key];
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            }
+
+            table.appendChild(tbody);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>创建表格-带操作</title>
+        <style>
+            table{
+                width:600px;
+                border-collapse: collapse;
+                text-align:center;
+            }
+            td,th {
+                border:1px solid #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="data">
+            <table>
+              <thead>
+                <tr>
+                  <th>姓名</th>
+                  <th>薪资</th>
+                  <th>年龄</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <script>
+            var json=[
+                {"ename":"Tom", "salary":11000, "age":25},
+                {"ename":"John", "salary":13000, "age":28},
+                {"ename":"Mary", "salary":12000, "age":25}
+            ];
+
+            var table = document.querySelector("#data>table");
+            var tbody = document.createElement("tbody");
+            for(var emp of json)
+            {
+                var tr = tbody.insertRow();
+                for(var key in emp)
+                {
+                    var td = tr.insertCell();
+                    td.innerHTML=emp[key];
+                }
+                tbody.appendChild(tr);
+                //添加删除按钮
+                var td = tr.insertCell();
+                var btn = document.createElement("button");
+                btn.innerText="X";
+                td.appendChild(btn);
+                btn.onclick = function(){
+                  var btn = this;
+                  var tr = btn.parentNode.parentNode;
+                  var ename = tr.cells[0].innerHTML;
+                  if(confirm(`是否继续删除${ename}？`))
+                  {
+                    table.deleteRow(tr.rowIndex);
+                  }
+                }
+            }
+            table.appendChild(tbody);
+          </script>
+    </body>
+</html>
