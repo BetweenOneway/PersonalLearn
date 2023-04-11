@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>二级联动</title>
+        <meta charset="utf-8">
+        <style>
+            .hide {
+                display:none;
+            }
+        </style>
+    </head>
+    <body>
+        <select name="provs" id="">
+            <option value="">--请选择--</option>
+            <option value="">北京市</option>
+            <option value="">天津市</option>
+            <option value="">河北省</option>
+        </select>
+
+        <select name="cities" id="" class="hide"></select>
+
+        <script>
+            var cities=[
+                [{"name":'东城区',"value":101},
+                {"name":'西城区',"value":102},
+                {"name":'海淀区',"value":103},
+                {"name":'朝阳区',"value":104}],
+                [{"name":'河东区',"value":201},
+                {"name":'河西区',"value":202},
+                {"name":'南开区',"value":303}],
+                [{"name":'石家庄市',"value":301},
+                {"name":'廊坊市',"value":302},
+                {"name":'保定市',"value":303},
+                {"name":'唐山市',"value":304},
+                {"name":'秦皇岛市',"value":304}]
+            ];
+
+            var selectProvs = document.getElementsByName("provs")[0];
+            selectProvs.onchange = function(){
+                var selectProvs = this;
+                var selectCity = document.getElementsByName("cities")[0];
+                var selectedIndex = selectProvs.selectedIndex;
+                //选中--请选择--
+                if(selectedIndex == 0)
+                {
+                    selectCity.className = "hide";
+                    return;
+                }
+                //因为第0个是--请选择--
+                var cts = cities[selectedIndex-1];
+                var frag = document.createDocumentFragment();
+
+                var opt = document.createElement("option");
+                opt.textContent="--请选择--";
+                frag.appendChild(opt);
+                for(var city of cts)
+                {
+                    var opt = document.createElement("option");
+                    opt.textContent = city.name;
+                    opt.value = city.value;
+                    frag.appendChild(opt);
+                }
+
+                selectCity.innerHTML = "";
+                selectCity.appendChild(frag);
+                selectCity.className = "";
+            }   
+        </script>
+    </body>
+</html>

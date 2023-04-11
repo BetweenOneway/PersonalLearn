@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>二级联动菜单</title>
+        <meta charset="utf-8">
+        <style>
+            .hide{
+                display:none;
+            }
+        </style>
+    </head>
+    <body>
+        <select name="provs" id="">
+            <option>—请选择—</option>
+        </select>
+        <select name="cities" id="">
+            <option>—请选择—</option>
+        </select>
+        
+        <script>
+            var provs=[
+                {name:"北京市",value:1},
+                {name:"天津市",value:2},
+                {name:"河北省",value:3},
+            ];
+            var cities=[
+                [{"name":'东城区',"value":101},
+                {"name":'西城区',"value":102},
+                {"name":'海淀区',"value":103},
+                {"name":'朝阳区',"value":104}],
+                [{"name":'河东区',"value":201},
+                {"name":'河西区',"value":202},
+                {"name":'南开区',"value":303}],
+                [{"name":'石家庄市',"value":301},
+                {"name":'廊坊市',"value":302},
+                {"name":'保定市',"value":303},
+                {"name":'唐山市',"value":304},
+                {"name":'秦皇岛市',"value":304}]
+            ];
+            var provsCtl = document.getElementsByName("provs")[0];
+            var cits = document.getElementsByName("cities")[0];
+            
+            (function(){
+                var frag = document.createDocumentFragment();
+                for(var prov of provs)
+                {
+                    frag.appendChild(new Option(prov.name,prov.value));
+                }
+                provsCtl.appendChild(frag);
+                if(provsCtl.selectedIndex == 0)
+                {
+                    cits.className = "hide";
+                    return;
+                }
+            })()
+            
+            provsCtl.onchange = function(){
+                var selProvs = this;
+                var selectedI = selProvs.selectedIndex;
+
+                if(selectedI == 0)
+                {
+                    cits.className = "hide";
+                    return;
+                }
+                var cts = cities[selectedI-1];
+                
+                var frag = document.createDocumentFragment();
+                for(var district of cts)
+                {
+                    frag.appendChild(new Option(district.name,district.value));
+                }
+                cits.textContent = "";
+                cits.appendChild(frag);
+                cits.className ="";
+            }
+            
+        </script>
+    </body>
+</html>
