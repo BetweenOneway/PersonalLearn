@@ -25,6 +25,9 @@ int testStatic()
 	return 0;
 }
 
+/*
+* 两个函数中的同名static变量互不影响
+*/
 void func1()
 {
     static int num = 10;
