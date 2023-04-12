@@ -8,6 +8,7 @@ using namespace std;
 #include <Windows.h>
 
 #include "container.h"
+#include "static.h"
 
 enum class Color:int {
     Red,
@@ -135,13 +136,16 @@ void testDiv()
 */
 void testStatic()
 {
-    for (int i = 0; i < 10; i++)
     {
-        static int sum = 0;
-        sum = sum + i;
-        cout << sum << " ";
+        for (int i = 0; i < 10; i++)
+        {
+            static int sum = 0;
+            sum = sum + i;
+            cout << sum << " ";
+        }
+        cout << endl;
     }
-    cout << endl;
+    STATIC_TEST::testSameStaticInDifferentFunction();
 }
 
 /*
@@ -196,7 +200,7 @@ void tesstVector()
 
 void testRename()
 {
-    rename("D:\\repo\\smarteeproj//SmarteeErpPrototypeFile//697770_周思怡_2211251654_信息码_20", "D:\\repo\\smarteeproj//SmarteeErpPrototypeFile\\697770_周思怡_2211251654_信息码_20_CNC");
+    rename("D:\\test\\信息码_20", "D:\\test\\信息码_20_CNC");
 }
 
 void testUnorderedMap()
@@ -313,11 +317,10 @@ void testContainer()
     //CONTAINER_TEST::testPriorityQueue();
     //CONTAINER_TEST::testQueue();
     //CONTAINER_TEST::testVectorInsert();
-<<<<<<< HEAD
 	CONTAINER_TEST::testVectorPointer();
-=======
+
     CONTAINER_TEST::testVectorAddress();
->>>>>>> 0726007fd796ab1223b3dfbca0b982e858a0e3eb
+
 }
 
 void testWired()
@@ -342,7 +345,8 @@ int main()
     //testContainer();
    // testWString();
     //testWired();
-    testScope();
+    //testScope();
+    testStatic();
     system("pause");
     return 0;
 }
