@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>打开新链接方式总结</title>
+        <meta charset="utf-8">
+        <script>
+            function open1()
+            {
+                window.open("http://baidu.com","_self");
+            }
+            function open2()
+            {
+                location.replace("http://baidu.com");
+            }
+            function open3()
+            {
+                window.open("http://baidu.com","_blank");
+            }
+            function open4()
+            {
+                window.open("http://baidu.com","between");
+            }
+        </script>
+    </head>
+    <body>
+        <a href="http://baidu.com",target="_self">当前窗口打开链接，可后退</a>
+        <button onclick="open1()">在当前窗口打开新链接，可后退（JS）</button>
+        <br><hr>
+        
+        <button onclick="open2()">在当前窗口打开新链接，不可后退（JS）</button>
+        
+        <br><hr>
+
+        <a href="http://baidu.com" target="_blank">在新窗口打开新链接，可打开多个</a>
+        <button onclick="open3()">在新窗口打开新链接，可打开多个(JS)</button>
+
+        <br><hr>
+
+        <a href="http://baidu.com" target="between">在新窗口打开链接，只能打开一个</a>
+        <button onclick="open4()">在新窗口打开链接，只能打开一个(JS)</button>
+    </body>
+</html>
