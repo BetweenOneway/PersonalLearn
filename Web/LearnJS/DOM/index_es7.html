@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>累加</title>
+        <script src="./js/Ajax.js"></script>
+    </head>
+    <body>
+        <script>
+            var total = 0;
+            (async function(){
+                //写法1
+                /*
+                var ret = await ajax({url:"http://localhost:5050",data:"type=a"});
+                total += ret.count;
+                ret = await ajax({url:"http://localhost:5050",data:"type=b"});
+                total += ret.count;
+                ret = await ajax({url:"http://localhost:5050",data:"type=c"});
+                total += ret.count;
+                */
+               var arr = await Promise.all([
+                ajax({url:"http://localhost:5050",data:"type=a"}),
+                ajax({url:"http://localhost:5050",data:"type=b"}),
+                ajax({url:"http://localhost:5050",data:"type=c"})
+               ]);
+               for(var obj of arr)
+               {
+                    total += obj.count;
+               }
+               console.log(total);
+            })()
+        </script>
+    </body>
+</html>

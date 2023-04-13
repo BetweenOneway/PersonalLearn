@@ -1,0 +1,40 @@
+<!--
+    //假设有一个服务端接口，可根据条件分别查询三种商品的数量: 
+	http://localhost:5050/?type=a, 
+	http://localhost:5050/?type=b, 
+	http://localhost:5050/?type=c 
+	分别返回a类商品的总数，b类商品的总数，c类商品的总数
+	每个接口，因为数据量很大，所以，可能有3秒的返回延迟
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>三个URL累加</title>
+        <script src="./js/Ajax.js"></script>
+    </head>
+    <body>
+        <script>
+            var total=0;
+            ajax({url:"http://localhost:5050",data:"type=a"})
+            .then(
+                result=>{
+                    //累加前一步所获取的值
+                    total+=result.count;
+                    return ajax({url:"http://localhost:5050",data:"type=b"});
+                }
+            ).then(
+                result=>{
+                    total+=result.count;
+                    return ajax({url:"http://localhost:5050",data:"type=c"});
+                }
+            ).then(
+                result=>{
+                    total+=result.count;
+                    //输出最终结果
+                    console.log(total);
+                }
+            )
+        </script>
+    </body>
+</html>

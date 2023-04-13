@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>累加</title>
+        <script src="./js/Ajax.js"></script>
+    </head>
+    <body>
+        <script>
+            var total = 0;
+            Promise.all([
+                ajax({url:"http://localhost:5050",data:"type=a"}),
+                ajax({url:"http://localhost:5050",data:"type=b"}),
+                ajax({url:"http://localhost:5050",data:"type=c"})
+            ]).then(
+                arr=>{
+                    for(var mem of arr)
+                    {
+                        total += mem.count;
+                    }
+                    console.log(total);
+                }
+            );
+        </script>
+    </body>
+</html>
