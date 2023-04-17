@@ -1,5 +1,8 @@
-#include <iostream>
+﻿#include <iostream>
 using namespace std;
+#include "class.h"
+
+namespace CLASS_TEST {
 
 class Oper
 {
@@ -20,7 +23,7 @@ private:
 	int m;
 };
 
-int testClass()
+int testClass1()
 {
 	Oper op1(2);
 	Oper op2(3);
@@ -31,4 +34,34 @@ int testClass()
 
 	return 0;
 }
+void Call()
+{
+    cout << "global Call" << endl;
+}
+    void classBase::SayHello(){
+        cout << "base say Hello" << endl;
+    }
+    void classBase::SayHi()
+    {
+        cout << "base say Hi" << endl;
+    }
 
+    void child::SayHi(){
+        cout << "child say Hi" << endl;
+    }
+    void child::SayHello()const
+    {
+        cout << "child say Hello" << endl;
+    }
+    void child::Call()
+    {
+        cout << "child Call" << endl;
+    }
+
+    void testFinalOvertide()
+    {
+        child newChild;
+        newChild.SayHello();
+        newChild.test();
+    }
+}

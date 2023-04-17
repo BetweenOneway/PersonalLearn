@@ -151,6 +151,7 @@
     <ClCompile Include="index.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="class.h" />
     <ClInclude Include="container.h" />
     <ClInclude Include="static.h" />
     <ClInclude Include="struct.h" />

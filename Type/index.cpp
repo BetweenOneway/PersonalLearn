@@ -9,6 +9,7 @@ using namespace std;
 
 #include "container.h"
 #include "static.h"
+#include "class.h"
 
 enum class Color:int {
     Red,
@@ -340,13 +341,19 @@ void testScope()
     }
     cout << num << endl;
 }
+
+void testClass()
+{
+    CLASS_TEST::testFinalOvertide();
+}
 int main()
 {
     //testContainer();
    // testWString();
     //testWired();
     //testScope();
-    testStatic();
+    //testStatic();
+    testClass();
     system("pause");
     return 0;
 }
