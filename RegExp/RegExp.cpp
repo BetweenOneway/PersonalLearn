@@ -1,4 +1,4 @@
-#include <iostream>
+Ôªø#include <iostream>
 #include <regex>
 #include <string>
 using namespace std;
@@ -46,7 +46,7 @@ void modifyFileName(wstring fileName,wstring dir)
 {
 	string strFileName = Wstring2String(fileName);
 	string strDir = Wstring2String(dir);
-	//hiveµƒ’˝‘Ú±Ì¥Ô Ω‘⁄Ω¯––Õ®≈‰∑˚∆•≈‰µƒ ±∫Ú\d,\w,\s£¨’‚÷÷–Ë“™Ω¯––∂˛¥Œ◊™ªª£¨º¥œ»◊™“Â∫Û’˝‘Úµƒ–Œ Ω£∫(\S+)-->(\\S+)
+	//hiveÁöÑÊ≠£ÂàôË°®ËææÂºèÂú®ËøõË°åÈÄöÈÖçÁ¨¶ÂåπÈÖçÁöÑÊó∂ÂÄô\d,\w,\sÔºåËøôÁßçÈúÄË¶ÅËøõË°å‰∫åÊ¨°ËΩ¨Êç¢ÔºåÂç≥ÂÖàËΩ¨‰πâÂêéÊ≠£ÂàôÁöÑÂΩ¢ÂºèÔºö(\S+)-->(\\S+)
 	wstring result = regex_replace(fileName, wregex(L"\\[.+\\]"), L"");
 	string strResult = Wstring2String(result);
 
@@ -59,7 +59,7 @@ void modifyFileName(wstring fileName,wstring dir)
 
 void ListAllFiles()
 {
-	wstring dir(L"D:\\øÒÏ≠\\");
+	wstring dir(L"D:\\ÁãÇÈ£ô\\");
 	wstring searchDir = dir + L"*.*";
 	HANDLE hFind;
 	WIN32_FIND_DATA findData;
@@ -86,9 +86,20 @@ void ListAllFiles()
 	} while (FindNextFile(hFind, &findData));
 }
 
+void test()
+{
+    wstring text(L"‰∏ÅÊòïÂ•ï774652U");
+    wstring result = regex_replace(text, wregex(L"[\u4e00-\u9fa5]"), L"");
+    wstring dir = regex_replace(result, wregex(L"[0-9]"),L"");
+    if (1)
+    {
+
+    }
+}
+
 int main()
 {
-	ListAllFiles();
+	test();
 	system("pause");
 	return 0;
 }

@@ -27,8 +27,9 @@ void Vector()
 
 int main()
 {
-    Vector();
-    Quaternion();
+    //Vector();
+    //Quaternion();
+    Ray();
     system("pause");
     return 0;
 }

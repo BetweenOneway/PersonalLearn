@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <script>
+            var search = "uname=dingding&upwd=123456&favs=running&favs=swimming&favs=basketball";
+            var splits = search.split('&');
+            var obj = new Object();
+            for(var piece of splits)
+            {
+                var index = piece.indexOf('=');
+                var name = piece.slice(0,index-1);
+                var value = piece.slice(index+1);
+                if(obj[name] !== undefined)
+                {
+                    var arr = [value];
+                    obj[name] = arr.concat(obj[name]);
+                }
+                else
+                {
+                    obj[name] = value;
+                }
+            }
+            console.log(obj);
+        </script>
+    </body>
+</html>
