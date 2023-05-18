@@ -1,4 +1,4 @@
-#include <Windows.h>
+﻿#include <Windows.h>
 #include <stdio.h>
 #include "Point.h"
 #include "math.h"
@@ -31,15 +31,18 @@ void testSpline()
     //double x0[3] = { -12.3474464,0.0120483264,12.8443232};		//已知的数据点
     //double y0[3] = { -2.63052559,3.16588783,-2.34144878 };
 
-    constexpr int num = 6;
+    constexpr int num = 3;
 
     //double x0[num] = { -10.0f,-5.0f,-3.0f,-1.0f,3.0f,5.0f,10.0f};
     //double y0[num] = { -10.0f,0.0f,0.0f,0.0f,0.0f,0.0f,-10.0f };
 
-    double x0[num] = { -10.0f,-5.0f,-4.0f,-2.0f,0.0f,5.0f };
-    double y0[num] = { -10.0f,0.0f,0.0f,0.0f,0.0f,0.0f };
+    //double x0[num] = { -10.0f,-5.0f,-4.0f,-2.0f,0.0f,5.0f };
+    //double y0[num] = { -10.0f,0.0f,0.0f,0.0f,0.0f,0.0f };
     //double x0[num] = { -12.0f,-10.0f,0.0f,10.0f,12.0f };
     //double y0[num] = { -12.0f,-10.0f,0.0f,-10.0f,-12.0f };
+
+    double x0[3] = { 1.0f,10.0f,20.0f};		//已知的数据点
+    double y0[3] = { 10.0f,10.0f,1.0f };
 
     constexpr int insertNum = 119;
     double x[insertNum];	//插值点
@@ -55,7 +58,7 @@ void testSpline()
     }
     sp.MultiPointInterp(x, insertNum, y);			//求x的插值结果y
 
-    FILE* fp_m_x = fopen("./spline.obj", "wt");
+    FILE* fp_m_x = fopen("./test/spline.obj", "wt");
     for (int i = 0; i < insertNum; i++)
     {
         fprintf(fp_m_x, "v %lf %lf 0.0\n", x[i], y[i]);
@@ -66,10 +69,16 @@ void testSpline()
 
 void testBezier()
 {
-    Point3D p1(-10, -10, 10);
-    Point3D p2(-5,0, 3);
-    Point3D p3(0, 0, 0);
+    //Point3D p1(-10, -10, 10);
+    //Point3D p2(-5,0, 3);
+    //Point3D p3(0, 0, 0);
+
+    Point3D p1(1, 10, 0);
+    Point3D p2(10, 10, 0);
+    Point3D p3(10, 1, 0);
+    Point3D p4(20, 1, 0);
     vector<Point3D> result;
-    Bezier2(p1, p2, p3, 100, result);
+    //Bezier2(p1, p2, p3, 100, result);
+    Bezier3(p1, p2, p3, p4, 100, result);
     OBJWritePoints(result, "./test/Bezier.obj");
 }

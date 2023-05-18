@@ -10,6 +10,8 @@ using namespace std;
 #include "container.h"
 #include "static.h"
 #include "class.h"
+#include "struct.h"
+#include "stringOper.h"
 
 enum class Color:int {
     Red,
@@ -252,66 +254,6 @@ void testLoop()
 
 }
 
-
-void testVectorInsert()
-{
-    //插入10个5
-    //vector<int> vi(10,5);
-    vector<int> vi;
-    for (int i = 0; i < 10; i++)
-    {
-        vi.push_back(i);
-    }
-
-    for (auto val : vi)
-    {
-        cout << val << " ";
-    }
-    cout << endl;
-    auto it = vi.begin();
-    advance(it, 3);
-    //在给定的位置前插入
-    vi.insert(it, 6);
-    it = vi.begin();
-    advance(it, 3);
-    vi.insert(it, 5);
-    cout << vi.size() << ": ";
-    for (auto val : vi)
-    {
-        cout << val << " ";
-    }
-    cout << endl;
-
-    //
-    vector<int> vi1(10, 1);
-    vector<int> vi2{11,22,33,44,55,66};
-    it = vi1.begin();
-    advance(it, 3);
-    //[)
-    vi1.insert(it, vi2.begin() + 2, vi2.begin() + 4);
-    for (auto& val : vi1)
-    {
-        cout << val << " ";
-    }
-    cout << endl;
-    
-}
-
-/*
-* 测试vector访问越界
-* 测试结果都会报错，但根据cppreference []不会做下标检查 at会做
-*/
-void testVectorRange()
-{
-    vector<int> vi(10, 1);
-    for (int i = 0; i < 20; i++)
-    {
-        cout << vi[i] << endl;
-    }
-    //cout << vi[10] << endl;
-    //cout << vi.at(10) << endl;
-}
-
 void testContainer()
 {
     //CONTAINER_TEST::testStack();
@@ -319,7 +261,6 @@ void testContainer()
     //CONTAINER_TEST::testQueue();
     //CONTAINER_TEST::testVectorInsert();
 	CONTAINER_TEST::testVectorPointer();
-
     CONTAINER_TEST::testVectorAddress();
 
 }
@@ -346,6 +287,25 @@ void testClass()
 {
     CLASS_TEST::testFinalOvertide();
 }
+
+void testStruct()
+{
+    STRUCT_TEST::testStruct();
+}
+
+void testType()
+{
+    wchar_t t1 = L'0';
+    wchar_t t2 = L'6';
+    int num = t2 - t1;
+    cout<<num<< endl;
+}
+
+void testString()
+{
+    STRINGOPER::testStringOper();
+}
+
 int main()
 {
     //testContainer();
@@ -353,7 +313,10 @@ int main()
     //testWired();
     //testScope();
     //testStatic();
-    testClass();
+    //testClass();
+    //testStruct();
+    //testType();
+    testString();
     system("pause");
     return 0;
 }

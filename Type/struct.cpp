@@ -51,7 +51,7 @@ void test1()
 
 void test2()
 {
-    st_containClass st;
+    //st_containClass st;
     //st.p = new base();
 }
 

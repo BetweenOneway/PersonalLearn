@@ -89,7 +89,9 @@ void ListAllFiles()
 void test()
 {
     wstring text(L"丁昕奕774652U");
-    wstring result = regex_replace(text, wregex(L"[\u4e00-\u9fa5]"), L"");
+    //wstring result = regex_replace(text, wregex(L"[\u4e00-\u9fa5]"), L"");
+    std::wstring name(L"丁昕奕");
+    wstring result = regex_replace(text, wregex(name), L"");
     wstring dir = regex_replace(result, wregex(L"[0-9]"),L"");
     if (1)
     {

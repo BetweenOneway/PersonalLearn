@@ -58,6 +58,10 @@ void testGetUnitLengthAndDistance()
 
     cout << ray.GetDistance(point) << endl; //0
     cout << ray.GetUnitsLenth(point) << endl;//2
+
+    cout << ray.GetDistance(point1) << endl;//0
     cout << ray.GetUnitsLenth(point1) << endl;//-2
+
     cout << ray.GetUnitsLenth(point2) << endl;//-3
+    cout << ray.GetDistance(point2) << endl;//4
 }
