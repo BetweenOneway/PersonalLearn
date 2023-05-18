@@ -38,10 +38,12 @@ void Call()
 {
     cout << "global Call" << endl;
 }
-    void classBase::SayHello(){
+
+void classBase::SayHello(){
         cout << "base say Hello" << endl;
     }
-    void classBase::SayHi()
+
+void classBase::SayHi()
     {
         cout << "base say Hi" << endl;
     }
@@ -63,5 +65,32 @@ void Call()
         child newChild;
         newChild.SayHello();
         newChild.test();
+    }
+
+    void testNew()
+    {
+        int* ip1 = new int(1);
+        int* ip2 = new int(2);
+
+        int*(*add)[2];
+        {
+            int* arr[2] = { ip1,ip2 };
+            add = &arr;
+        }
+        //delete ip1;
+        try
+        {
+            //占用局部变量arr数组的地址重新写数据
+            //因为此时该地址已经被释放
+            int* p = new(add) int[4]{6,7,8,9};
+        }
+        catch (exception& ex)
+        {
+            cout << ex.what() << endl;
+        }
+
+        cout << *add[0] << endl;
+        cout << *add[1] << endl;
+
     }
 }

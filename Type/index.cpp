@@ -285,7 +285,8 @@ void testScope()
 
 void testClass()
 {
-    CLASS_TEST::testFinalOvertide();
+    //CLASS_TEST::testFinalOvertide();
+    CLASS_TEST::testNew();
 }
 
 void testStruct()
@@ -313,10 +314,10 @@ int main()
     //testWired();
     //testScope();
     //testStatic();
-    //testClass();
+    testClass();
     //testStruct();
     //testType();
-    testString();
+    //testString();
     system("pause");
     return 0;
 }
