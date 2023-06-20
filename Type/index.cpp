@@ -4,6 +4,7 @@
 #include <vector>
 #include <filesystem>
 #include <unordered_map>
+#include <iomanip>
 using namespace std;
 #include <Windows.h>
 
@@ -259,9 +260,10 @@ void testContainer()
     //CONTAINER_TEST::testStack();
     //CONTAINER_TEST::testPriorityQueue();
     //CONTAINER_TEST::testQueue();
-    //CONTAINER_TEST::testVectorInsert();
-	CONTAINER_TEST::testVectorPointer();
-    CONTAINER_TEST::testVectorAddress();
+    CONTAINER_TEST::testVectorInsert();
+	//CONTAINER_TEST::testVectorPointer();
+    //CONTAINER_TEST::testVectorAddress();
+    //CONTAINER_TEST::testPair();
 
 }
 
@@ -307,17 +309,41 @@ void testString()
     STRINGOPER::testStringOper();
 }
 
+void testMacro()
+{
+#define M1
+#ifdef M1
+    cout << "M1 defined" << endl;
+#else
+#ifdef M2
+    cout << "M2 defined" << endl;
+#else
+    cout << "M2 not defined" << endl;
+#endif
+#endif
+
+}
+void testBitOper()
+{
+    int var1 = 0x00F0FF;
+    int var2 = var1 & 0xFF;
+    cout <<hex<< var2 << endl;
+}
+
 int main()
 {
+    testBitOper();
     //testContainer();
    // testWString();
     //testWired();
     //testScope();
     //testStatic();
-    testClass();
+    //testClass();
     //testStruct();
     //testType();
     //testString();
+    //testMacro();
+
     system("pause");
     return 0;
 }

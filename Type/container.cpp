@@ -295,9 +295,9 @@ void testVectorAddress()
 
 void testVectorInsert()
 {
+    //insert表示的意思是在指定位置之前插入 insertBefore
     vector<int> v(5, 5);
     vector<int> v1{ 1,2,3,4 };
-    //[)
     v.insert(v.begin(), v1.begin(), v1.begin() + 3);
 
     for (auto val : v)
@@ -348,6 +348,20 @@ void testVectorInsert()
 
 }
 
+void testVectorErase()
+{
+    //erase 包前不包后
+    std::vector<int> vec{ 0,1,2,3,4,5,6,7,8,9 };
+    vec.erase(vec.begin() + 2, vec.begin() + 5);
+    for (auto& val : vec)
+    {
+        cout << val << " ";
+    }
+    cout << endl;
+
+    int cnt = 5 - (5 - 2);
+
+}
 /*
 * 测试vector访问越界
 * 测试结果都会报错，但根据cppreference []不会做下标检查 at会做
@@ -362,4 +376,30 @@ void testVectorRange()
     //cout << vi[10] << endl;
     //cout << vi.at(10) << endl;
 }
+
+void CallFunc(std::pair<std::vector<int>, std::vector<int>>&& p)
+{
+    std::pair<std::vector<int>, std::vector<int>> p1;
+    p1.first = std::move(p.first);
+    p1.second = std::move(p.second);
+    for (auto& val : p1.first)
+    {
+        cout << val << endl;
+    }
+
+    for (auto& val : p1.second)
+    {
+        cout << val << endl;
+    }
+}
+
+void testPair()
+{
+    std::pair<std::vector<int>, std::vector<int>> p{ {1,2,3,4},{5,6,7,8} };
+    CallFunc(std::move(p));
+
+    std::pair<std::vector<int>, std::vector<int>> p1{};
+    cout << p1.first.size() << " " << p1.second.size() << endl;
+}
+
 }

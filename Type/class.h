@@ -23,4 +23,6 @@ namespace CLASS_TEST {
     void testFinalOvertide();
 
     void testNew();
+
+    void testInherit();
 }

@@ -55,6 +55,8 @@ void testGetUnitLengthAndDistance()
     Vector3 point(2.0f, 0.0f, 0.0f);
     Vector3 point1(-2.0f, 0.0f, 0.0f);
     Vector3 point2(-3.0f, 4.0f, 0.0f);
+    Vector3 point3(0.0f, 3.0f, 0.0f);
+    Vector3 point4(3.0f, 4.0f, 0.0f);
 
     cout << ray.GetDistance(point) << endl; //0
     cout << ray.GetUnitsLenth(point) << endl;//2
@@ -62,6 +64,12 @@ void testGetUnitLengthAndDistance()
     cout << ray.GetDistance(point1) << endl;//0
     cout << ray.GetUnitsLenth(point1) << endl;//-2
 
-    cout << ray.GetUnitsLenth(point2) << endl;//-3
     cout << ray.GetDistance(point2) << endl;//4
+    cout << ray.GetUnitsLenth(point2) << endl;//-3
+
+    cout << ray.GetDistance(point3) << endl;//3
+    cout << ray.GetUnitsLenth(point3) << endl;//0
+
+    cout << ray.GetDistance(point4) << endl;//4
+    cout << ray.GetUnitsLenth(point4) << endl;//3
 }

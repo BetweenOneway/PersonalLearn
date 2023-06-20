@@ -4,46 +4,46 @@ using namespace std;
 
 namespace CLASS_TEST {
 
-class Oper
-{
-public:
-	Oper() :Oper(0) {}
-	Oper(int v) {
-		m = v;
-	}
-	const Oper operator*(const Oper& roper) const
-	{
-		return Oper(m*roper.m);
-	}
-	int get_m() const
-	{
-		return m;
-	}
-private:
-	int m;
-};
+    class Oper
+    {
+    public:
+	    Oper() :Oper(0) {}
+	    Oper(int v) {
+		    m = v;
+	    }
+	    const Oper operator*(const Oper& roper) const
+	    {
+		    return Oper(m*roper.m);
+	    }
+	    int get_m() const
+	    {
+		    return m;
+	    }
+    private:
+	    int m;
+    };
 
-int testClass1()
-{
-	Oper op1(2);
-	Oper op2(3);
-	cout << (op1*op2).get_m() << endl;
-	op1 = op1*op2;
-	cout << op1.get_m() << endl;
-	system("pause");
+    int testClass1()
+    {
+	    Oper op1(2);
+	    Oper op2(3);
+	    cout << (op1*op2).get_m() << endl;
+	    op1 = op1*op2;
+	    cout << op1.get_m() << endl;
+	    system("pause");
 
-	return 0;
-}
-void Call()
-{
-    cout << "global Call" << endl;
-}
-
-void classBase::SayHello(){
-        cout << "base say Hello" << endl;
+	    return 0;
+    }
+    void Call()
+    {
+        cout << "global Call" << endl;
     }
 
-void classBase::SayHi()
+    void classBase::SayHello(){
+            cout << "base say Hello" << endl;
+        }
+
+    void classBase::SayHi()
     {
         cout << "base say Hi" << endl;
     }
@@ -92,5 +92,31 @@ void classBase::SayHi()
         cout << *add[0] << endl;
         cout << *add[1] << endl;
 
+    }
+
+    void testInherit()
+    {
+        class Base
+        {
+        public:
+            Base() {
+                num = 10;
+            }
+        private:
+            int getNum() {
+                return num;
+            }
+        private:
+            int num;
+        };
+
+        //class Child : public Base
+        //{
+        //public:
+        //    int get()
+        //    {
+        //        return Base::getNum();
+        //    }
+        //};
     }
 }
