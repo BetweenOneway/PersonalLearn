@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <ul id="nav">
+            <li>
+                <ul>
+                    <li>用户名：</li>
+                    <li>{{uname}}</li>
+                    <li>积分：</li>
+                    <li>{{score}}</li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li>积分：</li>
+                    <li>{{score}}</li>
+                    <li>*</li>
+                </ul>
+            </li>
+        </ul>
+
+        <script>
+            var data={
+                uname:"dingding",
+                score:3000
+            }
+
+            var arr=[];
+
+            function getChildren(parent)
+            {
+                var children = parent.children;
+                for(var c of children)
+                {
+                    if(c.children.length > 0)
+                    {
+                        getChildren(c);
+                    }
+                    else
+                    {
+                        if(c.innerHTML == "{{uname}}")
+                        {
+                            c.innerHTML = data.uname;
+                            arr.push({elem:c,innerHTML:"{{score}}"});
+                        }
+                        else if(c.innerHTML=="{{score}}")
+                        {
+                            c.innerHTML = data.score;
+                            arr.push({elem:c,innerHTML:"{{score}}"});
+                        }
+                    }
+                }
+            }
+            getChildren(nav);
+            console.log(arr);
+
+            //响应系统  
+            Object.defineProperties(data,{
+                _uname:{
+                    value:data.uname,
+                    writable:true,
+                    enumerable:false
+                },
+                uname:{
+                    get(){
+                        return this._uname;
+                    },
+                    set(value){
+                        this._uname=value;
+                        for(var obj of arr)
+                        {
+                            if(obj.innerHTML == "{{uname}}")
+                            {
+                                obj.elem.innerHTML=value;
+                            }
+                        }
+                    },
+                    enumerable:true
+                },
+                _score:{
+                    value:data.score,
+                    writable:true,
+                    enumerable:false
+                },
+                score:{
+                    get(){
+                        return this._score;
+                    },
+                    set(value){
+                        this._score=value;
+                        for(var obj of arr)
+                        {
+                            if(obj.innerHTML=="{{score}}")
+                            {
+                                obj.elem.innerHTML = value;
+                            }
+                        }
+                    },
+                    enumerable:true
+                }
+            });
+
+            Object.seal(data);
+        </script>
+    </body>
+</html>
