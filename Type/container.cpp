@@ -296,6 +296,18 @@ void testVectorAddress()
 void testVectorInsert()
 {
     //insert表示的意思是在指定位置之前插入 insertBefore
+    //是否可以在空的vector前插入 可以
+    vector<int> ve;
+    for (int i = 0; i < 10; i++)
+    {
+        ve.insert(ve.begin(), i);
+    }
+    for (auto val : ve)
+    {
+        cout << val << " ";
+    }
+    cout << endl;
+
     vector<int> v(5, 5);
     vector<int> v1{ 1,2,3,4 };
     v.insert(v.begin(), v1.begin(), v1.begin() + 3);

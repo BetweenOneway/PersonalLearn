@@ -332,8 +332,8 @@ void testBitOper()
 
 int main()
 {
-    testBitOper();
-    //testContainer();
+    //testBitOper();
+    testContainer();
    // testWString();
     //testWired();
     //testScope();
