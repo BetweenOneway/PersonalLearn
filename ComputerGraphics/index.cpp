@@ -4,6 +4,7 @@ using namespace std;
 #include "testRay.h"
 #include "testQuaternion.h"
 #include "testVectorMatrix.h"
+#include "testPlane.h"
 
 void Bezier()
 {
@@ -26,12 +27,17 @@ void Vector()
     testDotCross();
 }
 
+void Plane()
+{
+    TEST_PLANE::testGetDistance();
+}
 int main()
 {
     //Vector();
     //Quaternion();
-    Ray();
+    //Ray();
     //Bezier();
+    Plane();
     system("pause");
     return 0;
 }

@@ -7,7 +7,7 @@
 //-----------------------------------------------------------------------
 Plane::Plane()
 {
-    normal = Vector3::ZERO;
+    normal = Vector3(0.0f, 0.0f, 0.0f);
     d = 0.0;
 }
 //-----------------------------------------------------------------------
@@ -23,14 +23,14 @@ Plane::Plane(const Vector3 & rkNormal, float fConstant)
     normal = rkNormal;
     normal.normalize();
     d = -fConstant;
-    pos = this->projectPoint(Vector3::ZERO);
+    pos = this->projectPoint(Vector3(0.0f,0.0f,0.0f));
 }
 //---------------------------------------------------------------------
 Plane::Plane(float a, float b, float c, float _d)
     : normal(a, b, c), d(_d)
 {
     normal.normalize();
-    pos = this->projectPoint(Vector3::ZERO);
+    pos = this->projectPoint(Vector3(0.0f, 0.0f, 0.0f));
 }
 //-----------------------------------------------------------------------
 Plane::Plane(const Vector3& rkNormal, const Vector3& rkPoint)

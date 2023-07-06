@@ -153,6 +153,7 @@
     <ClCompile Include="RotationMatrix.cpp" />
     <ClCompile Include="Spline.cpp" />
     <ClCompile Include="testLine.cpp" />
+    <ClCompile Include="testPlane.cpp" />
     <ClCompile Include="testQuaternion.cpp" />
     <ClCompile Include="testRay.cpp" />
     <ClCompile Include="testVectorMatrix.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="RotationMatrix.h" />
     <ClInclude Include="Spline.h" />
     <ClInclude Include="testLine.h" />
+    <ClInclude Include="testPlane.h" />
     <ClInclude Include="testQuaternion.h" />
     <ClInclude Include="testRay.h" />
     <ClInclude Include="testVectorMatrix.h" />

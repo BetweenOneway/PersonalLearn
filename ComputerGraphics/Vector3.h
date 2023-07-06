@@ -35,7 +35,9 @@ public:
 	float getY() const { return y; }
 	float getZ() const { return z; }
 public:
-    static const Vector3 ZERO;
+    //static const Vector3 ZERO;
 private:
     float x, y, z;
 };
+
+//const Vector3 Vector3::ZERO = Vector3(0.0f, 0.0f, 0.0f);
