@@ -45,6 +45,9 @@
     <ClCompile Include="struct.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="template.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="container.h">
@@ -60,6 +63,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="stringOper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="template.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

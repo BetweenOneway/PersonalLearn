@@ -149,6 +149,7 @@
     <ClCompile Include="stringOper.cpp" />
     <ClCompile Include="struct.cpp" />
     <ClCompile Include="index.cpp" />
+    <ClCompile Include="template.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="static.h" />
     <ClInclude Include="stringOper.h" />
     <ClInclude Include="struct.h" />
+    <ClInclude Include="template.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
