@@ -4,20 +4,19 @@
 #include "common.h"
 
 
-//-----------------------------------------------------------------------
 Plane::Plane()
 {
     normal = Vector3(0.0f, 0.0f, 0.0f);
     d = 0.0;
 }
-//-----------------------------------------------------------------------
+
 Plane::Plane(const Plane& rhs)
 {
     normal = rhs.normal;
     d = rhs.d;
     pos = rhs.pos;
 }
-//-----------------------------------------------------------------------
+
 Plane::Plane(const Vector3 & rkNormal, float fConstant)
 {
     normal = rkNormal;
@@ -25,24 +24,25 @@ Plane::Plane(const Vector3 & rkNormal, float fConstant)
     d = -fConstant;
     pos = this->projectPoint(Vector3(0.0f,0.0f,0.0f));
 }
-//---------------------------------------------------------------------
+
 Plane::Plane(float a, float b, float c, float _d)
     : normal(a, b, c), d(_d)
 {
     normal.normalize();
     pos = this->projectPoint(Vector3(0.0f, 0.0f, 0.0f));
 }
-//-----------------------------------------------------------------------
+
 Plane::Plane(const Vector3& rkNormal, const Vector3& rkPoint)
 {
     redefine(rkNormal, rkPoint);
 }
-//-----------------------------------------------------------------------
+
 Plane::Plane(const Vector3& rkPoint0, const Vector3& rkPoint1, const Vector3& rkPoint2)
 {
     redefine(rkPoint0, rkPoint1, rkPoint2);
 }
-//-----------------------------------------------------------------------
+
+//计算点到平面的距离
 inline float Plane::getDistance(const Vector3& rkPoint) const
 {
     return normal*rkPoint + d;
@@ -66,7 +66,7 @@ Plane::Side Plane::getSide(const Vector3& rkPoint) const
     return Plane::NO_SIDE;
 }
 
-//-----------------------------------------------------------------------
+
 Plane::Side Plane::getSide(const Vector3& centre, const Vector3& halfSize) const
 {
     // Calculate the distance between box centre and the plane
@@ -85,7 +85,7 @@ Plane::Side Plane::getSide(const Vector3& centre, const Vector3& halfSize) const
     return Plane::BOTH_SIDE;
 }
 
-//-----------------------------------------------------------------------
+
 float Plane::normalise(void)
 {
     float fLength = normal.Magnitude();
@@ -179,7 +179,7 @@ bool Plane::isVertical(const Plane& plane) const
     return this->isParallel(plane.normal);
 }
 
-//-----------------------------------------------------------------------
+
 void Plane::redefine(const Vector3& rkNormal, const Vector3& rkPoint)
 {
     normal = rkNormal;
@@ -188,7 +188,7 @@ void Plane::redefine(const Vector3& rkNormal, const Vector3& rkPoint)
     pos = rkPoint;
 }
 
-//-----------------------------------------------------------------------
+
 void Plane::redefine(const Vector3& rkPoint0, const Vector3& rkPoint1,
     const Vector3& rkPoint2)
 {
