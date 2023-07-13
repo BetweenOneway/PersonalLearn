@@ -8,7 +8,7 @@ using namespace std;
 
 void Bezier()
 {
-    testBezier();
+    //testBezier();
     testSpline();
 }
 
@@ -36,8 +36,8 @@ int main()
     //Vector();
     //Quaternion();
     //Ray();
-    //Bezier();
-    Plane();
+    Bezier();
+    //Plane();
     system("pause");
     return 0;
 }
