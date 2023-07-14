@@ -143,6 +143,8 @@
     <ClCompile Include="BSpine.cpp" />
     <ClCompile Include="index.cpp" />
     <ClCompile Include="Lagrange.cpp" />
+    <ClCompile Include="LeastSquareMethod.cpp" />
+    <ClCompile Include="LSM.cpp" />
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="Matrix3x3.cpp" />
     <ClCompile Include="Matrix4x3.cpp" />
@@ -164,6 +166,8 @@
     <ClInclude Include="Bezier.h" />
     <ClInclude Include="BSpline.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="LeastSquareMethod.h" />
+    <ClInclude Include="LSM.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Matrix3x3.h" />
     <ClInclude Include="Matrix4x3.h" />

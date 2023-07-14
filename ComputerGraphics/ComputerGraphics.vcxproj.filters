@@ -75,6 +75,12 @@
     <ClCompile Include="testPlane.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="LSM.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LeastSquareMethod.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MathUtil.h">
@@ -135,6 +141,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="testPlane.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LeastSquareMethod.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LSM.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

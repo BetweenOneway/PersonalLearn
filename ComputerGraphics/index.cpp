@@ -5,6 +5,7 @@ using namespace std;
 #include "testQuaternion.h"
 #include "testVectorMatrix.h"
 #include "testPlane.h"
+#include "LSM.h"
 
 void Bezier()
 {
@@ -31,13 +32,19 @@ void Plane()
 {
     TEST_PLANE::testGetDistance();
 }
+
+void Learn()
+{
+    LSM();
+}
 int main()
 {
     //Vector();
     //Quaternion();
     //Ray();
-    Bezier();
+    //Bezier();
     //Plane();
+    Learn();
     system("pause");
     return 0;
 }
