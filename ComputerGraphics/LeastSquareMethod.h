@@ -1,7 +1,7 @@
 ﻿#ifndef LEAST_SQUARE_METHOD_H
 #define LEAST_SQUARE_METHOD_H
 
-#include <D:\wangwei\eigen\Eigen\Dense>
+#include "../ThirdParty/eigen/Eigen/Dense"
 #include <vector>
 
 using namespace std;

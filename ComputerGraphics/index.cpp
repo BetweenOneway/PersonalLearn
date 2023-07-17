@@ -35,7 +35,8 @@ void Plane()
 
 void Learn()
 {
-    LSM();
+    //CURVE_FITTING::LSM();
+    CURVE_FITTING::MyTest();
 }
 int main()
 {

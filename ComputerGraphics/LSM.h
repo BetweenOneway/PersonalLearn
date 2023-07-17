@@ -1,2 +1,7 @@
 ﻿#pragma once
-int LSM();
+namespace CURVE_FITTING
+{
+    int LSM();
+    bool MyTest();
+}
+
