@@ -42,6 +42,7 @@ std::wstring String2Wstring(std::string wstr)
 	return res;
 }
 
+//将名称中含有中括号，如"[电影天堂]狂飙-01.mp4"之类的名字转换成"狂飙-01.mp4"
 void modifyFileName(wstring fileName,wstring dir)
 {
 	string strFileName = Wstring2String(fileName);
@@ -59,7 +60,7 @@ void modifyFileName(wstring fileName,wstring dir)
 
 void ListAllFiles()
 {
-	wstring dir(L"D:\\狂飙\\");
+	wstring dir(L"H:\\电视剧\\浪漫医生金师傅\\3\\");
 	wstring searchDir = dir + L"*.*";
 	HANDLE hFind;
 	WIN32_FIND_DATA findData;
@@ -101,7 +102,7 @@ void test()
 
 int main()
 {
-	test();
+    ListAllFiles();
 	system("pause");
 	return 0;
 }
