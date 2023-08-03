@@ -306,7 +306,8 @@ void testType()
 
 void testString()
 {
-    STRINGOPER::testStringOper();
+    //STRINGOPER::testStringOper();
+    STRINGOPER::testFind();
 }
 
 void testMacro()
@@ -333,7 +334,7 @@ void testBitOper()
 int main()
 {
     //testBitOper();
-    testContainer();
+    //testContainer();
    // testWString();
     //testWired();
     //testScope();
@@ -341,7 +342,7 @@ int main()
     //testClass();
     //testStruct();
     //testType();
-    //testString();
+    testString();
     //testMacro();
 
     system("pause");

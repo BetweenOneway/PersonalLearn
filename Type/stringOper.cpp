@@ -82,4 +82,11 @@ namespace STRINGOPER{
 	    cin.get();
         return 0;
     }
+
+    void testFind()
+    {
+        std::wstring str(L"LinguleBuckle3.5.obj");
+        unsigned int pos = str.find(L"LinguleBuckle");
+        cout << pos << endl;
+    }
 }
