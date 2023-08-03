@@ -87,7 +87,7 @@ void ListAllFiles()
 	} while (FindNextFile(hFind, &findData));
 }
 
-void test()
+void testReplace()
 {
     wstring text(L"丁昕奕774652U");
     //wstring result = regex_replace(text, wregex(L"[\u4e00-\u9fa5]"), L"");
@@ -100,9 +100,30 @@ void test()
     }
 }
 
+void MathOrSearch()
+{
+    std::wstring str(L"ABC123LinguleBuckle3.5.obj");
+    std::wstring str1(L"123舌侧扣3.5.obj");
+    //L表示宽字符 R表示原始字符串 icase表示忽略大小写
+    //https://en.cppreference.com/w/cpp/regex/basic_regex
+    std::wregex wreg(LR"(lingule|舌侧扣|舌侧口)", std::regex::icase);
+
+    std::wsmatch result;
+    if (std::regex_search(str1, result, wreg))
+    {
+        for (int i = 0; i < result.size(); i++)
+        {
+            cout << Wstring2String(result[i].str()) << endl;
+        }
+    }
+}
+
 int main()
 {
     ListAllFiles();
+
+    MathOrSearch();
+
 	system("pause");
 	return 0;
 }
