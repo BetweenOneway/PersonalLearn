@@ -64,7 +64,7 @@ bool MyTest()
     //std::vector<Point3D> verts{ {-5.0f,-10.0f,0.0f},{-3.0f,0.0f,0.0f},{0.0f,10.0f,0.0f},{3.0f,0.0f,0.0f},{5.0f,-10.0f,0.0f} };
     //样本数据
     std::vector<Point3D> verts;
-    ReadOBJFile(verts, "D:/test/C11253/gumLineCenterOnPlane.obj");
+    ReadOBJFile(verts, "D:/test/C11253/mRegainPoint.obj");
 
 
     for (int j = 0; j <= order; j++)
@@ -88,9 +88,12 @@ bool MyTest()
     }
     cout << "Matrix 3*3:\n" << matrix33 << endl;
     cout << "Y :\n" << vectorY << endl;
-   
+
+    //结果近似
     Eigen::Vector3f params = matrix33.colPivHouseholderQr().solve(vectorY);
     //Eigen::Vector3f params = matrix33.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(vectorY);
+    // 差距有点大
+    //Eigen::Vector3f params = (matrix33.transpose() * matrix33).ldlt().solve(matrix33.transpose() * vectorY);
     cout << "params:\n" << params << endl;
 
     auto GetY = [&order,&params](float x)->float {
