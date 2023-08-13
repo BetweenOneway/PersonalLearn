@@ -81,6 +81,9 @@
     <ClCompile Include="LeastSquareMethod.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CalcBoundary.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MathUtil.h">
@@ -150,6 +153,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ComputerGraphics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CalcBoundary.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
