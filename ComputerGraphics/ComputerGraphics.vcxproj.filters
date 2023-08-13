@@ -149,5 +149,8 @@
     <ClInclude Include="LSM.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ComputerGraphics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
