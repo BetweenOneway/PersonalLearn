@@ -46,15 +46,20 @@ void CalcBoundary()
 {
     std::vector<Point3D> verts;
     std::vector<Point3D> resultVerts;
-    ReadOBJFile(verts, "../testData/local_attMesh.obj");
+    ReadOBJFile(verts, "../ComputerGraphics/input/local_attMesh.obj");
     //Plane zPlane;
     Plane zPlane(Vector3(0.0f, 0.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f));
     zPlane.projectPoints(verts);
-    WriteOBJFile(verts, "./input.obj");
+    WriteOBJFile(verts, "../ComputerGraphics/output/input.obj");
     CALC_BOUNDARY::CalcBoundaryMethod1(resultVerts,verts,30);
 
     resultVerts.clear();
     CALC_BOUNDARY::CalcBoundaryMethod2(resultVerts, verts, 10*10);
+
+    resultVerts.clear();
+    CALC_BOUNDARY::ConvexHullMethod1(resultVerts, verts);
+
+    CALC_BOUNDARY::ConvexHullMethod1();
 }
 
 int main()
