@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <script src="./js/vue.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <button :disabled="time != 10" @click="start">{{time==10?"获取验证码":`${time}秒后可重新获取`}}</button>
+        </div>
+        <script>
+            var vm = new Vue({
+                el:"#app",
+                data:{
+                    time:10
+                },
+                methods:{
+                    start()
+                    {
+                        if(this.time !=10)
+                        {
+                            return;
+                        }
+                        this.time--;
+                        var timer = setInterval(()=>{
+                            if(this.time>0)
+                            {
+                                this.time--;
+                            }
+                            else
+                            {
+                                this.time = 10;
+                                clearInterval(timer);
+                            }
+                        },1000);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
