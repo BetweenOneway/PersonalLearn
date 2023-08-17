@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bitOper.cpp" />
     <ClCompile Include="class.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="hash.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="template.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bitOper.h" />
     <ClInclude Include="class.h" />
     <ClInclude Include="container.h" />
     <ClInclude Include="static.h" />

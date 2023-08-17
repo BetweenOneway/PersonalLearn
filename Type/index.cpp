@@ -14,6 +14,8 @@ using namespace std;
 #include "struct.h"
 #include "stringOper.h"
 
+#include "bitOper.h"
+
 enum class Color:int {
     Red,
     Yellow
@@ -324,16 +326,17 @@ void testMacro()
 #endif
 
 }
-void testBitOper()
+void testBit()
 {
-    int var1 = 0x00F0FF;
-    int var2 = var1 & 0xFF;
-    cout <<hex<< var2 << endl;
+    //int var1 = 0x00F0FF;
+    //int var2 = var1 & 0xFF;
+    //cout <<hex<< var2 << endl;
+    BIT_OPER::testBitOper();
 }
 
 int main()
 {
-    //testBitOper();
+    testBit();
     //testContainer();
    // testWString();
     //testWired();
@@ -342,7 +345,7 @@ int main()
     //testClass();
     //testStruct();
     //testType();
-    testString();
+    //testString();
     //testMacro();
 
     system("pause");
