@@ -2,6 +2,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "BallConcave.h"
+
 namespace CALC_BOUNDARY {
 
     void CalcBoundaryMethod1(std::vector<Point3D>& cloud_boundary, const std::vector<Point3D>& cloud, int resolution)
@@ -344,5 +346,23 @@ namespace CALC_BOUNDARY {
             resultVerts.push_back({ g_result[i][0], g_result[i][1],0.0f });
         }
         WriteOBJFile(resultVerts, "../ComputerGraphics/output/test1.obj");
+    }
+
+    void BallConcaveMethod()
+    {
+        std::vector<Point3D> verts;
+        std::vector<Point3D> resultVerts;
+        ReadOBJFile(verts, "../ComputerGraphics/input/local_attMesh.obj");
+        //Plane zPlane;
+        Plane zPlane(Vector3(0.0f, 0.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f));
+        zPlane.projectPoints(verts);
+
+        WriteOBJFile(verts, "../ComputerGraphics/output/BallConcaveMethod_input.obj");
+
+        BallConcave ballConcave(verts);
+
+        double R = ballConcave.GetRecomandedR();
+        resultVerts = ballConcave.GetConcave_Ball(R);
+        WriteOBJFile(resultVerts, "../ComputerGraphics/output/BallConcaveMethod_output.obj");
     }
 }

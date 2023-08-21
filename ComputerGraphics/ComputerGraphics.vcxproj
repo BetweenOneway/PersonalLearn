@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BallConcave.cpp" />
     <ClCompile Include="Bezier.cpp" />
     <ClCompile Include="BSpine.cpp" />
     <ClCompile Include="CalcBoundary.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BallConcave.h" />
     <ClInclude Include="Bezier.h" />
     <ClInclude Include="BSpline.h" />
     <ClInclude Include="CalcBoundary.h" />
