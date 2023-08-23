@@ -27,7 +27,7 @@ BallConcave::BallConcave(std::vector<Point3D> list)
 {
     points = list;
     std::sort(points.begin(), points.end(), [](Point3D& point1, Point3D& point2)->bool {
-        return (point1.getY() < point2.getY() ? true : point1.getY() < point2.getY()&& point1.getX() < point2.getX() ? true : false);
+        return (point1.getY() < point2.getY() ? true : point1.getY() == point2.getY()&& point1.getX() < point2.getX() ? true : false);
         });
     flags.resize(points.size());
     for (int i = 0; i < flags.size(); i++)
