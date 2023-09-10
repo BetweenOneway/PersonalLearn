@@ -4,10 +4,13 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import MyHeader from './components/MyHeader'
+import MyFooter from './components/MyFooter'
 
 Vue.config.productionTip = false
-Vue.prototype.axios = axios;
+axios.defaults.baseURL="http://localhost:5050";
+Vue.prototype.axios=axios;
 Vue.component("my-header",MyHeader);
+Vue.component("my-footer",MyFooter);
 
 new Vue({
   router,
