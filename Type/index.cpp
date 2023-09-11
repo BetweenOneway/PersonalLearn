@@ -334,9 +334,20 @@ void testBit()
     BIT_OPER::testBitOper();
 }
 
+void testDist()
+{
+    std::vector<int> vec{1,2,3,4,5,6,7,8};
+    auto it = vec.begin();
+    auto it1 = vec.begin() + 2;
+    cout << *it << " " << *it1 << endl;
+    cout << "dist;" << std::distance(vec.begin(), vec.begin()) << endl;
+
+}
+
 int main()
 {
-    testBit();
+    testDist();
+    //testBit();
     //testContainer();
    // testWString();
     //testWired();
