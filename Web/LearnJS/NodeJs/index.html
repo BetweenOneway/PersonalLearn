@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<button onclick="show()">ajax</button>
+		<script>
+			function show(){
+				//1.创建异步对象
+				var xhr=new XMLHttpRequest();
+				console.log(xhr);
+				//4.绑定监听，接收响应
+				xhr.onreadystatechange=function(){
+					//onreadystatechange全程会调用4次
+					//我们关注xhr.readyState==4
+					//目的是，我们只要最后一次
+					if(xhr.readyState==4&&xhr.status==200){
+						//接收响应
+						var result=xhr.responseText;
+					}
+				}
+				//2.打开连接，创建请求
+				xhr.open("delete","http://127.0.0.1:8080/login",true);
+				//3.发送请求
+				xhr.send(null);
+			}
+		</script>
+	</body>
+</html>
