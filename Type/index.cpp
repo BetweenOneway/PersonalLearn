@@ -15,6 +15,7 @@ using namespace std;
 #include "stringOper.h"
 
 #include "bitOper.h"
+#include "stream.h"
 
 enum class Color:int {
     Red,
@@ -290,7 +291,7 @@ void testScope()
 void testClass()
 {
     //CLASS_TEST::testFinalOvertide();
-    CLASS_TEST::testNew();
+    CLASS_TEST::testClassPassPointer();
 }
 
 void testStruct()
@@ -344,16 +345,22 @@ void testDist()
 
 }
 
+void testStream()
+{
+    STREAM::testStream();
+}
+
 int main()
 {
-    testDist();
+    //testStream();
+    //testDist();
     //testBit();
     //testContainer();
    // testWString();
     //testWired();
     //testScope();
     //testStatic();
-    //testClass();
+    testClass();
     //testStruct();
     //testType();
     //testString();

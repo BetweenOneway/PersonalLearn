@@ -119,4 +119,68 @@ namespace CLASS_TEST {
         //    }
         //};
     }
+
+    void Child1::func()
+    {
+        std::cout << "Child1 func" << endl;
+    }
+
+    void Child2::func()
+    {
+        std::cout << "Child2 func" << endl;
+    }
+
+    void testFunc()
+    {
+        Base1* child1 = new Child1();
+        Base1* child2 = new Child2();
+
+        //child1->func();
+    }
+
+    Class1::Class1(int num)
+    {
+        m_num = num;
+    }
+
+    void Class1::SetNum(int num)
+    {
+        m_num = num;
+    }
+
+    void Class1::func()
+    {
+        cout << m_num << endl;
+    }
+
+    void Class2::init(const std::shared_ptr<Class1> ptr)
+    {
+        m_ptr = ptr;
+    }
+
+    void Class2::Call()
+    {
+        m_ptr->func();
+    }
+    void testClassPassPointer()
+    {
+        //Class1 c1(1);
+        //Class2 c2;
+        //c2.init(std::make_shared<Class1>(c1));
+        //c2.Call();//1
+
+        //c1.SetNum(6);
+        //c1.func();//6
+        //c2.Call();//1
+
+        std::shared_ptr<Class1> c1(new Class1(1));
+        Class2 c2;
+        c2.init(c1);
+        c2.Call();//1
+
+        c1->SetNum(6);
+        c1->func();//6
+        c2.Call();//6
+       // c1 = nullptr;
+    }
 }

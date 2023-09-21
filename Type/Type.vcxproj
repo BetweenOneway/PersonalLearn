@@ -157,6 +157,7 @@
     <ClInclude Include="class.h" />
     <ClInclude Include="container.h" />
     <ClInclude Include="static.h" />
+    <ClInclude Include="stream.h" />
     <ClInclude Include="stringOper.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="template.h" />
