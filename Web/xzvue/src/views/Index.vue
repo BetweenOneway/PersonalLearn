@@ -34,231 +34,50 @@
         </div>
       <div>
         <h3 class="pb-3">
-          <nav class="navbar navbar-light border-bottom border-secondary pb-0 mb-2">
-            <a class="navbar-brand" href="#">
-              <img src="img/index/computer_icon.png" class="d-inline-block align-top" alt="">
-              首页推荐 / 1F
-            </a>
-          </nav>
-          <div class="row mb-2">
-            <div id="p1" class="col-md-7">
-              <div class="card border-0 flex-md-row box-shadow h-md-250">
-                <div class="card-body d-flex flex-column align-items-start">
-                  <h5 class="d-inline-block mb-2" v-text="p1.title"></h5>
-                  <h6 class="mb-5">
-                    <a class="text-dark" href="javascript:;" v-text="p1.details"></a>
-                  </h6>
-                  <span class="text-primary">¥{{p2.price.toFixed(2)}}</span>
-                  <router-link class="btn btn-primary" :to="`/details/${p1.href.split('=')[1]}`">查看详情</router-link>
-                </div>
-                <img class="card-img-right flex-auto d-none d-md-block" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" :src="p1.pic" data-holder-rendered="true">
-              </div>
+            <div class="border-bottom">
+                <img src="img/index/computer_icon.png" class="title_img_size" alt="">
+                <span class="title_font text-muted ml-2">首页推荐/1F</span>
             </div>
-            <div class="col-md-5 pl-0">
-              <div class="card border-0 flex-md-row box-shadow h-md-250">
-                <div class="card-body d-flex flex-column align-items-start">
-                  <h5 class="d-inline-block mb-2" v-text="p2.title"></h5>
-                  <h6 class="mb-5">
-                    <a class="text-dark" href="javascript:;" v-text="p2.details"></a>
-                  </h6>
-                  <span class="text-primary">¥{{p2.price.toFixed(2)}}</span>
-                  <router-link class="btn btn-primary" :to="`/details/${p2.href.split('=')[1]}`">查看详情</router-link>
-                </div>
-                <img class="card-img-right flex-auto d-none d-md-block mt-5" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" :src="p2.pic" data-holder-rendered="true">
-              </div>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-md-5">
-              <div class="card border-0 flex-md-row box-shadow h-md-250">
-                <div class="card-body d-flex flex-column align-items-start">
-                  <h5 class="d-inline-block mb-3" v-text="p3.title"></h5>
-                  <span class="text-primary">¥{{p3.price.toFixed(2)}}</span>
-                  <router-link class="btn btn-primary" :to="`/details/${p3.href.split('=')[1]}`">查看详情</router-link>
-                </div>
-                <img class="card-img-right flex-auto d-none d-md-block mt-5" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" :src="p3.pic" data-holder-rendered="true">
-              </div>
-            </div>
-            <div class="col-md-7 pl-0">
-              <div id="others" class="row pr-3">
-                <div v-for="(p,i) of others" :key="i" class="col-md-4 p-0 pl-2">
-                  <div class="card border-0 text-center">
-                    <img class="card-img-top" :src="p.pic" alt="Card image cap">
-                    <div class="card-body p-0 pr-1 pl-1">
-                      <span class="d-inline-block" v-text="p.title"></span>
-                      <span class="text-primary small">¥{{p.price.toFixed(2)}}</span>
-                      <router-link class="btn btn-sm btn-primary" :to="`/details/${p.href.split('=')[1]}`">查看详情</router-link>
+            <div class="row mx-0 mt-2">
+                <div class="col-lg-7 col-sm-12 px-0">
+                    <div class="top_height bg_L mr-lg-1 mb-1 before_margin">
+                        <div class="card border-0 w-40 mt-4 ml-5 bg-transparent">
+                            <h3 v-text="p1.title"></h3>
+                            <h6 class="text-muted my_small mb-3" v-text="p1.details"></h6>
+                            <span class="text-primary font24">¥{{p1.price.toFixed(2)}}</span>
+                            <router-link class="btn btn-primary" :to="`/details/${p1.href.split('=')[1]}`">查看详情</router-link>
+                        </div>
+                        <img class="float-right my_img_position" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" :src="p1.pic" >
                     </div>
-                  </div>
                 </div>
-                <!--删除后两个片段-->
-              </div>
-            </div>
-          </div>
-        </h3>
-        <h3 class="pb-3">
-          <nav class="navbar navbar-light border-bottom border-secondary pb-0 mb-2">
-            <a class="navbar-brand" href="#">
-              <img src="img/index/computer_icon.png" class="d-inline-block align-top" alt="">
-              最新上架 / 2F
-            </a>
-          </nav>
-          <div class="row mb-2">
-            <div class="col-md-7">
-              <div class="card border-0 flex-md-row box-shadow h-md-250">
-                <div class="card-body d-flex flex-column align-items-start">
-                  <h5 class="d-inline-block mb-2">Apple MacBook Air系列</h5>
-                  <h6 class="mb-5">
-                    <a class="text-dark" href="javascript:;">酷睿双核i5处理器|256GB SSD|8GB内存|英特尔HD显卡620含共享显卡内存</a>
-                  </h6>
-                  <span class="text-primary">¥6988.00</span>
-                  <a class="btn btn-primary" href="product_details.html?lid=1">查看详情</a>
-                </div>
-                <img class="card-img-right flex-auto d-none d-md-block" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" src="img/index/study_computer_img1.png" data-holder-rendered="true">
-              </div>
-            </div>
-            <div class="col-md-5">
-              <div class="card border-0 flex-md-row box-shadow h-md-250">
-                <div class="card-body d-flex flex-column align-items-start">
-                  <h5 class="d-inline-block mb-2">小米Air 金属超轻薄</h5>
-                  <h6 class="mb-5">
-                    <a class="text-dark" href="javascript:;">酷睿双核i5处理器|512GB SSD|2GB内存|英特尔HD独立显卡</a>
-                  </h6>
-                  <span class="text-primary">¥3488.00</span>
-                  <a class="btn btn-primary" href="product_details.html?lid=5">查看详情</a>
-                </div>
-                <img class="card-img-right flex-auto d-none d-md-block mt-5" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" src="img/index/study_computer_img2.png" data-holder-rendered="true">
-              </div>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-md-5">
-              <div class="card border-0 flex-md-row box-shadow h-md-250">
-                <div class="card-body d-flex flex-column align-items-start">
-                  <h5 class="d-inline-block mb-3">联想E480C 轻薄系列</h5>
-                  <span class="text-primary">¥5399.00</span>
-                  <a class="btn btn-primary" href="product_details.html?lid=9">查看详情</a>
-                </div>
-                <img class="card-img-right flex-auto d-none d-md-block mt-5" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" src="img/index/study_computer_img3.png" data-holder-rendered="true">
-              </div>
-            </div>
-            <div class="col-md-7">
-              <div class="row pr-3">
-                <div class="col-md-4 p-0 pl-2">
-                  <div class="card border-0 text-center">
-                    <img class="card-img-top" src="img/index/study_computer_img4.png" alt="Card image cap">
-                    <div class="card-body p-0 pr-1 pl-1">
-                      <span class="d-inline-block">华硕RX310 金属超极本</span>
-                      <span class="text-primary small">¥4966.00</span>
-                      <a class="btn btn-sm btn-primary" href="product_details.html?lid=13">查看详情</a>
+                <div class="col-lg-5 col-sm-12 px-0">
+                    <div class="top_height bg_L mb-1 before_margin">
+                        <div class="card border-0 w-40 mt-4 ml-5 bg-transparent">
+                            <h3 v-text="p2.title"></h3>
+                            <h6 class="text-muted my_small mb-3" v-text="p2.details"></h6>
+                            <span class="text-primary font24">¥{{p2.price.toFixed(2)}}</span>
+                            <router-link class="btn btn-primary mt-3 w-75" :to="`/details/${p2.href.split('=')[1]}`">查看详情</router-link>
+                        </div>
+                        <img class="float-right my_img_position"  alt="Thumbnail [200x250]" :src="p2.pic">
                     </div>
-                  </div>
                 </div>
-                <div class="col-md-4 p-0 pl-2">
-                  <div class="card border-0 text-center">
-                    <img class="card-img-top" src="img/index/study_computer_img5.png" alt="Card image cap">
-                    <div class="card-body p-0 pr-1 pl-1">
-                      <span class="d-inline-block">联想小新700 电竞版游戏本</span>
-                      <span class="text-primary small">¥6299.00</span>
-                      <a class="btn btn-sm btn-primary" href="product_details.html?lid=17">查看详情</a>
+                <div class="col-lg-5 col-sm-12 px-0">
+                    <div class="bottom_height bg_L mr-lg-1 mb-sm-1 mb-lg-0"></div>
+                </div>
+                <div class="col-lg-7 col-sm-12 px-0">
+                    <div class="row mx-0">
+                        <div class="col-4 px-0">
+                            <div class="bottom_height bg_L mr-1"></div>
+                        </div>
+                        <div class="col-4 px-0">
+                            <div class="bottom_height bg_L mr-1"></div>
+                        </div>
+                        <div class="col-4 px-0">
+                            <div class="bottom_height bg_L"></div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-                <div class="col-md-4 p-0 pl-2">
-                  <div class="card border-0 text-center">
-                    <img class="card-img-top" src="img/index/study_computer_img3.png" alt="Card image cap">
-                    <div class="card-body p-0 pr-1 pl-1">
-                      <span class="d-inline-block">戴尔灵越燃7000 轻薄窄边</span>
-                      <span class="text-primary small">¥5199.00</span>
-                      <a class="btn btn-sm btn-primary" href="product_details.html?lid=19">查看详情</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-        </h3>
-        <h3 class="pb-3">
-          <nav class="navbar navbar-light border-bottom border-secondary pb-0 mb-2">
-            <a class="navbar-brand" href="#">
-              <img src="img/index/computer_icon.png" class="d-inline-block align-top" alt="">
-              热销单品 / 3F
-            </a>
-          </nav>
-          <div class="row mb-2">
-            <div class="col-md-7">
-              <div class="card border-0 flex-md-row box-shadow h-md-250">
-                <div class="card-body d-flex flex-column align-items-start">
-                  <h5 class="d-inline-block mb-2">Apple MacBook Air系列</h5>
-                  <h6 class="mb-5">
-                    <a class="text-dark" href="javascript:;">酷睿双核i5处理器|256GB SSD|8GB内存|英特尔HD显卡620含共享显卡内存</a>
-                  </h6>
-                  <span class="text-primary">¥6988.00</span>
-                  <a class="btn btn-primary" href="product_details.html?lid=1">查看详情</a>
-                </div>
-                <img class="card-img-right flex-auto d-none d-md-block" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" src="img/index/study_computer_img1.png" data-holder-rendered="true">
-              </div>
-            </div>
-            <div class="col-md-5">
-              <div class="card border-0 flex-md-row box-shadow h-md-250">
-                <div class="card-body d-flex flex-column align-items-start">
-                  <h5 class="d-inline-block mb-2">小米Air 金属超轻薄</h5>
-                  <h6 class="mb-5">
-                    <a class="text-dark" href="javascript:;">酷睿双核i5处理器|512GB SSD|2GB内存|英特尔HD独立显卡</a>
-                  </h6>
-                  <span class="text-primary">¥3488.00</span>
-                  <a class="btn btn-primary" href="product_details.html?lid=5">查看详情</a>
-                </div>
-                <img class="card-img-right flex-auto d-none d-md-block mt-5" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" src="img/index/study_computer_img2.png" data-holder-rendered="true">
-              </div>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-md-5">
-              <div class="card border-0 flex-md-row box-shadow h-md-250">
-                <div class="card-body d-flex flex-column align-items-start">
-                  <h5 class="d-inline-block mb-3">联想E480C 轻薄系列</h5>
-                  <span class="text-primary">¥5399.00</span>
-                  <a class="btn btn-primary" href="product_details.html?lid=9">查看详情</a>
-                </div>
-                <img class="card-img-right flex-auto d-none d-md-block mt-5" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" src="img/index/study_computer_img3.png" data-holder-rendered="true">
-              </div>
-            </div>
-            <div class="col-md-7">
-              <div class="row pr-3">
-                <div class="col-md-4 p-0 pl-2">
-                  <div class="card border-0 text-center">
-                    <img class="card-img-top" src="img/index/study_computer_img4.png" alt="Card image cap">
-                    <div class="card-body p-0 pr-1 pl-1">
-                      <span class="d-inline-block">华硕RX310 金属超极本</span>
-                      <span class="text-primary small">¥4966.00</span>
-                      <a class="btn btn-sm btn-primary" href="product_details.html?lid=13">查看详情</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 p-0 pl-2">
-                  <div class="card border-0 text-center">
-                    <img class="card-img-top" src="img/index/study_computer_img5.png" alt="Card image cap">
-                    <div class="card-body p-0 pr-1 pl-1">
-                      <span class="d-inline-block">联想小新700 电竞版游戏本</span>
-                      <span class="text-primary small">¥6299.00</span>
-                      <a class="btn btn-sm btn-primary" href="product_details.html?lid=17">查看详情</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 p-0 pl-2">
-                  <div class="card border-0 text-center">
-                    <img class="card-img-top" src="img/index/study_computer_img3.png" alt="Card image cap">
-                    <div class="card-body p-0 pr-1 pl-1">
-                      <span class="d-inline-block">戴尔灵越燃7000 轻薄窄边</span>
-                      <span class="text-primary small">¥5199.00</span>
-                      <a class="btn btn-sm btn-primary" href="product_details.html?lid=19">查看详情</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </h3>
       </div>
     </main>
@@ -294,7 +113,6 @@ export default {
 }
 </script>
 <style>
-  @import url("../assets/css/comm.css");
   @import url("../assets/css/index.css");
 </style>
 
