@@ -13,14 +13,17 @@
         <div class="row pr-3">
           <div id="preview" class="col pr-0">
             <div class="card bg-transparent mr-5 position-absolute">
-              <img   class="card-img-top" :src="pics[i].md" alt="Card image cap" id="mImg">
+              <img class="card-img-top" :src="pics[i].md" alt="Card image cap" id="mImg">
+              <!--遮罩层 中图上的黄色框-->
               <div id="mask" class="position-absolute" v-show="show" :style="maskStyle"></div>
-              <div @mouseover="toggle" @mouseout="toggle" @mousemove="drag" id="super-mask" class="position-absolute"></div>
+              <!--该div是为了避免遮罩层对图片的遮挡，使得mouseover动作频繁进出图片导致的闪烁-->
+              <div id="super-mask" @mouseover="toggle" @mouseout="toggle" @mousemove="drag" class="position-absolute"></div>
+              <!--放大镜-->
               <div id="div-lg" class="position-absolute" v-show="show" :style="{'background-image':`url(${pics[i].lg})`,'background-position':gbPosition}"></div>
               <div class="card-body p-0 text-center">
                 <img src="img/product_detail/hover-prev.png" class="btn float-left btn-light border-0 p-1 pt-4 pb-4" :class="times==0?'disabled':''" id="btnLeft" @click="move(-1)">
                 <div class="d-inline-block pt-2 mx-0 m-auto">
-                  <!-- <ul class="list-unstyled mb-0"> -->
+                  <!-- 小图轮播 -->
                   <ul @mouseover="changei" class="list-unstyled mb-0" :style="{width:pics.length*62+'px', 'margin-left':-62*times+'px'}" id="ulImgs">
                     <li v-for="(p,i) of pics" :key="i" class="float-left p-1">
                       <img :data-i="i" :src="p.sm">
@@ -287,7 +290,7 @@ export default {
     toggle(){
       this.show=!this.show;
     },
-    //当鼠标进入第i个小图片时
+    //当鼠标进入第i个小图片时 就显示第几个图片
     changei(e){
       //如果进入的img元素
       if(e.target.nodeName=="IMG"){
