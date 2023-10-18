@@ -263,10 +263,11 @@ void testContainer()
     //CONTAINER_TEST::testStack();
     //CONTAINER_TEST::testPriorityQueue();
     //CONTAINER_TEST::testQueue();
-    CONTAINER_TEST::testVectorInsert();
+    //CONTAINER_TEST::testVectorInsert();
 	//CONTAINER_TEST::testVectorPointer();
     //CONTAINER_TEST::testVectorAddress();
     //CONTAINER_TEST::testPair();
+    CONTAINER_TEST::testVectorErase();
 
 }
 
@@ -355,12 +356,12 @@ int main()
     //testStream();
     //testDist();
     //testBit();
-    //testContainer();
+    testContainer();
    // testWString();
     //testWired();
     //testScope();
     //testStatic();
-    testClass();
+    //testClass();
     //testStruct();
     //testType();
     //testString();

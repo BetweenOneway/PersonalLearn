@@ -116,14 +116,100 @@ void MathOrSearch()
             cout << Wstring2String(result[i].str()) << endl;
         }
     }
+    {
+        //这个用法不行 regex_match：全文匹配，要求整个字符串符合正则表达式的匹配规则。用来判断一个字符串和一个正则表达式是否模式匹配
+        std::string str2("11,12,13,14");
+        std::regex regex(R"(\\b[0-9]+\\b)");
+        std::smatch pieces_match;
+        if(std::regex_match(str2, pieces_match, regex))
+        {
+            for (size_t i = 0; i < pieces_match.size(); ++i)
+            {
+                std::ssub_match sub_match = pieces_match[i];
+                std::string piece = sub_match.str();
+                std::cout << "  submatch " << i << ": " << piece << '\n';
+            }
+        }
+        else
+        {
+            cout << "regex_match error" << endl;
+        }
+    }
+
+    {
+        const std::string fnames[] = { "foo.txt", "bar.txt", "baz.dat", "zoidberg" };
+        const std::regex txt_regex("[a-z]+\\.txt");
+
+        for (const auto& fname : fnames)
+            std::cout << fname << ": " << std::regex_match(fname, txt_regex) << '\n';
+
+        // Extraction of a sub-match
+        const std::regex base_regex("([a-z]+)\\.txt");
+        std::smatch base_match;
+
+        for (const auto& fname : fnames)
+        {
+            if (std::regex_match(fname, base_match, base_regex))
+            {
+                // The first sub_match is the whole string; the next
+                // sub_match is the first parenthesized expression.
+                if (base_match.size() == 2)
+                {
+                    std::ssub_match base_sub_match = base_match[1];
+                    std::string base = base_sub_match.str();
+                    std::cout << fname << " has a base of " << base << '\n';
+                }
+            }
+        }
+    }
+}
+
+void RegToken()
+{
+    std::string str("11, 12,13 ,14");
+    std::regex reg(",");
+    std::sregex_token_iterator pos(str.begin(), str.end(), reg, -1);
+    decltype(pos) end;
+    for (; pos != end; ++pos)
+    {
+        std::cout << pos->str() << std::endl;
+    }
+}
+
+void StringSplit()
+{
+    std::string str("11, 12,,13 ,14,");
+    char split = ',';
+
+    std::vector<string> subStrs;
+    size_t prevPos = 0;
+    auto pos = str.find_first_of(split);
+    while (pos != std::string::npos)
+    {
+        if (pos > prevPos)
+        {
+            subStrs.push_back(str.substr(prevPos, pos - prevPos));
+        }
+        prevPos = pos + 1;
+        pos = str.find_first_of(split, prevPos);
+    }
+    if (prevPos != str.length())
+    {
+        subStrs.push_back(str.substr(prevPos));
+    }
+    for (auto& elem : subStrs)
+    {
+        cout << elem.c_str() << endl;
+    }
 }
 
 int main()
 {
-    ListAllFiles();
+    //ListAllFiles();
 
-    MathOrSearch();
-
+    //MathOrSearch();
+    //RegToken();
+    StringSplit();
 	system("pause");
 	return 0;
 }

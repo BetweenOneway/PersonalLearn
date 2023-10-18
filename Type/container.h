@@ -6,6 +6,7 @@ namespace CONTAINER_TEST {
     void testVectorInsert();
 	void testVectorPointer();
     void testVectorAddress();
+    void testVectorErase();
     void testPair();
 }
 

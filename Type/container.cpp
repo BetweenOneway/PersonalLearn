@@ -364,15 +364,17 @@ void testVectorErase()
 {
     //erase 包前不包后
     std::vector<int> vec{ 0,1,2,3,4,5,6,7,8,9 };
-    vec.erase(vec.begin() + 2, vec.begin() + 5);
+    //vec.erase(vec.begin() + 2, vec.begin() + 5);
+    //测试erase能否跨起点删除 不能会报错
+    //vec.erase(vec.begin() + 5, vec.begin() + 2);
+
+    //如果只指定一个位置，表示的是删除该位置元素
+    vec.erase(vec.begin() + 2);
     for (auto& val : vec)
     {
         cout << val << " ";
     }
     cout << endl;
-
-    int cnt = 5 - (5 - 2);
-
 }
 /*
 * 测试vector访问越界
