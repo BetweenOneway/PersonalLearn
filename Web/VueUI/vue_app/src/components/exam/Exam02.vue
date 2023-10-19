@@ -1,5 +1,10 @@
 <template>
     <div>
+        <div>
+            <mt-checklist title="复选框列表" v-model="checklist" :options="['a','b','c','d']"></mt-checklist>
+            <mt-button @click="GetChecklistValue">GetChecklistValue</mt-button>
+        </div>
+        <br /><hr/>
         <button @click="Delete">Delete</button>
         <button @click="handle1">显示交互式提示框</button>
         <button @click="handle2">显示确认框</button>
@@ -27,6 +32,7 @@
                 val:true,
                 opt:"",
                 opt1:"",
+                checklist:[],//针对多选框 这里必须是数组
                 options:[
                     {label:"去年",value:"24"},
                     {label:"今年",value:"23"},
@@ -35,6 +41,9 @@
             }
         },
         methods:{
+            GetChecklistValue(){
+                console.log(this.checklist);
+            },
             GetVal(){
                 this.$toast({message:this.opt1});
             },
