@@ -6,6 +6,7 @@ import Exam02 from "./components/exam/Exam02.vue"
 import Tab from "./components/exam/Tab.vue"
 import Tabbar from "./components/exam/Tabbar.vue"
 import Fa08 from "./components/exam/Fa08.vue"
+import Home from "./components/message/Home.vue"
 
 Vue.use(Router)
 export default new Router({
@@ -18,5 +19,6 @@ export default new Router({
     {path:'/Tab',component:Tab},
     {path:'/Tabbar',component:Tabbar},
     {path:'/Fa08',component:Fa08},
+    {path:'/WeChat',component:Home},
   ]
 })
