@@ -7,6 +7,7 @@ import Tab from "./components/exam/Tab.vue"
 import Tabbar from "./components/exam/Tabbar.vue"
 import Fa08 from "./components/exam/Fa08.vue"
 import Home from "./components/message/Home.vue"
+import MessageList from "./components/message/common/MessageList.vue"
 
 Vue.use(Router)
 export default new Router({
@@ -20,5 +21,6 @@ export default new Router({
     {path:'/Tabbar',component:Tabbar},
     {path:'/Fa08',component:Fa08},
     {path:'/WeChat',component:Home},
+    {path:'/MessageList',component:MessageList},
   ]
 })
