@@ -3,19 +3,25 @@
         <!--一条消息子组件-->
         <!--左侧图片与标题-->
         <div class="leftImgTxt">
-            <img :src="require('../../../assets/Home.png')" class="imgStyle" alt="">
+            <img :src=imageurl class="imgStyle" alt="">
             <div class="rightOfImg">
-                <span class="titleBar">今天股票涨</span>
-                <span class="subTitle">其实没涨</span>
+                <span class="titleBar">{{title}}</span>
+                <span class="subTitle">{{subTitle}}</span>
             </div>
         </div>
         <!--右侧时间-->
-        <span class="sendTime">下午 3:38</span>
+        <span class="sendTime">{{sendTime}}</span>
     </div>
 </template>
 
 <script>
     export default{
+        props:{
+            imageurl:{default:""},
+            title:{default:""},
+            subTitle:{default:""},
+            sendTime:{default:""},
+        },
         components:{
         }
     }
@@ -39,5 +45,15 @@
         display:flex;
         flex-direction: column;
         justify-content: center;
+    }
+
+    .titleBar {
+        color:#000;
+        font-size:17px;
+    }
+
+    .subTitle{
+        color:gray;
+        font-size:4px;
     }
 </style>
