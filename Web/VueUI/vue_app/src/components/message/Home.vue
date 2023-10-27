@@ -93,6 +93,14 @@
     }
     .page-wrap{
         overflow:auto;
-        padding-bottom: 60px;
+        padding-bottom: 60px;/*底部导航条*/
+    }
+    .mint-tabbar > .mint-tab-item {
+        color:#999;
+    }
+    .mint-tabbar > .mint-tab-item.is-selected
+    {
+        background-color: transparent;
+        color:#45c018;
     }
 </style>

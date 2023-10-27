@@ -50,6 +50,7 @@
     .titleBar {
         color:#000;
         font-size:17px;
+        text-align:left;
     }
 
     .subTitle{
