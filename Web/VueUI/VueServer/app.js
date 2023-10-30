@@ -24,6 +24,13 @@ server.use(cors({
     credentials:true
 }))
 
+//配置session session的配置要在所有请求之前
+server.use(session({
+    secret:"128位的字符串",
+    resave:true,
+    saveUninitialized:true
+}));
+
 //http:127.0.0.1:8080/login?uname=tom&upwd=123
 server.get("/login",(req,res)=>{
     var u = req.query.uname;
@@ -39,6 +46,10 @@ server.get("/login",(req,res)=>{
             res.send({code:-1,msg:"用户名或密码有误"});
         }
         else{
+            //获取当前登录用户ID
+            var id = result[0].id;
+            //保存当前用户ID到session中 为什么是保存在req中呢？
+            req.session.uid = id;
             res.send({code:1,msg:"登录成功"});
         }
     })
