@@ -31,6 +31,10 @@ server.use(session({
     saveUninitialized:true
 }));
 
+//配置静态目录
+//http://127.0.0.1:8080/01.jpg
+server.use(express.static("public"));
+
 //http:127.0.0.1:8080/login?uname=tom&upwd=123
 server.get("/login",(req,res)=>{
     var u = req.query.uname;
@@ -53,4 +57,32 @@ server.get("/login",(req,res)=>{
             res.send({code:1,msg:"登录成功"});
         }
     })
+});
+
+//商品分页显示
+server.get("/product",(req,res)=>{
+    var pno = req.query.pno;
+    var pagesize = req.query.pagesize;
+    if(!pno)
+    {
+        pno = 1;
+    }
+    if(!pagesize)
+    {
+        pagesize=4;
+    }
+
+    var sql = "select lid,lname,price,img_url from xz_laptop ";
+    sql += "limit ?,?";
+
+    var offset = (pno-1)*pagesize;//起始记录数
+    pagesize = parseInt(pagesize);//行数
+
+    pool.query(sql,[offset,pagesize],(err,result)=>{
+        if(err)
+        {
+            throw err;
+        }
+        res.send({code:1,msg:"查询成功",data:result});
+    });
 });
