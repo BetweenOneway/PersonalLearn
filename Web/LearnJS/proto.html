@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script>
+		function Student(sname,sage)
+		{
+			this.sname = sname;
+			this.sage = sage;
+		}
+		//在Student的老公中添加一个intrSelf，让所有孩子共用  
+		Student.prototype.intrSelf = function()
+		{
+			console.log(`I'm ${this.sname}, I'm ${this.sage}`);
+		}
+
+		var lilei = new Student('liLei',12);
+		var hmm = new Student('Han Meimei',15);
+		lilei.__proto__.test = function(){
+			console.log(`Hello test from ${this.sname}`);
+		}
+		
+		lilei.test();
+		hmm.test();
+	</script>
+</head>
+<body>
+</body>
+</html>
