@@ -51,6 +51,9 @@
     <ClCompile Include="bitOper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="macro.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="container.h">

@@ -2,6 +2,8 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+
+#include <vector>
 using namespace std;
 
 #include "stringOper.h"
@@ -88,5 +90,59 @@ namespace STRINGOPER{
         std::wstring str(L"LinguleBuckle3.5.obj");
         unsigned int pos = str.find(L"LinguleBuckle");
         cout << pos << endl;
+    }
+
+    void StringSplit()
+    {
+        std::string str("11, 12,,13 ,14,");
+        char split = ',';
+
+        std::vector<string> subStrs;
+        size_t prevPos = 0;
+        auto pos = str.find_first_of(split);
+        while (pos != std::string::npos)
+        {
+            if (pos > prevPos)
+            {
+                subStrs.push_back(str.substr(prevPos, pos - prevPos));
+            }
+            prevPos = pos + 1;
+            pos = str.find_first_of(split, prevPos);
+        }
+        if (prevPos != str.length())
+        {
+            subStrs.push_back(str.substr(prevPos));
+        }
+        for (auto& elem : subStrs)
+        {
+            cout << elem.c_str() << endl;
+        }
+    }
+
+    void WStringSplit()
+    {
+        std::wstring str(L"11, 12,,13 ,14,");
+        wchar_t split{ ',' };
+
+        std::vector<wstring> subStrs;
+        size_t prevPos = 0;
+        auto pos = str.find_first_of(split);
+        while (pos != std::string::npos)
+        {
+            if (pos > prevPos)
+            {
+                subStrs.push_back(str.substr(prevPos, pos - prevPos));
+            }
+            prevPos = pos + 1;
+            pos = str.find_first_of(split, prevPos);
+        }
+        if (prevPos != str.length())
+        {
+            subStrs.push_back(str.substr(prevPos));
+        }
+        for (auto& elem : subStrs)
+        {
+            cout << elem.c_str() << endl;
+        }
     }
 }

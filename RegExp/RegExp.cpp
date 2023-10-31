@@ -176,40 +176,13 @@ void RegToken()
     }
 }
 
-void StringSplit()
-{
-    std::string str("11, 12,,13 ,14,");
-    char split = ',';
-
-    std::vector<string> subStrs;
-    size_t prevPos = 0;
-    auto pos = str.find_first_of(split);
-    while (pos != std::string::npos)
-    {
-        if (pos > prevPos)
-        {
-            subStrs.push_back(str.substr(prevPos, pos - prevPos));
-        }
-        prevPos = pos + 1;
-        pos = str.find_first_of(split, prevPos);
-    }
-    if (prevPos != str.length())
-    {
-        subStrs.push_back(str.substr(prevPos));
-    }
-    for (auto& elem : subStrs)
-    {
-        cout << elem.c_str() << endl;
-    }
-}
-
 int main()
 {
     //ListAllFiles();
 
     //MathOrSearch();
     //RegToken();
-    StringSplit();
+    //StringSplit();
 	system("pause");
 	return 0;
 }
