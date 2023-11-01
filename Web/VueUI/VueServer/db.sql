@@ -19,3 +19,14 @@ ALTER TABLE xz_laptop ADD img_url VARCHAR(255);
 UPDATE xz_laptop SET img_url="01.jpg" where lid = 1;
 
 UPDATE xz_laptop SET img_url="02.jpg" where lid > 1;
+
+# DECIMAL 高精度浮点数
+
+CREATE TABLE xz_cart(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    lid INT,
+    price DECIMAL(10,2),
+    count INT,
+    lname VARCHAR(255),
+    uid INT
+);

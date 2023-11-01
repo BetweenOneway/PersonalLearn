@@ -86,3 +86,47 @@ server.get("/product",(req,res)=>{
         res.send({code:1,msg:"查询成功",data:result});
     });
 });
+
+//将指定的商品添加至购物车
+//此功能要求登录
+//http://127.0.0.1:8080/login?uname=1&upwd=123
+//测试地址：http://127.0.0.1:8080/addcart?lid=1&lname=kk&price=9
+server.get("/addcart",(req,res)=>{
+    var uid = req.session.uid;
+    if(!uid)
+    {
+        res.send({code:-1,msg:"请先登录"});
+        return;
+    }
+    //商品编号
+    var lid = req.query.lid;
+    //商品价格
+    var price = req.query.price;
+    //商品名称
+    var lname = req.query.lname;
+    var sql = "select id from xz_cart where uid = ? and lid = ?";
+    pool.query(sql,[uid,lid],(err,result)=>{
+        if(err) throw err;
+        var sql="";
+        if(0 == result.length)
+        {
+            sql = `INSERT INTO xz_cart(lid,price,count,lname,uid) VALUES(${lid},${price},1,"${lname}",${uid})`;
+        }
+        else
+        {
+            sql = `UPDATE xz_cart SET count = count+1 WHERE uid = ${uid} AND lid=${lid}`;
+        }
+        console.log(sql);
+        pool.query(sql,(err,result)=>{
+            if(err)throw err;
+            if(result.affectedRows >0)
+            {
+                res.send({code:1,msg:"商品添加成功"});
+            }
+            else
+            {
+                res.send({code:-2,msg:"商品添加失败"});
+            }
+        });
+    });
+});

@@ -16,8 +16,8 @@ Vue.use(Router)
 export default new Router({
   routes: [
     //http://127.0.0.1:8080/#/Exam02
-    {path:'/Home',component:HelloWrold},
-    {path:'/',component:Exam01},
+    {path:'/HelloWorld',component:HelloWrold},
+    {path:'/',component:Login},
     {path:'/Exam01',component:Exam01},
     {path:'/Exam02',component:Exam02},
     {path:'/Tab',component:Tab},

@@ -28,7 +28,8 @@
                 var obj = {pno:this.pno}
                 var url="product";
                 this.axios.get(url,{params:obj}).then(res=>{
-                    this.list = res.data.data;
+                    var rows = this.list.concat(res.data.data);
+                    this.list = rows;
                 })
             }
         },
