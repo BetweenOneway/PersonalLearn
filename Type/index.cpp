@@ -334,7 +334,8 @@ void testBit()
     //int var1 = 0x00F0FF;
     //int var2 = var1 & 0xFF;
     //cout <<hex<< var2 << endl;
-    BIT_OPER::testBitOper();
+    //BIT_OPER::testBitOper();
+    BIT_OPER::testOper();
 }
 
 void testDist()
@@ -356,7 +357,7 @@ int main()
 {
     //testStream();
     //testDist();
-    //testBit();
+    testBit();
     //testContainer();
    // testWString();
     //testWired();
@@ -365,7 +366,7 @@ int main()
     //testClass();
     //testStruct();
     //testType();
-    testString();
+    //testString();
     //testMacro();
 
     system("pause");
