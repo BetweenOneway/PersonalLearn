@@ -130,3 +130,64 @@ server.get("/addcart",(req,res)=>{
         });
     });
 });
+
+//查询指定用户购物车信息
+server.get("/carts",(req,res)=>{
+    var uid = req.session.uid;
+    if(!uid)
+    {
+        res.send({code:-1,msg:"请先登录"});
+        return;
+    }
+    var sql = "select id,lname,price from xz_cart where uid = ?";
+    pool.query(sql,[uid],(err,result)=>{
+        if(err)throw err;
+        res.send({code:1,msg:"查询成功",data:result});
+    });
+});
+
+//删除购物车表中指定数据
+server.get("/delItem",(req,res)=>{
+    var uid = req.session.uid;
+    if(!uid)
+    {
+        res.send({code:-1,msg:"请先登录"});
+        return;
+    }
+    var id = req.query.id;
+    var sql = "delete from xz_cart where id = ? and uid = ?";
+    pool.query(sql,[id,uid],(err,result)=>{
+        if(err) throw err;
+        if(result.affectedRows>0)
+        {
+            res.send({code:1,msg:"删除成功"});
+        }
+        else{
+            res.send({code:-2,msg:"删除失败"});
+        }
+    })
+});
+
+//删除购物车中的多个商品
+server.get('/delItems',(req,res)=>{
+    var uid = req.session.uid;
+    if(!uid)
+    {
+        res.send({code:-1,msg:"请先登录"});
+        return;
+    }
+    var ids = req.query.ids;
+    var sql = "delete from xz_cart where uid = ? ";
+    sql+=`and id in (${ids})`;
+    console.log(sql);
+    pool.query(sql,[uid],(err,result)=>{
+        if(err) throw err;
+        if(result.affectedRows>0)
+        {
+            res.send({code:1,msg:"删除成功"});
+        }
+        else{
+            res.send({code:-2,msg:"删除失败"});
+        }
+    });
+});

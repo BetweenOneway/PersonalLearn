@@ -7,7 +7,7 @@
             <mt-button @click="addcart" :data-lid="item.lid" :data-price="item.price" :data-lname="item.lname">加入购物车</mt-button>
         </div>
         <mt-button size="large" @click="loadMore">加载更多</mt-button>
-        <mt-button size="large">查看购物车</mt-button>
+        <mt-button size="large" @click="ShowCart">查看购物车</mt-button>
     </div>
 </template>
 
@@ -43,18 +43,22 @@
                     console.log(res);
                     if(res.data.code == -1)
                     {
-                        this.$messagebox("消息","请登录");
-                        this.$router.push("/Login");
+                        this.$messagebox("消息","请登录").then(res=>{
+                            this.$router.push("/Login");
+                        });
                     }
                     else if(res.data.code == -2)
                     {
-
+                        this.$messagebox("消息","添加失败");
                     }
                     else
                     {
-
+                        this.$messagebox("消息","添加成功");
                     }
                 });
+            },
+            ShowCart(){
+                this.$router.push("/Cart");
             }
         },
         props:{},
