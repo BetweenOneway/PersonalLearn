@@ -12,6 +12,8 @@ import Login from "./components/xz/Login.vue"
 import Product from "./components/xz/Product.vue"
 import Cart from "./components/xz/Cart.vue"
 
+import AVue from "./components/exam/A.vue"
+import BVue from "./components/exam/B.vue"
 //客户端的访问地址不能和服务器的地址相同 如果服务器listen的是8080，则客户端不能用8080
 Vue.use(Router)
 export default new Router({
@@ -29,5 +31,7 @@ export default new Router({
     {path:'/Login',component:Login},
     {path:'/Product',component:Product},
     {path:'/Cart',component:Cart},
+    {path:'/A',component:AVue},
+    {path:'/B',component:BVue},
   ]
 })

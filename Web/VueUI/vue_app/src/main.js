@@ -15,10 +15,27 @@ Vue.prototype.axios=axios;
 
 Vue.use(MintUI)
 
+//教程中演示的这个方法不行
+import Vuex from "vuex"
+Vue.use(Vuex)
+var vuexStore = new Vuex.Store({
+    state:{
+        age:23
+    },
+    getters:{
+        //所有的函数都有参数，
+        getAge(state){
+            return state.age;
+        }
+    },
+})
+
+// var test = "hello";
 import "./font/iconfont.css"
 
 new Vue({
   router,
   store,
+  vuexStore,
   render: h => h(App)
 }).$mount('#app')
