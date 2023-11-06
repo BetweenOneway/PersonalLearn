@@ -23,8 +23,17 @@ export default new Vuex.Store({
     updateAge(state,age){
         state.age = age;
     },
+    clear(state){
+        state.age=0;
+    }
   },
   actions: {
+    //context上下文对象=>store存储对象
+    modifyAge:(context)=>{
+        setTimeout(()=>{
+            context.commit("clear")
+        },500)
+    }
   },
   modules: {
   }

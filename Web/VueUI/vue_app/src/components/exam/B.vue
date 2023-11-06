@@ -5,6 +5,7 @@
         <h1>{{$store.getters.getCar}}</h1>
         <button @click="upCar">升级汽车</button>
         <button @click="upAge">修改年龄</button>
+        <button @click="clearAge">清空年龄</button>
     </div>
 </template>
 
@@ -19,6 +20,9 @@
             },
             upAge(){
                 this.$store.commit("updateAge",63);
+            },
+            clearAge(){
+                this.$store.dispatch("modifyAge");
             }
         },
         props:{},
