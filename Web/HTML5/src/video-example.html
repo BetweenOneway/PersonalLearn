@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <style>
+            body{
+                background-color: #fff;
+                text-align: center;
+            }
+            .container{
+                position:relative;
+            }
+            #ctrl{
+                position:absolute;
+                left:50%;
+                top:50%;
+                margin-top:-60px;
+                margin-left:-60px;
+            }
+            #ctrl img{
+                width:120px;
+                height: 120px;
+            }
+            #ad{
+                position:absolute;
+                width:200px;
+                height:100px;
+                left:50%;   /*居中*/
+                top:50%;
+                margin-left:-100px;
+                margin-top: -50px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <video src="res/x.mp4" id="v3"></video>
+            <!--广告区域-->
+            <img src="res/p3.png" alt="" id="ad">
+            <!--按钮区域-->
+            <a href="#" id="ctrl">
+                <img src="res/play.png" alt="">
+            </a>
+        </div>
+        <script>
+            var container = document.querySelector(".container");
+            var ctrl = document.getElementById("ctrl");
+            var img = document.querySelector("#ctrl img");
+            var v3 = document.getElementById("v3");
+            var ad = document.getElementById("ad");
+
+            container.onmouseenter = function(){
+                ctrl.style.display="block";
+            };
+            container.onmouseleave = function(){
+                ctrl.style.display = "none";
+            };
+
+            ctrl.onclick=function(event){
+                event.preventDefault();
+                if(v3.paused)
+                {
+                    v3.play();
+                    img.src="res/pause.png";
+                    ad.style.display="none";
+                }
+                else
+                {
+                    v3.pause();
+                    img.src="res/play.png";
+                    ad.style.display="block";
+                }
+                
+            }
+        </script>
+    </body>
+</html>

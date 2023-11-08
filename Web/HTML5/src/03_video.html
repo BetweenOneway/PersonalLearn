@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>视频样式与事件</title>
+        <style>
+            .box{
+                width:160px;
+                height:160px;
+                margin:10px 0 20px;
+                background-color: #000;
+                overflow: hidden;
+                resize:both;/*规定用户是否可以调整元素大小 none 不能 both 调整宽度和高度*/
+                border:1px solid red;
+            }
+
+            .box img{
+                width:100%;
+                height:100%;
+                background-color: #CD0000;
+            }
+        </style>
+    </head>
+    <body>
+        <h4>视频与图片专用的样式</h4>
+        <h5>默认值fill 拉伸</h5>
+        <div class="box">
+            <img src="res/mm.png" alt="">
+        </div>
+
+        <h5>默认值contain 包含</h5>
+        <div class="box">
+            <img src="res/mm.png" alt="" style="object-fit:contain">
+        </div>
+
+        <h5>默认值cover 覆盖</h5>
+        <div class="box">
+            <img src="res/mm.png" alt="" style="object-fit:cover">
+        </div>
+
+        <video src="res/x.mp4" id="v3" controls></video>
+        <script>
+            var v3 = document.getElementById("v3");
+            v3.addEventListener("canplaythrough",()=>{
+                console.log("1-视频加载结束，时长:"+v3.duration);
+            });
+            v3.addEventListener("ended",()=>{
+                console.log("3-视频播放结束");
+            });
+            v3.addEventListener("timeupdate",()=>{
+                console.log("2-视频播放中...,当前时间:"+v3.currentTime);
+            });
+        </script>
+    </body>
+</html>
