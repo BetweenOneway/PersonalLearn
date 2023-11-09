@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body{
+                text-align: center;
+            }
+            canvas {
+                background-color: #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <h4>canvas矩形</h4>
+        <canvas id="c3" width="500px" height="400px"></canvas>
+        <script>
+            var c3 = document.getElementById("c3");
+            var ctx = c3.getContext("2d");
+            ctx.strokeRect(0,0,100,80);
+
+            ctx.fillStyle = "#f00";
+            ctx.fillRect(250,200,100,80);
+            
+        </script>
+    </body>
+</html>

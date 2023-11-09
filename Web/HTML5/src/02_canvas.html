@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body{
+                text-align: center;
+            }
+            canvas {
+                background-color: #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="c3" width="500px" height="400px"></canvas>
+        <script>
+            var c3 = document.getElementById("c3");
+            var ctx = c3.getContext("2d");
+            var x = 0;
+            var time = setInterval(()=>{
+                ctx.clearRect(0,0,500,400);
+                x+=5;
+                ctx.fillRect(x,0,100,80);
+            },200);
+        </script>
+    </body>
+</html>

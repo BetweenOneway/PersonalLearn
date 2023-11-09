@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+   body{text-align: center}
+   canvas{background: #ddd}
+  </style>
+</head>
+<body>
+  <h3>绘制销售统计图</h3>
+  <canvas id="c3" width="500" height="400"></canvas>
+  <script>
+    //1:获取画布对象获取画笔对象
+    var c3 = document.getElementById("c3");
+    var ctx = c3.getContext("2d");
+    //2:创建销售记录数据
+    var list = [
+      {name:"北口",value:1000},
+      {name:"南口",value:1200},
+      {name:"地铁口",value:2000},
+      {name:"交叉口",value:1300}
+    ]
+    //3:创建循环遍历数组中每个元素
+    
+    for(var i=0;i<list.length;i++){
+      var w = 50;              //元素宽度
+      var h = list[i].value/10;//元素高度
+      var y = 400 - h;         //元素y
+      var x = i * 100 + 50;    //元素x
+      ctx.fillStyle = rc();    //随机背景色
+      ctx.globalAlpha = 0.3;   //透明度
+      ctx.fillRect(x,y,w,h);   //绘制矩形
+    }
+   //创建随机颜色每个柱子背景不相同
+   //返回随机颜色字符串 rgb(100,25,14)
+   function rc(){
+     var r = Math.floor(Math.random()*256);
+     var g = Math.floor(Math.random()*256);
+     var b = Math.floor(Math.random()*256);
+     return `rgb(${r},${g},${b})`;
+   }
+  </script>
+</body>
+</html>
