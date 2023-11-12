@@ -33,9 +33,18 @@
       var y = 400 - h;         //元素y
       var x = i * 100 + 50;    //元素x
       
-      ctx.fillStyle = rc();    //随机背景色
-      ctx.globalAlpha = 0.3;   //透明度
+      var idx = Math.floor(Math.random()*colors.length);
+
+      ctx.fillStyle = colors[idx];    //随机背景色 一次修改颜色 影响所有 直到再次设置颜色
+      //ctx.globalAlpha = 0.3;   //透明度
       ctx.fillRect(x,y,w,h);   //绘制矩形
+
+      var name = list[i].name;
+      var txtX = x;
+      var txtY = y - 20;
+      ctx.font ="20px SimHei";//文字大小和字体
+      ctx.fillStyle="#000";//文字颜色
+      ctx.fillText(name,txtX,txtY);//绘制实心文字
     }
    //创建随机颜色每个柱子背景不相同
    //返回随机颜色字符串 rgb(100,25,14)

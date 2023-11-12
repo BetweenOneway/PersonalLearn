@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body{
+                text-align: center
+            }
+            canvas{
+                background: #ddd
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="c3" width="500" height="400"></canvas>
+        <script>
+            var c3 = document.getElementById("c3");
+            var ctx = c3.getContext("2d");
+            
+            var p3 = new Image();
+            p3.src="res/p3.png";
+            p3.onload = function(){
+                //小飞机1 每次旋转15 小飞机2 每次旋转30
+                var deg1 = 0;
+                var deg2 = 0;
+                var t = setInterval(()=>{
+                    ctx.clearRect(0,0,500,400);
+                    //绘制小飞机1
+                    ctx.save();
+                    
+                    deg1 +=15;
+                    ctx.translate(100,200);
+                    ctx.rotate(deg1*Math.PI/180);
+                    ctx.drawImage(p3,-100,-50);
+
+                    ctx.restore();
+                    //绘制小飞机2
+                    ctx.save();
+
+                    deg2 += 30;
+                    ctx.translate(350,200);
+                    ctx.rotate(deg2*Math.PI/180);
+                    ctx.drawImage(p3,-100,-50);
+
+                    ctx.restore();
+                },200);
+            }
+        </script>
+    </body>
+</html>

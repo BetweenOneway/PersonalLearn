@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body{
+                text-align: center
+            }
+            canvas{
+                background: #ddd
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="c3" width="500" height="400"></canvas>
+        <script>
+            var c3 = document.getElementById("c3");
+            var ctx = c3.getContext("2d");
+            
+            var p3 = new Image();
+            p3.src="res/p3.png";
+            p3.onload = function(){
+                //画在左上角
+                ctx.drawImage(p3,0,0);
+
+                //画在右上角
+                var w = p3.width;
+                var h = p3.height;
+                ctx.drawImage(p3,500-w,0);
+
+                //左下角 10*5
+                ctx.drawImage(p3,0,400-5,10,5);
+
+                var w1 = 10;
+                var h1 = 5;
+                var t = setInterval(()=>{
+                    ctx.clearRect(0,0,500,400);
+                    w1+=2;
+                    h1+=2;
+                    ctx.drawImage(p3,0,400-h1,w1,h1);
+                    if(w1>=200)
+                    {
+                        clearInterval(t);
+                    }
+                },200);
+            }
+        </script>
+    </body>
+</html>

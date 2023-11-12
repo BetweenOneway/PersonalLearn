@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body{
+                text-align: center
+            }
+            canvas{
+                background: #ddd
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="c3" width="500" height="400"></canvas>
+        <script>
+            var c3 = document.getElementById("c3");
+            var ctx = c3.getContext("2d");
+            var str = "abcxyz";
+            ctx.textBaseline = "top";
+            ctx.fillText(str,0,0);
+        </script>
+    </body>
+</html>
