@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <svg id="s3" width="500px" height="400px">
+        </svg>
+        <script>
+            //动态创建圆形
+            function rc(){
+                var r = Math.floor(Math.random()*256);
+                var g = Math.floor(Math.random()*256);
+                var b = Math.floor(Math.random()*256);
+                return `rgb(${r},${g},${b})`
+            }
+
+            var s3 = document.getElementById("s3");
+            for(var i=0;i<30;i++)
+            {
+                var c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+                c.setAttribute("r",5+Math.random()*20);
+                c.setAttribute("cx",Math.random()*500);
+                c.setAttribute("cy",Math.random()*400);
+                c.setAttribute("fill",rc());
+                c.setAttribute("fill-opacity",Math.random());
+
+                s3.appendChild(c);
+
+                //同一个元素多次点击的时候会启动多个定时器，后续定时器会出错
+                c.onclick = function(){
+                    //解决元素多次点击报错
+                    this.onclick = null;
+                    var t = setInterval(()=>{
+                        var r = this.getAttribute("r");
+                        r*=1.05;
+                        this.setAttribute("r",r);
+
+                        var p = this.getAttribute("fill-opacity");
+                        p*=0.9;
+                        this.setAttribute("fill-opacity",p);
+                        if(p<0.1)
+                        {
+                            clearInterval(t);
+                            s3.removeChild(this);
+                        }
+                    },200);
+                }
+            }
+
+            c.onclick=function(){
+                var r = c.getAttribute("r");
+                r*=1.2;
+                c.setAttribute("r",r);
+            }
+        </script>
+    </body>
+</html>

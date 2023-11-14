@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <svg id="s3" width="500px" height="400px">
+            <circle id="c3" cx="250" cy="200" r="10" fill="#00f" fill-opacity="0.2" stroke="#f00" stroke-opacity="0.3"></circle>
+        </svg>
+        <script>
+            //动态创建圆形
+            var s3 = document.getElementById("s3");
+            var c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+            c.setAttribute("cx",50);
+            c.setAttribute("cy",50);
+            c.setAttribute("r",15);
+            c.setAttribute("fill","#fc0");
+            s3.appendChild(c);
+
+            c.onclick=function(){
+                var r = c.getAttribute("r");
+                r*=1.2;
+                c.setAttribute("r",r);
+            }
+        </script>
+    </body>
+</html>
