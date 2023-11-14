@@ -17,17 +17,18 @@ msgObj.prototype.init = function(){
     for(var i=0;i<this.num;i++)
     {
         this.x[i] = canWidth;
-        this.y[i] = 100;
-        this.m[i] = "666";
+        this.y[i] = 0;
+        this.m[i] = "";
         this.font[i] = "12px";
         this.color[i] = "#000";
         this.spd[i] = 3;
-        this.alive[i] = true;
+        this.alive[i] = false;
     }
 }
 
 //将数据绘制到网站中
 msgObj.prototype.draw = function(){
+    ctx.clearRect(0,0,canWidth,canHeight);
     //
     for(var i=0;i<this.num;i++)
     {
@@ -42,9 +43,29 @@ msgObj.prototype.draw = function(){
             ctx.font = f +" SimHei";
             ctx.fillStyle = c;
             ctx.fillText(m,this.x[i],this.y[i]);
+            if(this.x[i]<0)
+            {
+                this.alive[i]=false;
+                this.x[i] = canWidth;
+            }
         }
     }
 }
 
 //将新弹幕添加到弹幕池中
-msgObj.prototype.add = function(m){}
+//m={m:"666",color:"red",font:"22px"}
+msgObj.prototype.add = function(m){
+    for(var i=0;i<this.num;i++)
+    {
+        if(!this.alive[i])
+        {
+            this.alive[i]=true;
+            this.font[i] = m.font;
+            this.color[i]=m.color;
+            this.y[i] = Math.random()*canHeight;
+            this.spd[i] = 1+ Math.random()*3;
+            this.m[i] = m.msg;
+            return;
+        }
+    }
+}

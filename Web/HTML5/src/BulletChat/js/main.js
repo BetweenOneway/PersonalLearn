@@ -34,11 +34,23 @@ function init(){
     //创建弹幕对象
     msg = new msgObj();
     msg.init();
+
+    inputBtn.addEventListener("click",handleMsg);
 }
 
 function gameloop(){
     requestAnimationFrame(gameloop);
     msg.draw();
+}
+
+function handleMsg(){
+    var m = {
+        msg:inputMsg.value,
+        font:inputFont.value,
+        color:inputColor.value
+    };
+
+    msg.add(m);
 }
 
 document.body.onload = game;
