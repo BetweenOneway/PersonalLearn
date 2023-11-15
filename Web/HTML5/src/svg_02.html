@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <svg id="s3" width="500" height="400">
+            
+            <defs>
+                <!--定义渐变对象-->
+                <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="red"></stop>
+                    <stop offset="50%" stop-color="pink"></stop>
+                    <stop offset="100%" stop-color="yellow"></stop>
+                </linearGradient>
+
+                <!--定义滤镜-->
+                <filter id="f3">
+                    <feGaussianBlur stdDeviation="3"> </feGaussianBlur>
+                </filter>
+            </defs>
+
+            <!--应用模糊滤镜至文本-->
+            <text font-size="30" x="30" y="50"  filter="url(#f3)">北京欢迎你</text>
+            <text font-size="30" x="30" y="90">北京欢迎你 Again</text>
+            <!--应用渐变对象-->
+            <!-- <rect x="0" y="0" width="270" height="130" fill="url(#g3)"></rect> -->
+
+            <polyline points="250,200,300,200 300,300 250,200" fill="#ddd" stroke="#f00"></polyline>
+        </svg>
+    </body>
+</html>
