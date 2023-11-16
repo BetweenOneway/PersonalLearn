@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!--1:加载js文件-->
+  <script src="./res/js/echarts.min.js"></script>
+</head>
+<body>
+  <!--2:创建容器-->
+  <div id="main" style="width:800px;height:600px;"></div>
+  <!--3:创建第二容器-->
+  <div id="main3" style="width:800px;height:600px;border:1px solid red">
+  </div>
+  <!--4:创建第三个容器:饼状图-->
+  <div id="main4" style="width:800px;height:600px;border:1px solid red">
+  </div>
+  <!--5:创建第四个容器:仪表图-->
+  <div id="main5" style="width:800px;height:600px;border:1px solid red;">
+  </div>
+  <!--3:创建通过js创建图形-->
+  <script>
+    //4:获取容器main对象
+    var main = document.getElementById("main");
+    //5:依据main对象来创建echart对象
+    var mychart = echarts.init(main)
+    //6:创建配置选项 option 59
+    var option = {
+     title:{text:"入门示例-柱状统计图"},
+     xAxis:{data:["衬衫","裤子","鞋","雪纺衫"]},
+     yAxis:{},
+     series:[
+       {type:"bar",data:[100,100,1,10]},
+       {type:"line",data:[101,59,16,77]}
+     ]
+    };
+    //7:将配置选项添加echarts对象即可 25
+    mychart.setOption(option);
+    
+    //################################
+    var list = [
+      {name:"北京",value:19000},
+      {name:"上海",value:23000},
+      {name:"杭州",value:17600},
+      {name:"广州",value:29000}
+    ];
+    var xlist =   [];//将分公司名称保存数组
+    var datalist = [];//将分公司销售保存数组
+    for(var item of list){
+        xlist.push(item.name);
+        datalist.push(item.value);
+    }
+    //依据以上数据创建销售统计
+    //8:获取容器main3
+    var main3 = document.getElementById("main3")
+    //9:创建新echarts对象 mycharts3
+    var mycharts3 = echarts.init(main3)
+    //10:创建新配置对象   option3 {空}
+    var option3 = {
+      title:{text:"分公司销售统计图"},
+      xAxis:{data:xlist},
+      yAxis:{},
+      series:[{type:"bar",data:datalist}]
+    };
+    //11:将option3添加mycharts3中 11:57
+    mycharts3.setOption(option3);
+   
+    //############################
+    //饼状图
+    //数据:data:[{value:122,name:"js"}...]
+    //radius:"50%",        半径
+    //center:["50%","50%"],圆心画布中心
+    //获取容器
+    var main4 = document.getElementById("main4");
+    //创建echart对象
+    var mychart4 = echarts.init(main4);
+    //创建配置对象
+    var option4 = {
+      title:{text:"饼状统计图"},
+      series:[
+        {
+          type:"pie",//饼状图
+          radius:"50%",//饼图半径占画布一半
+          center:["50%","50%"],//圆心 画布中心
+          data:[
+            {value:122,name:"js"},
+            {value:121,name:"css"},
+            {value:25,name:"html"}
+          ]
+        }
+      ]
+    };
+    //将配置对象添加echarts
+    mychart4.setOption(option4);
+
+    //############################
+    //main5 仪表图
+    //type:"gauge"
+    //文字
+    //detail:{formatter:"{value}%"}
+    //data:[{value:32,name:"完成率"}] 
+    //指针:
+    var main5 = document.getElementById("main5");
+    var mychart5 = echarts.init(main5);
+    var option5 = {
+    series:[
+      {
+       name:"业务指标",
+       type:"gauge",
+       detail:{formatter:"{value}%"},//显示文字
+       data:[
+         {value:0,name:"完成率"}  //指针
+        ]
+       }
+      ]
+    }
+    mychart5.setOption(option5);
+    //练习:每隔100ms修改数据到100停
+    //1:创建变量保存变化数值
+    var num = 1; 
+    //2:创建定时器修改value
+    var t = setInterval(()=>{
+      //2.1:修改value值
+      num++;
+      option5.series[0].data[0].value = num;
+      mychart5.setOption(option5,true);//更新
+      //2.2:到100停止
+      if(num>=100){clearInterval(t)}
+    },100)
+    //3:如果到100停止
+  </script>
+</body>
+</html>

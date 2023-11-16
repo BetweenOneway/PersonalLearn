@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <h3>拖动API</h3>
+        <img id="t" src="res/trash.png" alt="">
+        <img id="p3" src="res/p3.png" alt="">
+        <script>
+            var t = document.getElementById("t");
+            var p3 = document.getElementById("p3");
+
+            p3.ondragstart = function(){
+                //console.log(1)
+            }
+            p3.ondrag = function(){
+                //console.log(2)
+            }
+            p3.ondragend = function(){
+                //console.log(3)
+            }
+
+            t.ondragenter = function(){
+                console.log(1);
+            }
+            t.ondragover = function(e){
+                //阻止事件默认行为，否则会没有ondrop事件
+                e.preventDefault();
+                console.log(2);
+            }
+            t.ondragleave = function(){
+                console.log(3);
+            }
+            t.ondrop = function(){
+                console.log(4);
+            }
+        </script>
+    </body>
+</html>

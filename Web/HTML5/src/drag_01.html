@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <img src="res/trash.png" alt="" id="t">
+        <div class="container">
+            <img src="res/p3.png" alt="" id="p3">
+            <img src="res/p4.png" alt="" id="p4">
+            <img src="res/p5.png" alt="" id="p5">
+        </div>
+
+        <script>
+            var pid;
+            var list = document.querySelectorAll(".container img");
+            for(var item of list)
+            {
+                item.ondragstart = function(){
+                    pid = this.id;
+                    console.log(pid);
+                }
+                item.ondrag = function(){}
+                item.ondragend = function(){}
+            }
+
+            var t = document.getElementById("t");
+            t.ondragenter = function(){}
+            t.ondragover = function(e){
+                e.preventDefault();
+            }
+            t.ondragleave = function(){}
+            t.ondrop = function(){
+                var item = document.getElementById(pid);
+                item.remove();
+            }
+        </script>
+    </body>
+</html>
