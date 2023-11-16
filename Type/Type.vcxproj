@@ -142,6 +142,7 @@
     <ClCompile Include="bitOper.cpp" />
     <ClCompile Include="class.cpp" />
     <ClCompile Include="container.cpp" />
+    <ClCompile Include="function.cpp" />
     <ClCompile Include="hash.cpp" />
     <ClCompile Include="lambda.cpp" />
     <ClCompile Include="macro.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="bitOper.h" />
     <ClInclude Include="class.h" />
     <ClInclude Include="container.h" />
+    <ClInclude Include="function.h" />
     <ClInclude Include="static.h" />
     <ClInclude Include="stream.h" />
     <ClInclude Include="stringOper.h" />

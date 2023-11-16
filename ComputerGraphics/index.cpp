@@ -9,6 +9,7 @@ using namespace std;
 
 #include "ComputerGraphics.h"
 #include "CalcBoundary.h"
+#include "testCommonFunctions.h"
 
 void Bezier()
 {
@@ -63,6 +64,10 @@ void CalcBoundary()
     CALC_BOUNDARY::BallConcaveMethod();
 }
 
+void CommonFunctions()
+{
+    testPMIntersectTri();
+}
 int main()
 {
     //Vector();
@@ -71,7 +76,8 @@ int main()
     //Bezier();
     //Plane();
     //Learn();
-    CalcBoundary();
+    //CalcBoundary();
+    CommonFunctions();
     system("pause");
     return 0;
 }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Vector3.h"
 #include "Triangle.h"
 
@@ -10,8 +10,8 @@ public:
     float GetUnitsLenth(const Vector3& point) const;
     float GetDistance(const Vector3& point) const;
     
-    Vector3 GetOrigin();
-    Vector3 GetDirection();
+    Vector3 GetOrigin() const;
+    Vector3 GetDirection() const;
     bool GetRayIntersect(const Triangle& triangle,
     std::vector<Vector3>* posiPoints, std::vector<unsigned>* posiSurfIdx,
     std::vector<Vector3>* negaPoints, std::vector<unsigned>* negaSurfIdx);

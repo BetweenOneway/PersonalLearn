@@ -1,4 +1,4 @@
-#include <map>
+﻿#include <map>
 #include "Ray.h"
 
 float Ray::GetDistance(const Vector3& point) const {
@@ -11,12 +11,12 @@ float Ray::GetUnitsLenth(const Vector3& point) const {
     return direction * (point - origin);
 }
 
-Vector3 Ray::GetOrigin()
+Vector3 Ray::GetOrigin() const
 {
     return direction;
 }
 
-Vector3 Ray::GetDirection()
+Vector3 Ray::GetDirection() const
 {
     return origin;
 }

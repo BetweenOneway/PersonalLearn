@@ -16,6 +16,8 @@ using namespace std;
 
 #include "bitOper.h"
 #include "stream.h"
+#include "function.h"
+
 
 enum class Color:int {
     Red,
@@ -353,11 +355,15 @@ void testStream()
     STREAM::testStream();
 }
 
+void testFunction()
+{
+    FUNCTION::testFunction();
+}
 int main()
 {
     //testStream();
     //testDist();
-    testBit();
+    //testBit();
     //testContainer();
    // testWString();
     //testWired();
@@ -368,6 +374,8 @@ int main()
     //testType();
     //testString();
     //testMacro();
+
+    testFunction();
 
     system("pause");
     return 0;

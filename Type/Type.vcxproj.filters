@@ -54,6 +54,9 @@
     <ClCompile Include="macro.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="function.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="container.h">
@@ -78,6 +81,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="stream.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="function.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
