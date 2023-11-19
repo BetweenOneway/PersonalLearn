@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="socket.io.js"></script>
+    </head>
+    <body>
+        <h4>WebSocket client</h4>
+        <script>
+            var clientSocket = io("ws://127.0.0.1:3031");
+            //向服务器发送消息 触发事件message 时间名要和服务端相同
+            clientSocket.emit("message","Hello server");
+            //接收服务器消息 绑定事件
+            clientSocket.on("server",(data)=>{
+                console.log("Recv from server:"+data);
+            })
+
+            //接收服务器端广播的消息
+            clientSocket.on("list",(data)=>{
+                console.log("Recv broadcast from server:"+data);
+            })
+        </script>
+    </body>
+</html>

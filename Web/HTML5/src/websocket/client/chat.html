@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="socket.io.js"></script>
+    </head>
+    <body>
+        <div id="msg"></div>
+        <hr />
+        <input type="text" id="inputMsg" />
+        <button id="inputBtn">发送</button>
+        <script>
+            var clientSocket = io("ws://127.0.0.1:3032");
+            clientSocket.on("enter",(data)=>{
+                var div = document.createElement("div");
+                div.innerHTML = data;
+                div.style.color = "#F00";
+                var msg = document.getElementById("msg");
+                msg.appendChild(div);
+            });
+            var inputBtn = document.getElementById("inputBtn");
+            inputBtn.onclick = function(){
+                var txt = document.getElementById("inputMsg");
+                clientSocket.emit("message",txt.value);
+                txt.value = "";
+            }
+
+            //接收其他用户发送的消息
+            clientSocket.on("list",(data)=>{
+                var div = document.createElement("div");
+                div.innerHTML = data;
+                div.style.color = "#00F";
+                var msg = document.getElementById("msg");
+                msg.appendChild(div);
+            });
+
+            //接收其他用户离开的消息
+            clientSocket.on("leave",(data)=>{
+                var div = document.createElement("div");
+                div.innerHTML = data;
+                div.style.color = "#F00";
+                var msg = document.getElementById("msg");
+                msg.appendChild(div);
+            });
+        </script>
+    </body>
+</html>
