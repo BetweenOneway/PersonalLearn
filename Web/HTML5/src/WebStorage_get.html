@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebStorage获取数据</title>
+</head>
+<body>
+    <script>
+        var size = sessionStorage.length;
+        console.log("sessionStorage len:"+size);
+        size = localStorage.length;
+        console.log("localStorage len:"+size);
+
+        var val = sessionStorage.getItem("car");
+        console.log(val);
+    </script>
+</body>
+</html>
