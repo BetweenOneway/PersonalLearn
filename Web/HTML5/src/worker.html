@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <button>111</button>
+        <!-- <script src="./res/js/05.js"></script> -->
+        <script>
+            var w = new Worker("./res/js/05.js")
+            w.postMessage("123");
+            w.onmessage = function(e){
+                console.log("From worker:"+e.data);
+            }
+
+        </script>
+        <button>222</button>
+    </body>
+</html>
