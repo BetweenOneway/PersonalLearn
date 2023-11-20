@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大鱼吃小鱼游戏</title>
+    <style>
+        .container{
+            width:800px;
+            height: 600px;
+            margin:0 auto;
+            border:1px solid red;
+        }
+        .allCanvas{
+            position:relative;
+            width: 800px;
+            height: 600px;
+            margin:0;
+        }
+        #canvas1{
+            position:absolute;
+            width: 800px;
+            height: 600px;
+            z-index: 1;
+            bottom:0;
+            left: 0;
+        }
+        #canvas2{
+            position:absolute;
+            width: 800px;
+            height: 600px;
+            z-index: 0;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="allCanvas">
+            <!--前景画布 大鱼 小鱼 分数-->
+            <canvas id="canvas1" width="800px" height="600px"></canvas>
+            <!--背景画布 海葵 食物-->
+            <canvas id="canvas2" width="800px" height="600px"></canvas>
+        </div>
+    </div>
+    <!--游戏入口程序 负责创建游戏中所有对象-->
+    <!--并且负责调用不同角色绘制方法-->
+    <script src="js/main.js"></script>
+    <!--负责绘制大海背景-->
+    <script src="js/background.js"></script>
+</body>
+</html>
