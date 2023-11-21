@@ -17,6 +17,9 @@ var deltaTime;
 //背景图片对象
 var bgPic;
 
+//全局变量保存海葵
+var ane;
+
 function game(){
     init();
     gameloop();
@@ -37,6 +40,9 @@ function init(){
 
     bgPic = new Image();
     bgPic.src = "./res/background.jpg"
+
+    ane = new aneObj();
+    ane.init();
 }
 
 function gameloop(){
@@ -46,6 +52,8 @@ function gameloop(){
     lastTime = now;
     
     ctx2.drawImage(bgPic,0,0);
+
+    ane.draw();
 }
 
 document.body.onload = game;
