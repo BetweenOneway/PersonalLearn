@@ -20,6 +20,9 @@ var bgPic;
 //全局变量保存海葵
 var ane;
 
+//食物对象
+var food;
+
 function game(){
     init();
     gameloop();
@@ -43,6 +46,9 @@ function init(){
 
     ane = new aneObj();
     ane.init();
+
+    food = new foodObj();
+    food.init();
 }
 
 function gameloop(){
@@ -54,6 +60,10 @@ function gameloop(){
     ctx2.drawImage(bgPic,0,0);
 
     ane.draw();
+
+    foodMonitor();
+    
+    food.draw();
 }
 
 document.body.onload = game;
