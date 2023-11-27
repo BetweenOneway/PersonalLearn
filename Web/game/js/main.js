@@ -23,6 +23,9 @@ var ane;
 //食物对象
 var food;
 
+//大鱼对象
+var mom;
+
 function game(){
     init();
     gameloop();
@@ -49,6 +52,9 @@ function init(){
 
     food = new foodObj();
     food.init();
+
+    mom = new momObj();
+    mom.init();
 }
 
 function gameloop(){
@@ -64,6 +70,10 @@ function gameloop(){
     foodMonitor();
     
     food.draw();
+
+    ctx1.clearRect(0,0,canWidth,canHeight);
+    //
+    mom.draw();
 }
 
 document.body.onload = game;
