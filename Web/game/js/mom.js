@@ -70,7 +70,7 @@ momObj.prototype.draw = function(){
 
     }
 
-    //
+    //身体的切换
     this.bigBodyStart += deltaTime;
     if(this.bigBodyStart>this.bigBodyEnd)
     {
@@ -80,7 +80,14 @@ momObj.prototype.draw = function(){
 
     this.x = lerpDistance(mx,this.x,0.98);
     this.y = lerpDistance(my,this.y,0.98);
+
+    //修改大鱼游动角度
+    var deltaY = my - this.y;
+    var deltaX = mx - this.x;
+    var beta = Math.atan2(deltaY,deltaX) + Math.PI;
     
+    this.angle = lerpAngle(beta,this.angle,0.9);
+
     ctx1.save();
     
     //将画布原点移动到大鱼身体中心

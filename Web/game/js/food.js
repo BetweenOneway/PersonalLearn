@@ -97,3 +97,7 @@ foodObj.prototype.born = function(i)
     this.foodType[i] = Math.random()<0.9?"blue":"orange";
     this.spd[i] = Math.random()*0.017;
 }
+
+foodObj.prototype.dead = function(i){
+    this.alive[i] = false;
+}

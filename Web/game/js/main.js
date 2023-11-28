@@ -70,6 +70,9 @@ function gameloop(){
     
     ctx2.drawImage(bgPic,0,0);
 
+    //画食物之前校验大鱼和食物的碰撞距离
+    momFoodCollision();
+    
     ane.draw();
 
     foodMonitor();
