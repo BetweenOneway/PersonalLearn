@@ -11,6 +11,16 @@ var momObj = function(){
     this.bigEyeIndex = 0;
     this.bigEyeStart = 0;
     this.bigEyeEnd = 3000;
+
+    //尾巴的切换
+    this.bigTailIndex = 0;
+    this.bigTailStart = 0;
+    this.bigTailEnd = 200;
+
+    //身体的切换
+    this.bigBodyIndex = 0;
+    this.bigBodyStart = 0;
+    this.bigBodyEnd = 4000;
 }
 
 momObj.prototype.init = function(){
@@ -51,14 +61,34 @@ momObj.prototype.draw = function(){
         }
     }
 
+    //尾巴切换
+    this.bigTailStart+=deltaTime;
+    if(this.bigTailStart > this.bigTailEnd)
+    {
+        this.bigTailIndex = (this.bigTailIndex+1)%8;
+        this.bigTailStart = 0;
+
+    }
+
+    //
+    this.bigBodyStart += deltaTime;
+    if(this.bigBodyStart>this.bigBodyEnd)
+    {
+        this.bigBodyIndex = (this.bigBodyIndex+1)%8;
+        this.bigBodyStart = 0;
+    }
+
+    this.x = lerpDistance(mx,this.x,0.98);
+    this.y = lerpDistance(my,this.y,0.98);
+    
     ctx1.save();
     
     //将画布原点移动到大鱼身体中心
     ctx1.translate(this.x,this.y);
     ctx1.rotate(this.angle);
 
-    ctx1.drawImage(this.bigBody[0],-this.bigBody[0].width*0.5,-this.bigBody[0].height*0.5);
-    ctx1.drawImage(this.bigTail[0],-this.bigTail[0].width*0.5+30,-this.bigTail[0].height*0.5);
+    ctx1.drawImage(this.bigBody[this.bigBodyIndex],-this.bigBody[this.bigBodyIndex].width*0.5,-this.bigBody[this.bigBodyIndex].height*0.5);
+    ctx1.drawImage(this.bigTail[this.bigTailIndex],-this.bigTail[this.bigTailIndex].width*0.5+30,-this.bigTail[this.bigTailIndex].height*0.5);
     ctx1.drawImage(this.bigEye[this.bigEyeIndex],-this.bigEye[this.bigEyeIndex].width*0.5,-this.bigEye[this.bigEyeIndex].height*0.5);
 
     ctx1.restore();

@@ -26,6 +26,9 @@ var food;
 //大鱼对象
 var mom;
 
+//鼠标位置
+var mx = 0, my = 0;
+
 function game(){
     init();
     gameloop();
@@ -55,6 +58,8 @@ function init(){
 
     mom = new momObj();
     mom.init();
+
+    frontCanvas.addEventListener("mousemove",hanleMove);
 }
 
 function gameloop(){
@@ -74,6 +79,12 @@ function gameloop(){
     ctx1.clearRect(0,0,canWidth,canHeight);
     //
     mom.draw();
+}
+
+function hanleMove(event)
+{
+    mx = event.offsetX;
+    my = event.offsetY;
 }
 
 document.body.onload = game;
