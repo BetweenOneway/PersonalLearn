@@ -20,6 +20,8 @@ function momFoodCollision(){
                 type = 2;
             }
             score.add(type);
+
+            wave.born(food.x[i],food.y[i]);
         }
     }
 }

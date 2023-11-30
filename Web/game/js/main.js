@@ -32,6 +32,9 @@ var mx = 0, my = 0;
 //分数
 var score;
 
+//光环
+var wave;
+
 function game(){
     init();
     gameloop();
@@ -64,6 +67,9 @@ function init(){
 
     score = new scoreObj();
 
+    wave = new waveObj();
+    wave.init();
+
     frontCanvas.addEventListener("mousemove",hanleMove);
 }
 
@@ -89,6 +95,8 @@ function gameloop(){
     mom.draw();
 
     score.draw();
+
+    wave.draw();
 }
 
 function hanleMove(event)
