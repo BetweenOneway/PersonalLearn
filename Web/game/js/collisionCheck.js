@@ -13,6 +13,13 @@ function momFoodCollision(){
         if(l < 900)
         {
             food.dead(i);
+            //
+            var type = 1;
+            if(food.foodType[i] != "blue")
+            {
+                type = 2;
+            }
+            score.add(type);
         }
     }
 }

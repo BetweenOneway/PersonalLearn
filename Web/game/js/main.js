@@ -29,6 +29,9 @@ var mom;
 //鼠标位置
 var mx = 0, my = 0;
 
+//分数
+var score;
+
 function game(){
     init();
     gameloop();
@@ -59,6 +62,8 @@ function init(){
     mom = new momObj();
     mom.init();
 
+    score = new scoreObj();
+
     frontCanvas.addEventListener("mousemove",hanleMove);
 }
 
@@ -82,6 +87,8 @@ function gameloop(){
     ctx1.clearRect(0,0,canWidth,canHeight);
     //
     mom.draw();
+
+    score.draw();
 }
 
 function hanleMove(event)
