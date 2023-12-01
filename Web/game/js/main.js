@@ -35,6 +35,9 @@ var score;
 //光环
 var wave;
 
+//小鱼
+var baby;
+
 function game(){
     init();
     gameloop();
@@ -70,6 +73,9 @@ function init(){
     wave = new waveObj();
     wave.init();
 
+    baby = new babyObj();
+    baby.init();
+
     frontCanvas.addEventListener("mousemove",hanleMove);
 }
 
@@ -97,6 +103,8 @@ function gameloop(){
     score.draw();
 
     wave.draw();
+
+    baby.draw();
 }
 
 function hanleMove(event)
