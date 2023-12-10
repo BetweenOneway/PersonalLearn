@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./login_2.css">
+    <script src="./assets/jquery.js"></script>
+</head>
+<body>
+    <div class="box">
+        <div class="pre-box">
+            <h1>Welcome</h1>
+            <p>Join Us</p>
+            <div class="img-box">
+                <img src="./assets/waoku.jpg" alt="">
+            </div>
+        </div>
+        <div class="register-form">
+            <div class="title-box">
+                <h1>注册</h1>
+            </div>
+            <div class="input-box">
+                <input type="text" placeholder="用户名">
+                <input type="password" placeholder="密码">
+                <input type="password" placeholder="确认密码">
+            </div>
+            <div class="btn-box">
+                <button>注册</button>
+                <p onclick="mySwitch()">有账号？去登录</p>
+            </div>
+        </div>
+        <div class="login-form">
+            <div class="title-box">
+                <h1>登录</h1>
+            </div>
+            <div class="input-box">
+                <input type="text" placeholder="用户名">
+                <input type="password" placeholder="密码">
+            </div>
+            <div class="btn-box">
+                <button>登录</button>
+                <p onclick="mySwitch()">没有账号？去注册</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let flag = true;
+        const mySwitch=()=>{
+            if(flag == true)
+            {
+                $(".pre-box").css("transform","translateX(100%)");
+                $(".pre-box").css("background-color","#C9E8ED");
+                $("img").attr("src","./assets/wuwu.jpeg");
+                flag = !flag;
+            }
+            else{
+                $(".pre-box").css("transform","translateX(0%)");
+                $(".pre-box").css("background-color","#EDD4DC");
+                $("img").attr("src","./assets/waoku.jpg");
+                flag = !flag;
+            }
+        };
+    </script>
+</body>
+</html>
