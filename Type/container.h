@@ -8,5 +8,6 @@ namespace CONTAINER_TEST {
     void testVectorAddress();
     void testVectorErase();
     void testPair();
+    void compareVectorArray();
 }
 

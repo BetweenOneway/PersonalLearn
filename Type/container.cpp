@@ -4,7 +4,7 @@
 #include <stack>
 #include <deque>
 #include <queue>
-
+#include <array>
 using namespace std;
 
 #include "container.h"
@@ -414,6 +414,18 @@ void testPair()
 
     std::pair<std::vector<int>, std::vector<int>> p1{};
     cout << p1.first.size() << " " << p1.second.size() << endl;
+}
+
+/*
+* 从容量上看vector和Array没啥区别
+* 可能更多的是解决原始数组遍历和原始数组传参时长度传递有难度的问题
+*/
+void compareVectorArray()
+{
+    array<int, 10> arr;
+    vector<int> vec(10);
+    cout << "vec.size = "<< vec.size() << ",vec.cap = " << vec.capacity() << endl;
+    cout << "arr.size = "<<arr.size() <<",arr.max_size() = " << arr.max_size() << endl;
 }
 
 }

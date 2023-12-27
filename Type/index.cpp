@@ -269,7 +269,8 @@ void testContainer()
 	//CONTAINER_TEST::testVectorPointer();
     //CONTAINER_TEST::testVectorAddress();
     //CONTAINER_TEST::testPair();
-    CONTAINER_TEST::testVectorErase();
+    //CONTAINER_TEST::testVectorErase();
+    CONTAINER_TEST::compareVectorArray();
 
 }
 
@@ -331,6 +332,7 @@ void testMacro()
 #endif
 
 }
+
 void testBit()
 {
     //int var1 = 0x00F0FF;
@@ -359,12 +361,13 @@ void testFunction()
 {
     FUNCTION::testFunction();
 }
+
 int main()
 {
     //testStream();
     //testDist();
     //testBit();
-    //testContainer();
+    testContainer();
    // testWString();
     //testWired();
     //testScope();
@@ -375,7 +378,7 @@ int main()
     //testString();
     //testMacro();
 
-    testFunction();
+    //testFunction();
 
     system("pause");
     return 0;
