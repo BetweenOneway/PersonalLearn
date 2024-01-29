@@ -435,7 +435,7 @@ header nav ul li a i{
     pointer-events: auto;
 }
 
-.carousel::before{
+.container::before{
     width:500px;
     height: 300px;
     content:'';
