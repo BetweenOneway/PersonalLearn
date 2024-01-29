@@ -343,7 +343,7 @@ header nav ul li a i{
     width:100%;
 }
 
-.carousel.showDetail .list .item:nth-child(2) .intro-content{
+.carousel.showDetail .list .item:nth-child(2) .intro{
     opacity: 0;
     pointer-events: none;
 }
@@ -367,11 +367,11 @@ header nav ul li a i{
     transform:translateY(-50%);
 }
 
-.carousel.showDetail .list .item .detail .title{
+.carousel.showDetail .list .item:nth-child(2) .detail .title{
     font-size:4em;
 }
 
-.carousel.showDetail .list .item .des .specifications {
+.carousel.showDetail .list .item:nth-child(2) .detail .specifications {
     display:flex;
     gap:10px;
     width: 100%;
@@ -379,7 +379,7 @@ header nav ul li a i{
     margin-top:20px;
 }
 
-.carousel.showDetail .list .item .des .specifications div {
+.carousel.showDetail .list .item:nth-child(2) .detail .specifications div {
     width: 90px;
     text-align: center;
     flex-shrink: 0;
@@ -389,16 +389,19 @@ header nav ul li a i{
     font-weight: bold;
 }
 
-.carousel.showDetail .list .item .detail .checkout{
+.carousel.showDetail .list .item:nth-child(2) .checkout button{
+    font-family: Poppins;
     background-color: transparent;
-    border:1px solid #5555;
+    border: 1px solid #5555;
     margin-left: 5px;
+    padding: 5px 10px;
+    letter-spacing: 2px;
     font-weight: 500;
 }
 
-.carousel.showDetail .list .item .checkout:nth-child(2){
-    background-color: #693eff;
-    color:#eee;
+.carousel.showDetail .list .item:nth-child(2) .checkout button:nth-child(2){
+    background-color: #693EFF;
+    color: #eee;
 }
 
 .carousel.showDetail .list .item:nth-child(2) .detail .title,
