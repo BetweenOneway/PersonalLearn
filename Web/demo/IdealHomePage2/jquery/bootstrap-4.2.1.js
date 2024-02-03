@@ -1,1 +1,0 @@
-document.write("<script src='https://lib.sinaapp.com/js/bootstrap/4.2.1/js/bootstrap.min.js'><\/script>");
