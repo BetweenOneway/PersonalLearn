@@ -2008,8 +2008,14 @@ label{
 @media(max-width:767px){.search-course-area .cat-selsct{margin-left:0}}
 @media only screen and (min-width:576px) and (max-width:767px){.search-course-area .cat-selsct{margin-left:0}}
 .search-course-area .cat-selsct::before{
-    content:'\f078';position:absolute;font-family:'font awesome 5 pro';line-height:1;color:#000846;font-size:14px;
-    right:245px;top:38px;z-index:1
+    content:'\f078';
+    position:absolute;
+    font-family:'FontAwesome';
+    line-height:1;color:#000846;
+    font-size:14px;
+    right:245px;
+    top:38px;
+    z-index:1
 }
 @media(max-width:767px){.search-course-area .cat-selsct::before{right:40px}}
 @media only screen and (min-width:576px) and (max-width:767px){.search-course-area .cat-selsct::before{right:40px}}
