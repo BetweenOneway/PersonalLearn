@@ -1157,7 +1157,9 @@ label{
     line-height:60px;
     background:#ec1f1f
 }
-.video-learn-area .video-area .popup-video i{color:#fff}
+.video-learn-area .video-area .popup-video i{
+    color:#fff;
+}
 .improve-skill-area .review-icon{margin-bottom:10px}
 .improve-skill-area .review-icon a{color:#ea5822;font-size:12px;line-height:1}
 .course-title-03{font-size:30px}
