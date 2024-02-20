@@ -10,28 +10,53 @@
             margin:0;
             padding: 0;
         }
-        .loginForm {
-            width: 350px;
-            position: absolute;
-            left:50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
+        body {
+            height: 100vh;
+            display:flex;
             justify-content: center;
             align-items: center;
+            background-image: url(../assets/bg01.jpg);
+            background-size: cover;
+        }
+        .loginForm {
+            width: 350px;
+            padding:40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color:#FFFFFF49;
+            border-radius: 50px;
+        }
+        .title {
+            font-size:80px;
+            color: #FFFF;
         }
         input[type="text"],input[type="password"]{
+            width: 100%;
             height:50px;
+            margin:10px 0;
+            padding:5px 20px 0 20px;
+            border-radius: 50px;
+            box-sizing: border-box;
+        }
+        .loginButton {
+            width: 100%;
+            height: 50px;
+            border-radius: 50px;
+            background-color: #007BFF;
+            color:#FFFF;
+            font-size: 20px;
+            letter-spacing: 30px;
+            text-indent: 30px;/*解决增加字符间距letter-spacing后文本不居中问题*/
         }
     </style>
 </head>
 <body>
     <div class="loginForm">
-        <h2>登录</h2>
+        <h2 class="title">登录</h2>
         <input type="text" placeholder="用户名">
         <input type="password" placeholder="密码">
-        <input type="button" value="登录">
-
+        <button type="button" class="loginButton">登录</button>
     </div>
 </body>
 </html>
