@@ -70,5 +70,6 @@
     <None Include="json\json_valueiterator.inl">
       <Filter>json</Filter>
     </None>
+    <None Include="test.json" />
   </ItemGroup>
 </Project>

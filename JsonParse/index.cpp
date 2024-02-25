@@ -5,6 +5,7 @@
 using namespace std;
 
 void readFileJson();
+void readFileJson2();
 
 int main(int argc, char* argv[])
 {
@@ -50,10 +51,11 @@ void readFileJson()
 
         cout << "My name is " << name << endl;
         cout << "I`m " << age << endl;
-        cout << "I`m a" << (sexIsM ? "man" : "woman") << endl;
+        cout << "I`m a " << (sexIsM ? "man" : "woman") << endl;
 
         //读取子节点--字典
         const Json::Value partner = root["partner"];
+        cout << partner["partner_name"] << endl;
         vector<string> keys = partner.getMemberNames();
         for (unsigned int i = 0; i < keys.size(); i++) {
             cout << partner[keys[i]];
@@ -66,4 +68,14 @@ void readFileJson()
     }
 
     system("pause");
+}
+
+void readFileJson2()
+{
+    std::string strJsonFile("./conf/robot/RobotCutSpeed.json");
+
+    Json::CharReaderBuilder renderBuilder;
+
+    Json::CharReader* reader = renderBuilder.newCharReader();
+    Json::Value root;
 }
