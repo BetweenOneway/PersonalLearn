@@ -38,16 +38,38 @@
             padding:5px 20px 0 20px;
             border-radius: 50px;
             box-sizing: border-box;
+            border:5px solid transparent;
         }
         .loginButton {
             width: 100%;
             height: 50px;
+            border:none;
             border-radius: 50px;
             background-color: #007BFF;
             color:#FFFF;
             font-size: 20px;
             letter-spacing: 30px;
             text-indent: 30px;/*解决增加字符间距letter-spacing后文本不居中问题*/
+        }
+        .loginFooter {
+            width: 100%;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .reamberMe {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        input[type="checkbox"] {
+            height: 25px;
+            width: 25px;
+            margin-right: 10px;
+        }
+        .register {
+            text-decoration: none;
         }
     </style>
 </head>
@@ -57,6 +79,42 @@
         <input type="text" placeholder="用户名">
         <input type="password" placeholder="密码">
         <button type="button" class="loginButton">登录</button>
+        <div class="loginFooter">
+            <div class="reamberMe">
+                <input type="checkbox" name="" id="reamberMe">
+                <label for="reamberMe">记住我</label>
+            </div>
+            <a href="#" class="register" id="register">注册</a>
+        </div>
     </div>
+    <script>
+        var registerBtn = document.getElementById("register");
+        registerBtn.addEventListener("click",()=>{
+            var title = document.querySelector(".title");
+            var userName = document.querySelector('input[type="text"]');
+            var userPwd = document.querySelector('input[type="password"]');
+            var loginBtn = document.querySelector(".loginButton");
+            var reamberMeRegion = document.querySelector(".reamberMe");
+            var register = document.getElementById("register");
+            if(title.innerHTML == "注册")
+            {
+                title.innerHTML = "登录";
+                userName.placeholder="用户名";
+                userPwd.placeholder = "密码";
+                loginBtn.innerText="登录";
+                reamberMeRegion.style.opacity = "1";
+                register.innerHTML = "注册"
+            }
+            else
+            {
+                title.innerHTML = "注册";
+                userName.placeholder="新用户名";
+                userPwd.placeholder = "新密码";
+                loginBtn.innerText="注册";
+                reamberMeRegion.style.opacity = "0";
+                register.innerHTML = "登录"
+            }
+        });
+    </script>
 </body>
 </html>
