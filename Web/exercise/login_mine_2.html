@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录页面 2</title>
+
+    <style>
+        * {
+            margin:0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+            margin:0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position:relative;
+        }
+        .coverImage {
+            position: absolute;
+            top:0;
+            left:0;
+            width: 50%;
+        }
+        .coverImage img{
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+        }
+        .registerForm, .loginForm{
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="coverImage">
+            <h1>Welcome</h1>
+            <h2>Join Us</h2>
+            <img src="../assets/waoku.jpg" alt="">
+        </div>
+        <div class="registerForm">
+            <h2>注册</h2>
+            <input type="text" placeholder="用户名">
+            <input type="password" placeholder="密码">
+            <input type="password" placeholder="确认密码">
+            <button type="button">注册</button>
+            <a href="#">已有账号？去登陆</a>
+        </div>
+        <div class="loginForm">
+            <h2>注册</h2>
+            <input type="text" placeholder="用户名">
+            <input type="password" placeholder="密码">
+            <button type="button">登录</button>
+            <a href="#">没有账号？去注册</a>
+        </div>
+    </div>
+</body>
+</html>
