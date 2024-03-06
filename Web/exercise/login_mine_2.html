@@ -12,6 +12,8 @@
         body {
             background: linear-gradient(to right,rgb(247,209,215),rgb(191,227,241));
             height: 100vh;
+            display: flex;
+            align-items: center;
         }
 
         .container {
@@ -22,8 +24,34 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
-
+        .coverBox {
+            width: 50%;
+            height: 100%;
+            position:absolute;
+            top:0;
+            left:0;
+            border: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .coverBox h1 {
+            letter-spacing: 5px;
+            text-indent: 5px;
+            color:white;
+        }
+        .coverBox p{
+            height: 30px;
+            margin: 20px 0;
+        }
+        .coverBox img{
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+        }
         .registerForm, .loginForm{
             display: flex;
             flex-direction: column;
@@ -59,6 +87,11 @@
 </head>
 <body>
     <div class="container">
+        <div class="coverBox">
+            <h1>Welcome</h1>
+            <p>Join Us</p>
+            <img src="../assets/waoku.jpg" alt="">
+        </div>
         <div class="registerForm">
             <h2>注册</h2>
             <input type="text" placeholder="用户名">
@@ -70,7 +103,7 @@
             </div>
         </div>
         <div class="loginForm">
-            <h2>注册</h2>
+            <h2>登录</h2>
             <input type="text" placeholder="用户名">
             <input type="password" placeholder="密码">
             <div class="confirmArea">
