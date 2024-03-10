@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登录页面 2</title>
+    <script src="../assets/jquery.js"></script>
     <style>
         * {
             margin:0;
@@ -29,6 +30,7 @@
         .coverBox {
             width: 50%;
             height: 100%;
+            background-color: #c9e8Ed;
             position:absolute;
             top:0;
             left:0;
@@ -37,27 +39,32 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            transition:0.5s ease-in-out;
         }
         .coverBox h1 {
             letter-spacing: 5px;
             text-indent: 5px;
             color:white;
         }
+
         .coverBox p{
             height: 30px;
             margin: 20px 0;
         }
+
         .coverBox img{
             width: 200px;
             height: 200px;
             border-radius: 50%;
         }
+
         .registerForm, .loginForm{
             display: flex;
             flex-direction: column;
             align-items: center;
             flex: 1;
         }
+
         h2{
             text-align: center;
             letter-spacing: 5px;
@@ -99,7 +106,7 @@
             <input type="password" placeholder="确认密码">
             <div class="confirmArea">
                 <button type="button">注册</button>
-                <a href="#">已有账号？去登陆</a>
+                <a href="#" onclick="Switch(false)">已有账号？去登陆</a>
             </div>
         </div>
         <div class="loginForm">
@@ -108,9 +115,24 @@
             <input type="password" placeholder="密码">
             <div class="confirmArea">
                 <button type="button">登录</button>
-                <a href="#">没有账号？去注册</a>
+                <a href="#" onclick="Switch(true)">没有账号？去注册</a>
             </div>
         </div>
     </div>
+    <script>
+        function Switch(flag) {
+            if(flag == true)
+            {
+                $(".coverBox").css("transform","translateX(100%)");
+                $(".coverBox").css("background-color","#C9E8ED");
+                $(".coverBox img").attr("src","../assets/wuwu.jpeg");
+            }
+            else{
+                $(".coverBox").css("transform","translateX(0%)");
+                $(".coverBox").css("background-color","#EDD4DC");
+                $(".coverBox img").attr("src","../assets/waoku.jpg");
+            }
+        }
+    </script>
 </body>
 </html>
