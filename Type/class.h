@@ -59,4 +59,79 @@ namespace CLASS_TEST {
     };
 
     void testClassPassPointer();
+
+    class DataBase {
+    public:
+        void InitDataBase(int);
+    public:
+        int num;
+    };
+
+    class Algorithm : virtual public DataBase {
+    public:
+        void InitAlgorithm();
+    };
+
+    class CommonFunction : virtual public DataBase {
+    public:
+        void InitCommonFunction();
+    };
+    class Version1 : virtual public Algorithm, virtual public CommonFunction {
+    public:
+        void Init();
+    };
+
+    void testLozengeInherit();
+
+    //virtual类似于将最开始的父类单独提取了一份放在最终的子类中
+    //子类在构造的时候要求明确指出祖父类的构造
+    //祖父类的构造函数只被调用了一次
+    class Base2 {
+    public:
+        Base2(int num);
+        void set(int num);
+    protected:
+        int m_num;
+    };
+    class InheritClass1 : virtual protected Base2 {
+    public:
+        InheritClass1();
+        void Output1();
+    };
+    class InheritClass2 : virtual protected Base2 {
+    public:
+        InheritClass2();
+        void Output2();
+    };
+    class ActClass : private InheritClass1, private InheritClass2
+    {
+    public:
+        ActClass() :InheritClass1(), InheritClass2(),Base2(40) {};
+        void Output();
+    };
+
+    void testInherit2();
+
+
+    //
+    class DB {
+    public:
+        int m_num;
+    };
+
+    class A : virtual protected DB {
+    public:
+        void funcA() {};
+    };
+
+    class B :virtual private A, virtual protected DB {
+
+    };
+
+    class C :virtual  protected A, protected B {
+    public:
+        void CFunc() {
+            funcA();
+        }
+    };
 }

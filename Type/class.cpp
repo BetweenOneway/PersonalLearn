@@ -183,4 +183,73 @@ namespace CLASS_TEST {
         c2.Call();//6
        // c1 = nullptr;
     }
+
+    void DataBase::InitDataBase(int var)
+    {
+        num = var;
+    }
+
+    void Algorithm::InitAlgorithm()
+    {
+        InitDataBase(10);
+    }
+
+    void CommonFunction::InitCommonFunction()
+    {
+        InitDataBase(20);
+    }
+
+    void Version1::Init()
+    {
+        InitDataBase(30);
+        std::cout <<"num="<< num << endl;
+        InitAlgorithm();
+        std::cout << "num=" << num << endl;
+        InitCommonFunction();
+        std::cout << "num=" << num << endl;
+    }
+
+    void testLozengeInherit()
+    {
+        Version1 ver;
+        ver.Init();
+    }
+    Base2::Base2(int num)
+    {
+        std::cout << "call base2 construct:" << num << std::endl;
+        m_num = num;
+    }
+    void Base2::set(int num)
+    {
+        m_num = num;
+    }
+
+    InheritClass1::InheritClass1():Base2(10)
+    {
+        std::cout << "Call InheritClass1 construct" << std::endl;
+    }
+
+    void InheritClass1::Output1()
+    {
+        cout <<"InheritClass1::Output1:"<< m_num << endl;
+    }
+    InheritClass2::InheritClass2() :Base2(20)
+    {
+        std::cout << "Call InheritClass2 construct" << std::endl;
+    }
+    void InheritClass2::Output2()
+    {
+        cout << m_num << endl;
+    }
+    void ActClass::Output()
+    {
+        cout <<"ActClass:"<< m_num << endl;
+        Output1();
+    }
+
+    void testInherit2()
+    {
+        ActClass act;
+        act.Output();
+    }
 }

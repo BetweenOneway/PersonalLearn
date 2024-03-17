@@ -295,7 +295,9 @@ void testScope()
 void testClass()
 {
     //CLASS_TEST::testFinalOvertide();
-    CLASS_TEST::testClassPassPointer();
+    //CLASS_TEST::testClassPassPointer();
+    //CLASS_TEST::testLozengeInherit();
+    CLASS_TEST::testInherit2();
 }
 
 void testStruct()
@@ -367,12 +369,12 @@ int main()
     //testStream();
     //testDist();
     //testBit();
-    testContainer();
+    //testContainer();
    // testWString();
     //testWired();
     //testScope();
     //testStatic();
-    //testClass();
+    testClass();
     //testStruct();
     //testType();
     //testString();
