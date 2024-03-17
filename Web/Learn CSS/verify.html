@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../assets/fontawesome-free-6.5.1-web/css/all.min.css">
+    <style>
+        * {
+            margin:0;
+            padding: 0;
+            box-sizing:border-box;
+        }
+        body{
+            height: 100vh;
+            background-color:#E4E9F7;
+        }
+        .close {
+            width: 88px;
+        }
+        .shell{
+            background-color: #fff;
+            padding:10px 14px;
+            height: 100%;
+            position:fixed;
+            top:0;
+            left:0;
+            z-index: 100;
+        }
+        .menu-bar{
+            display:flex;
+            flex-direction: column;
+            justify-content:space-between;
+        }
+        .menu{
+            margin-top:40px;
+        }
+        .shell li{
+            height: 50px;
+            list-style:none;
+            display: flex;
+            align-items: center;
+            margin-top:10px;
+        }
+        .shell li a{
+            list-style:none;
+            height: 100%;
+            width:100%;
+            background-color:transparent;
+            display: flex;
+            align-items: center;
+            border-radius:6px;
+            text-decoration:none;
+        }
+        .text, .icon{
+            color:#707070;
+        }
+        .icon {
+            min-width: 60px;/*88-14-14*/
+            border-radius:6px;
+            height:100%;
+            display:flex;
+            justify-content:center;
+            font:200 23px "";
+        }
+        .shell.close .text{
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="shell close">
+        <div class="menu-bar">
+            <div class="menu">
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="">
+                            <i class="icon">
+                                <i class="fa-solid fa-house"></i>
+                            </i>
+                            <span class="text">主页</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="">
+                            <i class="icon">
+                                <i class="fa-solid fa-house"></i>
+                            </i>
+                            <span class="text">主页</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="">
+                            <i class="icon">
+                                <i class="fa-solid fa-house"></i>
+                            </i>
+                            <span class="text">主页</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="">
+                            <i class="icon">
+                                <i class="fa-solid fa-house"></i>
+                            </i>
+                            <span class="text">主页</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="">
+                            <i class="icon">
+                                <i class="fa-solid fa-house"></i>
+                            </i>
+                            <span class="text">主页</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

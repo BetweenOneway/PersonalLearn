@@ -4,89 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>侧边伸缩导航栏</title>
-    <link rel="stylesheet" href="../assets/font-awesome-4.7.0/css/font-awesome.css">
-    <style>
-        * {
-            margin:0;
-            padding: 0;
-        }
-        body{
-            width:100%;
-            height:100vh;
-        }
-        nav{
-            width: 10%;
-            padding: 10px 14px;
-            position: fixed;
-            top:0;
-            left: 0;
-        }
-        ul {
-            list-style: none;
-        }
-        .user {
-            display: flex;
-        }
-        .user .userImage img {
-            width: 45px;
-            border-radius: 6px;
-        }
-        .user .userInfo {
-            display: flex;
-            flex-direction: column;
-        }
-
-
-    </style>
+    <link rel="stylesheet" href="../assets/fontawesome-free-6.5.1-web/css/all.css">
+    <link rel="stylesheet" href="./nav2_mine.css">
 </head>
 <body>
-    <nav>
-        <div class="user">
-            <div class="userImage">
-                <img src="../assets/img/rumi.jpeg" alt="">
+    <nav class="shell close">
+        <div class="header">
+            <div class="user">
+                <div class="userImage">
+                    <img src="../assets/img/rumi.jpeg" alt="">
+                </div>
+                <div class="userInfo">
+                    <span class="userName">王者伟业</span>
+                    <span class="userRole">Admin</span>
+                </div>
             </div>
-            <div class="userInfo">
-                <span class="userName">王者伟业</span>
-                <span class="userRole">Admin</span>
-            </div>
+            <i class="fa-solid fa-angle-right toggle"></i>
         </div>
         <div class="functionArea">
             <div class="searchArea"></div>
             <ul class="functionList">
                 <li>
-                    <i class="fa fa-home"></i>
-                    <span>主页</span>
+                    <a href="#">
+                        <i class="icon">
+                            <i class="fa-solid fa-house"></i>
+                        </i>
+                        <span class="text">主页</span>
+                    </a>
                 </li>
                 <li>
-                    <i class="fa fa-home"></i>
-                    <span>收藏</span>
+                    <a href="#">
+                        <i class="icon">
+                            <i class="fa-regular fa-star"></i>
+                        </i>
+                        <span class="text">收藏</span>
+                    </a>
                 </li>
                 <li>
-                    <i class="fa fa-home"></i>
-                    <span>历史记录</span>
+                    <a href="#">
+                        <i class="icon">
+                            <i class="fa-regular fa-clock"></i>
+                        </i>
+                        <span class="text">历史记录</span>
+                    </a>
                 </li>
                 <li>
-                    <i class="fa fa-home"></i>
-                    <span>消息</span>
+                    <a href="#">
+                        <i class="icon">
+                            <i class="fa-regular fa-comments"></i>
+                        </i>
+                        <span class="text">消息</span>
+                    </a>
                 </li>
                 <li>
-                    <i class="fa fa-home"></i>
-                    <span>粉丝管理</span>
+                    <a href="#">
+                        <i class="icon">
+                            <i class="fa-regular fa-heart"></i>
+                        </i>
+                        <span class="text">粉丝管理</span>
+                    </a>
                 </li>
                 <li>
-                    <i class="fa fa-home"></i>
-                    <span>创作中心</span>
+                    <a href="#">
+                        <i class="icon">
+                            <i class="fa-solid fa-pen"></i>
+                        </i>
+                        <span class="text">创作中心</span>
+                    </a>
                 </li>
                 <li>
-                    <i class="fa fa-home"></i>
-                    <span>注销</span>
+                    <a href="#">
+                        <i class="icon">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        </i>
+                        <span class="text">注销</span>
+                    </a>
                 </li>
                 <li>
-                    <i class="fa fa-home"></i>
-                    <span>夜间模式</span>
+                    <i class="icon">
+                        <i class="fa-solid fa-moon"></i>
+                    </i>
+                    <span class="text">夜间模式</span>
+                    <span class="switch"></span>
                 </li>
             </ul>
         </div>
     </nav>
+    <script>
+        const body = document.querySelector("body");
+        nav = body.querySelector("nav");
+        toggleBtn = body.querySelector(".toggle");
+        toggleBtn.addEventListener("click",()=>{
+            nav.classList.toggle("close");
+        });
+    </script>
 </body>
 </html>
