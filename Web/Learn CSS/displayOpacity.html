@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试display none与opacity 0对父元素宽度的影响</title>
+    <style>
+        #d1 {
+            border:1px solid red;
+            display:inline-block;
+        }
+        #c1{
+            width: 100px;
+            height: 100px;
+            border:1px solid blue;
+            visibility: hidden;
+        }
+        #c2{
+            width:100px;
+            height:100px;
+            border:1px solid greenyellow;
+            opacity: 0;
+        }
+        #i1{
+            opacity: 0;
+        }
+        #i2{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="d1">
+        <div id="c1"></div>
+        <div id="c2"></div>
+        <i id="i1">hello</i><i id="i2">world</i>
+    </div>
+</body>
+</html>
