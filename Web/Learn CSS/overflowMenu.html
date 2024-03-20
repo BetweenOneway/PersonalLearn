@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试用overflow实现菜单隐藏</title>
+    <link rel="stylesheet" href="../assets/font-awesome-4.7.0/css/font-awesome.min.css">
+    <style>
+        ul{
+            list-style: none;
+            transition:all ease 1s;
+            overflow: hidden;
+        }
+        ul li{
+            
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <input type="button" value="hidden">
+    <nav>
+        <ul>
+            <li>
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+            </li>
+            <li>
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+            </li>
+            <li>
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+            </li>
+            <li>
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+            </li>
+            <li>
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+            </li>
+        </ul>
+    </nav>
+    <script>
+        var isHide = false;
+        var hideBtn = document.getElementsByTagName("input");
+        console.log(hideBtn);
+        var ul = document.getElementsByTagName("ul");
+        console.log(ul);
+        hideBtn[0].addEventListener("click",()=>{
+            console.log(isHide?"hide":"not");
+            if(isHide)
+            {
+                ul[0].style.width="70px";
+                isHide = false;
+            }
+            else{
+                ul[0].style.width="15px";
+                isHide = true;
+            }
+        });
+    </script>
+</body>
+</html>

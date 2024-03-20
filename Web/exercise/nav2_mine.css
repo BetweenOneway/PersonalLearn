@@ -64,6 +64,7 @@ ul {
 .close .user .userInfo {
     opacity: 0;
 }
+
 .header .toggle {
     width:25px;
     height:25px;
@@ -71,6 +72,11 @@ ul {
     position:absolute;
     top:50%;
     right: -25px;
+    background-color: var(--primary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
 }
 
 .functionArea {
@@ -104,6 +110,19 @@ ul {
     align-items: center;
     font:200 23px "";/*因为fontAwesome是字符图标 这里的23px实际效果是放大图标*/
 }
+
+.modeSwitch {
+    display: flex;
+    align-items: center;
+    position:relative;
+}
+.toggle-switch{
+    position:absolute;
+    right: 0;
+    height:100%;
+    min-width:60px;
+    border: 6px;
+}
 .switch {
     position:relative;
     display: inline-block;
@@ -111,5 +130,17 @@ ul {
     height: 22px;
     border-radius: 25px;
     background-color: var(--toggle-color);
+}
+.switch::before{
+    content:"";
+    position:absolute;
+    height: 15px;
+    width:15px;
+    border-radius: 50%;
+    top: 50%;
+    left:5px;
+    transform: translateY(-50%);
+    background-color: var(--shell-color);
+    transition:all .3s ease;
 }
 
