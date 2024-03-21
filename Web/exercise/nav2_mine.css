@@ -30,6 +30,16 @@ body{
     opacity: 0;
 }
 
+.userImage, .icon {
+    min-width: 60px;
+    border-radius: 6px;
+}
+
+.text{
+    font:500 17px "";
+    white-space: nowrap;/*避免中文自动换行*/
+}
+
 nav{
     width: 13%;
     padding: 10px 14px;
@@ -65,6 +75,17 @@ ul {
     opacity: 0;
 }
 
+.userName {
+    margin-top:2px;
+    font:600 18px;
+}
+
+.userRole{
+    font-size:20px;
+    margin-top: -2px;
+    display: block;
+}
+
 .header .toggle {
     width:25px;
     height:25px;
@@ -72,11 +93,18 @@ ul {
     position:absolute;
     top:50%;
     right: -25px;
+    transform: translateY(-50%) rotate(180deg);
     background-color: var(--primary-color);
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 15px;
+    cursor: pointer;
+    transition:all .3s ease;
+}
+
+.shell.close .header .toggle{
+    transform: translateY(-50%) rotate(0deg);
 }
 
 .functionArea {
