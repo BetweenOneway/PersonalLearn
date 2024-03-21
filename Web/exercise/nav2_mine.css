@@ -21,9 +21,11 @@ body{
 .close {
     width: 88px;
 }
+
 .shell{
     background-color: var(--shell-color);
     height: 100%;
+    transition: all .3s ease;
 }
 
 .shell.close  .text {
@@ -41,7 +43,7 @@ body{
 }
 
 nav{
-    width: 13%;
+    width: 250px;
     padding: 10px 14px;
     position: fixed;
     top:0;
@@ -144,12 +146,27 @@ ul {
     align-items: center;
     position:relative;
 }
+.sun-moon{
+    height: 50px;
+    width: 60px;
+}
+.modeSwitch .sun-moon .icon{
+    position:absolute;
+}
+.modeSwitch .sun-moon .icon.sun {
+    opacity: 0;
+}
+
 .toggle-switch{
     position:absolute;
     right: 0;
     height:100%;
     min-width:60px;
     border: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .switch {
     position:relative;
@@ -170,5 +187,16 @@ ul {
     transform: translateY(-50%);
     background-color: var(--shell-color);
     transition:all .3s ease;
+}
+
+.dark .modeSwitch .sun-moon .icon.sun {
+    opacity: 1;
+}
+
+.dark .modeSwitch .sun-moon .icon.moon {
+    opacity: 0;
+}
+.dark .switch::before{
+    left:20px;
 }
 

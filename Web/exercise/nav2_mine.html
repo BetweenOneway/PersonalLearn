@@ -82,15 +82,18 @@
                         <span class="text">注销</span>
                     </a>
                 </li>
-                <li>
-                    <div class="modeSwitch">
-                        <i class="icon">
+                <li class="modeSwitch">
+                    <div class="sun-moon">
+                        <i class="icon moon">
                             <i class="fa-solid fa-moon"></i>
                         </i>
-                        <span class="text">夜间模式</span>
-                        <div class="toggle-switch">
-                            <span class="switch"></span>
-                        </div>
+                        <i class="icon sun">
+                            <i class="fa-solid fa-sun"></i>
+                        </i>
+                    </div>
+                    <span class="mode-text text">夜间模式</span>
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
                     </div>
                 </li>
             </ul>
@@ -102,6 +105,19 @@
         toggleBtn = body.querySelector(".toggle");
         toggleBtn.addEventListener("click",()=>{
             nav.classList.toggle("close");
+        });
+
+        modeSwitch = body.querySelector(".toggle-switch");
+        modeText = body.querySelector(".mode-text");
+        modeSwitch.addEventListener("click",()=>{
+            body.classList.toggle("dark");
+            if(body.classList.contains('dark'))
+            {
+                modeText.innerText="日间模式";
+            }
+            else{
+                modeText.innerText="夜间模式";
+            }
         });
     </script>
 </body>
