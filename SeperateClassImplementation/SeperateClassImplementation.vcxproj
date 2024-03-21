@@ -139,11 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DerivedClass.cpp" />
+    <ClCompile Include="Imp.cpp" />
     <ClCompile Include="Imp1.cpp" />
     <ClCompile Include="imp2.cpp" />
     <ClCompile Include="SeperateClassImplementation.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseClass.h" />
+    <ClInclude Include="Calc.h" />
+    <ClInclude Include="DerivedClass.h" />
     <ClInclude Include="head.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

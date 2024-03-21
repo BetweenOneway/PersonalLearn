@@ -24,9 +24,24 @@
     <ClCompile Include="imp2.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Imp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DerivedClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="head.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DerivedClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Calc.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
