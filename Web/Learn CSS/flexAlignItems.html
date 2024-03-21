@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>不同宽度元素在交叉轴上的对齐</title>
+    <style>
+        #c1{
+            display: flex;
+            flex-direction: column;
+            border: 1px solid red;
+            width: 400px;
+        }
+        #d1{
+            width: 100px;
+            height: 200px;
+            border: 1px solid blue;
+        }
+        #d2{
+            width: 200px;
+            height: 200px;
+            border: 1px solid cyan;
+        }
+        #c2{
+            display: flex;
+            flex-direction: column;
+            width: 100px;
+            border: 1px solid pink;
+        }
+        #c3{
+            display: flex;
+            flex-direction: column;
+            width: 100px;
+            border: 1px solid greenyellow;
+        }
+    </style>
+</head>
+<body>
+    <div id="c1">
+        <div id="d2"></div>
+        <div id="d1"></div>
+    </div>
+    <div id="c2">
+        <span>王者伟业</span>
+        <span>Admin</span>
+    </div>
+    <!--中文在溢出时会自动换行，但是英文不会-->
+    <div id="c3">
+        <span>Hello,world</span>
+        <span>Admin</span>
+    </div>
+</body>
+</html>
