@@ -2,5 +2,5 @@
 class Calculator
 {
 public:
-    virtual int calculate() = 0;
+    virtual int calculate(int,int) = 0;
 };

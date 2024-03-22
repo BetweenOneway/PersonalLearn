@@ -7,11 +7,14 @@ public:
 
 class Father {
 public:
+    virtual void Init();
     void FatherPublicFunction();
 protected:
     void FatherProtectedFunction();
 private:
     void FatherPrivateFunction();
+public:
+    int m_num;
 };
 
 class PublicInheritChild : public Father
@@ -38,6 +41,11 @@ public:
 class Adder : public Calculator
 {
 public:
-    int caculate() override;
+    int calculate(int a, int b) override;
 };
 
+class Child :virtual public Father
+{
+public:
+    void Init();
+};

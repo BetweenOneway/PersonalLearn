@@ -2,6 +2,13 @@
 #include <iostream>
 using namespace std;
 
+void Father::Init()
+{
+    cout << m_num << endl;
+    cout << "Father::Init()" << endl;
+    m_num = 10;
+}
+
 void Father::FatherPublicFunction()
 {
     cout << "Father public function" << endl;
@@ -34,7 +41,14 @@ void PrivateInheritChild::CallFather()
 
 }
 
-int Adder::caculate(int a, int b)
+int Adder::calculate(int a, int b)
 {
     return a + b;
+}
+
+void Child::Init()
+{
+    Father::Init();
+    cout << "Child::Init()" << endl;
+    cout << m_num << endl;
 }
