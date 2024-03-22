@@ -51,6 +51,11 @@ body{
     white-space: nowrap;/*避免中文自动换行*/
 }
 
+.text,.icon {
+    color:var(--text-color);
+    transition:all .3s ease;
+}
+
 nav{
     width: 250px;
     padding: 10px 14px;
