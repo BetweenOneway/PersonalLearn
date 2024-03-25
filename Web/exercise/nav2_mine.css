@@ -157,6 +157,21 @@ ul {
     color:#CCC;
 }
 
+.searchArea{
+    height: 50px;
+    display: flex;
+    align-items: center;
+    background-color: var(--primary-color-light);
+    cursor: pointer;
+}
+.searchArea input{
+    height: 100%;
+    width: 100%;
+    outline: none;
+    border: none;
+    background-color: var(--primary-color-light);
+    color:var(--text-color);
+}
 .icon {
     height: 100%;
     min-width: 60px;
