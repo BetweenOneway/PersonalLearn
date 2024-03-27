@@ -30,35 +30,59 @@
             left:0;
             width: 250px;
             padding: 10px 14px;
+            background-color:var(--shell-color);
         }
         nav.close {
             width: 88px;
         }
-        .user {
+        .header{
+            position: relative;
+        }
+        .header .user {
             display: flex;
-            justify-content: space-between;
             align-items: center;
         }
-        .user .userImage img{
-            width: 45px;
+        .header .user .userImage {
+            border-radius: 5%;
         }
-        .user .userInfo{
+        .header .user .userImage img{
+            width: 45px;
+            border-radius: 5px;
+        }
+        .header .user .userInfo{
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            padding-left: 15px;
+        }
+        .header .toggle {
+            width: 25px;
+            height: 25px;
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor:pointer;
         }
     </style>
 </head>
 <body>
     <nav>
-        <div class="user">
-            <div class="userImage">
-                <img src="../../assets/img/rumi.jpeg" alt="">
-            </div>
-            <div class="userInfo">
-                <span class="userRole">Admin</span>
-                <span class="userName">王者伟业</span>
+        <div class="header">
+            <div class="user">
+                <div class="userImage">
+                    <img src="../../assets/img/rumi.jpeg" alt="">
+                </div>
+                <div class="userInfo">
+                    <span class="userRole">Admin</span>
+                    <span class="userName">王者伟业</span>
+                </div>
             </div>
             <div class="toggle">
                 <i class="fa-solid fa-angle-right "></i>
