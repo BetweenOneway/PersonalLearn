@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试绝对定位与box-sizing的关系</title>
+    <style>
+        #container{
+            width: 200px;
+            height: 200px;
+            position:relative;
+            border: 10px solid red;
+            box-sizing: border-box;
+        }
+        #d1{
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            left:50%;
+            background-color: aqua;
+            z-index: 1000;
+        }
+        #d2{
+            width: 100px;
+            height: 100px;
+            background-color: bisque;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="d1"></div>
+        <div id="d2"></div>
+    </div>
+</body>
+</html>
