@@ -6,71 +6,6 @@
     <title>侧边可伸缩导航栏</title>
     <link rel="stylesheet" href="../../assets/fontawesome-free-6.5.1-web/css/all.css">
     <link rel="stylesheet" href="./style.css">
-    <style>
-        :root{
-            --body-color:#E4E9F7;
-            --shell-color:#FFF;
-            --primary-color:#695CFE;
-            --primary-color-light:#F6F5FF;
-            --toggle-color:DDD;
-            --text-color:#707070;
-        }
-        * {
-            margin:0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body{
-            height: 100vh;
-            background-color: var(--body-color);
-        }
-        nav {
-            position: fixed;
-            top:0;
-            left:0;
-            width: 250px;
-            padding: 10px 14px;
-            background-color:var(--shell-color);
-        }
-        nav.close {
-            width: 88px;
-        }
-        .header{
-            position: relative;
-        }
-        .header .user {
-            display: flex;
-            align-items: center;
-        }
-        .header .user .userImage {
-            border-radius: 5%;
-        }
-        .header .user .userImage img{
-            width: 45px;
-            border-radius: 5px;
-        }
-        .header .user .userInfo{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding-left: 15px;
-        }
-        .header .toggle {
-            width: 25px;
-            height: 25px;
-            position: absolute;
-            left: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor:pointer;
-        }
-    </style>
 </head>
 <body>
     <nav>
@@ -84,13 +19,69 @@
                     <span class="userName">王者伟业</span>
                 </div>
             </div>
-            <div class="toggle">
-                <i class="fa-solid fa-angle-right "></i>
-            </div>
+            
         </div>
-        <div class="searchArea"></div>
-        <div class="functionList"></div>
-        <div class="bottomFunction"></div>
+        <div class="toggle">
+            <i class="fa-solid fa-angle-right "></i>
+        </div>
+        <div class="searchArea">
+            <i>
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </i>
+            <input type="text" placeholder="搜索。。。">
+        </div>
+        <div class="menu">
+            <div class="functionList">
+                <ul>
+                    <li>
+                        <i class="icon">
+                            <i class="fa-solid fa-house"></i>
+                        </i>
+                        <span>主页</span>
+                    </li>
+                    <li>
+                        <i class="icon">
+                            <i class="fa-regular fa-star"></i>
+                        </i>
+                        <span>收藏</span>
+                    </li>
+                    <li>
+                        <i class="icon">
+                            <i class="fa-regular fa-clock"></i>
+                        </i>
+                        <span>历史记录</span>
+                    </li>
+                    <li>
+                        <i class="icon"><i class="fa-regular fa-comments"></i></i>
+                        <span>消息</span>
+                    </li>
+                    <li>
+                        <i class="icon"><i class="fa-regular fa-heart"></i></i>
+                        <span>粉丝管理</span>
+                    </li>
+                    <li>
+                        <i class="icon">
+                            <i class="fa-solid fa-pen"></i>
+                        </i>
+                        <span>创作中心</span>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+        <div class="bottomFunction">
+            <ul>
+                <li>
+                    <i class="icon">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </i>
+                    <span class="text">注销</span>
+                </li>
+                <li>
+                    <span>夜间模式</span>
+                </li>
+            </ul>
+        </div>
     </nav>
 </body>
 </html>
