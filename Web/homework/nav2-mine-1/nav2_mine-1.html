@@ -91,4 +91,13 @@
         </div>
     </nav>
 </body>
+<script>
+    const body = document.querySelector("body");
+    toggle = body.querySelector(".toggle")
+    nav = body.querySelector("nav")
+
+    toggle.addEventListener("click",()=>{
+        nav.classList.toggle("close");
+    })
+</script>
 </html>
