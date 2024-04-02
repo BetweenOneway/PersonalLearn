@@ -109,8 +109,30 @@ nav .TopArea .functionList {
     justify-content: space-between;
 }
 
+nav .TopArea .functionList li{
+    border-radius: 6px;
+}
+nav .TopArea .functionList li:hover{
+    background-color: var(--primary-color);
+}
+
+nav .TopArea .functionList li:hover .text,
+nav .TopArea .functionList li:hover .icon{
+    color: var(--shell-color);
+}
 nav .bottomFunction {
     border-top: 1px solid var(--border-color);
+}
+nav .bottomFunction ul li:first-child {
+    border-radius: 6px;
+}
+nav .bottomFunction ul li:first-child:hover{
+    background-color: var(--primary-color);
+}
+
+nav .bottomFunction ul li:first-child:hover .text,
+nav .bottomFunction ul li:first-child:hover .icon{
+    color: var(--shell-color);
 }
 
 .mode {
