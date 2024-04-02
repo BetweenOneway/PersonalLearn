@@ -84,7 +84,7 @@
                             <i class="fa-solid fa-moon"></i>
                         </i>
                     </div>
-                    <span class="text">夜间模式</span>
+                    <span class="mode-text text">夜间模式</span>
                     <span class="switch"></span>
                 </li>
             </ul>
@@ -96,8 +96,24 @@
     toggle = body.querySelector(".toggle")
     nav = body.querySelector("nav")
 
+    switchMode = body.querySelector(".switch")
+    modeText = body.querySelector(".mode-text")
+
     toggle.addEventListener("click",()=>{
         nav.classList.toggle("close");
     })
+
+    switchMode.addEventListener("click",()=>{
+        body.classList.toggle("dark");
+        if(body.classList.contains("dark"))
+        {
+            modeText.innerText = "日间模式"
+        }
+        else
+        {
+            modeText.innerText = "夜间模式"
+        }
+    })
+
 </script>
 </html>
