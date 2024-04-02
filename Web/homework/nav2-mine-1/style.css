@@ -3,7 +3,7 @@
     --shell-color:#FFF;
     --primary-color:#695CFE;
     --primary-color-light:#F6F5FF;
-    --toggle-color:DDD;
+    --toggle-color:#DDD;
     --text-color:#707070;
     --border-color:#E6E5E5;
 }
@@ -16,6 +16,18 @@ body{
     height: 100vh;
     background-color: var(--body-color);
 }
+.icon,.text {
+    color:var(--text-color);
+}
+.icon {
+    display: flex;
+    height: 100%;
+    min-width: 60px;
+    justify-content: center;
+    align-items: center;
+    font: 300 23px "";
+}
+
 nav {
     position: fixed;
     top:0;
@@ -24,6 +36,9 @@ nav {
     height: 100vh;
     padding: 10px 14px;
     background-color:var(--shell-color);
+    display: flex;
+    flex-direction:column;
+    justify-content: space-between;
 }
 
 nav.close {
@@ -65,20 +80,70 @@ nav .toggle {
 
 nav ul li{
     list-style: none;
-}
-.searchArea{
-    margin-top: 20px;
-}
-.menu {
-    margin: 40px 0;
     display: flex;
-    flex-direction: column;
+    height: 50px;
+    align-items: center;
+}
+
+.searchArea{
+    margin-top: 40px;
+    background-color: var(--primary-color-light);
+    cursor:pointer;
+    border-radius:6px;
+    height: 50px;
+    display: flex;
+}
+
+.searchArea input{
+    width: 100%;
+    height: 100%;
+    outline: none;
+    border:none;
+    background-color: var(--primary-color-light);
+    font:500 17px "";
+}
+
+nav .TopArea .functionList {
+    display: flex;
+    flex-direction:column;
     justify-content: space-between;
 }
 
 nav .bottomFunction {
-    margin: 20px 0 10px 0;
     border-top: 1px solid var(--border-color);
+}
+
+.mode {
+    position:relative;
+}
+.sun-moon {
+    width: 60px;
+    height: 50px;
+}
+.sun-moon .icon {
     position: absolute;
-    bottom:0;
+}
+.sun-moon .sun{
+    opacity: 0;
+}
+
+.switch {
+    position: absolute;
+    right: 0;
+    width: 40px;
+    height: 22px;
+    border-radius: 25px;
+    background-color: var(--toggle-color);
+}
+
+.switch::before{
+    content:"";
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    position:absolute;
+    left: 5px;
+    top: 50%;
+    transform:translateY(-50%);
+    background-color: var(--shell-color);
 }
