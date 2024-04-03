@@ -7,6 +7,14 @@
     --text-color:#707070;
     --border-color:#E6E5E5;
 }
+.dark {
+    --body-color:#202224;
+    --shell-color:#171717;
+    --primary-color:#3A3B3C;
+    --primary-color-light:#3A3B3C;
+    --toggle-color:#FFF;
+    --text-color:#CCC;
+}
 * {
     margin:0;
     padding: 0;
@@ -176,6 +184,20 @@ nav .bottomFunction ul li:first-child:hover .icon{
     top: 50%;
     transform:translateY(-50%);
     background-color: var(--shell-color);
+}
+
+nav .TopArea .functionList li:hover{
+    background-color: var(--primary-color);
+}
+
+.dark nav .TopArea .functionList li:hover .text,
+.dark nav .TopArea .functionList li:hover .icon{
+    color: var(--shell-color);
+}
+
+.dark nav .bottomFunction ul li:first-child:hover .text,
+.dark nav .bottomFunction ul li:first-child:hover .icon{
+    color: var(--shell-color);
 }
 
 .dark .sun-moon .sun{
