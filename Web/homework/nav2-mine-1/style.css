@@ -186,6 +186,10 @@ nav .bottomFunction ul li:first-child:hover .icon{
     background-color: var(--shell-color);
 }
 
+nav li:hover {
+    cursor: pointer;
+}
+
 nav .TopArea .functionList li:hover{
     background-color: var(--primary-color);
 }

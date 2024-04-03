@@ -16,8 +16,8 @@
                         <img src="../../assets/img/rumi.jpeg" alt="">
                     </div>
                     <div class="userInfo">
-                        <span class="userRole">Admin</span>
-                        <span class="userName">王者伟业</span>
+                        <span class="userRole text">Admin</span>
+                        <span class="userName text">王者伟业</span>
                     </div>
                 </div>
                 
@@ -95,12 +95,22 @@
     const body = document.querySelector("body");
     toggle = body.querySelector(".toggle")
     nav = body.querySelector("nav")
+    searchBtn = body.querySelector(".searchArea .icon");
+    searchInput = body.querySelector(".searchArea input");
 
     switchMode = body.querySelector(".switch")
     modeText = body.querySelector(".mode-text")
 
     toggle.addEventListener("click",()=>{
         nav.classList.toggle("close");
+    })
+
+    searchBtn.addEventListener("click",()=>{
+        nav.classList.toggle("close");
+        if(!nav.classList.contains("close"))
+        {
+            searchInput.focus();
+        }
     })
 
     switchMode.addEventListener("click",()=>{
