@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>菜单栏</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        ol,ul,li{
+            list-style: none;
+        }
+        .testBody>header{
+            line-height: 50px;
+            background-color: dodgerblue;
+        }
+        .testBody>nav{
+            font-size: 14px;
+            background-color: cornflowerblue;
+            height: 30px;
+        }
+        .testBody>nav>ul{
+            width: 100%;
+            background-color: rgba(100, 149, 237,1);
+        }
+        .testBody>nav>ul>li{
+            float: left;
+            padding: 5px 10px;
+            background-color: rgba(100, 149, 237,0.8);
+        }
+        .testBody>nav>ul>li>ul>li{
+            padding: 5px 10px;
+            background-color: rgba(100, 149, 237,0.6);
+        }
+        .testBody>nav>ul>li>ul{
+            display: none;
+        }
+        .testBody>nav>ul>li:hover{
+            color: white;
+            background-color: burlywood;
+        }
+        .testBody>nav>ul>li:hover ul{
+            display: block;
+        }
+        .test1{
+            background-color: yellow;
+            width: 200px;
+            height: 100px;
+        }
+        /**例子2**/
+        .test2Body{
+            width: 80%;
+            margin: 0 auto;
+        }
+        .testBottom{
+            background-color: aquamarine;
+        }
+        .test2Body>nav>ul{
+            width: 100%;
+            background-color: dodgerblue;
+            text-align: center;
+            font-size: 14px;
+        }
+        .test2Body>nav>ul>li{
+            position: relative;
+            float: left;
+            line-height: 50px;
+            width: 20%;
+            box-sizing: border-box;
+        }
+        .test2Body>nav>ul>li:hover{
+            color: white;
+            background-color: rgba(255,255,255,0.5);
+        }
+        .test2Body>nav>ul>li:hover ul{
+            display: block;
+        }
+        .test2Body>nav>ul>li>ul{
+            display: none;
+            position: absolute;
+            width: 100%;
+            z-index: 100;
+            background-color: dodgerblue;
+        }
+        .test2Body>nav>ul>li>ul>li{
+            display: inline-block;
+            width: 100%;
+            background-color: rgba(255,255,255,0.5);
+            animation-name: navAnim;
+        }
+        .test2Body>nav>ul>li>ul>li:nth-of-type(1){
+            animation-duration: 0.25s;
+        }
+        .test2Body>nav>ul>li>ul>li:nth-of-type(2){
+            animation-duration: 0.5s;
+        }
+        .test2Body>nav>ul>li>ul>li:nth-of-type(3){
+            animation-duration: 1s;
+        }
+        .test2Body>nav>ul>li>ul>li:nth-of-type(4){
+            animation-duration: 1.5s;
+        }
+        .test2Body>nav>ul>li>ul>li:nth-of-type(5){
+            animation-duration: 2s;
+        }
+        .test2Body>nav>ul>li>ul>li:hover{
+            color: white;
+            background-color: rgba(255,255,255,0);
+        }
+        @keyframes navAnim
+        {
+            0%{transform: rotateY(180deg)}
+            50%{transform: rotateY(90deg)}
+            100%{transform: rotateY(0deg)}
+        }
+        .closeFloat:after{display:block;clear:both;content:"";visibility:hidden;height:0}
+        .closeFloat{zoom:1}
+    </style>
+</head>
+<body>
+   <div class="testBody">
+        <header>
+            假装有logo
+        </header>
+        <nav>
+            <ul>
+                <li>
+                    菜单一
+                    <ul>
+                        <li>子菜单一</li>
+                        <li>子菜单二</li>
+                        <li>子菜单三</li>
+                        <li>子菜单四</li>
+                    </ul>
+                </li>
+            <li>
+                菜单二
+                <ul>
+                    <li>子菜单一</li>
+                    <li>子菜单二</li>
+                    <li>子菜单三</li>
+                    <li>子菜单四</li>
+                </ul>
+            </li>
+            <li>
+                菜单三
+                <ul>
+                    <li>子菜单一</li>
+                    <li>子菜单二</li>
+                    <li>子菜单三</li>
+                    <li>子菜单四</li>
+                </ul>
+            </li>
+            <li>
+                菜单四
+                <ul>
+                    <li>子菜单一</li>
+                    <li>子菜单二</li>
+                    <li>子菜单三</li>
+                    <li>子菜单四</li>
+                </ul>
+            </li>
+            </ul>
+        </nav>
+        <div class="test1">
+            <p>
+            我是下方容器
+            </p>
+        </div>
+   </div>
+   <div class="test2Body">
+        <nav>
+            <ul class="closeFloat">
+                <li>菜单一
+                    <ul>
+                        <li><a>子级菜单1</a></li>
+                        <li><a>子级菜单2</a></li>
+                        <li><a>子级菜单3</a></li>
+                    </ul>
+                </li>
+                <li>菜单二</li>
+                <li>
+                    菜单三
+                    <ul>
+                        <li><a>子级菜单1</a></li>
+                        <li><a>子级菜单2</a></li>
+                        <li><a>子级菜单3</a></li>
+                        <li><a>子级菜单4</a></li>
+                        <li><a>子级菜单5</a></li>
+                    </ul>
+                </li>
+                <li>菜单四</li>
+                <li>菜单五</li>
+            </ul>
+        </nav>
+   </div>
+   <div class="testBottom">
+    菜单栏是否会影响我呢？
+   </div>
+</body>
+</html>
