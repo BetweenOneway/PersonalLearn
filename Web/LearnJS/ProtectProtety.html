@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var eric={
+            eid:1001,
+            ename:"埃里克",
+            _eage:25 //可以改，但是必须介于18~65之间
+        }
+        //将要保护的数据属性半隐藏
+        Object.defineProperties(eric,{
+            _eage:{
+            enumerable:false,
+            configurable:false
+            },
+        //访问器属性，不能用.添加
+        //只能用defineProperty或defineProperties添加
+            eage:{//保镖冒名顶替原属性名
+            //保镖一请就是一对儿
+            get:function(){
+                //当外人试图获取eage的属性值时，自动调用get
+                console.log(`您正在试图获取eage属性的值,所以自动调用get...`);
+                //由get代为从受保护的属性中拿出真实值返回给外部。
+                return this._eage
+            },
+            set:function(value){
+                //当外人试图修改eage的属性值时，自动调用set
+                console.log(`您正在试图修改eage属性的值，所以自动调用set，且value收到新值${value}...`);
+                //将要赋的新值，先交给value
+                //在set内部使用自定义规则验证value
+                //如果新值value符合要求
+                if(value>=18&&value<=65){
+                //才实际保存回受保护的数据属性中
+                this._eage=value;
+                }else{
+                //报错！
+                throw Error("年龄必须介于18~65之间");
+                }
+            },
+            //value:保镖不需要value，因为保镖都是不实际存储属性值的
+            //writable:保镖也不需要writable，因为writable功能弱，才被迫使用保镖的
+            enumerable:true,//因为保镖需要代替受保护的数据属性抛头露面
+            configurable:false,//因为保镖不能随便删除！
+            }
+        });
+
+        //试图读取eric的年龄
+        console.log(eric.eage);
+        //试图修改eric的年龄
+        eric.eage=26;
+        console.log(eric);
+        //试图修改错误的年龄
+        eric.eage=-2;
+        console.log(eric);
+
+
+    </script>
+</body>
+</html>
