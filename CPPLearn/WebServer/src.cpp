@@ -26,7 +26,6 @@ int Error_Request_Method(int Socket);
 int Inquire_File(char* URI);
 int File_not_Inquire(int Socket);
 int Send_File(char* URI, int Socket);
-int Logo();
 const char* Judge_Method(char* method, int Socket);
 const char* Judge_File_Type(char* URI, const char* content_type);
 const char* Get_Data(const char* cur_time);
@@ -398,24 +397,6 @@ const char* Post_Value(char* message) {
     return suffix;
 }
 
-int Logo() {
-    //Web服务器标志信息 
-    printf("___________________________________________________________\n");
-    printf("  __          ________ _______\n");
-    printf("  \\ \\        / /  ____|  _____\\\n");
-    printf("   \\ \\  /\\  / /| |____  |____) )\n");
-    printf("    \\ \\/  \\/ / |  ____|  ____(   __  __     __ ___\n");
-    printf("     \\  /\\  /  | |____  |____) )(__ |_ \\  /|_ |___)\n");
-    printf("      \\/  \\/   |______|_______/  __)|__ \\/ |__|   \\\n");
-    printf("\n");
-    printf("            Welcome to use the Web Server!\n");
-    printf("                     Version 1.0\n\n");
-    printf("                         BooLo\n");
-    printf("___________________________________________________________\n\n");
-
-    return OK;
-}
-
 int main() {
     //实现主要功能 
     SOCKET ServerSock, MessageSock;
@@ -423,7 +404,6 @@ int main() {
     int rval, Length;
     char revbuf[BUF_SIZE];
 
-    Logo();
     printf("Web Server 1.0 is starting......\n\n");
     ServerSock = Server_Socket_Init();
     printf("\n-----------------------------------------------------------\n");
