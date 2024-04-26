@@ -14,8 +14,8 @@
             </n-badge>
 
             <!--主题按钮-->
-            <n-button circle tertiary>
-                <n-icon size="18" :component="DarkModeRound" />
+            <n-button circle tertiary @click="changeTheme(!isDarkTheme)">
+                <n-icon size="18" :component="theme.icon" />
             </n-button>
             <n-button tertiary type="primary">登录</n-button>
         </n-space>
@@ -24,4 +24,10 @@
 </template>
 <script setup>
     import {DarkModeRound, NotificationsNoneOutlined} from "@vicons/material"
+    import {useThemeStore} from '../../stores/themeStore'
+    import {storeToRefs} from 'pinia'
+
+    const themeStore = useThemeStore()
+    const {theme,isDarkTheme} = storeToRefs(themeStore)
+    const {changeTheme} = themeStore
 </script>
