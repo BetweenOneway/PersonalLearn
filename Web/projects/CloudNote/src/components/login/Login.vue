@@ -4,7 +4,7 @@
             <h2>登录</h2>
             <n-text depth="3">
                 暂无账号？
-                <n-button text type="info">去注册</n-button>
+                <n-button text type="info" @click="emits('changeStep',2)">去注册</n-button>
             </n-text>
         </n-space>
         <!--登录表单-->
@@ -44,6 +44,9 @@
 <script setup>
     import {EmailOutlined, LockOpenOutlined} from "@vicons/material"
     import {ref} from 'vue'
+
+    //自定义事件
+    const emits = defineEmits(['changeStep']);
 
     //登录表单值
     const loginFormValue = ref({

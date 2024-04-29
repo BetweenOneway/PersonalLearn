@@ -24,7 +24,7 @@
     <n-modal v-model:show="showLoginModal" transform-origin="center" :close-on-esc="false">
         <div style="width:420px">
             <Transition name="bounce" mode="out-in">
-                <component :is="showLoginModalCard" />
+                <component :is="showLoginModalCard" @changeStep="changeLoginModalStep"/>
             </Transition>
         </div>
     </n-modal>
@@ -45,10 +45,10 @@
 
     const showLoginModal = ref(false)
     //1 登录 2 注册 3 注册成功
-    const loginModalStep = ref(3)
+    const loginModalStep = ref(1)
 
     const showLoginModalCard = computed(()=>{
-        switch(loginModalStep){
+        switch(loginModalStep.value){
             case 1:
                 return Login;
                 break;
@@ -60,6 +60,11 @@
                 break;
         }
     })
+
+    //
+    const changeLoginModalStep = step=>{
+        loginModalStep.value = step
+    }
 </script>
 
 <style>
