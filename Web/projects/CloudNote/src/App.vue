@@ -16,6 +16,7 @@
                 </n-layout-content>
             </n-layout>
         </n-layout>
+        <login-modal/>
     </n-config-provider>
 </template>
 
@@ -24,6 +25,8 @@
 
     import {useThemeStore} from './stores/themeStore'
     import {storeToRefs} from 'pinia'
+    import LoginModal from "./components/login/LoginModal.vue"
+
     const themeStore = useThemeStore()
     const {theme} = storeToRefs(themeStore)
 </script>
