@@ -8,7 +8,7 @@
     </n-modal>
 </template>
 
-<script steup>
+<script setup>
     import {ref,computed} from 'vue'
     import {storeToRefs} from 'pinia'
 
