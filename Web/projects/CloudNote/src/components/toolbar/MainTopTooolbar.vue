@@ -22,12 +22,10 @@
     </n-space>
 
     <n-modal v-model:show="showLoginModal" transform-origin="center" :close-on-esc="false">
-        <div style="width:400px">
-
-            <!---->
-            <Login v-if="loginModalStep === 1"/>
-
-            <Register v-else-if="loginModalStep === 2"/>
+        <div style="width:420px">
+            <Transition name="bounce" mode="out-in">
+                <component :is="showLoginModalCard" />
+            </Transition>
         </div>
     </n-modal>
 
@@ -36,9 +34,10 @@
     import {DarkModeRound, NotificationsNoneOutlined, EmailOutlined, LockOpenOutlined} from "@vicons/material"
     import {useThemeStore} from '../../stores/themeStore'
     import {storeToRefs} from 'pinia'
-    import {ref} from 'vue'
+    import {ref,computed} from 'vue'
     import Login from '../login/Login.vue'
     import Register from '../login/Register.vue'
+    import RegisterSuccess from '../login/RegisterSuccess.vue'
 
     const themeStore = useThemeStore()
     const {theme,isDarkTheme} = storeToRefs(themeStore)
@@ -46,5 +45,39 @@
 
     const showLoginModal = ref(false)
     //1 登录 2 注册 3 注册成功
-    const loginModalStep = ref(2)
+    const loginModalStep = ref(3)
+
+    const showLoginModalCard = computed(()=>{
+        switch(loginModalStep){
+            case 1:
+                return Login;
+                break;
+            case 2:
+                return Register;
+                break;
+            default:
+                return RegisterSuccess;
+                break;
+        }
+    })
 </script>
+
+<style>
+    .bounce-enter-active {
+        animation: bounce-in 0.5s;
+    }
+    .bounce-leave-active {
+        animation: bounce-in 0.5s reverse;
+    }
+    @keyframes bounce-in {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.25);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
