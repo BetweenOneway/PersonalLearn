@@ -1,4 +1,7 @@
 const express=require("express");
+const crypto = require("crypto")
+const redis = require('redis')
+
 var query=require("./query");
 
 var router=express.Router();
@@ -6,6 +9,7 @@ var router=express.Router();
 const LOGIN_SUCCESS = {status:'L_000', description:'登录成功'}
 const LOGIN_FAIL = {status:'L_001', description:'登录失败'}
 const LOGIN_LOG_CREATE_EXCEPTION = {status:'L_002', description:'登录日志创建失败'}
+const LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION = {status:'L_003', description:'登录成功，缓存失败'}
 
 const SELECT_SUCCESS = {status:'S_000', description:'查询成功'}
 const SELECT_EXCEPTION = {status:'S_001', description:'查询异常'}
@@ -14,6 +18,7 @@ const SELECT_NONE={status:'S_003', description:'账号或密码错误'}
 
 const ACCOUNT_CLOCK = {status:'A_001', description:'账号被锁定'}
 
+//用户登录
 router.get("/login",(req,res)=>{
     console.log(req.query);
     var userEmail = req.query.userEmail
@@ -21,6 +26,7 @@ router.get("/login",(req,res)=>{
     var output={
         status:'',
         description:'',
+        userToken:'',
         userInfo:{}
       }
     // res.writeHead(200,{
@@ -61,6 +67,25 @@ router.get("/login",(req,res)=>{
                     if(result.affectedRows > 0)
                     {
                         console.log("记录事件成功")
+                        //将登录信息存储到redis中 14天有效期
+                        try {
+                            const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
+                            const redisClient = redis.createClient('6379', '127.0.0.1')
+                            redisClient.on('error', err => {
+                                console.error(err) // 打印监听到的错误信息
+                            })
+
+                            redisClient.setEx(userTokenKey,14*24*60*60,JSON.stringify(result))
+                            output.userToken = userTokenKey
+                            output.userInfo = result
+                            output.status = LOGIN_SUCCESS.status
+                            output.description = LOGIN_SUCCESS.description
+                        } catch (error) {
+                            console.log(error)
+                            output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
+                            output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
+                        }
+                        
                     }
                     else{
                         output.status = LOGIN_LOG_CREATE_EXCEPTION.status
