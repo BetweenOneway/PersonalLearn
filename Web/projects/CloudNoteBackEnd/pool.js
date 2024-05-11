@@ -9,7 +9,3 @@ var pool = mysql.createPool({
 });
 //把创建好的连接池导出
 module.exports = pool;
-
-
-
-
