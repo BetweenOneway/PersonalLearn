@@ -32,5 +32,14 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server:{
+    proxy:{
+        '/note':{
+            target:'http://127.0.0.1:18081',
+            changeOrigin:true,//允许跨域
+            rewrite:path=>path.replace(/^\/note/,'')
+        }
+    }
   }
 })

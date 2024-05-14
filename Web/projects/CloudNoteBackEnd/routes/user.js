@@ -19,10 +19,10 @@ const SELECT_NONE={status:'S_003', description:'账号或密码错误'}
 const ACCOUNT_CLOCK = {status:'A_001', description:'账号被锁定'}
 
 //用户登录
-router.get("/login",(req,res)=>{
-    console.log(req.query);
-    var userEmail = req.query.userEmail
-    var userPassword = req.query.userPassword
+router.post("/login",(req,res)=>{
+    console.log(req.body);
+    var userEmail = req.body.userEmail
+    var userPassword = req.body.userPassword
     var output={
         status:'',
         description:'',
@@ -93,8 +93,8 @@ router.get("/login",(req,res)=>{
                     }
                 })
             }
-            res.send(output);
         })
     }
+    res.send(output);
 })
 module.exports=router;
