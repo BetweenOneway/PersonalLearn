@@ -35,7 +35,7 @@ router.post("/login",(req,res)=>{
     //     "Content-Type":"text/plain;charset=utf-8"//避免乱码
     // })
 
-    if(0 == userEmail.length || 0 == userPassword)
+    if(0 == userEmail.length || 0 == userPassword.length)
     {
         output.status = SELECT_NONE.status
         output.description = SELECT_NONE.description
