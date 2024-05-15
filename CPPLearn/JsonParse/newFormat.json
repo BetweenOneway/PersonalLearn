@@ -1,0 +1,43 @@
+{
+    "encoding" : "UTF-8",
+    "CustomizeCutSpeedConfig": [
+        {
+            "ProductSeries": [ "1", "2" ],
+            "CutSpeedPartList": [ "CutSpeedPart1", "CutSpeedPart2", "CutSpeedPart3" ],
+            "CutSpeedPart1": {
+                "toothFDIList": [ 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 43, 44 ],
+                "cutSpeed": 49.0,
+                "isLipSide": true
+            },
+            "CutSpeedPart2": {
+                "toothFDIList": [ 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 43, 44 ],
+                "cutSpeed": 40.0,
+                "isLipSide": false
+            },
+            "CutSpeedPart3": {
+                "toothFDIList": [ 15, 16, 25, 26, 35, 36, 45, 46 ],
+                "cutSpeed": 40.0,
+                "isLipSide": true
+            }
+        },
+        {
+            "ProductSeries": [ "3", "4" ],
+            "CutSpeedPartList": [ "CutSpeedPart4", "CutSpeedPart5", "CutSpeedPart6" ],
+            "CutSpeedPart4": {
+                "toothFDIList": [ 15, 16, 25, 26, 35, 36, 45, 46 ],
+                "cutSpeed": 40.0,
+                "isLipSide": false
+            },
+            "CutSpeedPart5": {
+                "toothFDIList": [ 17, 18, 27, 28, 37, 38, 47, 48 ],
+                "cutSpeed": 36.0,
+                "isLipSide": true
+            },
+            "CutSpeedPart6": {
+                "toothFDIList": [ 17, 18, 27, 28, 37, 38, 47, 48 ],
+                "cutSpeed": 36.0,
+                "isLipSide": false
+            }
+        }
+    ]
+}

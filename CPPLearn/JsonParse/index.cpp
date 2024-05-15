@@ -9,7 +9,8 @@ void readFileJson2();
 
 int main(int argc, char* argv[])
 {
-    readFileJson();
+    readFileJson2();
+    //system("pause");
     return 0;
 }
 
@@ -67,15 +68,66 @@ void readFileJson()
         }
     }
 
-    system("pause");
+    //system("pause");
 }
 
 void readFileJson2()
 {
-    std::string strJsonFile("./conf/robot/RobotCutSpeed.json");
-
-    Json::CharReaderBuilder renderBuilder;
-
-    Json::CharReader* reader = renderBuilder.newCharReader();
+    Json::Reader reader;
     Json::Value root;
+
+    //确认文件读取状态
+    ifstream in("./newFormat.json", ios::binary);
+
+    if (!in.is_open())
+    {
+        cout << "Error opening file\n";
+        return;
+    }
+
+    //std::string line;
+    //while (std::getline(in, line)) {
+    //    std::cout << line << std::endl; // 输出文件中的每一行内容
+    //}
+
+    if (reader.parse(in, root))
+    {
+        const Json::Value cutSpeedConfigList = root["CustomizeCutSpeedConfig"];
+        for (int i = 0; i < cutSpeedConfigList.size(); i++)
+        {
+            const Json::Value cutSpeedConfig = cutSpeedConfigList[i];
+            const Json::Value productSeries = cutSpeedConfig["ProductSeries"];
+            cout << "ProductSeries:";
+            for (int index = 0; index < productSeries.size(); index++)
+            {
+                cout << productSeries[index].asString() << " ";
+            }
+            cout << endl;
+
+            //"CutSpeedPartList": [ "CutSpeedPart1", "CutSpeedPart2", "CutSpeedPart3" ],
+            const Json::Value cutSpeedPartList = cutSpeedConfig["CutSpeedPartList"];
+            for (int j = 0; j < cutSpeedPartList.size(); j++)
+            {
+                string cutSpeedPartName = cutSpeedPartList[j].asString();
+                const Json::Value cutSpeedPartConfig = cutSpeedConfig[cutSpeedPartName];
+
+                const Json::Value toothFDIList = cutSpeedPartConfig["toothFDIList"];
+                cout << "toothFDIList:";
+                for (int k = 0; k < toothFDIList.size(); k++)
+                {
+                    cout << toothFDIList[k].asInt()<<" ";
+                }
+                cout << endl;
+
+                cout << "speed:" << cutSpeedPartConfig["cutSpeed"].asDouble() << endl;
+                cout << "side:" << (cutSpeedPartConfig["isLipSide"].asBool() == true?"lip":"tongue") << endl;
+            }
+        }
+    }
+    else
+    {
+        cout << "文件解析失败" << endl;
+    }
+
+    
 }

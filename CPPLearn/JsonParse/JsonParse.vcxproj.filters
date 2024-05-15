@@ -16,6 +16,9 @@
     <Filter Include="json">
       <UniqueIdentifier>{cef6303f-c1b7-46c6-a84e-476fb9e5df70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TestJsonFiles">
+      <UniqueIdentifier>{3d6fff0f-2e09-46e7-9a48-0ada6b413a00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="json\json_reader.cpp">
@@ -70,6 +73,11 @@
     <None Include="json\json_valueiterator.inl">
       <Filter>json</Filter>
     </None>
-    <None Include="test.json" />
+    <None Include="newFormat.json">
+      <Filter>TestJsonFiles</Filter>
+    </None>
+    <None Include="test.json">
+      <Filter>TestJsonFiles</Filter>
+    </None>
   </ItemGroup>
 </Project>

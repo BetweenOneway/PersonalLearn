@@ -161,7 +161,9 @@
     <None Include="json\json_internalarray.inl" />
     <None Include="json\json_internalmap.inl" />
     <None Include="json\json_valueiterator.inl" />
+    <None Include="newFormat.json" />
     <None Include="test.json" />
+    <None Include="test\test.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
