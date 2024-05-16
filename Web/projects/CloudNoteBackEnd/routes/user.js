@@ -2,6 +2,7 @@ const express=require("express");
 const crypto = require("crypto")
 const redis = require('redis')
 
+var pool = require("../pool");
 var query=require("./query");
 
 var router=express.Router();

@@ -1,13 +1,21 @@
 var pool=require("../pool");
-module.exports=function(sql,params){
+
+module.exports=function(sql,params,callback){
   return new Promise(function(open,err){
     pool.getConnection(function(error,connection){
-        if(error)err(error);
+        if(error) throw error;
         connection.beginTransaction(error=>{
-            if(error)err(error);
+            if(error) throw error;
             connection.query(sql,params, function (error, results, fields) {
-                if(error) err(error);
-                else open(result); 
+                if(error)
+                {
+                    throw error;
+                }
+                else
+                {
+                    console.log(results);
+                    open(results); 
+                } 
             })
         });
     });
