@@ -100,7 +100,7 @@ void readFileJson2()
             cout << "ProductSeries:";
             for (int index = 0; index < productSeries.size(); index++)
             {
-                cout << productSeries[index].asString() << " ";
+                cout << productSeries[index].asInt() << " ";
             }
             cout << endl;
 
