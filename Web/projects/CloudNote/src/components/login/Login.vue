@@ -47,6 +47,7 @@
     import { noteBaseRequest } from "../../request/noteRequest"
     import {useMessage,useLoadingBar} from 'naive-ui'
     import {useLoginModalStore} from "../../stores/loginModalStore"
+    import {useUserStore} from "../../stores/userStore"
 
     //消息对象
     const message = useMessage()
@@ -59,6 +60,10 @@
     const loginModalStore = useLoginModalStore()
     //取出登陆模态框显示状态函数
     const {changeLoginModalShow} = loginModalStore
+
+    //用户共享资源对象
+    const userStore = useUserStore()
+    const {setUserInfo} = userStore
 
     //登录表单值
     const loginFormValue = ref({
@@ -142,6 +147,10 @@
                 changeLoginModalShow(false)
                 //将Redis中的用户token存储到本地
                 localStorage.setItem("userToken",responseData.data.userToken)
+
+                const user = responseData.data.user
+
+                setUserInfo(user.id,user.email,user.nickName,user.headPic,user.level,user.time)
             }
             else
             {

@@ -4,8 +4,35 @@ import { ref } from 'vue'
 export const useUserStore = defineStore(
     "user",
     ()=>{
-        //
-        const user = ref(false)
-        return {}
+        //id
+        const id=ref(null)
+        //昵称
+        const nickName = ref('')
+        //头像
+        const headPic = ref('')
+        //等级
+        const level = ref(0)
+        //邮箱
+        const email = ref('')
+        //注册时间
+        const time=ref('')
+
+        //设置用户信息
+        const setUserInfo = (u_id,u_email,u_nickName,u_headPic,u_level,u_time)=>{
+            //
+            id.value=u_id
+            nickName.value = u_nickName
+            headPic.value = u_headPic
+            level.value=u_level
+            email.value=u_email
+            time.value=u_time
+        }
+
+        return {id,email,nickName,headPic,level,time,setUserInfo}
+    },
+    {
+        persist: {
+            storage:localStorage,//本地存储
+        }
     }
 )
