@@ -21,6 +21,7 @@ CREATE TABLE `z_user`  (
 -- ----------------------------
 -- Records of z_user
 -- ----------------------------
+-- 31315105654@qq.com  eVF4TJ
 INSERT INTO `z_user` VALUES (8, '315105654@qq.com', 'd3424c2d0c11c6b6b13a5a620f8eb41b', '爱思考的飞飞', 'https://cdn.vuetifyjs.com/images/john.jpg', 0, '2023-05-05 15:03:33', 1);
 INSERT INTO `z_user` VALUES (15, '1737895547@qq.com', 'a0098d3228a3a4f94ccda7670a8f2c4d', '斯科拉', 'https://avatars.githubusercontent.com/u/58872083?v=4', 0, '2023-06-12 17:15:22', 1);
 
