@@ -140,6 +140,8 @@
                 message.success(responseData.message)
                 //关闭登陆对话框
                 changeLoginModalShow(false)
+                //将Redis中的用户token存储到本地
+                localStorage.setItem("userToken",responseData.data.userToken)
             }
             else
             {
