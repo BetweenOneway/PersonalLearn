@@ -1,0 +1,8 @@
+{
+    "appSettings": {
+      "smtp":"smtp.qq.com",
+      "mailFrom": "3927934406@qq.com",
+      "mailPwd":""
+    }
+  }
+  
