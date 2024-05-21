@@ -35,6 +35,7 @@ router.post("/login",(req,res)=>{
     {
         output.status = SELECT_NONE.status
         output.description = SELECT_NONE.description
+        res.send(output);
     }
     else
     {
@@ -50,22 +51,24 @@ router.post("/login",(req,res)=>{
                             res.send(output);
                         });
                     }
-                    if(results.status == 0)
+                    if(results[0].status == 0)
                     {
                         output.status=ACCOUNT_CLOCK.status
                         output.description=ACCOUNT_CLOCK.description
                         res.send(output);
                     }
-                    var userId = results.id;
-                    var curTime = new Date();
-                    var sql = `insert into z_user_log(desc,time,event,u_id) VALUES(?,?,?,?)`
-                    connection.query(sql, ['登录成功',curTime.toLocalDate(),'邮箱密码登录',userId], function (error, results, fields) {
+                    console.log(results)
+                    var userInfo = results[0];
+                    var date = new Date();
+                    var sql = `insert into z_user_log(\`desc\`,\`time\`,\`event\`,\`u_id\`) VALUES(?,?,?,?)`
+                    connection.query(sql, ['登录成功',date.toISOString().slice(0, 19).replace('T', ' '),'邮箱密码登录',userInfo.id], function (error, results, fields) {
                         if (error) {
-                          return connection.rollback(function() {
-                            output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
-                            output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
-                            res.send(output)
-                          });
+                            console.log(error)
+                            return connection.rollback(function() {
+                                output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
+                                output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
+                                res.send(output)
+                            });
                         }
                         connection.commit(function(err) {
                             if (err) {
@@ -73,82 +76,33 @@ router.post("/login",(req,res)=>{
                                 throw err;
                                 });
                             }
-                            try {
-                                const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
-                                const redisClient = redis.createClient('6379', '127.0.0.1')
-                                redisClient.on('error', err => {
-                                    console.error(err) // 打印监听到的错误信息
-                                })
-
-                                redisClient.setEx(userTokenKey,14*24*60*60,JSON.stringify(result))
-                                output.userToken = userTokenKey
-                                output.userInfo = result
-                                output.status = LOGIN_SUCCESS.status
-                                output.description = LOGIN_SUCCESS.description
-                            } catch (error) {
-                                console.log(error)
-                                output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
-                                output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
-                            }
+                            (async function(){
+                                try {
+                                    const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
+                                    const redisClient = redis.createClient('6379', '127.0.0.1')
+                                    await redisClient.connect()
+                                    redisClient.on('error', err => {
+                                        console.error(err) // 打印监听到的错误信息
+                                    })
+                                    redisClient.setEx(userTokenKey,14*24*60*60,JSON.stringify(userInfo))
+                                    output.userToken = userTokenKey
+                                    output.userInfo = userInfo
+                                    output.status = LOGIN_SUCCESS.status
+                                    output.description = LOGIN_SUCCESS.description
+                                    res.send(output)
+                                } catch (error) {
+                                    console.log(error)
+                                    output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
+                                    output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
+                                    res.send(output)
+                                }
+                            })()
                         });
-                      });
+                    });
                 });
-              });
-        })
-        
-
-        query(sql,[userEmail,userPassword])
-        .then(result=>{
-            //用户不存在
-            if(result.length == 0)
-            {
-                output.status = SELECT_NONE.status
-                output.description = SELECT_NONE.description
-            }
-            else{
-                //用户被锁定
-                if(result.status == 0)
-                {
-                    output.status=ACCOUNT_CLOCK.status
-                    output.description=ACCOUNT_CLOCK.description
-                }
-                //用户存在且状态正常
-                var userId = result.id;
-                var curTime = new Date();
-
-                var sql = `insert into z_user_log(desc,time,event,u_id) VALUES(?,?,?,?)`
-                query(sql,['登录成功',curTime.toLocalDate(),'邮箱密码登录',userId]).then(result=>{
-                    if(result.affectedRows > 0)
-                    {
-                        console.log("记录事件成功")
-                        //将登录信息存储到redis中 14天有效期
-                        try {
-                            const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
-                            const redisClient = redis.createClient('6379', '127.0.0.1')
-                            redisClient.on('error', err => {
-                                console.error(err) // 打印监听到的错误信息
-                            })
-
-                            redisClient.setEx(userTokenKey,14*24*60*60,JSON.stringify(result))
-                            output.userToken = userTokenKey
-                            output.userInfo = result
-                            output.status = LOGIN_SUCCESS.status
-                            output.description = LOGIN_SUCCESS.description
-                        } catch (error) {
-                            console.log(error)
-                            output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
-                            output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
-                        }
-                        
-                    }
-                    else{
-                        output.status = LOGIN_LOG_CREATE_EXCEPTION.status
-                        output.description = LOGIN_LOG_CREATE_EXCEPTION.description
-                    }
-                })
-            }
+           })
         })
     }
-    res.send(output);
+    
 })
 module.exports=router;
