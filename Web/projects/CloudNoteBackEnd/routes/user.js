@@ -3,7 +3,7 @@ const crypto = require("crypto")
 const redis = require('redis')
 
 var pool = require("../pool");
-var query=require("./query");
+//var query=require("./query");
 
 var router=express.Router();
 
@@ -29,20 +29,73 @@ router.post("/login",(req,res)=>{
         description:'',
         userToken:'',
         userInfo:{}
-      }
-    // res.writeHead(200,{
-    //     "Access-Control-Allow-Origin":"*",//可伪装成任意网址
-    //     //内容类型      普通文本
-    //     "Content-Type":"text/plain;charset=utf-8"//避免乱码
-    // })
+    }
 
     if(0 == userEmail.length || 0 == userPassword.length)
     {
         output.status = SELECT_NONE.status
         output.description = SELECT_NONE.description
     }
-    else{
-        var sql = `select id,status from z_user where email=? and password = ?`
+    else
+    {
+        pool.getConnection(function(error,connection){
+            connection.beginTransaction(function(err) {
+                if (err) { throw err; }
+                var sql = `select id,status from z_user where email=? and password = ?`
+                connection.query(sql, [userEmail,userPassword], function (error, results, fields) {
+                    if (error || results.length == 0) {
+                        return connection.rollback(function() {
+                            output.status = SELECT_NONE.status
+                            output.description = SELECT_NONE.description
+                            res.send(output);
+                        });
+                    }
+                    if(results.status == 0)
+                    {
+                        output.status=ACCOUNT_CLOCK.status
+                        output.description=ACCOUNT_CLOCK.description
+                        res.send(output);
+                    }
+                    var userId = results.id;
+                    var curTime = new Date();
+                    var sql = `insert into z_user_log(desc,time,event,u_id) VALUES(?,?,?,?)`
+                    connection.query(sql, ['登录成功',curTime.toLocalDate(),'邮箱密码登录',userId], function (error, results, fields) {
+                        if (error) {
+                          return connection.rollback(function() {
+                            output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
+                            output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
+                            res.send(output)
+                          });
+                        }
+                        connection.commit(function(err) {
+                            if (err) {
+                                return connection.rollback(function() {
+                                throw err;
+                                });
+                            }
+                            try {
+                                const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
+                                const redisClient = redis.createClient('6379', '127.0.0.1')
+                                redisClient.on('error', err => {
+                                    console.error(err) // 打印监听到的错误信息
+                                })
+
+                                redisClient.setEx(userTokenKey,14*24*60*60,JSON.stringify(result))
+                                output.userToken = userTokenKey
+                                output.userInfo = result
+                                output.status = LOGIN_SUCCESS.status
+                                output.description = LOGIN_SUCCESS.description
+                            } catch (error) {
+                                console.log(error)
+                                output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
+                                output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
+                            }
+                        });
+                      });
+                });
+              });
+        })
+        
 
         query(sql,[userEmail,userPassword])
         .then(result=>{

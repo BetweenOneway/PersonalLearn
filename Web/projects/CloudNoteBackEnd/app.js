@@ -1,10 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
-const user=require("./routes/user");
-
 const cors=require("cors");
+
 /*引入路由模块*/
+const user=require("./routes/user");
 
 /*
 请求路径 http://127.0.0.1:5050/user/login?lid=30&pname=dell

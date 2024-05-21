@@ -1,3 +1,6 @@
+const express=require("express");
+var router=express.Router();
+
 var nodemailer = require("nodemailer");
 const config = require('config')
 
@@ -5,7 +8,7 @@ var smtp = config.get("appSettings.smtp");
 var mailFrom = config.get("appSettings.mailFrom");
 var mailPwd = config.get("appSettings.mailPwd");
 
-//email,subject,text,html,callback
+//email,subject,text,html
 function emailTo(mailInfo={},resultInfo={}) {
     var transporter = nodemailer.createTransport({
         host: smtp,
@@ -23,7 +26,7 @@ function emailTo(mailInfo={},resultInfo={}) {
     {
         mailOptions.text =mailInfo.text;// 文本
     }
-    if(html != undefined)
+    else if(html != undefined)
     {
         mailOptions.html =mailInfo.html;// html
     }
