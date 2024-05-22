@@ -42,7 +42,10 @@
 <script setup>
     import {EmailOutlined, LockOpenOutlined} from "@vicons/material"
     import {ref} from 'vue'
+    import { noteBaseRequest } from "../../request/noteRequest"
+    import {useMessage,useLoadingBar} from 'naive-ui'
 
+    const loadingBar = useLoadingBar()
     //自定义事件
     const emits = defineEmits(['changeStep']);
 
@@ -128,11 +131,50 @@
         btnStatus.value.disabled = false
     }
 
+    //验证码查询关键词
+    const emailVerifyCodeToken = ref("")
+
     const getEmailVC = ()=>{
         registerFormRef.value?.validate(
-            (errors) => {
+            async (errors) => {
                 if (!errors) {
                     btnCountDown()
+                    //发送获取验证码请求
+                    loadingBar.start()
+                    const {data:responseData} = await noteBaseRequest.get(
+                        "/user/SendVerifyCode",
+                        {
+                            params:{
+                                userEmail:registerFormValue.value.email
+                            }
+                        }
+                    ).catch(()=>{
+                        //发送请求失败
+                        loadingBar.error()//加载条异常结束
+                        message.error("获取验证码失败")
+
+                        throw "获取验证码失败"
+                    })
+
+                    //处理返回数据
+                    console.log(responseData)
+                    
+                    if(responseData.success)
+                    {
+                        //加载条正常结束
+                        loadingBar.finish()
+                        //显示获取成功的通知
+                        message.success(responseData.message)
+
+                        emailVerifyCodeToken.value = responseData.data
+                    }
+                    else
+                    {
+                        //加载条异常结束
+                        loadingBar.error()
+                        //显示获取验证码失败的通知
+                        message.error(responseData.message)
+                    }
                 } 
             },
             (rule)=>{

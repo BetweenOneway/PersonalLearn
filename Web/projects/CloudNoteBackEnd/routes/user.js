@@ -1,9 +1,10 @@
 const express=require("express");
 const crypto = require("crypto")
 const redis = require('redis')
+const stringRandom = require("string-random");
 
 var pool = require("../pool");
-//var query=require("./query");
+var mailOper =require("./mail");
 
 var router=express.Router();
 
@@ -18,6 +19,13 @@ const SELECT_ERROR={status:'S_002', description:'查询错误'}
 const SELECT_NONE={status:'S_003', description:'账号或密码错误'}
 
 const ACCOUNT_CLOCK = {status:'A_001', description:'账号被锁定'}
+const ACCOUNT_MAIL_USED = {status:'A_002',description:'该邮箱已经被注册'}
+
+const REGISTER_SEND_VERIFY_CODE_SUCCESS =  {status:'R_001', description:'验证码发送成功'}
+const REGISTER_REDIS_ERROR =  {status:'R_002', description:'注册验证码缓存失败'}
+
+const SERVICE_QUERY_FAIL = {status:'F_001',description:'查询服务异常'}
+const SERVICE_MAIL_SEND_FAIL = {status:'F_002',description:'邮件发送异常'}
 
 //用户登录
 router.post("/login",(req,res)=>{
@@ -104,5 +112,74 @@ router.post("/login",(req,res)=>{
         })
     }
     
+})
+
+//发送验证码
+router.get("/SendVerifyCode",(req,res)=>{
+    var output={
+        status:'',
+        description:'',
+        userToken:''
+    }
+    console.log(req.query);
+    var userEmail = req.query.userEmail
+    pool.getConnection((error,connection)=>{
+        //验证邮箱是否可用
+        var sql = `select count(1) from z_user where email=?`
+        connection.query(sql, [userEmail], function (error, results, fields) {
+            if (error) {
+                //查询服务异常
+                output.status = SERVICE_QUERY_FAIL.status
+                output.description = SERVICE_QUERY_FAIL.description
+            }
+            else
+            {
+                if(results.length == 1)
+                {
+                    //邮箱被占用
+                    output.status=ACCOUNT_MAIL_USED.status
+                    output.description=ACCOUNT_MAIL_USED.description
+                    res.send(output);
+                }
+                else
+                {
+                    //生成随机验证码
+                    let verifyCode = random(8, {letters:true,numbers: false,specials:false});
+                    let resultInfo = {};
+                    mailOper.SendEmail({email:userEmail,subject:"注册验证码",text:verifyCode,html:""},resultInfo)
+                    if(0 != resultInfo.statusCode)
+                    {
+                        output.status = SERVICE_MAIL_SEND_FAIL.status
+                        output.description = SERVICE_MAIL_SEND_FAIL.description
+                    }
+                    else
+                    {
+                        try
+                        {
+                            //将验证码保存到Redis中
+                            const userTokenKey = 'RegEmailToken:' + userEmail + ":" + crypto.randomUUID({ disableEntropyCache: true })
+                            const redisClient = redis.createClient('6379', '127.0.0.1')
+                            redisClient.connect()
+                            redisClient.on('error', err => {
+                                console.error(err) // 打印监听到的错误信息
+                            })
+                            //有效期15分钟
+                            redisClient.setEx(userTokenKey,15*60,verifyCode)
+                            output.status = REGISTER_SEND_VERIFY_CODE_SUCCESS.status
+                            output.description = REGISTER_SEND_VERIFY_CODE_SUCCESS.description
+                            output.userToken = userTokenKey
+                        }
+                        catch(e)
+                        {
+                            output.status = REGISTER_REDIS_ERROR.status
+                            output.description= REGISTER_REDIS_ERROR.description
+                        }
+                    }
+                }
+            }
+            res.send(output);
+            return
+        })
+    })
 })
 module.exports=router;

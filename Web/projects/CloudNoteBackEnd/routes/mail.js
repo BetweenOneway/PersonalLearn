@@ -1,6 +1,3 @@
-const express=require("express");
-var router=express.Router();
-
 var nodemailer = require("nodemailer");
 const config = require('config')
 
@@ -31,7 +28,7 @@ function emailTo(mailInfo={},resultInfo={}) {
         mailOptions.html =mailInfo.html;// html
     }
 
-    resultInfo.statusCode = 200
+    resultInfo.statusCode = 0
     resultInfo.message = '发送成功!'
 
     try {
@@ -47,3 +44,5 @@ function emailTo(mailInfo={},resultInfo={}) {
         resultInfo.message = err;
     }
 }
+
+module.exports.SendEmail = emailTo
