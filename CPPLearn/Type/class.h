@@ -134,4 +134,18 @@ namespace CLASS_TEST {
             funcA();
         }
     };
+
+    class ClassWithRefMem {
+    public:
+        ClassWithRefMem(int& num) :m_i(num)
+        {
+
+        }
+        void PrintNum();
+        void SetNum(int num);
+    private:
+        int& m_i;
+    };
+
+    void testRefMem();
 }

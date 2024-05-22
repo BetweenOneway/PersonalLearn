@@ -252,4 +252,29 @@ namespace CLASS_TEST {
         ActClass act;
         act.Output();
     }
+
+    void ClassWithRefMem::PrintNum()
+    {
+        cout << "m_i=" << m_i << endl;
+    }
+
+    void ClassWithRefMem::SetNum(int num)
+    {
+        m_i = num;
+    }
+
+    void testRefMem()
+    {
+        int a = 10;
+        ClassWithRefMem obj(a);
+
+        obj.PrintNum();
+
+        a = 20;
+
+        obj.PrintNum();
+
+        obj.SetNum(30);
+        cout << a << endl;
+    }
 }

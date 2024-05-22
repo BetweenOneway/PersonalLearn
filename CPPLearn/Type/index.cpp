@@ -297,7 +297,8 @@ void testClass()
     //CLASS_TEST::testFinalOvertide();
     //CLASS_TEST::testClassPassPointer();
     //CLASS_TEST::testLozengeInherit();
-    CLASS_TEST::testInherit2();
+    //CLASS_TEST::testInherit2();
+    CLASS_TEST::testRefMem();
 }
 
 void testStruct()
