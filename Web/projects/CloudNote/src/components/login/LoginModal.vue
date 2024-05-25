@@ -1,5 +1,5 @@
 <template>
-    <n-modal v-model:show="showLoginModal" transform-origin="center" :close-on-esc="false">
+    <n-modal v-model:show="showLoginModal" :mask-closeable="false" transform-origin="center" :close-on-esc="false">
         <div style="width:420px">
             <Transition name="bounce" mode="out-in">
                 <component :is="showLoginModalCard" @changeStep="changeLoginModalStep"/>

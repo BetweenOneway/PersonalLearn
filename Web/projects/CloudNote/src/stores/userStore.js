@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 export const useUserStore = defineStore(
     "user",
@@ -17,6 +17,16 @@ export const useUserStore = defineStore(
         //注册时间
         const time=ref('')
 
+        const head_image = computed(()=>{
+            if(headPic.value === null)
+            {
+                return "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+            }
+            else{
+                return headPic.value
+            }
+        })
+
         //设置用户信息
         const setUserInfo = (u_id,u_email,u_nickName,u_headPic,u_level,u_time)=>{
             //
@@ -28,7 +38,7 @@ export const useUserStore = defineStore(
             time.value=u_time
         }
 
-        return {id,email,nickName,headPic,level,time,setUserInfo}
+        return {id,email,nickName,headPic,level,time,setUserInfo,head_image}
     },
     {
         persist: {
