@@ -33,7 +33,7 @@
             </n-form-item>
 
             <n-form-item :show-label="false">
-                <n-button type="success" block @click="toRegister">注册</n-button>
+                <n-button type="success" :disabled = "registerBtnDisabled" block @click="toRegister">注册</n-button>
             </n-form-item>
         </n-form>
     </n-card>
@@ -90,11 +90,68 @@
 
     const registerFormRef = ref(null)
 
+    const registerBtnDisabled = ref(false)
+
     const toRegister = (e)=>{
         e.preventDefault();
-        registerFormRef.value?.validate((errors) => {
+        registerFormRef.value?.validate(async (errors) => {
           if (!errors) {
-            alert('注册成功')
+            //是否已经获取过验证码
+            const verifyCodeKey = emailVerifyCodeToken.value
+            if(verifyCodeKey === "" || verifyCodeKey === null)
+            {
+                throw message.error("请先获取验证码")
+            }
+            //判断接收验证码邮箱是否与注册邮箱一致
+            const vc_email = verifyCodeKey.split(":")[1]//获取验证码的邮箱
+            const email = registerFormValue.value.email;//注册邮箱
+            if(email !== vc_email)
+            {
+                throw message.error("注册邮箱账号发生改变")
+            }
+            //头部加载进度条开始
+            loadingBar.start()
+            registerBtnDisabled.value = true
+            //发送注册请求
+            const {data:responseData} = await noteBaseRequest.post(
+                "/user/register",
+                {
+                    userEmail:email,
+                    verifyCode:registerFormValue.value.verifyCode,
+                    verifyCodeKey:verifyCodeKey
+                }
+            ).catch(()=>{
+                //发送请求失败
+                loadingBar.error()//加载条异常结束
+                message.error("发送注册请求失败")
+                //解除禁用的登陆按钮
+                setTimeout(()=>{
+                    registerBtnDisabled.value = false
+                },1500)
+
+                throw "发送注册请求失败"
+            })
+            //处理返回数据
+            console.log(responseData)
+            
+            if(responseData.success)
+            {
+                //加载条正常结束
+                loadingBar.finish()
+                //跳转到注册成功的界面
+                emits(changeStep,3)
+            }
+            else
+            {
+                //加载条异常结束
+                loadingBar.error()
+                //显示注册失败的通知
+                message.error(responseData.message)
+                //解除禁用的登陆按钮
+                setTimeout(()=>{
+                    registerBtnDisabled.value = false
+                },1500)
+            }
           } 
         });
     }
