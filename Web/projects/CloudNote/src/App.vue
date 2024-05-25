@@ -26,6 +26,7 @@
 </template>
 
 <script setup>
+    import { onMounted } from "vue"
     import MainTopToolbar from "./components/toolbar/MainTopTooolbar.vue"
 
     import {useThemeStore} from './stores/themeStore'
@@ -34,4 +35,16 @@
 
     const themeStore = useThemeStore()
     const {theme} = storeToRefs(themeStore)
+    const {changeTheme} = themeStore
+
+    //监听主题是否发生改变
+    onMounted(()=>{
+        window.addEventListener('storage',event=>{
+            if(event.key ==="theme")
+            {
+                const newTheme = JSON.parse(event.newValue)
+                changeTheme(newTheme.isDarkTheme)
+            }
+        })
+    })
 </script>
