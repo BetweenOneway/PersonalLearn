@@ -8,28 +8,29 @@ var mailOper =require("./mail");
 
 var router=express.Router();
 
-const LOGIN_SUCCESS = {status:'LOGIN_000', description:'登录成功'}
-const LOGIN_FAIL = {status:'LOGIN_001', description:'登录失败'}
-const LOGIN_LOG_CREATE_EXCEPTION = {status:'LOGIN_002', description:'登录日志创建失败'}
-const LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION = {status:'LOGIN_003', description:'登录成功，缓存失败'}
+const LOGIN_SUCCESS = {success:true, status:'LOGIN_000', description:'登录成功'}
+const LOGIN_FAIL = {success:false, status:'LOGIN_001', description:'登录失败'}
+const LOGIN_LOG_CREATE_EXCEPTION = {success:false, status:'LOGIN_002', description:'登录日志创建失败'}
+const LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION = {success:false, status:'LOGIN_003', description:'登录成功，缓存失败'}
 
-const SELECT_SUCCESS = {status:'S_000', description:'查询成功'}
-const SELECT_EXCEPTION = {status:'S_001', description:'查询异常'}
-const SELECT_ERROR={status:'S_002', description:'查询错误'}
-const SELECT_NONE={status:'S_003', description:'账号或密码错误'}
+const SELECT_SUCCESS = {success:true, status:'Q_000', description:'查询成功'}
+const SELECT_EXCEPTION = {success:false, status:'Q_001', description:'查询异常'}
+const SELECT_ERROR={success:false, status:'Q_002', description:'查询错误'}
+const SELECT_NONE={success:false, status:'Q_003', description:'账号或密码错误'}
 
-const ACCOUNT_CLOCK = {status:'A_001', description:'账号被锁定'}
-const ACCOUNT_MAIL_USED = {status:'A_002',description:'该邮箱已经被注册'}
-const ACCOUNT_NEW_ADD_FAIL = {status:'A_003',description:'新增用户失败'}
+const ACCOUNT_CLOCK = {success:false, status:'A_001', description:'账号被锁定'}
+const ACCOUNT_MAIL_USED = {success:false, status:'A_002',description:'该邮箱已经被注册'}
+const ACCOUNT_NEW_ADD_FAIL = {success:false, status:'A_003',description:'新增用户失败'}
 //const ACCOUNT_NEW_ADD_EXCEPTION = {status:'A_004',description:'新增用户异常'}
 
-const REGISTER_SEND_VERIFY_CODE_SUCCESS =  {status:'R_001', description:'验证码发送成功'}
-const REGISTER_REDIS_ERROR =  {status:'R_002', description:'注册验证码缓存失败'}
+const REGISTER_SEND_VERIFY_CODE_SUCCESS =  {success:true, status:'R_001', description:'验证码发送成功'}
+const REGISTER_REDIS_ERROR =  {success:false, status:'R_002', description:'注册验证码缓存失败'}
 
-const SERVICE_QUERY_FAIL = {status:'F_001',description:'查询服务异常'}
-const SERVICE_MAIL_SEND_FAIL = {status:'F_002',description:'邮件发送异常'}
+const SERVICE_QUERY_FAIL = {success:false, status:'S_001',description:'查询服务异常'}
+const SERVICE_MAIL_SEND_FAIL = {success:false, status:'S_002',description:'邮件发送异常'}
+const SERVICE_DATA_BASE_EXCEPTION = {success:false, status:'S_003',description:'数据库服务异常'}
 
-const LOG_INSERT_FAIL = {status:'LOG_002', description:'日志创建失败'}
+const LOG_INSERT_FAIL = {success:false, status:'LOG_002', description:'日志创建失败'}
 
 //用户登录
 router.post("/login",(req,res)=>{
@@ -37,6 +38,7 @@ router.post("/login",(req,res)=>{
     var userEmail = req.body.userEmail
     var userPassword = req.body.userPassword
     var output={
+        success:false,
         status:'',
         description:'',
         userToken:'',
@@ -45,6 +47,7 @@ router.post("/login",(req,res)=>{
 
     if(0 == userEmail.length || 0 == userPassword.length)
     {
+        output.success = SELECT_NONE.success
         output.status = SELECT_NONE.status
         output.description = SELECT_NONE.description
         res.send(output);
@@ -58,6 +61,7 @@ router.post("/login",(req,res)=>{
                 connection.query(sql, [userEmail,userPassword], function (error, results, fields) {
                     if (error || results.length == 0) {
                         return connection.rollback(function() {
+                            output.success = SELECT_NONE.success
                             output.status = SELECT_NONE.status
                             output.description = SELECT_NONE.description
                             res.send(output);
@@ -65,6 +69,7 @@ router.post("/login",(req,res)=>{
                     }
                     if(results[0].status == 0)
                     {
+                        output.success = ACCOUNT_CLOCK.success
                         output.status=ACCOUNT_CLOCK.status
                         output.description=ACCOUNT_CLOCK.description
                         res.send(output);
@@ -77,6 +82,7 @@ router.post("/login",(req,res)=>{
                         if (error) {
                             console.log(error)
                             return connection.rollback(function() {
+                                output.success = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.success
                                 output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
                                 output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
                                 res.send(output)
@@ -99,11 +105,13 @@ router.post("/login",(req,res)=>{
                                     redisClient.setEx(userTokenKey,14*24*60*60,JSON.stringify(userInfo))
                                     output.userToken = userTokenKey
                                     output.userInfo = userInfo
+                                    output.success = LOGIN_SUCCESS.success
                                     output.status = LOGIN_SUCCESS.status
                                     output.description = LOGIN_SUCCESS.description
                                     res.send(output)
                                 } catch (error) {
                                     console.log(error)
+                                    output.success = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.success
                                     output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
                                     output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
                                     res.send(output)
@@ -121,38 +129,52 @@ router.post("/login",(req,res)=>{
 //发送验证码
 router.get("/SendVerifyCode",(req,res)=>{
     var output={
+        success:true,
         status:'',
         description:'',
         userToken:''
     }
     console.log(req.query);
     var userEmail = req.query.userEmail
-    pool.getConnection((error,connection)=>{
+    pool.getConnection(function(error,connection){
+        if(error)
+        {
+            //数据库连接失败
+            console.log(error)
+            output.success = SERVICE_DATA_BASE_EXCEPTION.success
+            output.status = SERVICE_DATA_BASE_EXCEPTION.status
+            output.description = SERVICE_DATA_BASE_EXCEPTION.description
+            res.send(output)
+            throw error
+        }
         //验证邮箱是否可用
-        var sql = `select count(1) from z_user where email=?`
+        var sql = `select count(1) as userCount from z_user where email=?`
         connection.query(sql, [userEmail], function (error, results, fields) {
             if (error) {
                 //查询服务异常
+                output.success = SERVICE_QUERY_FAIL.success
                 output.status = SERVICE_QUERY_FAIL.status
                 output.description = SERVICE_QUERY_FAIL.description
             }
             else
             {
-                if(results.length == 1)
+                if(results.userCount >= 1)
                 {
+                    console.log(results)
                     //邮箱被占用
+                    output.success = ACCOUNT_MAIL_USED.success
                     output.status=ACCOUNT_MAIL_USED.status
                     output.description=ACCOUNT_MAIL_USED.description
-                    res.send(output);
                 }
                 else
                 {
                     //生成随机验证码
-                    let verifyCode = random(8, {letters:true,numbers: false,specials:false});
+                    let verifyCode = stringRandom(8, {letters:true,numbers: false,specials:false});
                     let resultInfo = {};
                     mailOper.SendEmail({email:userEmail,subject:"注册验证码",text:verifyCode,html:""},resultInfo)
                     if(0 != resultInfo.statusCode)
                     {
+                        output.success = SERVICE_MAIL_SEND_FAIL.success
                         output.status = SERVICE_MAIL_SEND_FAIL.status
                         output.description = SERVICE_MAIL_SEND_FAIL.description
                     }
@@ -169,12 +191,15 @@ router.get("/SendVerifyCode",(req,res)=>{
                             })
                             //有效期15分钟
                             redisClient.setEx(userTokenKey,15*60,verifyCode)
+                            output.success = REGISTER_SEND_VERIFY_CODE_SUCCESS.success
                             output.status = REGISTER_SEND_VERIFY_CODE_SUCCESS.status
                             output.description = REGISTER_SEND_VERIFY_CODE_SUCCESS.description
                             output.userToken = userTokenKey
                         }
                         catch(e)
                         {
+                            console.log(e)
+                            output.success = REGISTER_REDIS_ERROR.success
                             output.status = REGISTER_REDIS_ERROR.status
                             output.description= REGISTER_REDIS_ERROR.description
                         }
@@ -194,6 +219,12 @@ router.post("/register",(req,res)=>{
     let verifyCode = req.body?.verifyCode??""
     let verifyCodeKey = req.body?.verifyCodeKey??""
 
+    var output={
+        success:true,
+        status:'',
+        description:''
+    }
+
     //参数校验
     if(userEmail.length == 0)
     {
@@ -212,6 +243,7 @@ router.post("/register",(req,res)=>{
             connection.query(sql, [userEmail], function (error, results, fields) {
                 if (error) {
                     //查询服务异常
+                    output.success = SERVICE_QUERY_FAIL.success
                     output.status = SERVICE_QUERY_FAIL.status
                     output.description = SERVICE_QUERY_FAIL.description
                 }
@@ -220,17 +252,15 @@ router.post("/register",(req,res)=>{
                     if(results.length == 1)
                     {
                         //邮箱被占用
+                        output.success = ACCOUNT_MAIL_USED.success
                         output.status=ACCOUNT_MAIL_USED.status
                         output.description=ACCOUNT_MAIL_USED.description
-                        res.send(output);
                     }
                     else
                     {
-                        
-
                         //用户注册
                         let curDate = new Date();
-                        let notEncryptedPassword = random(8, {letters:true,numbers: false,specials:true});
+                        let notEncryptedPassword = stringRandom(8, {letters:true,numbers: false,specials:true});
                         //密码加密
                         let encryptedPassword;
                         connection.beginTransaction(function(err){
@@ -240,6 +270,7 @@ router.post("/register",(req,res)=>{
                                 if (error) {
                                     console.log(error)
                                     return connection.rollback(function() {
+                                        output.success = ACCOUNT_NEW_ADD_FAIL.success
                                         output.status = ACCOUNT_NEW_ADD_FAIL.status
                                         output.description = ACCOUNT_NEW_ADD_FAIL.description
                                         res.send(output)
@@ -251,6 +282,7 @@ router.post("/register",(req,res)=>{
                                     if (error) {
                                         console.log(error)
                                         return connection.rollback(function() {
+                                            output.success = LOG_INSERT_FAIL.success
                                             output.status = LOG_INSERT_FAIL.status
                                             output.description = LOG_INSERT_FAIL.description
                                             res.send(output)
@@ -261,6 +293,7 @@ router.post("/register",(req,res)=>{
                                             if (err) {
                                                 return connection.rollback(function() {
                                                     //提交错误处理
+                                                    output.success = ACCOUNT_NEW_ADD_FAIL.success
                                                     output.status = ACCOUNT_NEW_ADD_FAIL.status
                                                     output.description = ACCOUNT_NEW_ADD_FAIL.description
                                                     res.send(output)
@@ -276,6 +309,7 @@ router.post("/register",(req,res)=>{
                                                 mailOper.SendEmail({email:userEmail,subject:"账号注册成功通知",text:"",html:mailContent},resultInfo)
                                                 if(0 != resultInfo.statusCode)
                                                 {
+                                                    output.success = SERVICE_MAIL_SEND_FAIL.success
                                                     output.status = SERVICE_MAIL_SEND_FAIL.status
                                                     output.description = SERVICE_MAIL_SEND_FAIL.description
                                                 }
@@ -283,7 +317,6 @@ router.post("/register",(req,res)=>{
                                         })
                                     }
                                 })
-                                
                             })
                         })
                     }

@@ -45,10 +45,15 @@
     import { noteBaseRequest } from "../../request/noteRequest"
     import {useMessage,useLoadingBar} from 'naive-ui'
 
+    //消息对象
+    const message = useMessage()
+    //进度条对象
     const loadingBar = useLoadingBar()
+
     //自定义事件
     const emits = defineEmits(['changeStep']);
 
+    
     //注册表单值
     const registerFormValue = ref({
         email:'',
@@ -230,7 +235,7 @@
                         //加载条异常结束
                         loadingBar.error()
                         //显示获取验证码失败的通知
-                        message.error(responseData.message)
+                        message.error(responseData.description)
                     }
                 } 
             },
