@@ -44,6 +44,7 @@
 <script setup>
     import {EmailOutlined, LockOpenOutlined} from "@vicons/material"
     import {ref} from 'vue'
+    import {md5} from "js-md5"
     import { noteBaseRequest } from "../../request/noteRequest"
     import {useMessage,useLoadingBar} from 'naive-ui'
     import {useLoginModalStore} from "../../stores/loginModalStore"
@@ -116,12 +117,14 @@
             //头部加载进度条开始
             loadingBar.start()
             loginBtnDisabled.value = true
+            //密码MD5加密
+            const encryptedPassword = md5(loginFormValue.value.password)
             //发送登录请求
             const {data:responseData} = await noteBaseRequest.post(
                 "/user/login",
                 {
                     userEmail:loginFormValue.value.email,
-                    userPassword:loginFormValue.value.password
+                    userPassword:encryptedPassword
                 }
             ).catch(()=>{
                 //发送请求失败
