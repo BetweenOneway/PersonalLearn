@@ -50,10 +50,12 @@
     //进度条对象
     const loadingBar = useLoadingBar()
 
+    //验证码查询关键词
+    const emailVerifyCodeToken = ref("")
+
     //自定义事件
     const emits = defineEmits(['changeStep']);
 
-    
     //注册表单值
     const registerFormValue = ref({
         email:'',
@@ -105,8 +107,10 @@
             const verifyCodeKey = emailVerifyCodeToken.value
             if(verifyCodeKey === "" || verifyCodeKey === null)
             {
+                console.log(verifyCodeKey)
                 throw message.error("请先获取验证码")
             }
+            console.log(verifyCodeKey)
             //判断接收验证码邮箱是否与注册邮箱一致
             const vc_email = verifyCodeKey.split(":")[1]//获取验证码的邮箱
             const email = registerFormValue.value.email;//注册邮箱
@@ -144,14 +148,14 @@
                 //加载条正常结束
                 loadingBar.finish()
                 //跳转到注册成功的界面
-                emits(changeStep,3)
+                emits('changeStep',3)
             }
             else
             {
                 //加载条异常结束
                 loadingBar.error()
                 //显示注册失败的通知
-                message.error(responseData.message)
+                message.error(responseData.description)
                 //解除禁用的登陆按钮
                 setTimeout(()=>{
                     registerBtnDisabled.value = false
@@ -193,9 +197,6 @@
         btnStatus.value.disabled = false
     }
 
-    //验证码查询关键词
-    const emailVerifyCodeToken = ref("")
-
     const getEmailVC = ()=>{
         registerFormRef.value?.validate(
             async (errors) => {
@@ -226,9 +227,9 @@
                         //加载条正常结束
                         loadingBar.finish()
                         //显示获取成功的通知
-                        message.success(responseData.message)
+                        message.success(responseData.description)
 
-                        emailVerifyCodeToken.value = responseData.data
+                        emailVerifyCodeToken.value = responseData.data.userToken
                     }
                     else
                     {

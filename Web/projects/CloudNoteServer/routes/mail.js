@@ -18,13 +18,16 @@ function emailTo(mailInfo={},resultInfo={}) {
         from: mailFrom, // 发送者
         to: mailInfo.email, // 接受者,可以同时发送多个,以逗号隔开
         subject: mailInfo.subject, // 标题
-    };
-    if(mailInfo.text != undefined)
+    }
+
+    if(mailInfo.text != undefined && mailInfo.text.length != 0)
     {
+        console.log("mailInfo.txt.length="+mailInfo.text.length)
         mailOptions.text =mailInfo.text;// 文本
     }
-    else if(html != undefined)
+    else if(mailInfo.html != undefined && mailInfo.html.length != 0)
     {
+        console.log("mailInfo.html.length="+mailInfo.html.length)
         mailOptions.html =mailInfo.html;// html
     }
 
