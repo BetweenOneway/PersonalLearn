@@ -68,8 +68,24 @@ void CommonFunctions()
 {
     testPMIntersectTri();
 }
+
+void testDot()
+{
+    Point3D dir1(0,1,0);
+    Point3D dir2(1,1,0);
+    Point3D dir3(-1, 1, 0);
+
+    //1
+    std::cout << dir1.AbsDot(dir2) << std::endl;
+    //1
+    std::cout << dir2.AbsDot(dir1) << std::endl;
+    //1
+    std::cout<<dir1.AbsDot(dir3)<<std::endl;
+}
+
 int main()
 {
+    testDot();
     //Vector();
     //Quaternion();
     //Ray();
@@ -77,7 +93,7 @@ int main()
     //Plane();
     //Learn();
     //CalcBoundary();
-    CommonFunctions();
+    //CommonFunctions();
     system("pause");
     return 0;
 }
