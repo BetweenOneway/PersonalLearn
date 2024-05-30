@@ -33,6 +33,8 @@ const SERVICE_DATA_BASE_EXCEPTION = {success:false, status:'S_003',description:'
 
 const LOG_INSERT_FAIL = {success:false, status:'LOG_002', description:'日志创建失败'}
 
+const REQ_PARAM_ERROR = {success:false,status:'REQ_001',description:'请求参数有误'}
+
 //MD5加密
 function cryptPwd(password) {
     var md5 = crypto.createHash('md5');
@@ -131,6 +133,44 @@ router.post("/login",(req,res)=>{
         })
     }
     
+})
+
+//退出登录
+router.get("/logout",(req,res)=>{
+    var output={
+        success:true,
+        status:'',
+        description:''
+    }
+    console.log(req.query);
+    var userToken = req.query.userToken
+    if(!userToken && userToken==="" )
+    {
+        output.success = REQ_PARAM_ERROR.success
+        output.status = REQ_PARAM_ERROR.status
+        output.description = REQ_PARAM_ERROR.description
+    }
+    try {
+        (async function(){
+            try {
+                const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
+                const redisClient = redis.createClient('6379', '127.0.0.1')
+                await redisClient.connect()
+                redisClient.on('error', err => {
+                    console.error(err) // 打印监听到的错误信息
+                })
+                //删除key
+            } catch (error) {
+                console.log(error)
+                output.success = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.success
+                output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
+                output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
+                res.send(output)
+            }
+        })()
+    } catch (error) {
+        
+    }
 })
 
 //发送验证码

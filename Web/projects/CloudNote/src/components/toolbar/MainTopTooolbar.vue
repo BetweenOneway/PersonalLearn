@@ -24,7 +24,7 @@
                     <template #default>
                         <n-divider style="margin:5px auto"/>
                         <!--菜单选项-->
-                        <n-menu :options="userMenu" :indent="18" />
+                        <n-menu :options="userMenu" :indent="18" :on-update:value="clickUserMenu" />
                     </template>
                 </n-thing>
             </n-popover>
@@ -75,8 +75,24 @@
 
     //用户菜单选项回调
     const clickUserMenu = (key,value)=>{
-        console.log(key)
-        console.log(value)
+        if(key==="sign-out")
+        {
+            signOutLogin()
+        }
+        else if(key==="user-center")
+        {
+
+        }
+        else if(key==="account-setting")
+        {
+
+        }
+    }
+
+    const signOutLogin = ()=>{
+        //删除redis中存储的key
+        //用户数据清空
+        //userToken本地存储删除
     }
     //点击头像的菜单
     const userMenu =[
