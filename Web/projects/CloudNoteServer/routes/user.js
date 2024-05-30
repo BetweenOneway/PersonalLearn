@@ -64,7 +64,7 @@ router.post("/login",(req,res)=>{
         pool.getConnection(function(error,connection){
             connection.beginTransaction(function(err) {
                 if (err) { throw err; }
-                var sql = `select id,status from z_user where email=? and password = ?`
+                var sql = `select id,email,nickname as nickName,head_pic as headPic,level,time,status from z_user where email=? and password = ?`
                 connection.query(sql, [userEmail,userPassword], function (error, results, fields) {
                     if (error || results.length == 0) {
                         return connection.rollback(function() {
@@ -338,10 +338,10 @@ router.post("/register",(req,res)=>{
                                                 else{
                                                     //邮箱通知用户新注册账号的密码
                                                     let resultInfo = {};
-                                                    let mailContent = "<p>尊敬的"+userEmail+":</p>"
+                                                    let mailContent = "<p>尊敬的 "+userEmail+":</p>"
                                                     +"<p>您已成功注册之间账号，其初始密码为：<b style='font-size:20px;color:blue;'>"
                                                     +notEncryptedPassword+"</b>。</p>"
-                                                    +"<p>请及时登录并修改登录密码！</p>"
+                                                    +'<p color="red">请及时登录并修改登录密码！</p>'
                                                     mailOper.SendEmail({email:userEmail,subject:"账号注册成功通知",text:"",html:mailContent},resultInfo)
                                                     if(0 != resultInfo.statusCode)
                                                     {

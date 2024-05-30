@@ -3,7 +3,7 @@
         <n-text>之间笔记</n-text>
         <n-space>
             <!--头像-->
-            <n-avatar v-if="user_id !== null" round size="small" style="position:relative;top:3px" :src="head_iamge"/>
+            <n-avatar v-if="user_id !== null" round size="small" style="position:relative;top:3px" :src="head_image==''?'https://cdn.vuetifyjs.com/images/john.jpg':head_image"/>
             <!--分割线-->
             <n-divider v-if="user_id !== null" vertical style="position:relative;top:5px;"/>
             <!--消息-->

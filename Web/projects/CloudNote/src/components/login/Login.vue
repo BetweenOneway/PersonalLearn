@@ -145,13 +145,13 @@
                 //加载条正常结束
                 loadingBar.finish()
                 //显示登陆成功的通知
-                message.success(responseData.message)
+                message.success(responseData.description)
                 //关闭登陆对话框
                 changeLoginModalShow(false)
                 //将Redis中的用户token存储到本地
-                localStorage.setItem("userToken",responseData.data.userToken)
+                localStorage.setItem("userToken",responseData.userToken)
 
-                const user = responseData.data.user
+                const user = responseData.userInfo
 
                 setUserInfo(user.id,user.email,user.nickName,user.headPic,user.level,user.time)
             }
@@ -160,7 +160,7 @@
                 //加载条异常结束
                 loadingBar.error()
                 //显示登陆失败的通知
-                message.error(responseData.message)
+                message.error(responseData.description)
             }
 
             //解除禁用的登陆按钮
