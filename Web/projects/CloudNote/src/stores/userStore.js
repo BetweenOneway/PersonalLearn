@@ -27,6 +27,26 @@ export const useUserStore = defineStore(
             }
         })
 
+        const userNickName = computed(()=>{
+            if(nickName.value === null)
+            {
+                return "暂未设置名称"
+            }
+            else{
+                return nickName.value
+            }
+        })
+
+        const userLevel = computed(()=>{
+            if(level.value == 0)
+            {
+                return "会员"
+            }
+            else{
+                return "超级会员"
+            }
+        })
+
         //设置用户信息
         const setUserInfo = (u_id,u_email,u_nickName,u_headPic,u_level,u_time)=>{
             //
@@ -38,7 +58,7 @@ export const useUserStore = defineStore(
             time.value=u_time
         }
 
-        return {id,email,nickName,headPic,level,time,setUserInfo,head_image}
+        return {id,email,userNickName,headPic,userLevel,time,setUserInfo,head_image}
     },
     {
         persist: {
