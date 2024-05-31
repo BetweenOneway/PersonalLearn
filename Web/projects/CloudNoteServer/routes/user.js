@@ -12,6 +12,8 @@ const LOGIN_SUCCESS = {success:true, status:'LOGIN_000', description:'登录成�
 const LOGIN_FAIL = {success:false, status:'LOGIN_001', description:'登录失败'}
 const LOGIN_LOG_CREATE_EXCEPTION = {success:false, status:'LOGIN_002', description:'登录日志创建失败'}
 const LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION = {success:false, status:'LOGIN_003', description:'登录成功，缓存失败'}
+const LOGIN_OUT_EXCEPTION = {success:false, status:'LOGIN_004', description:'退出登录异常'}
+const LOGIN_OUT_SUCCESS = {success:true, status:'LOGIN_005', description:'退出登录成功'}
 
 const SELECT_SUCCESS = {success:true, status:'Q_000', description:'查询成功'}
 const SELECT_EXCEPTION = {success:false, status:'Q_001', description:'查询异常'}
@@ -160,6 +162,10 @@ router.get("/logout",(req,res)=>{
                     console.error(err) // 打印监听到的错误信息
                 })
                 //删除key
+                redisClient.del(userToken).then(val=>{
+                    console.log("del userToken")
+                    console.log(val)
+                })
             } catch (error) {
                 console.log(error)
                 output.success = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.success

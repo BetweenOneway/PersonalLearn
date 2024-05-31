@@ -3,7 +3,7 @@
         <n-text>之间笔记</n-text>
         <n-space>
             <!--头像-->
-            <n-popover trigger="click" width="260px" content-style="padding:10px">
+            <n-popover v-model:show = "userMenuShow" trigger="click" width="260px" content-style="padding:10px">
                 <template #trigger>
                     <n-button circle :bordered="false">
                         <n-avatar v-if="user_id !== null" round :src="head_image==''?'https://cdn.vuetifyjs.com/images/john.jpg':head_image"/>
@@ -54,7 +54,9 @@
     import {useLoginModalStore} from '../../stores/loginModalStore'
     import { useUserStore } from "../../stores/userStore"
     import {storeToRefs} from 'pinia'
-    import { NIcon } from 'naive-ui'
+    import { NIcon,useMessage,useLoadingBar } from 'naive-ui'
+    import { noteBaseRequest } from "../../request/noteRequest"
+    import {ref} from "vue"
 
     const themeStore = useThemeStore()
     const {theme,isDarkTheme} = storeToRefs(themeStore)
@@ -62,12 +64,20 @@
 
     const loginModalStore = useLoginModalStore()
 
+    //消息对象
+    const message = useMessage()
+    const loadingBar = useLoadingBar()
+
     //改变登录模态框显示状态
     const {changeLoginModalShow} = loginModalStore
 
     const userStore = useUserStore()
     const {id:user_id,head_image,userNickName,userLevel} = storeToRefs(userStore)
+    const {resetUserInfo} = userStore
     
+    //是否显示用户菜单
+    const userMenuShow = ref(false)
+
     //读图标
     function renderIcon(icon){
         return ()=>h(NIcon,null,{default:()=>h(icon)})
@@ -75,6 +85,9 @@
 
     //用户菜单选项回调
     const clickUserMenu = (key,value)=>{
+
+        //关闭用户菜单弹出信息
+        userMenuShow.value = false
         if(key==="sign-out")
         {
             signOutLogin()
@@ -89,10 +102,39 @@
         }
     }
 
-    const signOutLogin = ()=>{
-        //删除redis中存储的key
-        //用户数据清空
-        //userToken本地存储删除
+    const signOutLogin = async ()=>{
+        const userToken = localStorage.getItem("userToken")
+        if(userToken === null)
+        {
+            //没登录
+            throw message.error("登录已失效")
+        }
+        //删除redis中存储的key 发送退出登录请求
+        const {data:responseData} = await noteBaseRequest.get(
+                "/user/logout",
+                {
+                    headers:{
+                        userToken
+                    }
+                }
+            ).catch(()=>{
+                throw message.error("退出登录失败")
+            }
+        )
+        
+        console.log(responseData)
+        if(responseData.success)
+        {
+            //用户共享数据清空
+            resetUserInfo()
+            //userToken本地存储删除
+            localStorage.removeItem(userToken)
+        }
+        else
+        {
+            message.error(responseData.description)
+        }
+        
     }
     //点击头像的菜单
     const userMenu =[

@@ -58,7 +58,17 @@ export const useUserStore = defineStore(
             time.value=u_time
         }
 
-        return {id,email,userNickName,headPic,userLevel,time,setUserInfo,head_image}
+        //重置用户信息
+        const resetUserInfo = ()=>{
+            id.value=null
+            nickName.value = null
+            headPic.value = null
+            level.value=null
+            email.value=null
+            time.value=null
+        }
+
+        return {id,email,userNickName,headPic,userLevel,time,setUserInfo,resetUserInfo,head_image}
     },
     {
         persist: {
