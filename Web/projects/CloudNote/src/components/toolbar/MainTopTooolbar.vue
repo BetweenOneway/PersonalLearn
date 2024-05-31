@@ -1,7 +1,7 @@
 <template>
     <n-space justify="space-between" align="center" style="height: 100%;">
         <n-text>之间笔记</n-text>
-        <n-space>
+        <n-space align="center">
             <!--头像-->
             <n-popover v-model:show = "userMenuShow" trigger="click" width="260px" content-style="padding:10px">
                 <template #trigger>
@@ -28,7 +28,6 @@
                     </template>
                 </n-thing>
             </n-popover>
-            
             <!--分割线-->
             <n-divider v-if="user_id !== null" vertical style="position:relative;top:5px;"/>
             <!--消息-->
