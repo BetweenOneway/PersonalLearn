@@ -6,11 +6,14 @@ export const useLoginModalStore = defineStore(
     ()=>{
         //是否显示模态框
         const showLoginModal = ref(false)
+        //显示哪个登录框
+        //1 登录 2 注册 3 注册成功
+        const loginModalStep = ref(1)
 
         const changeLoginModalShow = (show)=>{
             showLoginModal.value = show
         }
 
-        return {showLoginModal,changeLoginModalShow}
+        return {loginModalStep,showLoginModal,changeLoginModalShow}
     }
 )

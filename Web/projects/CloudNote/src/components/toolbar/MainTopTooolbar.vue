@@ -42,7 +42,7 @@
                 <n-icon size="18" :component="theme.icon" />
             </n-button>
             <!--登录按钮-->
-            <n-button v-if="user_id === null" tertiary type="primary" @click="changeLoginModalShow(true)">登录</n-button>
+            <n-button v-if="user_id === null" tertiary type="primary" @click="showLoginModal">登录</n-button>
         </n-space>
     </n-space>
 </template>
@@ -69,11 +69,16 @@
 
     //改变登录模态框显示状态
     const {changeLoginModalShow} = loginModalStore
+    const {loginModalStep} = storeToRefs(loginModalStore)
 
     const userStore = useUserStore()
     const {id:user_id,head_image,userNickName,userLevel} = storeToRefs(userStore)
     const {resetUserInfo} = userStore
     
+    const showLoginModal = (e)=>{
+        loginModalStep.value = 1
+        changeLoginModalShow(true)
+    }
     //是否显示用户菜单
     const userMenuShow = ref(false)
 

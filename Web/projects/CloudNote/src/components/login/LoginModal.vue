@@ -21,10 +21,10 @@
     const loginModalStore = useLoginModalStore()
 
     //是否显示登录模态框
-    const {showLoginModal} = storeToRefs(loginModalStore)
+    const {showLoginModal,loginModalStep} = storeToRefs(loginModalStore)
 
-    //1 登录 2 注册 3 注册成功
-    const loginModalStep = ref(1)
+    // //1 登录 2 注册 3 注册成功
+    // const loginModalStep = ref(1)
 
     const showLoginModalCard = computed(()=>{
         switch(loginModalStep.value){
