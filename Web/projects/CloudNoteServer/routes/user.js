@@ -151,6 +151,8 @@ router.get("/logout",(req,res)=>{
         output.success = REQ_PARAM_ERROR.success
         output.status = REQ_PARAM_ERROR.status
         output.description = REQ_PARAM_ERROR.description
+        res.send(output)
+        return
     }
     try {
         (async function(){
@@ -165,6 +167,11 @@ router.get("/logout",(req,res)=>{
                 redisClient.del(userToken).then(val=>{
                     console.log("del userToken")
                     console.log(val)
+                    
+                    output.success = LOGIN_OUT_SUCCESS.success
+                    output.status = LOGIN_OUT_SUCCESS.status
+                    output.description = LOGIN_OUT_SUCCESS.description
+                    res.send(output)
                 })
             } catch (error) {
                 console.log(error)
@@ -175,7 +182,7 @@ router.get("/logout",(req,res)=>{
             }
         })()
     } catch (error) {
-        
+        console.log(error)
     }
 })
 

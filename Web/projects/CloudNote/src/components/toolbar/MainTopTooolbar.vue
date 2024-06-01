@@ -103,6 +103,7 @@
 
     const signOutLogin = async ()=>{
         const userToken = localStorage.getItem("userToken")
+        console.log("signOutLogin"+userToken)
         if(userToken === null)
         {
             //没登录
@@ -112,7 +113,7 @@
         const {data:responseData} = await noteBaseRequest.get(
                 "/user/logout",
                 {
-                    headers:{
+                    params:{
                         userToken
                     }
                 }
