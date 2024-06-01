@@ -13,9 +13,7 @@
                             海淀桥
                         </n-layout-sider>
                         <!--主页面-->
-                        <n-layout-content>
-                            <router-view/>
-                        </n-layout-content>
+                        <router-view/>
                     </n-layout>
                 </n-layout>
                 <login-modal/>
