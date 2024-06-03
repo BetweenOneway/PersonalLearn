@@ -4,6 +4,7 @@ const cors=require("cors");
 
 /*引入路由模块*/
 const user=require("./routes/user");
+const memo=require("./routes/memo");
 
 /*
 请求路径 http://127.0.0.1:5050/user/login?lid=30&pname=dell
@@ -23,4 +24,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 //app.use(express.static('public'));
 
 /*使用路由器来管理路由*/
+//用户相关
 app.use("/user",user);
+//便签
+app.use("/memo",memo);
