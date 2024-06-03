@@ -157,7 +157,6 @@ router.get("/logout",(req,res)=>{
     try {
         (async function(){
             try {
-                const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
                 const redisClient = redis.createClient('6379', '127.0.0.1')
                 await redisClient.connect()
                 redisClient.on('error', err => {
