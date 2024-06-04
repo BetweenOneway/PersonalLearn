@@ -39,6 +39,10 @@ router.get("/getUserMemoList",(req,res)=>{
                 });
             }
             console.log(results)
+            output.success = SELECT_NONE.success
+            output.status = SELECT_NONE.status
+            output.description = SELECT_NONE.description
+            res.send(output);
             return
         })
     })
