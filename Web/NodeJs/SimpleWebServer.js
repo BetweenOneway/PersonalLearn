@@ -13,5 +13,10 @@ app.on('request',function(req,res){
         "Content-Type":"text/plain;charset=utf-8"//避免乱码
       })
       res.write("Hello world!");
-      res.end();
+      res.end()
+      //仍然会打印
+      console.log("after end")
+      return
+      //不会打印
+      console.log("after return")
 });
