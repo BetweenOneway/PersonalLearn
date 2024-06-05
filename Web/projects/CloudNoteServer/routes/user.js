@@ -3,10 +3,14 @@ const crypto = require("crypto")
 const redis = require('redis')
 const stringRandom = require("string-random");
 
+//数据库连接池
 var pool = require("../pool");
-var mailOper =require("./mail");
-
+//邮箱操作
+var mailOper =require("./mail")
+//状态码定义
+var statusCode = require("../statusCode")
 var router=express.Router();
+
 
 const LOGIN_SUCCESS = {success:true, status:'LOGIN_000', description:'登录成功'}
 const LOGIN_FAIL = {success:false, status:'LOGIN_001', description:'登录失败'}
@@ -58,9 +62,9 @@ router.post("/login",(req,res)=>{
 
     if(0 == userEmail.length || 0 == userPassword.length)
     {
-        output.success = SELECT_NONE.success
-        output.status = SELECT_NONE.status
-        output.description = SELECT_NONE.description
+        output.success = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.success
+        output.status = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.status
+        output.description = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.description
         res.send(output);
     }
     else
@@ -72,17 +76,17 @@ router.post("/login",(req,res)=>{
                 connection.query(sql, [userEmail,userPassword], function (error, results, fields) {
                     if (error || results.length == 0) {
                         return connection.rollback(function() {
-                            output.success = SELECT_NONE.success
-                            output.status = SELECT_NONE.status
-                            output.description = SELECT_NONE.description
+                            output.success = statusCode.DB_STATUS.SELECT_ERROR.success
+                            output.status = statusCode.DB_STATUS.SELECT_ERROR.status
+                            output.description = statusCode.DB_STATUS.SELECT_ERROR.description
                             res.send(output);
                         });
                     }
                     if(results[0].status == 0)
                     {
-                        output.success = ACCOUNT_CLOCK.success
-                        output.status=ACCOUNT_CLOCK.status
-                        output.description=ACCOUNT_CLOCK.description
+                        output.success = statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.success
+                        output.status=statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.status
+                        output.description=statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.description
                         res.send(output);
                     }
                     console.log(results)
@@ -93,16 +97,21 @@ router.post("/login",(req,res)=>{
                         if (error) {
                             console.log(error)
                             return connection.rollback(function() {
-                                output.success = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.success
-                                output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
-                                output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
+                                console.log(statusCode.DB_STATUS.INSERT_ERROR)
+                                output.success = statusCode.SERVICE_STATUS.LOGIN_FAIL.success
+                                output.status = statusCode.SERVICE_STATUS.LOGIN_FAIL.status
+                                output.description = statusCode.SERVICE_STATUS.LOGIN_FAIL.description
                                 res.send(output)
                             });
                         }
                         connection.commit(function(err) {
                             if (err) {
                                 return connection.rollback(function() {
-                                throw err;
+                                    output.success = statusCode.SERVICE_STATUS.LOGIN_FAIL.success
+                                    output.status = statusCode.SERVICE_STATUS.LOGIN_FAIL.status
+                                    output.description = statusCode.SERVICE_STATUS.LOGIN_FAIL.description
+                                    res.send(output)
+                                    throw err;
                                 });
                             }
                             (async function(){
@@ -116,15 +125,15 @@ router.post("/login",(req,res)=>{
                                     redisClient.setEx(userTokenKey,14*24*60*60,JSON.stringify(userInfo))
                                     output.userToken = userTokenKey
                                     output.userInfo = userInfo
-                                    output.success = LOGIN_SUCCESS.success
-                                    output.status = LOGIN_SUCCESS.status
-                                    output.description = LOGIN_SUCCESS.description
+                                    output.success = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.success
+                                    output.status = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.status
+                                    output.description = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.description
                                     res.send(output)
                                 } catch (error) {
                                     console.log(error)
-                                    output.success = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.success
-                                    output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
-                                    output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
+                                    output.success = statusCode.REDIS_STATUS.SET_FAIL.success
+                                    output.status = statusCode.REDIS_STATUS.SET_FAIL.status
+                                    output.description = statusCode.REDIS_STATUS.SET_FAIL.description
                                     res.send(output)
                                 }
                             })()

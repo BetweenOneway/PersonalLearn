@@ -100,12 +100,54 @@
     import { storeToRefs } from "pinia";
     import { DeleteOutlineRound, ArrowCircleUpRound, ArrowCircleDownRound, EditNoteRound} from "@vicons/material"
     import { useThemeStore } from "../../stores/themeStore";
+    import { getUserToken } from "../../Utils/userLogin";
+    import { noteBaseRequest } from "../../request/noteRequest"
+    import {useMessage,useLoadingBar} from 'naive-ui'
 
     const themeStore = useThemeStore()
     const {isDarkTheme} = storeToRefs(themeStore)
+
+    //消息对象
+    const message = useMessage()
+    const loadingBar = useLoadingBar()
 
     //便签已完成图片影子的颜色
     const thingFinishedShadowColor = computed(()=>{
         return isDarkTheme ?"#ABBAAA":"#676767";
     })
+
+    //获取用户便签列表
+    const getMemoList =async ()=>{
+        //判断用户登录状态
+        const userToken = await getUserToken()
+        //发送获取便签请求
+        //头部加载进度条开始
+        loadingBar.start()
+        const {data:responseData} = await noteBaseRequest.get(
+                "/memo/getUserMemoList",
+                {
+                    params:{
+                        userToken
+                    }
+                }
+            ).catch(()=>{
+                //加载条异常结束
+                loadingBar.error()
+                //显示登陆失败的通知
+                throw message.error(responseData.description)
+            }
+        )
+
+        if(responseData.success)
+        {
+            loadingBar.finish()
+            console.log(responseData)
+        }
+        else
+        {
+            loadingBar.error()
+            message.error(responseData.description)
+        }
+    }
+    getMemoList()
 </script>
