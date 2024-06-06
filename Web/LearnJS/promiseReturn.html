@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise用法</title>
+    <script>
+        function promiseFunc(param)
+        {
+            return new Promise((suc,err)=>{
+                console.log("step"+param)
+                param = param + 1
+                suc(param)
+            })
+        }
+        function func(param)
+        {
+            let num = 0;
+            promiseFunc(num).then((val)=>{
+                console.log("val="+val);
+                num = val;
+                console.log("num="+num)
+                return num
+            })
+            
+        }
+        let res = func()
+        console.log("res="+res)
+        
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
