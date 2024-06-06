@@ -103,7 +103,7 @@ SERVICE_STATUS={
         description:'用户未登录'
     },
     GET_MEMO_SUCCESS:{
-        success:false,
+        success:true,
         status:'SERVICE_009',
         description:'便签查询成功'
     }
