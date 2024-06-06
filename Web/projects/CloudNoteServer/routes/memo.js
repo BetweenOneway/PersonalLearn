@@ -24,7 +24,7 @@ router.get("/getUserMemoList",async (req,res)=>{
     let userTokenRedisValue={};
     //验证用户是否登录
     try{
-        await redisOper.RedisGet(userToken,userTokenRedisValue)
+        userTokenRedisValue = await redisOper.RedisGet(userToken)
         console.log("retrived redis value:")
         console.log(userTokenRedisValue)
         if(userTokenRedisValue == null)

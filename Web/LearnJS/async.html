@@ -6,42 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Async用法</title>
     <script>
-        // function waitFunc(param)
-        // {
-        //     return new Promise((resolve, reject) => {
-        //         setTimeout(() => {
-        //             resolve(param+1)
-        //         }, 2000);
-        //     })
-        // }
-        // async function test(){
-        //     let param = 0
-        //     param = await waitFunc(param)
-        //     console.log("param="+param)
-        //     return param
-        // }
-        // console.log(test())
-
-        function testAsync() {
+        async function method1(param){
             return new Promise((resolve, reject) => {
-                // here our function should be implemented
-                setTimeout(() => {
-                console.log('Hello from inside the testAsync function');
-                resolve();
-                ;
-                }, 5000);
-            });
+                param+=1
+                resolve(param)
+            })
         }
-
-        async function callerFun() {
-            console.log('Caller');
-            await testAsync();
-            console.log('After waiting');
-            
-        }
-
-        callerFun();
-        console.log("hello world")
+        (async function(){
+            let param = 0
+            param = await method1(param);
+            console.log("after await:"+param)
+        })()
         
     </script>
 </head>
