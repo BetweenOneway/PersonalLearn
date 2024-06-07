@@ -18,4 +18,28 @@ async function redisGet(key) {
     })
 }
 
-module.exports.RedisGet = redisGet
+async function redisDel(key) {
+    return new Promise(async(resolve, reject) => {
+        await redisConnect()
+        redisClient.del(key).then(val=>{
+            resolve(val)
+            redisClient.quit()
+        })
+    })
+}
+
+async function redisSet(key,value,expireSeconds) {
+    return new Promise(async(resolve, reject) => {
+        await redisConnect()
+        redisClient.setEx(key,expireSeconds,value).then(val=>{
+            resolve(val)
+            redisClient.quit()
+        })
+    })
+}
+
+module.exports = {
+    RedisSet : redisSet,
+    RedisGet : redisGet,
+    RedisDel : redisDel
+}
