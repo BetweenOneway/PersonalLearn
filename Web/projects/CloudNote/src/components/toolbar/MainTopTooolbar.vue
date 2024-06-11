@@ -55,6 +55,7 @@
     import {storeToRefs} from 'pinia'
     import { NIcon,useMessage,useLoadingBar } from 'naive-ui'
     import { noteBaseRequest } from "../../request/noteRequest"
+    import { loginInvalid } from "../../Utils/userLogin";
     import {ref} from "vue"
 
     const themeStore = useThemeStore()
@@ -73,7 +74,6 @@
 
     const userStore = useUserStore()
     const {id:user_id,head_image,userNickName,userLevel} = storeToRefs(userStore)
-    const {resetUserInfo} = userStore
     
     const showLoginModal = (e)=>{
         loginModalStep.value = 1
@@ -130,10 +130,8 @@
         console.log(responseData)
         if(responseData.success)
         {
-            //用户共享数据清空
-            resetUserInfo()
-            //userToken本地存储删除
-            localStorage.removeItem(userToken)
+            //登录失效处理
+            loginInvalid(false)
         }
         else
         {

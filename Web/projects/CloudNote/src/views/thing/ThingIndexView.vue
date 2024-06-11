@@ -90,7 +90,7 @@
     import { storeToRefs } from "pinia";
     import { DeleteOutlineRound, ArrowCircleUpRound, ArrowCircleDownRound, EditNoteRound} from "@vicons/material"
     import { useThemeStore } from "../../stores/themeStore";
-    import { getUserToken } from "../../Utils/userLogin";
+    import { getUserToken,loginInvalid } from "../../Utils/userLogin";
     import { noteBaseRequest } from "../../request/noteRequest"
     import {useMessage,useLoadingBar} from 'naive-ui'
 
@@ -161,6 +161,11 @@
         {
             loadingBar.error()
             message.error(responseData.description)
+            //登录失效处理
+            if(responseData.status ==='SERVICE_008')
+            {
+                loginInvalid(true)
+            }
         }
     }
     getMemoList()
