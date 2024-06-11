@@ -77,4 +77,20 @@ router.get("/getUserMemoList",async (req,res)=>{
     })
     
 })
+
+//置顶 取消置顶
+router.get("/",async (req,res)=>{
+    let output={
+        success:true,
+        status:'',
+        description:'',
+        data:[]
+    }
+    console.log("start getMemoList");
+    console.log(req.query)
+    let isTop = req.query.isTop
+    let memoId = req.query.memoId
+    let userId = req.query.userId
+    var sql = `UPDATE z_thing SET top =? WHERE id = ? AND u_id = ? AND top != ? AND status = 1;`
+})
 module.exports=router;
