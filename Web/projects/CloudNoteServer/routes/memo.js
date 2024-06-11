@@ -14,7 +14,8 @@ router.get("/getUserMemoList",async (req,res)=>{
     var output={
         success:true,
         status:'',
-        description:''
+        description:'',
+        data:[]
     }
     console.log("start getMemoList");
     console.log(req.query)
@@ -69,6 +70,7 @@ router.get("/getUserMemoList",async (req,res)=>{
             output.success = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.description
+            output.data = results
             res.send(output);
             return
         })

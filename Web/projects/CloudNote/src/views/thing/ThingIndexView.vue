@@ -13,9 +13,10 @@
         <n-card size="small" :bordered="false" style="margin-top:20px" >
             <n-space>
                 <n-card :segmented="{'content':soft}" 
-                class="thing-card-finished" size="small" 
-                :bordered="isDarkTheme" 
-                :embedded title="2023标题">
+                :class="{'thing-card-finished' : memo.finished}" size="small" 
+                v-for="memo in memos" :key="memo.id"
+                :bordered="isDarkTheme" style="min-width:220px"
+                :embedded :title="memo.title">
                     <template #header-extra>
                         <!--删除按钮-->
                         <n-popover>
@@ -31,20 +32,10 @@
                         <n-popover>
                             <template #trigger>
                                 <n-button text style="margin-left:8px">
-                                    <n-icon :size="18" :component="ArrowCircleUpRound"></n-icon>
+                                    <n-icon :size="18" :component="memoCardTopIconText(memo.top).icon"></n-icon>
                                 </n-button>
                             </template>
-                            置顶
-                        </n-popover>
-
-                        <!--取消置顶按钮-->
-                        <n-popover>
-                            <template #trigger>
-                                <n-button text style="margin-left:8px">
-                                    <n-icon :size="18" :component="ArrowCircleDownRound"></n-icon>
-                                </n-button>
-                            </template>
-                            取消置顶
+                            {{ memoCardTopIconText(memo.top).text }}
                         </n-popover>
 
                         <!--编辑按钮-->
@@ -60,16 +51,15 @@
                     <!--便签标签-->
                     <template #default>
                         <n-space>
-                            <n-tag :bordered="false" size="small">2024</n-tag>
-                            <n-tag :bordered="false" size="small">工作</n-tag>
+                            <n-tag v-for="tag in memo.tags.split(',')" :key="tag" size="small">{{tag}}</n-tag>
                         </n-space>
                     </template>
                     <!--底部状态栏-->
                     <template #footer>
                         <n-space align="center" :size="3">
-                            <n-tag :bordered="false" size="small" type="success">置顶</n-tag>
+                            <n-tag v-if="memo.top" size="small" type="success">置顶</n-tag>
                             <n-divider vertical></n-divider>
-                            <n-text depth="3">2024-06-01 11:11:11</n-text>
+                            <n-text depth="3">{{memo.update_time}}</n-text>
                         </n-space>
                     </template>
                 </n-card>
@@ -88,7 +78,7 @@
         bottom:50%;
         left:40px;
         transform: translateY(50px);
-        background-image: url("@/assetes/finish.png");
+        background-image: url("@/assets/finish.png");
         background-size:100px 100px;
         background-repeat:no-repeat;
         filter:drop-shadow(5px 5px 2px v-bind(thingFinishedShadowColor));/*仅对像素阴影*/
@@ -116,6 +106,29 @@
         return isDarkTheme ?"#ABBAAA":"#676767";
     })
 
+    /*
+    便签置顶对象
+    top true 置顶；false 不置顶
+    */
+    const memoCardTopIconText=(top)=>{
+        if(top)
+        {
+            return {
+                icon:ArrowCircleDownRound,
+                text:'取消置顶'
+            }
+        }
+        else
+        {
+            return {
+                icon:ArrowCircleUpRound,
+                text:'置顶'
+            }
+        }
+    }
+    //memo列表
+    const memos = ref([])
+
     //获取用户便签列表
     const getMemoList =async ()=>{
         //判断用户登录状态
@@ -142,6 +155,7 @@
         {
             loadingBar.finish()
             console.log(responseData)
+            memos.value = responseData.data
         }
         else
         {
