@@ -19,8 +19,8 @@ REDIS_STATUS={
         status:'CACHE_003',
         description:'缓存设置失败'
     },
-    DEL_SUCCESS:{
-        success:true,
+    DEL_FAIL:{
+        success:false,
         status:'CACHE_004',
         description:'缓存删除失败'
     },
@@ -29,7 +29,7 @@ REDIS_STATUS={
         status:'CACHE_005',
         description:'缓存查询失败'
     },
-    NO_CONNECT:{
+    PARAM_ERROR:{
         success:false,
         status:'CACHE_006',
         description:'请求参数有误'
@@ -44,7 +44,7 @@ DB_STATUS={
     },
     UPDATE_SUCCESS:{},
     DEL_SUCCESS:{},
-    NO_CONNECT:{
+    PARAM_ERROR:{
         success:false,
         status:'DB_006',
         description:'请求参数有误'
@@ -57,6 +57,11 @@ DB_STATUS={
 }
 
 SERVICE_STATUS={
+    COMMON_EXCEPTION:{
+        success:false,
+        status:'SERVICE_FFF',
+        description:'服务异常'
+    },
     SEND_EMAIL_VC_SUCCESS:{
         success:true,
         status:'SERVICE_000',
@@ -77,15 +82,25 @@ SERVICE_STATUS={
         status:'SERVICE_003',
         description:'邮箱验证码发送失败'
     },
-    REGISTER_Fail:{
+    REGISTER_FAIL:{
         success:true,
         status:'SERVICE_004',
         description:'用户注册失败'
     },
-    LOGIN_Fail:{
+    LOGIN_FAIL:{
         success:true,
         status:'SERVICE_005',
         description:'用户登录失败'
+    },
+    LOGOUT_SUCCESS:{
+        success:true,
+        status:'SERVICE_005',
+        description:'用户退出登录成功'
+    },
+    LOGOUT_FAIL:{
+        success:false,
+        status:'SERVICE_005',
+        description:'用户退出登录失败'
     },
     PARAM_ERROR:{
         success:false,
@@ -106,7 +121,36 @@ SERVICE_STATUS={
         success:true,
         status:'SERVICE_009',
         description:'便签查询成功'
+    },
+    MEMO_SET_TOP_SUCCESS:{
+        success:true,
+        status:'SERVICE_010',
+        description:'便签置顶或取消置顶成功'
+    },
+    MEMO_SET_TOP_FAIL:{
+        success:false,
+        status:'SERVICE_011',
+        description:'便签置顶或取消置顶失败'
     }
 }
 
-module.exports = {REDIS_STATUS,DB_STATUS,SERVICE_STATUS}
+EVENT_LIST = {
+    USER_REGIST:{
+        code:'0',
+        desc:'用户注册'
+    },
+    LOGIN_MAIL_PASSWORD:{
+        code:'1',
+        desc:'邮箱密码登录'
+    },
+    MEMO_SET_TOP:{
+        code:'2',
+        desc:'便签置顶'
+    },
+    MEMO_UNSET_TOP:{
+        code:'3',
+        desc:'便签取消置顶'
+    }
+}
+
+module.exports = {REDIS_STATUS,DB_STATUS,SERVICE_STATUS,EVENT_LIST}

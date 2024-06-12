@@ -176,16 +176,17 @@ router.get("/logout",(req,res)=>{
                     console.log("del userToken")
                     console.log(val)
                     
-                    output.success = LOGIN_OUT_SUCCESS.success
-                    output.status = LOGIN_OUT_SUCCESS.status
-                    output.description = LOGIN_OUT_SUCCESS.description
+                    output.success = statusCode.LOGOUT_SUCCESS.success
+                    output.status = statusCode.LOGOUT_SUCCESS.status
+                    output.description = statusCode.LOGOUT_SUCCESS.description
                     res.send(output)
                 })
             } catch (error) {
+                console.log("退出登录，缓存删除失败")
                 console.log(error)
-                output.success = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.success
-                output.status = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.status
-                output.description = LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION.description
+                output.success = statusCode.REDIS_STATUS.DEL_FAIL.success
+                output.status = statusCode.REDIS_STATUS.DEL_FAIL.status
+                output.description = statusCode.REDIS_STATUS.DEL_FAIL.description
                 res.send(output)
             }
         })()
