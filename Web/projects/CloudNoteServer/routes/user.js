@@ -4,34 +4,15 @@ const redis = require('redis')
 const stringRandom = require("string-random");
 
 //数据库连接池
-var pool = require("../pool");
+var pool = require("../utils/pool");
 //邮箱操作
-var mailOper =require("./mail")
+var mailOper =require("../utils/mail")
 //状态码定义
-var statusCode = require("../statusCode")
+var statusCode = require("./statusCode")
 var router=express.Router();
 
-
-const LOGIN_SUCCESS = {success:true, status:'LOGIN_000', description:'登录成功'}
-const LOGIN_FAIL = {success:false, status:'LOGIN_001', description:'登录失败'}
-const LOGIN_LOG_CREATE_EXCEPTION = {success:false, status:'LOGIN_002', description:'登录日志创建失败'}
-const LOGIN_LOG_LOGIN_SUCCESS_REDIS_EXCEPTION = {success:false, status:'LOGIN_003', description:'登录成功，缓存失败'}
-const LOGIN_OUT_EXCEPTION = {success:false, status:'LOGIN_004', description:'退出登录异常'}
-const LOGIN_OUT_SUCCESS = {success:true, status:'LOGIN_005', description:'退出登录成功'}
-
-const SELECT_SUCCESS = {success:true, status:'Q_000', description:'查询成功'}
-const SELECT_EXCEPTION = {success:false, status:'Q_001', description:'查询异常'}
-const SELECT_ERROR={success:false, status:'Q_002', description:'查询错误'}
-const SELECT_NONE={success:false, status:'Q_003', description:'账号或密码错误'}
-
-const ACCOUNT_CLOCK = {success:false, status:'A_001', description:'账号被锁定'}
-const ACCOUNT_MAIL_USED = {success:false, status:'A_002',description:'该邮箱已经被注册'}
-const ACCOUNT_NEW_ADD_FAIL = {success:false, status:'A_003',description:'新增用户失败'}
-
-const REGISTER_SUCCESS = {success:true,status:'R_000',description:'用户注册成功'}
 const REGISTER_SEND_VERIFY_CODE_SUCCESS =  {success:true, status:'R_001', description:'验证码发送成功'}
 const REGISTER_REDIS_ERROR =  {success:false, status:'R_002', description:'注册验证码缓存失败'}
-const REGISTER_FAIL = {success:false,status:'R_003',description:'用户注册失败'}
 
 const SERVICE_QUERY_FAIL = {success:false, status:'S_001',description:'查询服务异常'}
 const SERVICE_MAIL_SEND_FAIL = {success:false, status:'S_002',description:'邮件发送异常'}
@@ -235,9 +216,9 @@ router.get("/SendVerifyCode",(req,res)=>{
                 {
                     console.log(results)
                     //邮箱被占用
-                    output.success = ACCOUNT_MAIL_USED.success
-                    output.status=ACCOUNT_MAIL_USED.status
-                    output.description=ACCOUNT_MAIL_USED.description
+                    output.success = statusCode.SERVICE_STATUS.MAIL_USED.success
+                    output.status=statusCode.SERVICE_STATUS.MAIL_USED.status
+                    output.description=statusCode.SERVICE_STATUS.MAIL_USED.description
                 }
                 else
                 {
@@ -327,9 +308,9 @@ router.post("/register",(req,res)=>{
                     if(results.userCount == 1)
                     {
                         //邮箱被占用
-                        output.success = ACCOUNT_MAIL_USED.success
-                        output.status=ACCOUNT_MAIL_USED.status
-                        output.description=ACCOUNT_MAIL_USED.description
+                        output.success = statusCode.SERVICE_STATUS.MAIL_USED.success
+                        output.status=statusCode.SERVICE_STATUS.MAIL_USED.status
+                        output.description=statusCode.SERVICE_STATUS.MAIL_USED.description
                         res.send(output)
                     }
                     else
@@ -346,24 +327,25 @@ router.post("/register",(req,res)=>{
                                 if (error) {
                                     console.log(error)
                                     return connection.rollback(function() {
-                                        output.success = ACCOUNT_NEW_ADD_FAIL.success
-                                        output.status = ACCOUNT_NEW_ADD_FAIL.status
-                                        output.description = ACCOUNT_NEW_ADD_FAIL.description
+                                        output.success = statusCode.SERVICE_STATUS.REGISTER_FAIL.success
+                                        output.status = statusCode.SERVICE_STATUS.REGISTER_FAIL.status
+                                        output.description = statusCode.SERVICE_STATUS.REGISTER_FAIL.description
                                         res.send(output)
                                     });
                                 }
                                 console.log("insert z_user") 
                                 console.log(results)
                                 console.log(fields)
+                                //获取新增的用户ID
                                 var sql = `select id as userId from z_user where email=?`
                                 connection.query(sql, [userEmail], function (error, results, fields) {
                                     if (error) {
                                         console.log("get id error:")
                                         console.log(error)
                                         return connection.rollback(function() {
-                                            output.success = ACCOUNT_NEW_ADD_FAIL.success
-                                            output.status = ACCOUNT_NEW_ADD_FAIL.status
-                                            output.description = ACCOUNT_NEW_ADD_FAIL.description
+                                            output.success = statusCode.SERVICE_STATUS.REGISTER_FAIL.success
+                                            output.status = statusCode.SERVICE_STATUS.REGISTER_FAIL.status
+                                            output.description = statusCode.SERVICE_STATUS.REGISTER_FAIL.description
                                             res.send(output)
                                         });
                                     }
@@ -391,9 +373,9 @@ router.post("/register",(req,res)=>{
                                                     return connection.rollback(function() {
                                                         //提交错误处理
                                                         console.log("commit database error")
-                                                        output.success = ACCOUNT_NEW_ADD_FAIL.success
-                                                        output.status = ACCOUNT_NEW_ADD_FAIL.status
-                                                        output.description = ACCOUNT_NEW_ADD_FAIL.description
+                                                        output.success = statusCode.SERVICE_STATUS.REGISTER_FAIL.success
+                                                        output.status = statusCode.SERVICE_STATUS.REGISTER_FAIL.status
+                                                        output.description = statusCode.SERVICE_STATUS.REGISTER_FAIL.description
                                                         res.send(output)
                                                     });
                                                 }
@@ -416,9 +398,9 @@ router.post("/register",(req,res)=>{
                                                     else
                                                     {
                                                         console.log("mail send success,user account register success")
-                                                        output.success = REGISTER_SUCCESS.success
-                                                        output.status = REGISTER_SUCCESS.status
-                                                        output.description = REGISTER_SUCCESS.description
+                                                        output.success = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.success
+                                                        output.status = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.status
+                                                        output.description = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.description
                                                         console.log(output)
                                                         res.send(output)
                                                     }

@@ -77,6 +77,11 @@ SERVICE_STATUS={
         status:'SERVICE_002',
         description:'用户登录成功'
     },
+    MAIL_USED:{
+        success:false,
+        status:'SERVICE_002',
+        description:'用户登录成功'
+    },
     SEND_EMAIL_VC_FAIL:{
         success:true,
         status:'SERVICE_003',

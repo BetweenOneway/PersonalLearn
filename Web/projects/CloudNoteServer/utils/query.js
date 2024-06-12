@@ -1,4 +1,4 @@
-var pool=require("../pool");
+var pool=require("./pool");
 
 module.exports=function(sql,params,callback){
   return new Promise(function(suc,err){

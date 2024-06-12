@@ -3,9 +3,9 @@ const crypto = require("crypto")
 const redis = require('redis')
 const stringRandom = require("string-random");
 
-var pool = require("../pool");
-var redisOper =require("./redisOper");
-let statusCode = require("../statusCode")
+var pool = require("../utils/pool");
+let statusCode = require("./statusCode")
+let validate = require("../utils/validate")
 
 var router=express.Router();
 
@@ -22,34 +22,18 @@ router.get("/getUserMemoList",async (req,res)=>{
     var userToken = req.query.userToken
     let status = 1
     let userInfo = {}
-    let userTokenRedisValue={};
+
     //验证用户是否登录
-    try{
-        userTokenRedisValue = await redisOper.RedisGet(userToken)
-        console.log("retrived redis value:")
-        console.log(userTokenRedisValue)
-        if(userTokenRedisValue == null)
-        {
-            //用户未登录
-            output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-            output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-            output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
-            res.send(output)
-            return
-        }
-    }
-    catch(error)
+    let validateInfo = validate.IsUserValidate(userToken);
+    if(!validateInfo.isValidated)
     {
-        console.log("get redis error")
-        console.log(error)
-        output.success = statusCode.REDIS_STATUS.GET_FAIL.success
-        output.status = statusCode.REDIS_STATUS.GET_FAIL.status
-        output.description = statusCode.REDIS_STATUS.GET_FAIL.description
+        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
+        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
+        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
         res.send(output)
         return
     }
-
-    userInfo = JSON.parse(userTokenRedisValue)
+    userInfo = validateInfo.userInfo
     console.log("parsed userinfo")
     console.log(userInfo)
     //查询当前用户的所有正常的便签
@@ -103,19 +87,18 @@ router.get("/setMemoTop",async (req,res)=>{
         return
     }
 
-    userTokenRedisValue = await redisOper.RedisGet(userToken)
-    console.log("retrived redis value:")
-    console.log(userTokenRedisValue)
-    if(userTokenRedisValue == null)
+    //验证用户是否登陆
+    let validateInfo = validate.IsUserValidate(userToken);
+    if(!validateInfo.isValidated)
     {
-        //用户未登录
         output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
         output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
         output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
         res.send(output)
         return
     }
-    let userInfo = JSON.parse(userTokenRedisValue)
+
+    let userInfo = validateInfo.userInfo;
     let sql = `UPDATE z_thing SET top =? WHERE id = ? AND u_id = ? AND top != ? AND status = 1;`
     try{
         pool.getConnection(function(error,connection){
