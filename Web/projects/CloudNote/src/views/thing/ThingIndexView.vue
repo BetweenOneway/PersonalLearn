@@ -11,10 +11,32 @@
         </n-card>
         <!--小记列表 容器-->
         <n-card size="small" :bordered="false" style="margin-top:20px" >
-            <n-space>
+            <!--便签列表骨架屏-->
+            <n-space v-if="loading">
+                <n-card embeded size="small" :bordered="isDarkTheme" :segmented="{'content':soft}" v-for="n in 9">
+                    <template #header>
+                        <n-skeleton :width="180" size="small" />
+                    </template>
+                    <template #header-extra>
+                        <n-skeleton repeat="3" :width="20" circle style="margin-left:6px" />
+                    </template>
+                    <template #default>
+                        <n-space>
+                            <n-skeleton :width="50" :height="22" />
+                            <n-skeleton :width="80" :height="22" />
+                            <n-skeleton :width="50" :height="22" />
+                        </n-space>
+                    </template>
+                    <template #footer>
+                        <n-skeleton text :width="140" />
+                    </template>
+                </n-card>
+            </n-space>
+            <!--便签列表-->
+            <n-space v-else>
                 <n-card :segmented="{'content':soft}" 
                 :class="{'thing-card-finished' : memo.finished}" size="small" 
-                v-for="memo in memos" :key="memo.id"
+                v-for="(memo,index) in memos" :key="memo.id"
                 :bordered="isDarkTheme" style="min-width:220px"
                 :embedded :title="memo.title">
                     <template #header-extra>
@@ -31,7 +53,8 @@
                         <!--置顶按钮-->
                         <n-popover>
                             <template #trigger>
-                                <n-button text style="margin-left:8px">
+                                <!--memo.top 0 非置顶 1 置顶-->
+                                <n-button :disabled="memo.toTop" text style="margin-left:8px" @click="SetMemoTop(!!!memo.top,memo.id,index)">
                                     <n-icon :size="18" :component="memoCardTopIconText(memo.top).icon"></n-icon>
                                 </n-button>
                             </template>
@@ -106,6 +129,9 @@
         return isDarkTheme ?"#ABBAAA":"#676767";
     })
 
+    //是否处于加载中
+    const loading = ref(true)
+
     /*
     便签置顶对象
     top true 置顶；false 不置顶
@@ -130,7 +156,8 @@
     const memos = ref([])
 
     //获取用户便签列表
-    const getMemoList =async ()=>{
+    //isUpdateLoading 是否需要改变
+    const getMemoList =async (isUpdateLoading)=>{
         //判断用户登录状态
         const userToken = await getUserToken()
         //发送获取便签请求
@@ -156,6 +183,11 @@
             loadingBar.finish()
             console.log(responseData)
             memos.value = responseData.data
+            //加载完成 骨架屏不再显示
+            if(isUpdateLoading)
+            {
+                loading.value = false
+            }
         }
         else
         {
@@ -168,5 +200,58 @@
             }
         }
     }
-    getMemoList()
+    getMemoList(true)
+
+    //置顶或取消置顶便签
+    //isTop bool 是否置顶 目标状态
+    //index 便签索引
+    const SetMemoTop = async (isTop,memoId,index)=>{
+        
+        //判断用户登录状态
+        const userToken = await getUserToken()
+        //发送置顶/取消置顶便签请求
+        //头部加载进度条开始
+        loadingBar.start()
+
+        const curMemo = memos.value[index]
+        curMemo.toTop = true//禁用便签置顶按钮
+
+        const {data:responseData} = await noteBaseRequest.get(
+                "/memo/setMemoTop",
+                {
+                    params:{
+                        userToken:userToken,
+                        targetTop:isTop?1:0,
+                        memoId:memoId
+                    }
+                }
+            ).catch(()=>{
+                //加载条异常结束
+                loadingBar.error()
+                curMemo.toTop = false//解除禁用便签置顶按钮
+                //显示登陆失败的通知
+                throw message.error(isTop?"置顶便签失败":"取消置顶便签失败")
+            }
+        )
+
+        if(responseData.success)
+        {
+            loadingBar.finish()
+            console.log(responseData)
+            message.success(responseData.description)
+            getMemoList(false)
+        }
+        else
+        {
+            loadingBar.error()
+            curMemo.toTop = false//解除禁用便签置顶按钮
+            message.error(responseData.description)
+            //登录失效处理
+            if(responseData.status ==='SERVICE_008')
+            {
+                loginInvalid(true)
+            }
+        }
+    }
+
 </script>
