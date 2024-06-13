@@ -50,6 +50,7 @@ namespace CLASS_TEST {
 
     void child::SayHi(){
         cout << "child say Hi" << endl;
+        classBase::SayHi();
     }
     void child::SayHello()const
     {
@@ -62,9 +63,15 @@ namespace CLASS_TEST {
 
     void testFinalOvertide()
     {
-        child newChild;
-        newChild.SayHello();
-        newChild.test();
+        //child newChild;
+        //newChild.SayHello();
+        //newChild.test();
+
+        shared_ptr< classBase> ptr(new child);
+        //ptr->test();//global call
+        //ptr->SayHello();//base say hello
+        ptr->SayHi();//child say hi
+        //ptr->Call();//语法错误
     }
 
     void testNew()
@@ -233,14 +240,17 @@ namespace CLASS_TEST {
     {
         cout <<"InheritClass1::Output1:"<< m_num << endl;
     }
+
     InheritClass2::InheritClass2() :Base2(20)
     {
         std::cout << "Call InheritClass2 construct" << std::endl;
     }
+
     void InheritClass2::Output2()
     {
         cout << m_num << endl;
     }
+
     void ActClass::Output()
     {
         cout <<"ActClass:"<< m_num << endl;

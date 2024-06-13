@@ -13,7 +13,7 @@ namespace CLASS_TEST {
 
     class child :public classBase
     {
-    public:
+    private:
         void SayHi() override;
         void SayHello()const;
         void Call();
