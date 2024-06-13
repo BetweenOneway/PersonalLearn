@@ -8,25 +8,27 @@ async function IsUserValidate(userToken)
     }
     //验证用户是否登录
     try{
-        userTokenRedisValue = await redisOper.RedisGet(userToken)
+        let userTokenRedisValue = await redisOper.RedisGet(userToken)
         console.log("retrived redis value:")
         console.log(userTokenRedisValue)
         if(userTokenRedisValue == null)
         {
             //用户未登录
+            console.log("IsUserValidate:用户未登录")
             validateInfo.isValidated = false;
         }
         else
         {
+            console.log("IsUserValidate:用户状态有效")
             validateInfo.isValidated = true;
             validateInfo.userInfo = JSON.parse(userTokenRedisValue);
         }
     }
     catch(error)
     {
-        userValidate = false
+        validateInfo.isValidated = false
     }
-    return userValidate
+    return validateInfo
 }
 
-module.exports = IsUserValidate
+module.exports.IsUserValidate = IsUserValidate

@@ -24,9 +24,10 @@ router.get("/getUserMemoList",async (req,res)=>{
     let userInfo = {}
 
     //验证用户是否登录
-    let validateInfo = validate.IsUserValidate(userToken);
+    let validateInfo = await validate.IsUserValidate(userToken);
     if(!validateInfo.isValidated)
     {
+        console.log("用户登录状态无效"+validateInfo.isValidated)
         output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
         output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
         output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
@@ -88,7 +89,7 @@ router.get("/setMemoTop",async (req,res)=>{
     }
 
     //验证用户是否登陆
-    let validateInfo = validate.IsUserValidate(userToken);
+    let validateInfo = await validate.IsUserValidate(userToken);
     if(!validateInfo.isValidated)
     {
         output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
