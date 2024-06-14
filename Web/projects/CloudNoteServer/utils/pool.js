@@ -5,7 +5,8 @@ var pool = mysql.createPool({
   user: 'root',
   password: '',
   database: 'cloudnote',
-  connectionLimit: 10 
+  connectionLimit: 10,
+  timezone:"08:00"
 });
 //把创建好的连接池导出
 module.exports = pool;
