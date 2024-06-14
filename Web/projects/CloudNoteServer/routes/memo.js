@@ -78,7 +78,7 @@ router.get("/setMemoTop",async (req,res)=>{
     let targetTop = req.query.targetTop
     let memoId = req.query.memoId
     let userToken = req.query.userToken
-    if(0 == userToken.length())
+    if(0 == userToken.length)
     {
         console.log("memo set top, userToken empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
@@ -100,7 +100,7 @@ router.get("/setMemoTop",async (req,res)=>{
     }
 
     let userInfo = validateInfo.userInfo;
-    let sql = `UPDATE z_thing SET top =? WHERE id = ? AND u_id = ? AND top != ? AND status = 1;`
+    let sql = `UPDATE z_thing SET \`top\` =? WHERE \`id\` = ? AND \`u_id\` = ? AND \`top\` != ? AND \`status\` = 1;`
     try{
         pool.getConnection(function(error,connection){
             connection.query(sql, [targetTop,memoId,userInfo.id,targetTop], function (error, results, fields) {
@@ -117,11 +117,14 @@ router.get("/setMemoTop",async (req,res)=>{
                 if(results.affectedRows > 0)
                 {
                     //记录事件日志
+                    console.log("set memo top add event log")
                     var date = new Date();
                     let event = targetTop === 1? statusCode.EVENT_LIST.MEMO_SET_TOP : statusCode.EVENT_LIST.MEMO_UNSET_TOP;
-                    sql = `INSERT INTO z_note_thing_log(time,event,desc,u_id,t_id) VALUES(?,?,?,?,?)`
+                    console.log('time:'+date.toISOString().slice(0, 19).replace('T', ' '))
+                    console.log(event)
+                    sql = `INSERT INTO z_note_thing_log(\`time\`,\`event\`,\`desc\`,\`u_id\`,\`t_id\`) VALUES(?,?,?,?,?)`
                     connection.query(sql, [date.toISOString().slice(0, 19).replace('T', ' ')
-                        ,event.code,event.desc,userId,memoId], 
+                        ,event.code,event.desc,userInfo.id,memoId], 
                         function (error, results, fields){
                             console.log(results)
                             if (error || results.affectedRows <= 0) {

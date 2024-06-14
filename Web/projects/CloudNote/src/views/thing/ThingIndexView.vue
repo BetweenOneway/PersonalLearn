@@ -59,7 +59,7 @@
     import { getUserToken,loginInvalid } from "../../Utils/userLogin";
     import { noteBaseRequest } from "../../request/noteRequest"
     import {useMessage,useLoadingBar} from 'naive-ui'
-    import meoCard from '../../components/memoCard'
+    import meoCard from '../../components/memo/memoCard.vue'
 
     const themeStore = useThemeStore()
     const {isDarkTheme} = storeToRefs(themeStore)

@@ -157,9 +157,9 @@ router.get("/logout",(req,res)=>{
                     console.log("del userToken")
                     console.log(val)
                     
-                    output.success = statusCode.LOGOUT_SUCCESS.success
-                    output.status = statusCode.LOGOUT_SUCCESS.status
-                    output.description = statusCode.LOGOUT_SUCCESS.description
+                    output.success = statusCode.SERVICE_STATUS.LOGOUT_SUCCESS.success
+                    output.status = statusCode.SERVICE_STATUS.LOGOUT_SUCCESS.status
+                    output.description = statusCode.SERVICE_STATUS.LOGOUT_SUCCESS.description
                     res.send(output)
                 })
             } catch (error) {
