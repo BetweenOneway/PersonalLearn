@@ -136,6 +136,11 @@ SERVICE_STATUS={
         success:false,
         status:'SERVICE_011',
         description:'便签置顶或取消置顶失败'
+    },
+    ACCOUNT_PASSWORD_NOT_MATCHED:{
+        success:false,
+        status:'SERVICE_012',
+        description:'账号密码不匹配'
     }
 }
 

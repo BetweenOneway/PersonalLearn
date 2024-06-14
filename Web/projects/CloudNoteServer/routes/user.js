@@ -55,16 +55,19 @@ router.post("/login",(req,res)=>{
                 if (err) { throw err; }
                 var sql = `select id,email,nickname as nickName,head_pic as headPic,level,time,status from z_user where email=? and password = ?`
                 connection.query(sql, [userEmail,userPassword], function (error, results, fields) {
+                    console.log(results)
                     if (error || results.length == 0) {
                         return connection.rollback(function() {
-                            output.success = statusCode.DB_STATUS.SELECT_ERROR.success
-                            output.status = statusCode.DB_STATUS.SELECT_ERROR.status
-                            output.description = statusCode.DB_STATUS.SELECT_ERROR.description
+                            console.log("login account password not matched")
+                            output.success = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.success
+                            output.status = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.status
+                            output.description = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.description
                             res.send(output);
                         });
                     }
                     if(results[0].status == 0)
                     {
+                        console.log("login account locked")
                         output.success = statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.success
                         output.status=statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.status
                         output.description=statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.description
