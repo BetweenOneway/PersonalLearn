@@ -7,8 +7,8 @@ export const getUserToken =async ()=>{
     if(token ===null)
     {
         //未登录
-        const {changeLoginModalStatus} = useLoginModalStore()
-        await changeLoginModalStatus(true)
+        const {changeLoginModalShow} = useLoginModalStore()
+        await changeLoginModalShow(true)
         throw "未登录"
     }
     else{
@@ -27,7 +27,7 @@ export const loginInvalid = show=>{
     resetUserInfo()
     if(show)
     {
-        const {changeLoginModalStatus} = useLoginModalStore()
-        changeLoginModalStatus(true)
+        const {changeLoginModalShow} = useLoginModalStore()
+        changeLoginModalShow(true)
     }
 }
