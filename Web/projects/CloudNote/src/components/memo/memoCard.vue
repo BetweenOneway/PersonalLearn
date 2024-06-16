@@ -7,7 +7,7 @@
             <!--删除按钮-->
             <n-popover>
                 <template #trigger>
-                    <n-button text style="margin-left:16px">
+                    <n-button text style="margin-left:16px" @click="emits('delete',{id,title})">
                         <n-icon :size="18" :component="DeleteOutlineRound"></n-icon>
                     </n-button>
                 </template>
@@ -86,7 +86,7 @@
     })
     
     //自定义事件
-    const emits = defineEmits(['changeStatus'])
+    const emits = defineEmits(['changeStatus','delete'])
 
     //便签已完成图片影子的颜色
     const thingFinishedShadowColor = computed(()=>{

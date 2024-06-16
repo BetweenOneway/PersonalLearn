@@ -44,7 +44,8 @@
                         :top="!!memo.top" 
                         :tags="memo.tags.split(',')" 
                         :time="memo.update_time" 
-                        @changeStatus="getMemoList()"></meoCard>
+                        @changeStatus="getMemoList()"
+                        @delete="showDeleteRemindDialog"></meoCard>
                     </template>
                 </TransitionGroup>
             </n-space>
@@ -61,11 +62,10 @@
     </n-layout>
 
     <DeleteRemindDialog 
-    description="删除的便签为《123》"
-    :complete-delete-btn="true"
-    @completeDelete="abc"
-    @delete="abc"
-    @cancel="abc"></DeleteRemindDialog>
+    :show="deleteRemind.show"
+    :description="deleteRemind.desc"
+    @delete="deleteMemo"
+    @cancel="deleteRemind.show=false"></DeleteRemindDialog>
 </template>
 
 <script setup>
@@ -156,8 +156,24 @@
         })
     }
 
-    const abc = (type)=>{
-        message.info(type)
+    //删除提醒框的对象
+    const deleteRemind = ref({
+        show:false,//是否显示
+        id:null,//便签编号
+        desc:""//删除描述
+    })
+
+    //显示删除便签提醒框
+    const showDeleteRemindDialog = ({id,title})=>{
+        deleteRemind.value.id = id //将要删除的便签编号
+        deleteRemind.value.desc = "删除《"+title+"》,可在回收站恢复。彻底删除无法恢复！" //将要删除的便签标题
+        deleteRemind.value.show = true
+    }
+
+    //删除便签 
+    //complete true彻底删除 false非彻底删除
+    const deleteMemo = (complete)=>{
+        message.info(complete?'彻底删除':'删除')
     }
 </script>
 
