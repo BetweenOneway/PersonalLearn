@@ -1,7 +1,7 @@
 <template>
     <n-space justify="space-between" align="center" style="height: 100%;">
         <n-text>之间笔记</n-text>
-        <n-space align="center">
+        <n-space align="center" :wrap-item="false">
             <!--头像-->
             <n-popover v-model:show = "userMenuShow" trigger="click" width="260px" content-style="padding:10px">
                 <template #trigger>
@@ -29,7 +29,7 @@
                 </n-thing>
             </n-popover>
             <!--分割线-->
-            <n-divider v-if="user_id !== null" vertical style="position:relative;top:5px;"/>
+            <n-divider v-if="user_id !== null" vertical />
             <!--消息-->
             <n-badge dot processing type="success" :offset="[-8,4]">
                 <n-button circle tertiary>
@@ -55,7 +55,7 @@
     import {storeToRefs} from 'pinia'
     import { NIcon,useMessage,useLoadingBar } from 'naive-ui'
     import { noteBaseRequest } from "../../request/noteRequest"
-    import { loginInvalid } from "../../Utils/userLogin";
+    import { loginInvalid,getUserToken } from "../../Utils/userLogin";
     import {ref} from "vue"
 
     const themeStore = useThemeStore()
@@ -107,14 +107,10 @@
     }
 
     const signOutLogin = async ()=>{
-        const userToken = localStorage.getItem("userToken")
-        console.log("signOutLogin"+userToken)
-        if(userToken === null)
-        {
-            //没登录
-            throw message.error("登录已失效")
-        }
-        //删除redis中存储的key 发送退出登录请求
+        const userToken =await getUserToken();
+        //加载条开始
+        loadingBar.start()
+        //发送退出登录请求 服务器删除redis中存储的key 
         const {data:responseData} = await noteBaseRequest.get(
                 "/user/logout",
                 {
@@ -123,6 +119,7 @@
                     }
                 }
             ).catch(()=>{
+                loadingBar.error()
                 throw message.error("退出登录失败")
             }
         )
@@ -130,11 +127,13 @@
         console.log(responseData)
         if(responseData.success)
         {
+            loadingBar.finish()
             //登录失效处理
             loginInvalid(false)
         }
         else
         {
+            loadingBar.error()
             message.error(responseData.description)
         }
         

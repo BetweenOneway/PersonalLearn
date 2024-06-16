@@ -8,6 +8,9 @@ export const getUserToken =async ()=>{
     {
         //未登录
         const {changeLoginModalShow} = useLoginModalStore()
+        //重置用户状态
+        const {resetUserInfo} = useUserStore()
+        await resetUserInfo()
         await changeLoginModalShow(true)
         throw "未登录"
     }
