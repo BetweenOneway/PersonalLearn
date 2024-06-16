@@ -3,7 +3,7 @@ import ThingIndexView from "../views/thing/ThingIndexView.vue"
 
 const routes = [
     {
-        path:'/thing',
+        path:'/memo',
         component:ThingIndexView
     }
 ]
