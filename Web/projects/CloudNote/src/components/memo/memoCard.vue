@@ -1,7 +1,7 @@
 <template>
     <n-card :segmented="{'content':soft}" 
                 :class="{'thing-card-finished' : finished}" size="small" 
-                :bordered="isDarkTheme" style="min-width:220px"
+                :bordered="isDarkTheme" style="min-width:220px;max-width:max-content"
                 :embedded :title="title">
         <template #header-extra>
             <!--删除按钮-->

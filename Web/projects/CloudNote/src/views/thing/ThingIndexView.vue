@@ -33,11 +33,23 @@
                 </n-card>
             </n-space>
             <!--便签列表-->
-            <n-space v-else-if="!loading && memos.length > 0">
-                <meoCard v-for="memo in memos" :key="memo.id" :id="memo.id" :title="memo.title" :finished="!!memo.finished" :top="!!memo.top" :tags="memo.tags.split(',')" :time="memo.update_time" @changeStatus="getMemoList()"></meoCard>
+            <n-space :wrap-item="false" >
+                <TransitionGroup @before-enter="beforeEnter" @enter="enterEvent">
+                    <template v-if="!loading && memos.length > 0">
+                        <meoCard class="memo-cards" v-for="(memo,index) in memos" :key="memo.id" 
+                        :data-index="index"
+                        :id="memo.id" 
+                        :title="memo.title" 
+                        :finished="!!memo.finished" 
+                        :top="!!memo.top" 
+                        :tags="memo.tags.split(',')" 
+                        :time="memo.update_time" 
+                        @changeStatus="getMemoList()"></meoCard>
+                    </template>
+                </TransitionGroup>
             </n-space>
             <!--暂无便签-->
-            <n-empty v-else style="margin:20px auto" size="huge" description="暂无便签">
+            <n-empty v-if="!loading && memos.length == 0" style="margin:20px auto" size="huge" description="暂无便签">
                 <template #icon>
                     <n-icon :component="SubtitlesOffOutlined"></n-icon>
                 </template>
@@ -60,6 +72,7 @@
     import { noteBaseRequest } from "../../request/noteRequest"
     import {useMessage,useLoadingBar} from 'naive-ui'
     import meoCard from '../../components/memo/memoCard.vue'
+    import gsap from "gsap"
 
     const themeStore = useThemeStore()
     const {isDarkTheme} = storeToRefs(themeStore)
@@ -118,4 +131,28 @@
         }
     }
     getMemoList()
+
+    //执行动画之前的初始位置
+    const beforeEnter = (el)=>{
+        gsap.set(el,{
+            y:30,
+            opacity:0
+        })
+    }
+    //执行动画
+    const enterEvent = (el,done)=>{
+        gsap.to(el,{
+            y:0,//偏移量
+            opacity:1,//透明度
+            duration:0.5,//秒
+            delay:el.dataset.index * 0.12,//延迟动画
+            onComplete:done//动画执行完成回调函数
+        })
+    }
 </script>
+
+<style scoped>
+    .n-card .memo-cards{
+        transition:all .5s;
+    }
+</style>
