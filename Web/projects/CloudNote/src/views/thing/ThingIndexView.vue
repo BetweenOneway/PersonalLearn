@@ -59,7 +59,13 @@
             </n-empty>
         </n-card>
     </n-layout>
-    
+
+    <DeleteRemindDialog 
+    description="删除的便签为《123》"
+    :complete-delete-btn="true"
+    @completeDelete="abc"
+    @delete="abc"
+    @cancel="abc"></DeleteRemindDialog>
 </template>
 
 <script setup>
@@ -72,6 +78,7 @@
     import { noteBaseRequest } from "../../request/noteRequest"
     import {useMessage,useLoadingBar} from 'naive-ui'
     import meoCard from '../../components/memo/memoCard.vue'
+    import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue";
     import gsap from "gsap"
 
     const themeStore = useThemeStore()
@@ -84,7 +91,6 @@
     //是否处于加载中
     const loading = ref(true)
 
-    
     //memo列表
     const memos = ref([])
 
@@ -148,6 +154,10 @@
             delay:el.dataset.index * 0.12,//延迟动画
             onComplete:done//动画执行完成回调函数
         })
+    }
+
+    const abc = (type)=>{
+        message.info(type)
     }
 </script>
 
