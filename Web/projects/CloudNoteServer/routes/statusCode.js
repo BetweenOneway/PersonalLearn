@@ -141,6 +141,16 @@ SERVICE_STATUS={
         success:false,
         status:'SERVICE_012',
         description:'账号密码不匹配'
+    },
+    DEL_MEMO_FAIL:{
+        success:false,
+        status:'SERVICE_011',
+        description:'删除或彻底删除便签失败'
+    },
+    DEL_MEMO_SUCCESS:{
+        success:TRUE,
+        status:'SERVICE_011',
+        description:'删除便签成功'
     }
 }
 
@@ -160,6 +170,14 @@ EVENT_LIST = {
     MEMO_UNSET_TOP:{
         code:'3',
         desc:'便签取消置顶'
+    },
+    MEMO_DEL:{
+        code:'4',
+        desc:'删除便签'
+    },
+    MEMO_COMPEL_DEL:{
+        code:'5',
+        desc:'彻底删除便签'
     }
 }
 

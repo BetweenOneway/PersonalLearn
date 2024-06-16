@@ -183,4 +183,134 @@ router.get("/setMemoTop",async (req,res)=>{
     return
 })
 
+//删除便签
+router.get("/deleteMemo",async (req,res)=>{
+    let output={
+        success:true,
+        status:'',
+        description:'',
+        data:[]
+    }
+    console.log("start set Top");
+    console.log(req.query)
+    
+    //目标状态
+    let isCompleteDel = req.query.isCompleteDel
+    let memoId = req.query.memoId
+    let userToken = req.query.userToken
+    if(0 == userToken.length)
+    {
+        console.log("del memo, userToken empty")
+        output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
+        output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
+        output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
+        res.send(output)
+        return
+    }
+
+    //验证用户是否登陆
+    let validateInfo = await validate.IsUserValidate(userToken);
+    if(!validateInfo.isValidated)
+    {
+        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
+        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
+        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
+        res.send(output)
+        return
+    }
+
+    let userInfo = validateInfo.userInfo;
+    var date = new Date();
+    let curTime = date.toISOString().slice(0, 19).replace('T', ' ')
+    let sql;
+    if(isCompleteDel)
+    {
+        sql = `UPDATE z_thing SET status = -1 ,update_time=? WHERE \`id\` = ? AND \`u_id\` = ? AND \`status\` != -1;`
+    }
+    else{
+        sql = `UPDATE z_thing SET status = 0 ,update_time=? WHERE \`id\` = ? AND \`u_id\` = ? AND \`status\` = 1;`
+    }
+
+    try{
+        pool.getConnection(function(error,connection){
+            connection.query(sql, [curTime,memoId,userInfo.id], function (error, results, fields) {
+                if (error) {
+                    return connection.rollback(function() {
+                        output.success = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.success
+                        output.status = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.status
+                        output.description = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.description
+                        res.send(output);
+                        return
+                    });
+                }
+                console.log(results)
+                if(results.affectedRows > 0)
+                {
+                    //记录事件日志
+                    console.log("del memo add event log")
+                    
+                    let event = isCompleteDel? statusCode.EVENT_LIST.MEMO_COMPEL_DEL : statusCode.EVENT_LIST.MEMO_DEL;
+                    console.log('time:'+curTime)
+                    console.log(event)
+                    sql = `INSERT INTO z_note_thing_log(\`time\`,\`event\`,\`desc\`,\`u_id\`,\`t_id\`) VALUES(?,?,?,?,?)`
+                    connection.query(sql, [curTime
+                        ,event.code,event.desc,userInfo.id,memoId], 
+                        function (error, results, fields){
+                            console.log(results)
+                            if (error || results.affectedRows <= 0) {
+                                return connection.rollback(function() {
+                                    console.log("del memo add event log fail")
+                                    output.success = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.success
+                                    output.status = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.status
+                                    output.description = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.description
+                                    res.send(output);
+                                    return
+                                });
+                            }
+                            connection.commit(function(err) {
+                                if (err) {
+                                    return connection.rollback(function() {
+                                        //提交错误处理
+                                        console.log("del memo,commit database error")
+                                        output.success = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.success
+                                        output.status = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.status
+                                        output.description = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.description
+                                        res.send(output);
+                                    });
+                                }
+                                else{
+                                    console.log("del memo success,commit database success")
+                                    output.success = statusCode.SERVICE_STATUS.DEL_MEMO_SUCCESS.success
+                                    output.status = statusCode.SERVICE_STATUS.DEL_MEMO_SUCCESS.status
+                                    output.description = statusCode.SERVICE_STATUS.DEL_MEMO_SUCCESS.description
+                                    res.send(output);
+                                }
+                            })
+                    })
+                    
+                }
+                else
+                {
+                    console.log("set memo top, affected rows < 0")
+                    return connection.rollback(function() {
+                        output.success = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.success
+                        output.status = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.status
+                        output.description = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.description
+                        res.send(output);
+                        return
+                    });
+                }
+            })
+        })
+    }
+    catch(e){
+        console.log(e)
+        output.success = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.success
+        output.status = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.status
+        output.description = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.description
+        res.send(output);
+    }
+    return
+})
+
 module.exports=router;
