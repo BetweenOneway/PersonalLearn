@@ -1,13 +1,24 @@
 const redis = require('redis');
-const redisClient = redis.createClient('6379', '127.0.0.1')
+const redisClient = redis.createClient({port:'6379', host:'127.0.0.1'})
 
 async function redisConnect()
 {
-    await redisClient.connect()
-    redisClient.on('error',err=>{
-        console.log(err)
-    })
+    try
+    {
+        await redisClient.connect()
+        redisClient.on('error',err=>{
+            console.log("redis connect error")
+            console.log(err)
+        })
+    }
+    catch(e)
+    {
+        console.log("redis connet error")
+        console.log(e)
+        throw(e)
+    }
 }
+
 async function redisGet(key) {
     return new Promise(async(resolve, reject) => {
         await redisConnect()
@@ -31,10 +42,18 @@ async function redisDel(key) {
 async function redisSet(key,value,expireSeconds) {
     return new Promise(async(resolve, reject) => {
         await redisConnect()
-        redisClient.setEx(key,expireSeconds,value).then(val=>{
-            resolve(val)
-            redisClient.quit()
-        })
+        try
+        {
+            redisClient.setEx(key,expireSeconds,value).then(val=>{
+                resolve(val)
+                redisClient.quit()
+            })
+        }
+        catch(e)
+        {
+            console.log("set redis error:key:["+key+"],value:["+value+"]")
+            reject()
+        }
     })
 }
 

@@ -172,8 +172,50 @@
 
     //删除便签 
     //complete true彻底删除 false非彻底删除
-    const deleteMemo = (complete)=>{
-        message.info(complete?'彻底删除':'删除')
+    const deleteMemo = async (isTop)=>{
+        //关闭提醒框
+        deleteRemind.value.show = false
+        //判断用户登录状态
+        const userToken = await getUserToken()
+        //发送置顶/取消置顶便签请求
+        //头部加载进度条开始
+        loadingBar.start()
+
+        const {data:responseData} = await noteBaseRequest.delete(
+                "/memo/deleteMemo",
+                {
+                    params:{
+                        isCompleteDel:complete,
+                        userToken:userToken,
+                        memoId:deleteRemind.value.id
+                    }
+                }
+            ).catch(()=>{
+                //加载条异常结束
+                loadingBar.error()
+                //显示登陆失败的通知
+                throw message.error(complete?"彻底删除便签失败":"删除便签失败")
+            }
+        )
+
+        if(responseData.success)
+        {
+            loadingBar.finish()
+            console.log(responseData)
+            message.success(responseData.description)
+            //重新获取便签列表
+            getMemoList()
+        }
+        else
+        {
+            loadingBar.error()
+            message.error(responseData.description)
+            //登录失效处理
+            if(responseData.status ==='SERVICE_008')
+            {
+                loginInvalid(true)
+            }
+        }
     }
 </script>
 

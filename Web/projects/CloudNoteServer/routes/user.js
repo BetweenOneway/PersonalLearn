@@ -2,6 +2,7 @@ const express=require("express");
 const crypto = require("crypto")
 const redis = require('redis')
 const stringRandom = require("string-random");
+let redisOper =require("../utils/redisOper")
 
 //数据库连接池
 var pool = require("../utils/pool");
@@ -30,6 +31,7 @@ function cryptPwd(password) {
 
 //用户登录
 router.post("/login",(req,res)=>{
+    console.log("user login service start")
     console.log(req.body);
     var userEmail = req.body.userEmail
     var userPassword = req.body.userPassword
@@ -43,6 +45,7 @@ router.post("/login",(req,res)=>{
 
     if(0 == userEmail.length || 0 == userPassword.length)
     {
+        console.log("user login:param error")
         output.success = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.success
         output.status = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.status
         output.description = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.description
@@ -52,7 +55,11 @@ router.post("/login",(req,res)=>{
     {
         pool.getConnection(function(error,connection){
             connection.beginTransaction(function(err) {
-                if (err) { throw err; }
+                if (err) 
+                {
+                    console.log("user login:db begin transaction error") 
+                    throw err; 
+                }
                 var sql = `select id,email,nickname as nickName,head_pic as headPic,level,time,status from z_user where email=? and password = ?`
                 connection.query(sql, [userEmail,userPassword], function (error, results, fields) {
                     console.log(results)
@@ -73,12 +80,13 @@ router.post("/login",(req,res)=>{
                         output.description=statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.description
                         res.send(output);
                     }
-                    console.log(results)
+
                     var userInfo = results[0];
                     var date = new Date();
                     var sql = `insert into z_user_log(\`desc\`,\`time\`,\`event\`,\`u_id\`) VALUES(?,?,?,?)`
                     connection.query(sql, ['登录成功',date.toISOString().slice(0, 19).replace('T', ' '),'邮箱密码登录',userInfo.id], function (error, results, fields) {
                         if (error) {
+                            console.log("user login:add log error")
                             console.log(error)
                             return connection.rollback(function() {
                                 console.log(statusCode.DB_STATUS.INSERT_ERROR)
@@ -91,6 +99,7 @@ router.post("/login",(req,res)=>{
                         connection.commit(function(err) {
                             if (err) {
                                 return connection.rollback(function() {
+                                    console.log("user login:commit error")
                                     output.success = statusCode.SERVICE_STATUS.LOGIN_FAIL.success
                                     output.status = statusCode.SERVICE_STATUS.LOGIN_FAIL.status
                                     output.description = statusCode.SERVICE_STATUS.LOGIN_FAIL.description
@@ -100,13 +109,9 @@ router.post("/login",(req,res)=>{
                             }
                             (async function(){
                                 try {
+                                    console.log("user login:set redis")
                                     const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
-                                    const redisClient = redis.createClient('6379', '127.0.0.1')
-                                    await redisClient.connect()
-                                    redisClient.on('error', err => {
-                                        console.error(err) // 打印监听到的错误信息
-                                    })
-                                    redisClient.setEx(userTokenKey,14*24*60*60,JSON.stringify(userInfo))
+                                    let setRedisResponse = await redisOper.RedisSet(userTokenKey,JSON.stringify(userInfo),14*24*60*60)
                                     output.userToken = userTokenKey
                                     output.userInfo = userInfo
                                     output.success = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.success
@@ -114,6 +119,7 @@ router.post("/login",(req,res)=>{
                                     output.description = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.description
                                     res.send(output)
                                 } catch (error) {
+                                    console.log("user login:set redis error")
                                     console.log(error)
                                     output.success = statusCode.REDIS_STATUS.SET_FAIL.success
                                     output.status = statusCode.REDIS_STATUS.SET_FAIL.status

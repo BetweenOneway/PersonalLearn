@@ -148,7 +148,7 @@ SERVICE_STATUS={
         description:'删除或彻底删除便签失败'
     },
     DEL_MEMO_SUCCESS:{
-        success:TRUE,
+        success:true,
         status:'SERVICE_011',
         description:'删除便签成功'
     }

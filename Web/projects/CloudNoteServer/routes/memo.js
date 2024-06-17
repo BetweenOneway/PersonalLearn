@@ -184,20 +184,20 @@ router.get("/setMemoTop",async (req,res)=>{
 })
 
 //删除便签
-router.get("/deleteMemo",async (req,res)=>{
+router.delete("/deleteMemo",async (req,res)=>{
     let output={
         success:true,
         status:'',
         description:'',
         data:[]
     }
-    console.log("start set Top");
-    console.log(req.query)
+    console.log("start del memo");
+    console.log(req.params)
     
     //目标状态
-    let isCompleteDel = req.query.isCompleteDel
-    let memoId = req.query.memoId
-    let userToken = req.query.userToken
+    let isCompleteDel = req.params.isCompleteDel
+    let memoId = req.params.memoId
+    let userToken = req.params.userToken
     if(0 == userToken.length)
     {
         console.log("del memo, userToken empty")
