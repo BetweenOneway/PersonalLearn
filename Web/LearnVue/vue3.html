@@ -1,0 +1,22 @@
+<script src="./js/vue3.global.min.js"></script>
+<!--<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>-->
+<div id="app">
+    <template v-if="1==1">
+        <h1>head 1</h1>
+        <p>paragraph 1</p>
+        <p>paragraph 2</p>
+    </template>
+</div>
+
+<script>
+  const { createApp, ref } = Vue
+
+  createApp({
+    setup() {
+      const message = ref('Hello vue!')
+      return {
+        message
+      }
+    }
+  }).mount('#app')
+</script>

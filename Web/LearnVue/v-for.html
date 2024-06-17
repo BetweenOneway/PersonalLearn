@@ -35,47 +35,47 @@
   </style>
 </head>
 <body>
-<div id="app">
-    <ul @click="change">
-        <li :class="pno==1?'disabled':''">上一页</li>
-        <li v-for="i of pcount" :key=i :class="i==pno?'active':''">{{i}}</li>
-        <li :class="pno==pcount?'disabled':''">下一页</li>
-    </ul>
-</div>
-<script>
-var vm=new Vue({
-  el:"#app",
-  data:{
-    pcount:3,
-    pno:1
-  },
-  methods:{
-      change(e){
-          //node名必须大写
-          if(e.target.nodeName=="LI")
-          {
-              switch(e.target.innerHTML)
-              {
-                  case "上一页":
-                    if(this.pno>1)
+    <div id="app">
+        <ul @click="change">
+            <li :class="pno==1?'disabled':''">上一页</li>
+            <li v-for="i of pcount" :key=i :class="i==pno?'active':''">{{i}}</li>
+            <li :class="pno==pcount?'disabled':''">下一页</li>
+        </ul>
+    </div>
+    <script>
+        var vm=new Vue({
+        el:"#app",
+        data:{
+            pcount:3,
+            pno:1
+        },
+        methods:{
+            change(e){
+                //node名必须大写
+                if(e.target.nodeName=="LI")
+                {
+                    switch(e.target.innerHTML)
                     {
-                        this.pno--;
+                        case "上一页":
+                            if(this.pno>1)
+                            {
+                                this.pno--;
+                            }
+                        break;
+                        case "下一页":
+                            if(this.pno < this.pcount)
+                            {
+                                this.pno++;
+                            }
+                        break;
+                        default:
+                            this.pno = parseInt(e.target.innerHTML);
+                        break;
                     }
-                  break;
-                  case "下一页":
-                    if(this.pno < this.pcount)
-                    {
-                        this.pno++;
-                    }
-                  break;
-                  default:
-                    this.pno = parseInt(e.target.innerHTML);
-                  break;
-              }
-          }
-      }
-  }
-})
-</script>
+                }
+            }
+        }
+        })
+    </script>
 </body>
 </html>
