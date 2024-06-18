@@ -62,6 +62,7 @@ router.post("/login",(req,res)=>{
                 }
                 var sql = `select id,email,nickname as nickName,head_pic as headPic,level,time,status from z_user where email=? and password = ?`
                 connection.query(sql, [userEmail,userPassword], function (error, results, fields) {
+                    console.log("query results:")
                     console.log(results)
                     if (error || results.length == 0) {
                         return connection.rollback(function() {
@@ -111,7 +112,8 @@ router.post("/login",(req,res)=>{
                                 try {
                                     console.log("user login:set redis")
                                     const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
-                                    let setRedisResponse = await redisOper.RedisSet(userTokenKey,JSON.stringify(userInfo),14*24*60*60)
+                                    await redisOper.RedisSet(userTokenKey,JSON.stringify(userInfo),14*24*60*60)
+                                    console.log("user login:set redis success")
                                     output.userToken = userTokenKey
                                     output.userInfo = userInfo
                                     output.success = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.success
