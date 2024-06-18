@@ -192,12 +192,12 @@ router.delete("/deleteMemo",async (req,res)=>{
         data:[]
     }
     console.log("start del memo");
-    console.log(req.params)
-    
+    console.log("req.query")
+    console.log(req.query)
     //目标状态
-    let isCompleteDel = req.params.isCompleteDel
-    let memoId = req.params.memoId
-    let userToken = req.params.userToken
+    let isCompleteDel = req.query.isCompleteDel.toLowerCase() === 'true'
+    let memoId = req.query.memoId
+    let userToken = req.query.userToken
     if(0 == userToken.length)
     {
         console.log("del memo, userToken empty")
@@ -291,7 +291,7 @@ router.delete("/deleteMemo",async (req,res)=>{
                 }
                 else
                 {
-                    console.log("set memo top, affected rows < 0")
+                    console.log("del memo, affected rows < 0")
                     return connection.rollback(function() {
                         output.success = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.success
                         output.status = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.status
