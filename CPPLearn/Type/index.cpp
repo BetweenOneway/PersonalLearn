@@ -294,7 +294,8 @@ void testScope()
 
 void testClass()
 {
-    CLASS_TEST::testFinalOvertide();
+    //CLASS_TEST::testFinalOvertide();
+    CLASS_TEST::testInherit();
     //CLASS_TEST::testClassPassPointer();
     //CLASS_TEST::testLozengeInherit();
     //CLASS_TEST::testInherit2();

@@ -103,28 +103,43 @@ namespace CLASS_TEST {
 
     void testInherit()
     {
-        class Base
-        {
+        class Base {
         public:
-            Base() {
-                num = 10;
+            void BaseFunc() {
+                cout << __FUNCTION__ << endl;
             }
-        private:
-            int getNum() {
-                return num;
+        };
+        class CommonBase :virtual public Base{
+        public:
+            void Call() {
+                BaseFunc();
+                SubCall();
+            };
+        protected:
+            virtual void SubCall() {
+                cout << "Common Base SubCall" << endl;
+                cout << __FUNCTION__ << endl;
             }
-        private:
-            int num;
+        };
+        class CommonFunc :virtual public Base{
+        public:
+            void commonFunc()
+            {
+                cout << __FUNCTION__ << endl;
+                BaseFunc();
+            }
         };
 
-        //class Child : public Base
-        //{
-        //public:
-        //    int get()
-        //    {
-        //        return Base::getNum();
-        //    }
-        //};
+        class Impl : public CommonBase, public CommonFunc {
+        public:
+            virtual void SubCall()override {
+                cout << __FUNCTION__ << endl;
+                commonFunc();
+            }
+        };
+
+        shared_ptr<CommonBase> implPtr = std::make_shared<Impl>();
+        implPtr->Call();
     }
 
     void Child1::func()
@@ -287,4 +302,5 @@ namespace CLASS_TEST {
         obj.SetNum(30);
         cout << a << endl;
     }
+
 }
