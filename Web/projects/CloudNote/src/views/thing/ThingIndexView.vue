@@ -1,4 +1,5 @@
 <template>
+    <!--便签页-->
     <n-layout embedded content-style="padding:24px">
         <!--小记列表 标头-->
         <n-card size="small" :bordered="false">
@@ -64,11 +65,59 @@
         </n-card>
     </n-layout>
 
+    <!--删除提醒框-->
     <DeleteRemindDialog 
     :show="deleteRemind.show"
     :description="deleteRemind.desc"
     @delete="deleteMemo"
     @cancel="deleteRemind.show=false"></DeleteRemindDialog>
+
+    <!--便签编辑-->
+    <n-modal :show="true" :auto-focus="false">
+        <n-card style="width:400px">
+            <template #header>
+                <n-input size="large" placeholder="便签标题"></n-input>
+            </template>
+            <template #default>
+                <!--置顶 便签-->
+                <n-space align="center">
+                    <n-text depth="3">置顶：</n-text>
+                    <n-switch></n-switch>
+                    <!--标签容器-->
+                    <n-space align="center">
+                        <n-text depth="3">标签：</n-text>
+                        <n-dynamic-tags :max="5" :default-value="['IT','生活']" :color="{borderColor:'rgba(0,0,0,0)'}"></n-dynamic-tags>
+                    </n-space>
+                </n-space>
+                <!--分割线-->
+                <n-divider style="margin-top:14px"></n-divider>
+                <!--待办事项列表-->
+                <n-dynamic-input :on-create="onCreateTodoThing" v-model:value="todoThingContent">
+                    <template #create-button-default>
+                        添加待办事项
+                    </template>
+                    <!---->
+                    <template #default="{value}">
+                        <div style="display:flex;align-items:center;width:100%">
+                            <n-checkbox v-model:checked="value.checked"></n-checkbox>
+                            <n-input v-model:value="value.thing" style="margin-left:12px"></n-input>
+                        </div>
+                    </template>
+                    <!---->
+                    <template #action="{index,create,remove,move}">
+                        <n-space style="margin-left:20px">
+                            <n-button @click="()=>create(index)">
+                                添加
+                            </n-button>
+                            <n-button @click="()=>remove(index)">
+                                删除
+                            </n-button>
+                        </n-space>
+                    </template>
+                </n-dynamic-input>
+            </template>
+        </n-card>
+    </n-modal>
 </template>
 
 <script setup>
@@ -241,6 +290,16 @@
             }
         }
     }
+
+    const onCreateTodoThing = ()=>{
+        return {
+            checked:false,//是否已完成
+            ting:''//待办事项
+        }
+    }
+
+    //待办事项内容
+    const todoThingContent = ref([])
 </script>
 
 <style scoped>
