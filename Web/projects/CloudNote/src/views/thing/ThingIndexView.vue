@@ -34,9 +34,12 @@
             </n-space>
             <!--便签列表-->
             <n-space :wrap-item="false" >
-                <TransitionGroup @before-enter="beforeEnter" @enter="enterEvent">
+                <TransitionGroup 
+                @before-enter="beforeEnter" @enter="enterEvent" 
+                @before-leave="beforeLeave" @leave="leaveEvent"
+                move-class="move-transition">
                     <template v-if="!loading && memos.length > 0">
-                        <meoCard class="memo-cards" v-for="(memo,index) in memos" :key="memo.id" 
+                        <meoCard v-for="(memo,index) in memos" :key="memo.id" 
                         :data-index="index"
                         :id="memo.id" 
                         :title="memo.title" 
@@ -138,18 +141,39 @@
     }
     getMemoList()
 
-    //执行动画之前的初始位置
+    //执行显示动画之前的初始位置
     const beforeEnter = (el)=>{
         gsap.set(el,{
             y:30,
             opacity:0
         })
     }
-    //执行动画
+    //执行显示动画
     const enterEvent = (el,done)=>{
         gsap.to(el,{
             y:0,//偏移量
             opacity:1,//透明度
+            duration:0.5,//秒
+            delay:el.dataset.index * 0.12,//延迟动画
+            onComplete:done//动画执行完成回调函数
+        })
+    }
+
+    //执行隐藏动画之前的初始位置
+    const beforeLeave = (el)=>{
+        gsap.set(el,{
+            opacity:1,
+            scale:1,
+            position:'fixed',
+            top:0,
+            left:'50%'
+        })
+    }
+    //执行隐藏动画
+    const leaveEvent = (el,done)=>{
+        gsap.to(el,{
+            scale:0.01,
+            opacity:0,//透明度
             duration:0.5,//秒
             delay:el.dataset.index * 0.12,//延迟动画
             onComplete:done//动画执行完成回调函数
@@ -220,7 +244,7 @@
 </script>
 
 <style scoped>
-    .n-card .memo-cards{
+    .move-transition{
         transition:all .5s;
     }
 </style>
