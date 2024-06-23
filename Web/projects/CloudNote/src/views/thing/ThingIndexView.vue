@@ -74,47 +74,64 @@
 
     <!--便签编辑-->
     <n-modal :show="true" :auto-focus="false">
-        <n-card style="width:400px">
+        <n-card size="small" :bordered="false" style="width:460px" :clsss="{'memo-card-finished':isFinished}">
             <template #header>
-                <n-input size="large" placeholder="便签标题"></n-input>
+                <n-input size="large" placeholder="便签标题" style="--n-border:none;background-color: transparent"></n-input>
             </template>
             <template #default>
-                <!--置顶 便签-->
-                <n-space align="center">
-                    <n-text depth="3">置顶：</n-text>
-                    <n-switch></n-switch>
-                    <!--标签容器-->
+                <div style="padding:0 14px">
+                    <!--置顶 便签-->
                     <n-space align="center">
-                        <n-text depth="3">标签：</n-text>
-                        <n-dynamic-tags :max="5" :default-value="['IT','生活']" :color="{borderColor:'rgba(0,0,0,0)'}"></n-dynamic-tags>
-                    </n-space>
-                </n-space>
-                <!--分割线-->
-                <n-divider style="margin-top:14px"></n-divider>
-                <!--待办事项列表-->
-                <n-dynamic-input :on-create="onCreateTodoThing" v-model:value="todoThingContent">
-                    <template #create-button-default>
-                        添加待办事项
-                    </template>
-                    <!---->
-                    <template #default="{value}">
-                        <div style="display:flex;align-items:center;width:100%">
-                            <n-checkbox v-model:checked="value.checked"></n-checkbox>
-                            <n-input v-model:value="value.thing" style="margin-left:12px"></n-input>
-                        </div>
-                    </template>
-                    <!---->
-                    <template #action="{index,create,remove,move}">
-                        <n-space style="margin-left:20px">
-                            <n-button @click="()=>create(index)">
-                                添加
-                            </n-button>
-                            <n-button @click="()=>remove(index)">
-                                删除
-                            </n-button>
+                        <n-text depth="3">置顶：</n-text>
+                        <n-switch></n-switch>
+                        <!--标签容器-->
+                        <n-space align="center">
+                            <n-text depth="3">标签：</n-text>
+                            <n-dynamic-tags :max="5" :default-value="['IT','生活']" :color="{borderColor:'rgba(0,0,0,0)'}"></n-dynamic-tags>
                         </n-space>
-                    </template>
-                </n-dynamic-input>
+                    </n-space>
+                    <!--分割线-->
+                    <n-divider style="margin-top:14px"></n-divider>
+                    <!--待办事项列表-->
+                    <n-dynamic-input :on-create="onCreateTodoThing" v-model:value="todoThingContent">
+                        <template #create-button-default>
+                            添加待办事项
+                        </template>
+                        <!---->
+                        <template #default="{value}">
+                            <div style="display:flex;align-items:center;width:100%">
+                                <!--复选框-->
+                                <n-checkbox v-model:checked="value.checked"></n-checkbox>
+                                <!--待办事项 文本输入框-->
+                                <n-input v-model:value="value.thing" style="margin-left:12px;--n-border:none" placeholder="请输入。。。"></n-input>
+                            </div>
+                        </template>
+                        <!---->
+                        <template #action="{index,create,remove,move}">
+                            <div style="display:flex;align-items:center;margin-left:12px">
+                                <!--添加待办事项按钮-->
+                                <n-button circle tertiary type="tertiary" @click="()=>create(index)" style="margin-right:6px">
+                                    <n-icon :component="AddBoxRound" />
+                                </n-button>
+                                <!--删除待办事项按钮-->
+                                <n-button circle tertiary type="tertiary" @click="()=>remove(index)">
+                                    <n-icon  :component="DeleteForeverFilled" />
+                                </n-button>
+                            </div>
+                        </template>
+                    </n-dynamic-input>
+                </div>
+            </template>
+            <!--底部 取消 保存-->
+            <template #action>
+                <n-grid cols="2" :x-gap="12">
+                    <n-gi>
+                        <n-button block tertiary>取消</n-button>
+                    </n-gi>
+                    <n-gi>
+                        <n-button block ghost type="primary">保存</n-button>
+                    </n-gi>
+                </n-grid>
             </template>
         </n-card>
     </n-modal>
@@ -123,7 +140,8 @@
 <script setup>
     import { storeToRefs } from "pinia";
     import {
-        SubtitlesOffOutlined
+        SubtitlesOffOutlined,
+        AddBoxRound,DeleteForeverFilled
     } from "@vicons/material"
     import { useThemeStore } from "../../stores/themeStore";
     import { getUserToken,loginInvalid } from "../../Utils/userLogin";
@@ -300,10 +318,35 @@
 
     //待办事项内容
     const todoThingContent = ref([])
+
+    //便签所有事项是否已完成
+    const isFinished = computed(()=>{
+        if(todoThingContent.value.length === 0)
+        {
+            return false
+        }
+        return todoThingContent.value.every(item=>item.checked)
+    })
 </script>
 
 <style scoped>
     .move-transition{
         transition:all .5s;
+    }
+
+    .n-card.memo-card-finished{
+        background-image: url("@/assets/finish.png");
+        background-repeat:no-repeat;
+        background-position: 360px 0;
+        animation:finished 0.25s linear forwards;
+    }
+
+    @keyframes finished{
+        from {
+            background-size:130px 130px;
+        }
+        to{
+            background-size:100px 100px;
+        }
     }
 </style>
