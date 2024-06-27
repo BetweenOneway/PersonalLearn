@@ -313,4 +313,43 @@ router.delete("/deleteMemo",async (req,res)=>{
     return
 })
 
+//新增便签
+/**
+ * userId 用户编号
+ * title 标题
+ * tags 标签
+ * content 内容
+ * finished 是否已完成
+ * top是否置顶
+ */
+router.post("/addMemo",(req,res)=>{
+    console.log(req.body);
+    var userEmail = req.body?.userEmail??""
+    let verifyCode = req.body?.verifyCode??""
+    let verifyCodeKey = req.body?.verifyCodeKey??""
+
+    let output={
+        success:false,
+        status:"",
+        description:""
+    }
+    //新增便签
+    //记录日志
+})
+
+//获取便签信息
+router.get("/getMemoInfo",async (req,res)=>{
+    var output={
+        success:true,
+        status:'',
+        description:'',
+        data:[]
+    }
+    console.log("start getMemoList");
+    console.log(req.query)
+    var userToken = req.query.userToken
+    let status = 1
+    let userInfo = {}
+})
+
 module.exports=router;
