@@ -7,7 +7,7 @@
                 <h3>便签列表</h3>
             </template>
             <template #header-extra>
-                <n-button dashed>新增便签</n-button>
+                <n-button dashed @click="editMemoModalRef.showEditModal(null)">新增便签</n-button>
             </template>
         </n-card>
         <!--小记列表 容器-->
@@ -49,7 +49,8 @@
                         :tags="memo.tags.split(',')" 
                         :time="memo.update_time" 
                         @changeStatus="getMemoList()"
-                        @delete="showDeleteRemindDialog"></meoCard>
+                        @delete="showDeleteRemindDialog"
+                        @edit="editMemoModalRef.showEditModal(thing.id)"></meoCard>
                     </template>
                 </TransitionGroup>
             </n-space>
@@ -59,7 +60,7 @@
                     <n-icon :component="SubtitlesOffOutlined"></n-icon>
                 </template>
                 <template #exra>
-                    <n-button dashed>创建便签</n-button>
+                    <n-button dashed @click="editMemoModalRef.showEditModal(null)">创建便签</n-button>
                 </template>
             </n-empty>
         </n-card>
@@ -73,7 +74,7 @@
     @cancel="deleteRemind.show=false"></DeleteRemindDialog>
 
     <!--便签编辑-->
-    <EditMemoModal/>
+    <EditMemoModal ref="editMemoModalRef"/>
 </template>
 
 <script setup>
@@ -249,6 +250,9 @@
             }
         }
     }
+
+    //编辑便签模态框引用
+    const editMemoModalRef = ref(null)
 </script>
 
 <style scoped>

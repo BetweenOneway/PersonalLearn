@@ -28,7 +28,7 @@
             <!--编辑按钮-->
             <n-popover>
                 <template #trigger>
-                    <n-button text style="margin-left:8px">
+                    <n-button text style="margin-left:8px" @click="emits('edit')">
                         <n-icon :size="18" :component="EditNoteRound"></n-icon>
                     </n-button>
                 </template>
@@ -86,7 +86,7 @@
     })
     
     //自定义事件
-    const emits = defineEmits(['changeStatus','delete'])
+    const emits = defineEmits(['changeStatus','delete','edit'])
 
     //便签已完成图片影子的颜色
     const thingFinishedShadowColor = computed(()=>{
