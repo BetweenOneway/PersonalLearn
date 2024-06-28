@@ -151,6 +151,16 @@ SERVICE_STATUS={
         success:true,
         status:'SERVICE_011',
         description:'删除便签成功'
+    },
+    ADD_MEMO_SUCCESS:{
+        success:true,
+        status:'SERVICE_011',
+        description:'新增便签成功'
+    },
+    ADD_MEMO_FAIL:{
+        success:false,
+        status:'SERVICE_011',
+        description:'新增便签失败'
     }
 }
 
@@ -178,6 +188,10 @@ EVENT_LIST = {
     MEMO_COMPEL_DEL:{
         code:'5',
         desc:'彻底删除便签'
+    },
+    ADD_MEMO:{
+        code:'6',
+        desc:'新增便签'
     }
 }
 

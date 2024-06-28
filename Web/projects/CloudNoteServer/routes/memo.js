@@ -315,14 +315,14 @@ router.delete("/deleteMemo",async (req,res)=>{
 
 //新增便签
 /**
- * userId 用户编号
+ * userToken 用户编号
  * title 标题
  * tags 标签
  * content 内容
  * finished 是否已完成
  * top是否置顶
  */
-router.post("/addMemo",(req,res)=>{
+router.post("/addMemo",async (req,res)=>{
     console.log(req.body);
     var userEmail = req.body?.userEmail??""
     let verifyCode = req.body?.verifyCode??""
@@ -333,8 +333,141 @@ router.post("/addMemo",(req,res)=>{
         status:"",
         description:""
     }
+    let inputInfo = {}
+    inputInfo.userToken = req.query.userToken
+    inputInfo.title = req.query.title
+    inputInfo.tags = req.query.tags
+    inputInfo.content = req.query.content
+    inputInfo.finished = req.query.finished
+    inputInfo.top = req.query.top
+
+    if(0 == nputInfo.userToken.length)
+    {
+        console.log("del memo, userToken empty")
+        output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
+        output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
+        output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
+        res.send(output)
+        return
+    }
+
+    //验证用户是否登陆
+    let validateInfo = await validate.IsUserValidate(nputInfo.userToken);
+    if(!validateInfo.isValidated)
+    {
+        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
+        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
+        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
+        res.send(output)
+        return
+    }
+
+    let userInfo = validateInfo.userInfo;
+    var date = new Date();
+    let curTime = date.toISOString().slice(0, 19).replace('T', ' ')
     //新增便签
-    //记录日志
+    let sql = `INSERT INTO z_thing(\`title\`,\`tags\`,\`content\`,\`u_id\`,\`finished\`,\`time\`,\`top\`,\`status\`,\`type\`) 
+    VALUES(?,?,?,?,?,?,?,1,2)`;
+    try {
+        pool.getConnection(function(error,connection){
+            connection.query(sql, [inputInfo.title,inputInfo.tags,inputInfo.content,userInfo.id,inputInfo.finished,curTime,inputInfo.top], 
+                function (error, results, fields) {
+                if (error) {
+                    return connection.rollback(function() {
+                        output.success = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.success
+                        output.status = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.status
+                        output.description = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.description
+                        res.send(output);
+                        return
+                    });
+                }
+                console.log('add memo,insert exec results')
+                console.log(results)
+                if(results.affectedRows > 0)
+                {
+                    //记录日志
+                    //记录事件日志
+                    console.log("add memo add event log")
+
+                    var sql = `SELECT MAX(id) as maxId from z_thing where u_id=? AND finished = ? AND top = ? AND status = 1 AND type =2`
+                    connection.query(sql, [userInfo.id,inputInfo.finished,inputInfo.top], function (error, results, fields) {
+                        if (error) {
+                            return connection.rollback(function() {
+                                //查询服务异常
+                                output.success = SERVICE_QUERY_FAIL.success
+                                output.status = SERVICE_QUERY_FAIL.status
+                                output.description = SERVICE_QUERY_FAIL.description
+                                res.send(output)
+                            });
+                        }
+                        else
+                        {
+                            let memoId = results[0].maxId
+                            let event = statusCode.EVENT_LIST.ADD_MEMO
+                            console.log('time:'+curTime)
+                            console.log(event)
+                            sql = `INSERT INTO z_note_thing_log(\`time\`,\`event\`,\`desc\`,\`u_id\`,\`t_id\`) VALUES(?,?,?,?,?)`
+                            connection.query(sql, [curTime
+                                ,event.code,event.desc,userInfo.id,memoId], 
+                                function (error, results, fields){
+                                    console.log(results)
+                                    if (error || results.affectedRows <= 0) {
+                                        return connection.rollback(function() {
+                                            console.log("add memo add event log fail")
+                                            output.success = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.success
+                                            output.status = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.status
+                                            output.description = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.description
+                                            res.send(output);
+                                            return
+                                        });
+                                    }
+                                    connection.commit(function(err) {
+                                        if (err) {
+                                            return connection.rollback(function() {
+                                                //提交错误处理
+                                                console.log("add memo,commit database error")
+                                                output.success = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.success
+                                                output.status = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.status
+                                                output.description = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.description
+                                                res.send(output);
+                                            });
+                                        }
+                                        else{
+                                            console.log("add memo success,commit database success")
+                                            output.success = statusCode.SERVICE_STATUS.ADD_MEMO_SUCCESS.success
+                                            output.status = statusCode.SERVICE_STATUS.ADD_MEMO_SUCCESS.status
+                                            output.description = statusCode.SERVICE_STATUS.ADD_MEMO_SUCCESS.description
+                                            res.send(output);
+                                        }
+                                    })
+                                }
+                            )
+                        }
+                    })
+                }
+                else
+                {
+                    console.log("del memo, affected rows < 0")
+                    return connection.rollback(function() {
+                        output.success = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.success
+                        output.status = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.status
+                        output.description = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.description
+                        res.send(output);
+                        return
+                    });
+                }
+            })
+        })
+    } catch (error) {
+        console.log("Add memo,catch unknown exception")
+        console.log(error)
+        output.success = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.success
+        output.status = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.status
+        output.description = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.description
+        res.send(output);
+        return
+    }
+    return
 })
 
 //获取便签信息
