@@ -222,7 +222,7 @@
         if(responseData.success)
         {
             //触发保存事件
-            emits('save')
+            emits('save',true)
             loadingBar.finish()
             //显示发送成功的通知
             message.success(responseData.description)

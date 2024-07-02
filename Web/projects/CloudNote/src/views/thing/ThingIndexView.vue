@@ -48,7 +48,7 @@
                         :top="!!memo.top" 
                         :tags="memo.tags.split(',')" 
                         :time="memo.update_time" 
-                        @changeStatus="getMemoList()"
+                        @changeStatus="getMemoList(false)"
                         @delete="showDeleteRemindDialog"
                         @edit="editMemoModalRef.showEditModal(thing.id)"></meoCard>
                     </template>
@@ -101,12 +101,18 @@
     //是否处于加载中
     const loading = ref(true)
 
+    //是否是新增便签
+    const isNewCreate = ref(false)
+
     //memo列表
     const memos = ref([])
 
     //获取用户便签列表
-    //isUpdateLoading 是否需要改变
-    const getMemoList =async ()=>{
+    /**
+     * @param newCreate {Boolean} 是否新增便签
+     */
+    const getMemoList =async (newCreate)=>{
+        isNewCreate.value = newCreate
         //判断用户登录状态
         const userToken = await getUserToken()
         //发送获取便签请求
@@ -146,7 +152,8 @@
             }
         }
     }
-    getMemoList()
+
+    getMemoList(false)
 
     //执行显示动画之前的初始位置
     const beforeEnter = (el)=>{
@@ -162,7 +169,7 @@
             y:0,//偏移量
             opacity:1,//透明度
             duration:0.5,//秒
-            delay:el.dataset.index * 0.12,//延迟动画
+            delay:()=>{isNewCreate.vale ? 0 : el.dataset.index * 0.12},//延迟动画
             onComplete:done//动画执行完成回调函数
         })
     }
@@ -237,7 +244,7 @@
             console.log(responseData)
             message.success(responseData.description)
             //重新获取便签列表
-            getMemoList()
+            getMemoList(false)
         }
         else
         {
