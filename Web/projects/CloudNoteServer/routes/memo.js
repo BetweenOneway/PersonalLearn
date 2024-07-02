@@ -324,9 +324,6 @@ router.delete("/deleteMemo",async (req,res)=>{
  */
 router.post("/addMemo",async (req,res)=>{
     console.log(req.body);
-    var userEmail = req.body?.userEmail??""
-    let verifyCode = req.body?.verifyCode??""
-    let verifyCodeKey = req.body?.verifyCodeKey??""
 
     let output={
         success:false,
@@ -341,7 +338,7 @@ router.post("/addMemo",async (req,res)=>{
     inputInfo.finished = req.query.finished
     inputInfo.top = req.query.top
 
-    if(0 == nputInfo.userToken.length)
+    if(0 == inputInfo.userToken.length)
     {
         console.log("del memo, userToken empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
@@ -471,18 +468,126 @@ router.post("/addMemo",async (req,res)=>{
 })
 
 //获取便签信息
+/**
+ * memoId 便签编号
+ * userToken 用户
+ */
 router.get("/getMemoInfo",async (req,res)=>{
-    var output={
+    let output={
         success:true,
         status:'',
         description:'',
         data:[]
     }
-    console.log("start getMemoList");
+    console.log("start set Top");
     console.log(req.query)
-    var userToken = req.query.userToken
-    let status = 1
-    let userInfo = {}
+    
+    //目标状态
+    let memoId = req.query.memoId
+    let userToken = req.query.userToken
+    if(0 == userToken.length)
+    {
+        console.log("memo set top, userToken empty")
+        output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
+        output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
+        output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
+        res.send(output)
+        return
+    }
+
+    //验证用户是否登陆
+    let validateInfo = await validate.IsUserValidate(userToken);
+    if(!validateInfo.isValidated)
+    {
+        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
+        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
+        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
+        res.send(output)
+        return
+    }
+
+    let userInfo = validateInfo.userInfo;
+    let sql = `SELECT title,top,tags,content FROM z_thing WHERE \`id\` = ? AND \`u_id\` = ? AND \`status\` = 1;`
+    try{
+        pool.getConnection(function(error,connection){
+            connection.query(sql, [memoId,userInfo.id], function (error, results, fields) {
+                if (error) {
+                    return connection.rollback(function() {
+                        output.success = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.success
+                        output.status = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.status
+                        output.description = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.description
+                        res.send(output);
+                        return
+                    });
+                }
+                console.log(results)
+                if(results.affectedRows > 0)
+                {
+                    //记录事件日志
+                    console.log("get memo info add event log")
+                    var date = new Date();
+                    let event = targetTop === 1? statusCode.EVENT_LIST.MEMO_SET_TOP : statusCode.EVENT_LIST.MEMO_UNSET_TOP;
+                    console.log('time:'+date.toISOString().slice(0, 19).replace('T', ' '))
+                    console.log(event)
+                    sql = `INSERT INTO z_note_thing_log(\`time\`,\`event\`,\`desc\`,\`u_id\`,\`t_id\`) VALUES(?,?,?,?,?)`
+                    connection.query(sql, [date.toISOString().slice(0, 19).replace('T', ' ')
+                        ,event.code,event.desc,userInfo.id,memoId], 
+                        function (error, results, fields){
+                            console.log(results)
+                            if (error || results.affectedRows <= 0) {
+                                return connection.rollback(function() {
+                                    console.log("memo置顶 日志记录失败")
+                                    output.success = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.success
+                                    output.status = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.status
+                                    output.description = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.description
+                                    res.send(output);
+                                    return
+                                });
+                            }
+                            connection.commit(function(err) {
+                                if (err) {
+                                    return connection.rollback(function() {
+                                        //提交错误处理
+                                        console.log("set memo top,commit database error")
+                                        output.success = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.success
+                                        output.status = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.status
+                                        output.description = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.description
+                                        res.send(output);
+                                    });
+                                }
+                                else{
+                                    console.log("set memo top,commit database success")
+                                    output.success = statusCode.SERVICE_STATUS.MEMO_SET_TOP_SUCCESS.success
+                                    output.status = statusCode.SERVICE_STATUS.MEMO_SET_TOP_SUCCESS.status
+                                    output.description = statusCode.SERVICE_STATUS.MEMO_SET_TOP_SUCCESS.description
+                                    res.send(output);
+                                }
+                            })
+                    })
+                    
+                }
+                else
+                {
+                    console.log("set memo top, affected rows < 0")
+                    return connection.rollback(function() {
+                        output.success = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.success
+                        output.status = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.status
+                        output.description = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.description
+                        res.send(output);
+                        return
+                    });
+                }
+            })
+        })
+    }
+    catch(e){
+        console.log(e)
+        output.success = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.success
+        output.status = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.status
+        output.description = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.description
+        res.send(output);
+    }
+    return
 })
 
 module.exports=router;

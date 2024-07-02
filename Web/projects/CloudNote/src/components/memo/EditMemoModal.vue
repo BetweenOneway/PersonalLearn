@@ -125,12 +125,20 @@
     import {
         AddBoxRound,DeleteForeverFilled
     } from "@vicons/material"
-    import {useNotification,NText,NSpace} from 'naive-ui'
+    import {useNotification,NText,NSpace,useMessage,useLoadingBar} from 'naive-ui'
+    import { getUserToken,loginInvalid } from "../../Utils/userLogin"
+    import { noteBaseRequest } from "../../request/noteRequest"
 
     //是否显示编辑便签模态框
     const show = ref(false)
+
     //通知对象
     const notification = useNotification()
+    const message = useMessage()
+    const loadingBar = useLoadingBar()
+
+    //自定义事件
+    const emits = defineEmits(['save'])
 
     //创建待办事项
     const onCreateTodoThing = ()=>{
@@ -142,6 +150,7 @@
 
     //编辑便签表单值
     const formValue = ref({
+        id:null,//便签编号
         title:'',//标题
         top:false,//是否置顶
         tags:[],//标签组
@@ -176,11 +185,129 @@
         }
     }
 
+    //新增便签的保存
+    const saveMemo = async ()=>{
+        //判断用户登录状态
+        const userToken = await getUserToken()
+        
+        //头部加载进度条开始
+        loadingBar.start()
+
+        //发送创建便签请求
+        const title = formValue.value.title
+        const tags = formValue.value.tags.join()
+        const content = JSON.stringify(formValue.value.content) //[{},{}] => '[{},{}]'
+        const finished = formValue.value.finished
+        const top = formValue.value.top
+
+        const {data:responseData} = await noteBaseRequest.post(
+                "/memo/addMemo",
+                {
+                    userToken:userToken,
+                    title:title,
+                    tags:tags,
+                    content:content,
+                    finished:finished,
+                    top:top
+                }
+            ).catch(()=>{
+                //加载条异常结束
+                loadingBar.error()
+                //显示登陆失败的通知
+                throw message.error('新增便签失败')
+            }
+        )
+        console.log(responseData.success)
+
+        if(responseData.success)
+        {
+            //触发保存事件
+            emits('save')
+            loadingBar.finish()
+            //显示发送成功的通知
+            message.success(responseData.description)
+            //关闭编辑便签窗口
+            show.value = false
+            //重新获取便签列表
+        }
+        else
+        {
+            loadingBar.error()
+            message.error(responseData.description)
+            //登录失效处理
+            if(responseData.status ==='SERVICE_008')
+            {
+                loginInvalid(true)
+            }
+        }
+    }
+
+    //获取便签信息
+    /**
+     * 
+     * @param {Integer} id 
+     */
+    const getMemoInfo = async (id) =>{
+        //判断用户登录状态
+        const userToken = await getUserToken()
+        
+        //头部加载进度条开始
+        loadingBar.start()
+
+        //发送获取便签请求
+        const {data:responseData} = await noteBaseRequest.get(
+                "/memo/getMemoInfo",
+                {
+                    params:{
+                        userToken:userToken,
+                        memoId:id
+                    }
+                }
+            ).catch(()=>{
+                //加载条异常结束
+                loadingBar.error()
+                //显示获取便签信息失败的通知
+                throw message.error('获取便签信息失败')
+            }
+        )
+        console.log(responseData.success)
+
+        if(responseData.success)
+        {
+            loadingBar.finish()
+            const memoInfo = responseData.data[0]
+            formValue.value.title = memoInfo.title
+            formValue.value.top = !!memoInfo.top
+            formValue.value.tags = memoInfo.tags.split(',')
+            formValue.value.content = JSON.parse(memoInfo.content)
+            loading.value = false
+        }
+        else
+        {
+            loadingBar.error()
+            message.error(responseData.description)
+            //登录失效处理
+            if(responseData.status ==='SERVICE_008')
+            {
+                loginInvalid(true)
+            }
+        }
+    }
+
+    //保存新增便签
     const saveNewAddMemo = (e)=>{
         formRef.value?.validate(errors=>{
             if(!errors)
             {
-                alert('保存成功')
+                if(formValue.value.id === null)
+                {
+                    //新增便签的保存
+                    saveMemo()
+                }
+                else
+                {
+                    //修改保存
+                }
             }
             else
             {
@@ -222,17 +349,16 @@
         }
         else
         {
+            formValue.value.id = id
             //修改便签
             //发送请求 根据便签编号获取最新的便签信息
-            //
-            setTimeout(()=>{
-                loading.value = false
-            },3000)
+            getMemoInfo(id)
         }
     }
 
     //重置便签编辑框中内容
     const resetEditMemo =()=>{
+        formValue.value.id = null
         formValue.value.title = '' //标题
         formValue.value.top = false //是否置顶
         formValue.value.tags=[] //标签

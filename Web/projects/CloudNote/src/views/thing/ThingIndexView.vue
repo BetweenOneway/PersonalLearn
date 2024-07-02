@@ -74,7 +74,7 @@
     @cancel="deleteRemind.show=false"></DeleteRemindDialog>
 
     <!--便签编辑-->
-    <EditMemoModal ref="editMemoModalRef"/>
+    <EditMemoModal ref="editMemoModalRef" @save="getMemoList"/>
 </template>
 
 <script setup>
