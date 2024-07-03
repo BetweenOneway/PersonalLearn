@@ -18,6 +18,7 @@
     "nodemailer": "^6.9.13",
     "query": "^0.2.0",
     "redis": "^4.6.13",
+    "sequelize": "^6.37.3",
     "string-random": "^0.1.3"
   }
 }
