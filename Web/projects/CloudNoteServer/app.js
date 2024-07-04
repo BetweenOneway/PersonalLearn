@@ -28,3 +28,10 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use("/user",user);
 //便签
 app.use("/memo",memo);
+
+var sqldb = require('./sqldb');
+sqldb.sequelize.sync({force: false}).then(function() {
+    console.log("Server successed to start");
+}).catch(function(err){
+    console.log("Server failed to start due to error: %s", err);
+});
