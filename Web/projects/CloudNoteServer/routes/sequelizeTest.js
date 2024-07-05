@@ -12,4 +12,17 @@ router.get('/getAll',async (req,res)=>{
     res.send(users)
 })
 
+router.get('/getWithCondition',async (req,res)=>{
+    const userId = req.query.id;
+    //select id,nickname from user where id = 35;
+    const users = await sqldb.User.findAll({
+        attributes: ['id', 'nickname'],
+        where: {
+            id: userId
+        }
+      });
+    console.log("Get users:", JSON.stringify(users));
+    res.send(JSON.stringify(users))
+})
+
 module.exports=router;
