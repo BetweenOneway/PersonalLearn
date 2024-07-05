@@ -3,8 +3,17 @@ const bodyParser = require('body-parser');
 const cors=require("cors");
 
 /*引入路由模块*/
+const sequelizeTest = require("./routes/sequelizeTest")
 const user=require("./routes/user");
 const memo=require("./routes/memo");
+
+//启动数据库
+var sqldb = require('./sqldb');
+sqldb.sequelize.sync({force: false}).then(function() {
+    console.log("Server successed to start");
+}).catch(function(err){
+    console.log("Server failed to start due to error: %s", err);
+});
 
 /*
 请求路径 http://127.0.0.1:5050/user/login?lid=30&pname=dell
@@ -28,10 +37,5 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use("/user",user);
 //便签
 app.use("/memo",memo);
-
-var sqldb = require('./sqldb');
-sqldb.sequelize.sync({force: false}).then(function() {
-    console.log("Server successed to start");
-}).catch(function(err){
-    console.log("Server failed to start due to error: %s", err);
-});
+//测试用
+app.use("/sequelize",sequelizeTest)
