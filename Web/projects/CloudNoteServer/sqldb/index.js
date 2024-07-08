@@ -13,7 +13,6 @@ var dbSettings = config.get("mysql");
 var db = {
     sequelize:new Sequelize(dbSettings.database,dbSettings.username,dbSettings.password,dbSettings.sequelize)
 };
-console.log(db.sequelize)
 
 db.User = user(db.sequelize,Sequelize.DataTypes);
 db.UserLog = userLog(db.sequelize,Sequelize.DataTypes);
