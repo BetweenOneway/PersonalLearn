@@ -4,8 +4,9 @@ const redis = require('redis')
 const stringRandom = require("string-random");
 let redisOper =require("../utils/redisOper")
 
-//数据库连接池
-var pool = require("../utils/pool");
+//数据库
+var sqldb = require('../sqldb');
+
 //邮箱操作
 var mailOper =require("../utils/mail")
 //状态码定义
@@ -30,7 +31,7 @@ function cryptPwd(password) {
 }
 
 //用户登录
-router.post("/login",(req,res)=>{
+router.post("/login",async(req,res)=>{
     console.log("user login service start")
     console.log(req.body);
     var userEmail = req.body.userEmail
@@ -43,6 +44,7 @@ router.post("/login",(req,res)=>{
         userInfo:{}
     }
 
+    //校验输入参数
     if(0 == userEmail.length || 0 == userPassword.length)
     {
         console.log("user login:param error")
@@ -53,89 +55,82 @@ router.post("/login",(req,res)=>{
     }
     else
     {
-        pool.getConnection(function(error,connection){
-            connection.beginTransaction(function(err) {
-                if (err) 
+        //事务处理
+        const t = await sqldb.sequelize.transaction();
+        try {
+            const users = await sqldb.User.findAll(
                 {
-                    console.log("user login:db begin transaction error") 
-                    throw err; 
+                    attributes: ['id', 'email','nickname','head_pic','level','time','status'],
+                    where: {
+                        email: userEmail,
+                        password:userPassword
+                    }
                 }
-                var sql = `select id,email,nickname as nickName,head_pic as headPic,level,time,status from z_user where email=? and password = ?`
-                connection.query(sql, [userEmail,userPassword], function (error, results, fields) {
-                    console.log("query results:")
-                    console.log(results)
-                    if (error || results.length == 0) {
-                        return connection.rollback(function() {
-                            console.log("login account password not matched")
-                            output.success = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.success
-                            output.status = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.status
-                            output.description = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.description
-                            res.send(output);
-                        });
-                    }
-                    if(results[0].status == 0)
-                    {
-                        console.log("login account locked")
-                        output.success = statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.success
-                        output.status=statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.status
-                        output.description=statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.description
-                        res.send(output);
-                    }
-
-                    var userInfo = results[0];
-                    var date = new Date();
-                    var sql = `insert into z_user_log(\`desc\`,\`time\`,\`event\`,\`u_id\`) VALUES(?,?,?,?)`
-                    connection.query(sql, ['登录成功',date.toISOString().slice(0, 19).replace('T', ' '),'邮箱密码登录',userInfo.id], function (error, results, fields) {
-                        if (error) {
-                            console.log("user login:add log error")
-                            console.log(error)
-                            return connection.rollback(function() {
-                                console.log(statusCode.DB_STATUS.INSERT_ERROR)
-                                output.success = statusCode.SERVICE_STATUS.LOGIN_FAIL.success
-                                output.status = statusCode.SERVICE_STATUS.LOGIN_FAIL.status
-                                output.description = statusCode.SERVICE_STATUS.LOGIN_FAIL.description
-                                res.send(output)
-                            });
-                        }
-                        connection.commit(function(err) {
-                            if (err) {
-                                return connection.rollback(function() {
-                                    console.log("user login:commit error")
-                                    output.success = statusCode.SERVICE_STATUS.LOGIN_FAIL.success
-                                    output.status = statusCode.SERVICE_STATUS.LOGIN_FAIL.status
-                                    output.description = statusCode.SERVICE_STATUS.LOGIN_FAIL.description
-                                    res.send(output)
-                                    throw err;
-                                });
-                            }
-                            (async function(){
-                                try {
-                                    console.log("user login:set redis")
-                                    const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
-                                    await redisOper.RedisSet(userTokenKey,JSON.stringify(userInfo),14*24*60*60)
-                                    console.log("user login:set redis success")
-                                    output.userToken = userTokenKey
-                                    output.userInfo = userInfo
-                                    output.success = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.success
-                                    output.status = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.status
-                                    output.description = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.description
-                                    res.send(output)
-                                } catch (error) {
-                                    console.log("user login:set redis error")
-                                    console.log(error)
-                                    output.success = statusCode.REDIS_STATUS.SET_FAIL.success
-                                    output.status = statusCode.REDIS_STATUS.SET_FAIL.status
-                                    output.description = statusCode.REDIS_STATUS.SET_FAIL.description
-                                    res.send(output)
-                                }
-                            })()
-                        });
-                    });
-                });
-           })
-        })
+            );
+            if (users.length == 0) {
+                console.log("login account password not matched")
+                output.success = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.success
+                output.status = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.status
+                output.description = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.description
+                res.send(output);
+                return
+            }
+            //账号状态异常
+            if(users[0].status == 0)
+            {
+                console.log("login account locked")
+                output.success = statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.success
+                output.status=statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.status
+                output.description=statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.description
+                res.send(output);
+                return
+            }
+            var curDate = new Date().toLocaleString();
+            //记录用户登录日志
+            await sqldb.UserLog.create(
+                {
+                    u_id: users[0].id,
+                    desc: '新增用户',
+                    time:curDate,
+                    event:'用户注册'
+                }, 
+                { 
+                    transaction: t 
+                }
+            );
+            await t.commit();
+            //设置reddis缓存
+            (async function(){
+                try {
+                    console.log("user login:set redis")
+                    const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
+                    await redisOper.RedisSet(userTokenKey,JSON.stringify(userInfo),14*24*60*60)
+                    console.log("user login:set redis success")
+                    output.userToken = userTokenKey
+                    output.userInfo = userInfo
+                    output.success = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.success
+                    output.status = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.status
+                    output.description = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.description
+                    res.send(output)
+                } catch (error) {
+                    console.log("user login:set redis error")
+                    console.log(error)
+                    output.success = statusCode.REDIS_STATUS.SET_FAIL.success
+                    output.status = statusCode.REDIS_STATUS.SET_FAIL.status
+                    output.description = statusCode.REDIS_STATUS.SET_FAIL.description
+                    res.send(output)
+                }
+            })()
+        } catch (error) {
+            //出错处理
+            console.log("user login error:",error)
+            await t.rollback();
+            output.success = statusCode.SERVICE_STATUS.LOGIN_FAIL.success
+            output.status = statusCode.SERVICE_STATUS.LOGIN_FAIL.status
+            output.description = statusCode.SERVICE_STATUS.LOGIN_FAIL.description
+            res.send(output)
+        }
     }
-    
 })
 
 //退出登录
@@ -327,14 +322,14 @@ router.post("/register",(req,res)=>{
                     else
                     {
                         //用户注册
-                        let curDate = new Date();
+                        let curDate = new Date().toLocaleString();
                         let notEncryptedPassword = stringRandom(8, {letters:true,numbers: false,specials:true});
                         //密码加密
                         let encryptedPassword = cryptPwd(notEncryptedPassword);
                         connection.beginTransaction(function(err){
                             //用户表中新增用户记录
                             let sql = `insert into z_user(\`email\`,\`password\`,\`time\`) VALUES(?,?,?)`
-                            connection.query(sql, [userEmail,encryptedPassword,curDate.toISOString().slice(0, 19).replace('T', ' ')], function (error, results, fields) {
+                            connection.query(sql, [userEmail,encryptedPassword,curDate], function (error, results, fields) {
                                 if (error) {
                                     console.log(error)
                                     return connection.rollback(function() {

@@ -114,10 +114,10 @@ router.get('/unmanagedTransaction',async (req,res)=>{
     const nickName = req.query.nickname;
     const passWord = "e10adc3949ba59abbe56e057f20f883e"
     const level = 0;
-    const curDate = new Date;
-    const curDateFormated = curDate.toISOString().slice(0, 19).replace('T', ' ')
+    const curDateFormated = new Date().toLocaleString();
+    console.log("curDateFormated:",curDateFormated);
     const status = 1
-
+    console.log("curDateFormated:",curDateFormated);
     // 首先, 我们从你的连接开始一个事务并将其保存到一个变量中
     const t = await sqldb.sequelize.transaction();
 

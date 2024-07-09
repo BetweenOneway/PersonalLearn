@@ -118,12 +118,12 @@ router.get("/setMemoTop",async (req,res)=>{
                 {
                     //记录事件日志
                     console.log("set memo top add event log")
-                    var date = new Date();
+                    var date = new Date().toLocaleString();
                     let event = targetTop === 1? statusCode.EVENT_LIST.MEMO_SET_TOP : statusCode.EVENT_LIST.MEMO_UNSET_TOP;
                     console.log('time:'+date.toISOString().slice(0, 19).replace('T', ' '))
                     console.log(event)
                     sql = `INSERT INTO z_note_thing_log(\`time\`,\`event\`,\`desc\`,\`u_id\`,\`t_id\`) VALUES(?,?,?,?,?)`
-                    connection.query(sql, [date.toISOString().slice(0, 19).replace('T', ' ')
+                    connection.query(sql, [date
                         ,event.code,event.desc,userInfo.id,memoId], 
                         function (error, results, fields){
                             console.log(results)
@@ -220,8 +220,7 @@ router.delete("/deleteMemo",async (req,res)=>{
     }
 
     let userInfo = validateInfo.userInfo;
-    var date = new Date();
-    let curTime = date.toISOString().slice(0, 19).replace('T', ' ')
+    let curTime = new Date().toLocaleString()
     let sql;
     if(isCompleteDel)
     {
@@ -360,8 +359,7 @@ router.post("/addMemo",async (req,res)=>{
     }
 
     let userInfo = validateInfo.userInfo;
-    var date = new Date();
-    let curTime = date.toISOString().slice(0, 19).replace('T', ' ')
+    let curTime = new Date().toLocaleString()
     //新增便签
     let sql = `INSERT INTO z_thing(\`title\`,\`tags\`,\`content\`,\`u_id\`,\`finished\`,\`time\`,\`top\`,\`status\`,\`type\`) 
     VALUES(?,?,?,?,?,?,?,1,2)`;
@@ -525,12 +523,12 @@ router.get("/getMemoInfo",async (req,res)=>{
                 {
                     //记录事件日志
                     console.log("get memo info add event log")
-                    var date = new Date();
+                    var date = new Date().toLocaleString();
                     let event = targetTop === 1? statusCode.EVENT_LIST.MEMO_SET_TOP : statusCode.EVENT_LIST.MEMO_UNSET_TOP;
-                    console.log('time:'+date.toISOString().slice(0, 19).replace('T', ' '))
+                    console.log('time:'+date)
                     console.log(event)
                     sql = `INSERT INTO z_note_thing_log(\`time\`,\`event\`,\`desc\`,\`u_id\`,\`t_id\`) VALUES(?,?,?,?,?)`
-                    connection.query(sql, [date.toISOString().slice(0, 19).replace('T', ' ')
+                    connection.query(sql, [date
                         ,event.code,event.desc,userInfo.id,memoId], 
                         function (error, results, fields){
                             console.log(results)
