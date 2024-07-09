@@ -85,6 +85,7 @@ router.post("/login",async(req,res)=>{
                 res.send(output);
                 return
             }
+            var userInfo = users[0];
             var curDate = new Date().toLocaleString();
             //记录用户登录日志
             await sqldb.UserLog.create(
