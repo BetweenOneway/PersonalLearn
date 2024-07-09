@@ -90,7 +90,7 @@ router.post("/login",async(req,res)=>{
             //记录用户登录日志
             await sqldb.UserLog.create(
                 {
-                    u_id: users[0].id,
+                    u_id: userInfo.id,
                     desc: '新增用户',
                     time:curDate,
                     event:'用户注册'
@@ -184,7 +184,7 @@ router.get("/logout",(req,res)=>{
 })
 
 //发送验证码
-router.get("/SendVerifyCode",(req,res)=>{
+router.get("/SendVerifyCode",async(req,res)=>{
     var output={
         success:true,
         status:'',
@@ -195,82 +195,66 @@ router.get("/SendVerifyCode",(req,res)=>{
     }
     console.log(req.query);
     var userEmail = req.query.userEmail
-    pool.getConnection(function(error,connection){
-        if(error)
-        {
-            //数据库连接失败
-            console.log(error)
-            output.success = SERVICE_DATA_BASE_EXCEPTION.success
-            output.status = SERVICE_DATA_BASE_EXCEPTION.status
-            output.description = SERVICE_DATA_BASE_EXCEPTION.description
-            res.send(output)
-            throw error
-        }
-        //验证邮箱是否可用
-        var sql = `select count(1) as userCount from z_user where email=?`
-        connection.query(sql, [userEmail], function (error, results, fields) {
-            if (error) {
-                //查询服务异常
-                output.success = SERVICE_QUERY_FAIL.success
-                output.status = SERVICE_QUERY_FAIL.status
-                output.description = SERVICE_QUERY_FAIL.description
+    try {
+         const matchedUserCount = await sqldb.User.count(
+            {
+                where:{
+                    email:userEmail
+                }
+            }
+         )
+         if(matchedUserCount > 0)
+         {
+            //邮箱被占用
+            output.success = statusCode.SERVICE_STATUS.MAIL_USED.success
+            output.status=statusCode.SERVICE_STATUS.MAIL_USED.status
+            output.description=statusCode.SERVICE_STATUS.MAIL_USED.description
+         }
+         else{
+            //生成随机验证码
+            let verifyCode = stringRandom(8, {letters:true,numbers: false,specials:false});
+            let resultInfo = {};
+            mailOper.SendEmail({email:userEmail,subject:"注册验证码",text:verifyCode,html:""},resultInfo)
+            if(0 != resultInfo.statusCode)
+            {
+                output.success = SERVICE_MAIL_SEND_FAIL.success
+                output.status = SERVICE_MAIL_SEND_FAIL.status
+                output.description = SERVICE_MAIL_SEND_FAIL.description
             }
             else
             {
-                console.log("send Verify check if mail used")
-                console.log(results)
-                if(results[0].userCount >= 1)
+                try
                 {
-                    console.log(results)
-                    //邮箱被占用
-                    output.success = statusCode.SERVICE_STATUS.MAIL_USED.success
-                    output.status=statusCode.SERVICE_STATUS.MAIL_USED.status
-                    output.description=statusCode.SERVICE_STATUS.MAIL_USED.description
+                    //将验证码保存到Redis中
+                    const userTokenKey = 'RegEmailToken:' + userEmail + ":" + crypto.randomUUID({ disableEntropyCache: true })
+                    const redisClient = redis.createClient('6379', '127.0.0.1')
+                    redisClient.connect()
+                    redisClient.on('error', err => {
+                        console.error(err) // 打印监听到的错误信息
+                    })
+                    //有效期15分钟
+                    redisClient.setEx(userTokenKey,15*60,verifyCode)
+                    output.success = REGISTER_SEND_VERIFY_CODE_SUCCESS.success
+                    output.status = REGISTER_SEND_VERIFY_CODE_SUCCESS.status
+                    output.description = REGISTER_SEND_VERIFY_CODE_SUCCESS.description
+                    output.data.userToken = userTokenKey
                 }
-                else
+                catch(e)
                 {
-                    //生成随机验证码
-                    let verifyCode = stringRandom(8, {letters:true,numbers: false,specials:false});
-                    let resultInfo = {};
-                    mailOper.SendEmail({email:userEmail,subject:"注册验证码",text:verifyCode,html:""},resultInfo)
-                    if(0 != resultInfo.statusCode)
-                    {
-                        output.success = SERVICE_MAIL_SEND_FAIL.success
-                        output.status = SERVICE_MAIL_SEND_FAIL.status
-                        output.description = SERVICE_MAIL_SEND_FAIL.description
-                    }
-                    else
-                    {
-                        try
-                        {
-                            //将验证码保存到Redis中
-                            const userTokenKey = 'RegEmailToken:' + userEmail + ":" + crypto.randomUUID({ disableEntropyCache: true })
-                            const redisClient = redis.createClient('6379', '127.0.0.1')
-                            redisClient.connect()
-                            redisClient.on('error', err => {
-                                console.error(err) // 打印监听到的错误信息
-                            })
-                            //有效期15分钟
-                            redisClient.setEx(userTokenKey,15*60,verifyCode)
-                            output.success = REGISTER_SEND_VERIFY_CODE_SUCCESS.success
-                            output.status = REGISTER_SEND_VERIFY_CODE_SUCCESS.status
-                            output.description = REGISTER_SEND_VERIFY_CODE_SUCCESS.description
-                            output.data.userToken = userTokenKey
-                        }
-                        catch(e)
-                        {
-                            console.log(e)
-                            output.success = REGISTER_REDIS_ERROR.success
-                            output.status = REGISTER_REDIS_ERROR.status
-                            output.description= REGISTER_REDIS_ERROR.description
-                        }
-                    }
+                    console.log(e)
+                    output.success = REGISTER_REDIS_ERROR.success
+                    output.status = REGISTER_REDIS_ERROR.status
+                    output.description= REGISTER_REDIS_ERROR.description
                 }
             }
-            res.send(output);
-            return
-        })
-    })
+         }
+    } catch (error) {
+        console.log(error)
+        output.success = statusCode.SERVICE_STATUS.SEND_EMAIL_VC_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.SEND_EMAIL_VC_FAIL.status
+        output.description= statusCode.SERVICE_STATUS.SEND_EMAIL_VC_FAIL.description
+    }
+    res.send(output)
 })
 
 //邮箱注册账号
