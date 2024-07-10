@@ -164,4 +164,20 @@ router.get('/unmanagedTransaction',async (req,res)=>{
     }
     res.send("transaction complete")
 })
+
+//排序
+router.get('/order',async (req,res)=>{
+    //select id,nickname from user order by id desc;
+    //返回值是一个对象 findAll返回值是由多个对象组成的数组
+    const users = await sqldb.User.findOne(
+        {
+            attributes: ['id', 'nickname'],
+            order:[
+                ['id', 'DESC']
+            ]
+        }
+    );
+    console.log("All users:", JSON.stringify(users, null, 2));
+    res.send(users)
+})
 module.exports=router;
