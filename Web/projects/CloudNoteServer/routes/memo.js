@@ -17,8 +17,8 @@ router.get("/getUserMemoList",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start getMemoList");
-    console.log(req.query)
+
+    console.log("start getMemoList",req.query)
     var userToken = req.query.userToken
     let status = 1
     let userInfo = {}
