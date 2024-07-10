@@ -20,8 +20,7 @@ function cryptPwd(password) {
 
 //用户登录
 router.post("/login",async(req,res)=>{
-    console.log("user login service start")
-    console.log(req.body);
+    console.log("user login service start",req.body);
     var userEmail = req.body.userEmail
     var userPassword = req.body.userPassword
     var output={
@@ -131,7 +130,7 @@ router.get("/logout",(req,res)=>{
         status:'',
         description:''
     }
-    console.log(req.query);
+    console.log("退出登录",req.query);
     var userToken = req.query.userToken
     if(!userToken && userToken==="" )
     {
@@ -173,7 +172,7 @@ router.get("/SendVerifyCode",async(req,res)=>{
             userToken:''
         }
     }
-    console.log(req.query);
+    console.log("获取验证码：",req.query);
     var userEmail = req.query.userEmail
     try {
         //查询邮箱是否被占用
@@ -237,7 +236,7 @@ router.get("/SendVerifyCode",async(req,res)=>{
 
 //邮箱注册账号
 router.post("/register",async (req,res)=>{
-    console.log(req.body);
+    console.log("用户注册",req.body);
     var userEmail = req.body?.userEmail??""
     let verifyCode = req.body?.verifyCode??""
     let verifyCodeKey = req.body?.verifyCodeKey??""
