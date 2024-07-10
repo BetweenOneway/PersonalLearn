@@ -144,23 +144,28 @@ SERVICE_STATUS={
     },
     DEL_MEMO_FAIL:{
         success:false,
-        status:'SERVICE_011',
+        status:'SERVICE_013',
         description:'删除或彻底删除便签失败'
     },
     DEL_MEMO_SUCCESS:{
         success:true,
-        status:'SERVICE_011',
+        status:'SERVICE_014',
         description:'删除便签成功'
     },
     ADD_MEMO_SUCCESS:{
         success:true,
-        status:'SERVICE_011',
+        status:'SERVICE_015',
         description:'新增便签成功'
     },
     ADD_MEMO_FAIL:{
         success:false,
-        status:'SERVICE_011',
+        status:'SERVICE_016',
         description:'新增便签失败'
+    },
+    MAIL_NOTIFICATION:{
+        success:false,
+        status:'SERVICE_017',
+        description:'通知邮件发送失败'
     }
 }
 
