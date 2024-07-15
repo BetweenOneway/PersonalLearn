@@ -40,7 +40,7 @@ router.get('/newAddUser',async (req,res)=>{
 
     console.log(nickName)
 
-    //select id,nickname from user where id = 35;
+    //返回整个User对象 包含所有列
     const users = await sqldb.User.create(
         {
             email:email,

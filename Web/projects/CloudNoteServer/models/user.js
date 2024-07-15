@@ -9,7 +9,8 @@ module.exports = function(sequelize,DataTypes){
             autoIncrement:true
         },
         email:{
-            type:DataTypes.STRING
+            type:DataTypes.STRING,
+            unique: true
         },
         password:{
             type:DataTypes.STRING
