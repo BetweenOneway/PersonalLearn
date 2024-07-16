@@ -275,7 +275,7 @@
         if(responseData.success)
         {
             loadingBar.finish()
-            const memoInfo = responseData.data[0]
+            const memoInfo = responseData.data
             formValue.value.title = memoInfo.title
             formValue.value.top = !!memoInfo.top
             formValue.value.tags = memoInfo.tags.split(',')

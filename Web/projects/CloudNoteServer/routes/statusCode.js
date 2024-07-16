@@ -166,6 +166,16 @@ SERVICE_STATUS={
         success:false,
         status:'SERVICE_017',
         description:'通知邮件发送失败'
+    },
+    UPDATE_MEMO_SUCCESS:{
+        success:true,
+        status:'SERVICE_018',
+        description:'更新便签成功'
+    },
+    UPDATE_MEMO_FAIL:{
+        success:false,
+        status:'SERVICE_019',
+        description:'更新便签失败'
     }
 }
 
@@ -197,6 +207,10 @@ EVENT_LIST = {
     ADD_MEMO:{
         code:'6',
         desc:'新增便签'
+    },
+    UPDATE_MEMO:{
+        code:'7',
+        desc:'更新便签'
     }
 }
 

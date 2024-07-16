@@ -320,7 +320,7 @@ router.post("/addMemo",async (req,res)=>{
         let userInfo = validateInfo.userInfo;
         let curTime = new Date().toLocaleString()
 
-        const newAddMemo = await sqldb.memo.create(
+        const newAddMemo = await sqldb.Memo.create(
             {
                 title:inputInfo.title,
                 tags:inputInfo.tags,
@@ -378,7 +378,7 @@ router.get("/getMemoInfo",async (req,res)=>{
         success:true,
         status:'',
         description:'',
-        data:[]
+        data:{}
     }
     console.log("start Get Memeo Info:",req.query);
     
@@ -409,7 +409,7 @@ router.get("/getMemoInfo",async (req,res)=>{
     let userInfo = validateInfo.userInfo;
 
     try {
-        const users = await sqldb.User.findAll(
+        const memo = await sqldb.Memo.findOne(
             {
                 attributes: ['title', 'top','tags','content'],
                 where: {
@@ -419,6 +419,11 @@ router.get("/getMemoInfo",async (req,res)=>{
                 }
             }
         );
+        output.success = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.description
+        output.data = memo;
+        res.send(output);
     } catch (error) {
         output.success = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.success
         output.status = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.status
@@ -429,4 +434,122 @@ router.get("/getMemoInfo",async (req,res)=>{
     return
 })
 
+//修改便签
+/**
+ * userToken 用户编号
+ * memoId 便签编号
+ * title 标题
+ * tags 标签
+ * content 内容
+ * finished 是否已完成
+ * top是否置顶
+ */
+router.post("/updateMemo",async (req,res)=>{
+    console.log(req.body);
+
+    let output={
+        success:false,
+        status:"",
+        description:""
+    }
+    let inputInfo = {}
+    inputInfo.userToken = req.query.userToken
+    inputInfo.memoId = req.query.memoId
+    inputInfo.title = req.query.title
+    inputInfo.tags = req.query.tags
+    inputInfo.content = req.query.content
+    inputInfo.finished = req.query.finished
+    inputInfo.top = req.query.top
+
+    if(0 == inputInfo.userToken.length)
+    {
+        console.log("del memo, userToken empty")
+        output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
+        output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
+        output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
+        res.send(output)
+        return
+    }
+
+    //验证用户是否登陆
+    let validateInfo = await validate.IsUserValidate(nputInfo.userToken);
+    if(!validateInfo.isValidated)
+    {
+        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
+        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
+        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
+        res.send(output)
+        return
+    }
+
+    const t = await sqldb.sequelize.transaction();
+
+    try {
+        let userInfo = validateInfo.userInfo;
+        let curTime = new Date().toLocaleString()
+
+        const targetMemo = sqldb.Memo.findOne(
+            {
+                where: {
+                    id: inputInfo.memoId,
+                    u_id:userInfo.id,
+                    status:1
+                }
+            }
+        )
+        if(targetMemo !== undefined)
+        {
+            //更新便签
+            const updateNum = await sqldb.Memo.update(
+                {
+                    title:inputInfo.title,
+                    tags:inputInfo.tags,
+                    content:inputInfo.content,
+                    finished:inputInfo.finished,
+                    update_time:curTime,
+                    top:inputInfo.top,
+                },
+                {
+                    where:{
+                        id: inputInfo.memoId,
+                        u_id:userInfo.id,
+                        status:1
+                    },
+                    transaction:t
+                }
+            );
+            //记录日志
+            let event = statusCode.EVENT_LIST.UPDATE_MEMO;
+            const addLog = await sqldb.NoteMemoLog.create(
+                {
+                    time:curTime,
+                    event:event.code,
+                    desc:event.desc,
+                    u_id:userInfo.id,
+                    t_id:inputInfo.memoId
+                },
+                {
+                    transaction:t
+                }
+            );
+
+            t.commit();
+            console.log("update memo success,commit database success")
+            output.success = statusCode.SERVICE_STATUS.UPDATE_MEMO_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.UPDATE_MEMO_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.UPDATE_MEMO_SUCCESS.description
+            res.send(output);
+        }
+
+        
+    } catch (error) {
+        t.rollback();
+        output.success = statusCode.SERVICE_STATUS.UPDATE_MEMO_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.UPDATE_MEMO_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.UPDATE_MEMO_FAIL.description
+        res.send(output);
+    }
+
+    return
+})
 module.exports=router;
