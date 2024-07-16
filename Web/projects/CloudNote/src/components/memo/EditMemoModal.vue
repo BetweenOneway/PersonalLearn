@@ -185,36 +185,50 @@
         }
     }
 
-    //新增便签的保存
-    const saveMemo = async ()=>{
+    //新增便签的保存 修改便签的保存
+
+    const saveUpdateMemo = async(isNewCreate)=>{
         //判断用户登录状态
         const userToken = await getUserToken()
         
         //头部加载进度条开始
         loadingBar.start()
 
-        //发送创建便签请求
+        const memoId = formValue.value.id //只有修改的时候使用
         const title = formValue.value.title
         const tags = formValue.value.tags.join()
         const content = JSON.stringify(formValue.value.content) //[{},{}] => '[{},{}]'
         const finished = formValue.value.finished
         const top = formValue.value.top
 
-        const {data:responseData} = await noteBaseRequest.post(
-                "/memo/addMemo",
+        //发送保存请求
+        let url = '/memo/updateMemo'
+        let method = 'POST'
+        if(isNewCreate)
+        {
+            method='PUT'
+            url="/memo/addMemo"
+        }
+
+        const {data:responseData} = await noteBaseRequest(
                 {
-                    userToken:userToken,
-                    title:title,
-                    tags:tags,
-                    content:content,
-                    finished:finished,
-                    top:top
+                    method,
+                    url,
+                    data:{
+                        userToken:userToken,
+                        memoId:memoId,
+                        title:title,
+                        tags:tags,
+                        content:content,
+                        finished:finished,
+                        top:top
+                    }
                 }
             ).catch(()=>{
                 //加载条异常结束
                 loadingBar.error()
-                //显示登陆失败的通知
-                throw message.error('新增便签失败')
+                //显示请求失败的通知
+                throw message.error('保存便签失败')
             }
         )
         console.log(responseData.success)
@@ -229,6 +243,7 @@
             //关闭编辑便签窗口
             show.value = false
             //重新获取便签列表
+            emits('save',isNewCreate)
         }
         else
         {
@@ -299,15 +314,7 @@
         formRef.value?.validate(errors=>{
             if(!errors)
             {
-                if(formValue.value.id === null)
-                {
-                    //新增便签的保存
-                    saveMemo()
-                }
-                else
-                {
-                    //修改保存
-                }
+                saveUpdateMemo(formValue.value.id === null)
             }
             else
             {

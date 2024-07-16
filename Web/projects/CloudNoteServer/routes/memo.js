@@ -277,7 +277,7 @@ router.delete("/deleteMemo",async (req,res)=>{
  * finished 是否已完成
  * top是否置顶
  */
-router.post("/addMemo",async (req,res)=>{
+router.put("/addMemo",async (req,res)=>{
     console.log(req.body);
 
     let output={
@@ -445,7 +445,7 @@ router.get("/getMemoInfo",async (req,res)=>{
  * top是否置顶
  */
 router.post("/updateMemo",async (req,res)=>{
-    console.log(req.body);
+    console.log("start update Memo :",req.body);
 
     let output={
         success:false,
@@ -461,9 +461,9 @@ router.post("/updateMemo",async (req,res)=>{
     inputInfo.finished = req.query.finished
     inputInfo.top = req.query.top
 
-    if(0 == inputInfo.userToken.length)
+    if(0 == inputInfo.userToken.length || inputInfo.memoId.length == 0)
     {
-        console.log("del memo, userToken empty")
+        console.log("update memo, userToken or memoId empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
         output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
         output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
