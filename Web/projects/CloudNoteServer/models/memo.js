@@ -14,7 +14,7 @@ module.exports = function(sequelize,DataTypes){
         tags:{
             type:DataTypes.STRING
         },
-        context:{
+        content:{
             type:DataTypes.STRING
         },
         u_id:{

@@ -50,7 +50,7 @@
                         :time="memo.update_time" 
                         @changeStatus="getMemoList(false)"
                         @delete="showDeleteRemindDialog"
-                        @edit="editMemoModalRef.showEditModal(thing.id)"></meoCard>
+                        @edit="editMemoModalRef.showEditModal(memo.id)"></meoCard>
                     </template>
                 </TransitionGroup>
             </n-space>
@@ -212,7 +212,7 @@
 
     //删除便签 
     //complete true彻底删除 false非彻底删除
-    const deleteMemo = async (isTop)=>{
+    const deleteMemo = async (complete)=>{
         //关闭提醒框
         deleteRemind.value.show = false
         //判断用户登录状态

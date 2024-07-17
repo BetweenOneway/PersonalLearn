@@ -5,7 +5,7 @@
         </template>
         <template #default>{{description}}</template>
         <template #action>
-            <n-button v-if="completeDeletBtn" size="small" tertiary type="error" @click="emits('completeDelete',true)">彻底删除</n-button>
+            <n-button v-if="completeDeletBtn" size="small" tertiary type="error" @click="emits('delete',true)">彻底删除</n-button>
             <n-button v-if="deleteBtn" size="small" secondary type="error" @click="emits('delete',false)">删除</n-button>
             <n-button size="small" tertiary @click="emits('cancel','取消')">取消</n-button>
         </template>

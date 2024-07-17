@@ -2,6 +2,7 @@ const express=require("express");
 const crypto = require("crypto")
 const redis = require('redis')
 const stringRandom = require("string-random");
+const { Op } = require("sequelize");
 
 //数据库
 var sqldb = require('../sqldb');
@@ -42,7 +43,7 @@ router.get("/getUserMemoList",async (req,res)=>{
         console.log(userInfo)
         //查询当前用户的所有正常的便签
         //置顶在前 未完成在前 时间越近的越在前
-        const users = await sqldb.memo.findAll(
+        const users = await sqldb.Memo.findAll(
             {
                 attributes: ['id', 'title','top','tags','update_time','finished'],
                 where:{
@@ -62,12 +63,14 @@ router.get("/getUserMemoList",async (req,res)=>{
         output.data = users
         res.send(output);
     } catch (error) {
+        console.log(error)
         output.success = statusCode.DB_STATUS.SELECT_FAIL.success
         output.status = statusCode.DB_STATUS.SELECT_FAIL.status
         output.description = statusCode.DB_STATUS.SELECT_FAIL.description
         res.send(output);
-        return
     }
+    console.log("End of get User's Memo List")
+    return;
 })
 
 //置顶 取消置顶
@@ -78,8 +81,7 @@ router.get("/setMemoTop",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start set Top");
-    console.log(req.query)
+    console.log("start set Top:",req.query);
     
     //目标状态
     let targetTop = req.query.targetTop
@@ -112,7 +114,7 @@ router.get("/setMemoTop",async (req,res)=>{
     const t = await sqldb.sequelize.transaction();
 
     try{
-        const updateNum = await sqldb.memo.update(
+        const updateNum = await sqldb.Memo.update(
             {
                 top:targetTop
             },
@@ -152,6 +154,7 @@ router.get("/setMemoTop",async (req,res)=>{
             res.send(output);
         }
         else{
+            console.log("set memo top,updateNum=",updateNum);
             t.rollback()
             output.success = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.success
             output.status = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.status
@@ -167,6 +170,7 @@ router.get("/setMemoTop",async (req,res)=>{
         output.description = statusCode.SERVICE_STATUS.MEMO_SET_TOP_FAIL.description
         res.send(output);
     }
+    console.log("End of set memo top");
     return
 })
 
@@ -178,7 +182,7 @@ router.delete("/deleteMemo",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start del memo,req.query:",eq.query);
+    console.log("start del memo,req.query:",req.query);
 
     //目标状态
     let isCompleteDel = req.query.isCompleteDel.toLowerCase() === 'true'
@@ -211,15 +215,15 @@ router.delete("/deleteMemo",async (req,res)=>{
         let curTime = new Date().toLocaleString()
         let targetStatus = isCompleteDel? -1:0
 
-        const updateNum = await sqldb.memo.update(
+        const updateNum = await sqldb.Memo.update(
             {
-                status:newNickName,
+                status:targetStatus,
                 update_time:curTime
             },
             {
                 where:{
-                    id:userId,
-                    u_id:email,
+                    id:memoId,
+                    u_id:userInfo.id,
                     status:{
                         [Op.ne]:targetStatus
                     }
@@ -250,6 +254,7 @@ router.delete("/deleteMemo",async (req,res)=>{
             res.send(output);
         }
         else{
+            console.log("Delete memo:updateNum=",updateNum);
             t.rollback();
             output.success = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.success
             output.status = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.status
@@ -257,14 +262,15 @@ router.delete("/deleteMemo",async (req,res)=>{
             res.send(output);
         }
     } catch (error) {
-        t.rollback();
         console.log(error)
-        
+
+        t.rollback();
         output.success = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.success
         output.status = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.status
         output.description = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.description
         res.send(output);
     }
+    console.log("End of delete memo")
     return
 })
 
@@ -286,16 +292,16 @@ router.put("/addMemo",async (req,res)=>{
         description:""
     }
     let inputInfo = {}
-    inputInfo.userToken = req.query.userToken
-    inputInfo.title = req.query.title
-    inputInfo.tags = req.query.tags
-    inputInfo.content = req.query.content
-    inputInfo.finished = req.query.finished
-    inputInfo.top = req.query.top
+    inputInfo.userToken = req.body.userToken
+    inputInfo.title = req.body.title
+    inputInfo.tags = req.body.tags
+    inputInfo.content = req.body.content
+    inputInfo.finished = req.body.finished
+    inputInfo.top = req.body.top
 
-    if(0 == inputInfo.userToken.length)
+    if(inputInfo.userToken == undefined || 0 == inputInfo.userToken.length)
     {
-        console.log("del memo, userToken empty")
+        console.log("Add memo, userToken empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
         output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
         output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
@@ -304,9 +310,10 @@ router.put("/addMemo",async (req,res)=>{
     }
 
     //验证用户是否登陆
-    let validateInfo = await validate.IsUserValidate(nputInfo.userToken);
+    let validateInfo = await validate.IsUserValidate(inputInfo.userToken);
     if(!validateInfo.isValidated)
     {
+        console.log("Add memo,user info invalidated")
         output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
         output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
         output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
@@ -358,6 +365,7 @@ router.put("/addMemo",async (req,res)=>{
         output.description = statusCode.SERVICE_STATUS.ADD_MEMO_SUCCESS.description
         res.send(output);
     } catch (error) {
+        console.log(error)
         t.rollback();
         output.success = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.success
         output.status = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.status
@@ -365,6 +373,7 @@ router.put("/addMemo",async (req,res)=>{
         res.send(output);
     }
 
+    console.log("End of add memo")
     return
 })
 
@@ -413,7 +422,7 @@ router.get("/getMemoInfo",async (req,res)=>{
             {
                 attributes: ['title', 'top','tags','content'],
                 where: {
-                    id: userId,
+                    id: memoId,
                     u_id:userInfo.id,
                     status:1
                 }
@@ -425,12 +434,13 @@ router.get("/getMemoInfo",async (req,res)=>{
         output.data = memo;
         res.send(output);
     } catch (error) {
+        console.log(error);
         output.success = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.success
         output.status = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.status
         output.description = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.description
         res.send(output);
     }
-    
+    console.log("End GetMemoInfo");
     return
 })
 
@@ -452,16 +462,17 @@ router.post("/updateMemo",async (req,res)=>{
         status:"",
         description:""
     }
-    let inputInfo = {}
-    inputInfo.userToken = req.query.userToken
-    inputInfo.memoId = req.query.memoId
-    inputInfo.title = req.query.title
-    inputInfo.tags = req.query.tags
-    inputInfo.content = req.query.content
-    inputInfo.finished = req.query.finished
-    inputInfo.top = req.query.top
 
-    if(0 == inputInfo.userToken.length || inputInfo.memoId.length == 0)
+    let inputInfo = {}
+    inputInfo.userToken = req.body.userToken
+    inputInfo.memoId = req.body.memoId
+    inputInfo.title = req.body.title
+    inputInfo.tags = req.body.tags
+    inputInfo.content = req.body.content
+    inputInfo.finished = req.body.finished
+    inputInfo.top = req.body.top
+
+    if(inputInfo.userToken === undefined || 0 == inputInfo.userToken.length || inputInfo.memoId.length == 0)
     {
         console.log("update memo, userToken or memoId empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
@@ -472,7 +483,7 @@ router.post("/updateMemo",async (req,res)=>{
     }
 
     //验证用户是否登陆
-    let validateInfo = await validate.IsUserValidate(nputInfo.userToken);
+    let validateInfo = await validate.IsUserValidate(inputInfo.userToken);
     if(!validateInfo.isValidated)
     {
         output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
@@ -543,13 +554,15 @@ router.post("/updateMemo",async (req,res)=>{
 
         
     } catch (error) {
+        console.log(error);
         t.rollback();
         output.success = statusCode.SERVICE_STATUS.UPDATE_MEMO_FAIL.success
         output.status = statusCode.SERVICE_STATUS.UPDATE_MEMO_FAIL.status
         output.description = statusCode.SERVICE_STATUS.UPDATE_MEMO_FAIL.description
         res.send(output);
     }
-
+    console.log("End of Update memo");
     return
 })
+
 module.exports=router;
