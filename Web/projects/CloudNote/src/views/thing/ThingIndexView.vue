@@ -7,7 +7,17 @@
                 <h3>便签列表</h3>
             </template>
             <template #header-extra>
-                <n-button dashed @click="editMemoModalRef.showEditModal(null)">新增便签</n-button>
+                <n-space>
+                    <!--搜索输入框-->
+                    <n-input-group>
+                        <n-input v-model:value="search" placeholder="搜索"></n-input>
+                        <n-button>搜索</n-button>
+                    </n-input-group>
+                    <!--过滤选项-->
+                    <n-select v-model:value="filter" :options="filterOptions" placeholder="过滤" style="width:130px"></n-select>
+                    <!--新增便签按钮-->
+                    <n-button dashed @click="editMemoModalRef.showEditModal(null)">新增便签</n-button>
+                </n-space>
             </template>
         </n-card>
         <!--小记列表 容器-->
@@ -106,6 +116,28 @@
 
     //memo列表
     const memos = ref([])
+
+    //搜索关键字
+    const search = ref(null)
+
+    //过滤选项
+    const filterOptions = [
+        {
+            label:'默认',
+            value:null
+        },
+        {
+            label:'未完成',
+            value:0
+        },
+        {
+            label:'已完成',
+            value:1
+        }
+    ]
+
+    //过滤选项值
+    const filter = ref(null)
 
     //获取用户便签列表
     /**

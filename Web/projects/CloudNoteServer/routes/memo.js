@@ -13,6 +13,11 @@ let validate = require("../utils/validate")
 var router=express.Router();
 
 //获取用户所有正常的便签
+/**
+ * userToken 用户编号
+ * searchText 搜索关键词（标题含有 或者标签含有)
+ * filter 过滤 null 默认 0 只查询未完成 1 只查询已完成
+ */
 router.get("/getUserMemoList",async (req,res)=>{
     var output={
         success:true,
@@ -74,6 +79,9 @@ router.get("/getUserMemoList",async (req,res)=>{
 })
 
 //置顶 取消置顶
+/**
+ * 
+ */
 router.get("/setMemoTop",async (req,res)=>{
     let output={
         success:true,
@@ -175,6 +183,9 @@ router.get("/setMemoTop",async (req,res)=>{
 })
 
 //删除便签
+/**
+ * 
+ */
 router.delete("/deleteMemo",async (req,res)=>{
     let output={
         success:true,

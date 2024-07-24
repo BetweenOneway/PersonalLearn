@@ -20,7 +20,7 @@ async function AddEventLog(userId,noteId,event,transaction)
         )
     } catch (error) {
         console.log("Add event log failed:",event.desc)
-        return false;
+        throw new Error("Add log failed")
     }
 }
 
