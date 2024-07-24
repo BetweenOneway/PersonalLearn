@@ -3,6 +3,7 @@ const express=require("express");
 var router=express.Router();
 
 var sqldb = require('../sqldb');
+const { Op } = require("sequelize");
 
 //查询
 router.get('/getAll',async (req,res)=>{
@@ -179,5 +180,47 @@ router.get('/order',async (req,res)=>{
     );
     console.log("All users:", JSON.stringify(users, null, 2));
     res.send(users)
+})
+
+//组合条件查询 传什么条件组什么条件
+router.get('/getComposedCondition',async (req,res)=>{
+    console.log('get by composed condition',req.query)
+    const {id,email,level} = req.query;
+    console.log('parsed:',id,email,level);
+
+    console.log('typeof(id)',typeof(id));//string
+    console.log('typeof(email)',typeof(email));//string
+    console.log('typeof(level)',typeof(level));//string
+
+    let retrivedAttributes = [];
+    let condition = {};
+
+    retrivedAttributes.push('id');
+    retrivedAttributes.push('email');
+    retrivedAttributes.push('level');
+
+    if(id != undefined && id != null && id.length != 0)
+    {
+        condition['id']=id;
+    }
+    
+    if(email.length != 0 )
+    {
+        condition['email'] = {
+            [Op.like]:'%'+email+'%'
+        };
+    }
+    
+    if(level != undefined && level != null && level.length != 0)
+    {
+        condition['level']=level;
+    }
+    
+    const users = await sqldb.User.findAll({
+        attributes: retrivedAttributes,
+        where:condition
+      });
+    console.log("Get users by composed condition:", JSON.stringify(users));
+    res.send(JSON.stringify(users))
 })
 module.exports=router;
