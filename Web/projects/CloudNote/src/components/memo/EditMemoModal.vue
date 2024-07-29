@@ -1,5 +1,7 @@
 <template>
-    <n-modal v-model:show="show" :auto-focus="false" :on-after-leave="resetEditMemo">
+    <!--close-on-esc esc关闭 mask-closable 点击遮罩层关闭-->
+    <n-modal v-model:show="show" :auto-focus="false" :on-after-leave="resetEditMemo" transform-origin="center" 
+    :close-on-esc="false" :mask-closable="false">
         <div>
             <!--骨架屏-->
             <n-card size="small" :bordered="false" style="width:460px" v-show="loading">
@@ -235,15 +237,13 @@
 
         if(responseData.success)
         {
-            //触发保存事件
-            emits('save',true)
             loadingBar.finish()
             //显示发送成功的通知
             message.success(responseData.description)
             //关闭编辑便签窗口
             show.value = false
             //重新获取便签列表
-            emits('save',isNewCreate)
+            emits('save',false,false)
         }
         else
         {

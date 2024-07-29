@@ -58,7 +58,7 @@
                         :top="!!memo.top" 
                         :tags="memo.tags.split(',')" 
                         :time="memo.update_time" 
-                        @changeStatus="getMemoList(false)"
+                        @changeStatus="getMemoList(false,false)"
                         @delete="showDeleteRemindDialog"
                         @edit="editMemoModalRef.showEditModal(memo.id)"></meoCard>
                     </template>
@@ -111,9 +111,6 @@
     //是否处于加载中
     const loading = ref(true)
 
-    //是否是新增便签
-    const isNewCreate = ref(false)
-
     //memo列表
     const memos = ref([])
 
@@ -139,12 +136,19 @@
     //过滤选项值
     const filter = ref(null)
 
+    //显示便签是否需要延迟动画
+    let enterDelay = true;
+    //隐藏便签是否需要延迟动画
+    let hiddenAnimation = true
+
     //获取用户便签列表
     /**
-     * @param newCreate {Boolean} 是否新增便签
+     * @param ed {Boolean} 显示便签卡片是否需要延迟动画
+     * @param ha {Boolean} 隐藏便签卡片是否需要延迟动画
      */
-    const getMemoList =async (newCreate)=>{
-        isNewCreate.value = newCreate
+    const getMemoList =async (ed,ha)=>{
+        enterDelay = ed;
+        hiddenAnimation = ha;
         //判断用户登录状态
         const userToken = await getUserToken()
         //发送获取便签请求
@@ -188,7 +192,8 @@
         }
     }
 
-    getMemoList(false)
+    //首次进入页面 获取便签列表
+    getMemoList(true,false)
 
     //执行显示动画之前的初始位置
     const beforeEnter = (el)=>{
@@ -204,31 +209,50 @@
             y:0,//偏移量
             opacity:1,//透明度
             duration:0.5,//秒
-            delay:()=>{isNewCreate.vale ? 0 : el.dataset.index * 0.12},//延迟动画
+            delay:()=>{enterDelay ? el.dataset.index * 0.12 : 0},//延迟动画
             onComplete:done//动画执行完成回调函数
         })
     }
 
     //执行隐藏动画之前的初始位置
     const beforeLeave = (el)=>{
-        gsap.set(el,{
-            opacity:1,
-            scale:1,
-            position:'fixed',
-            top:0,
-            left:'50%'
-        })
+        if(hiddenAnimation)
+        {
+            //获取删除的元素距离父组件的左和上的位置
+            const left = el.offsetLeft
+            const top = el.offsetTop
+            //设置删除组件的属性（需要脱离文档流）
+            gsap.set(el,{
+                position:'absolute',
+                boxShadow: '0 0 5px black',
+                zIndex:1,
+                top:top,
+                left:left
+            })
+        }
     }
 
     //执行隐藏动画
     const leaveEvent = (el,done)=>{
-        gsap.to(el,{
-            scale:0.01,
-            opacity:0,//透明度
-            duration:0.5,//秒
-            delay:el.dataset.index * 0.12,//延迟动画
-            onComplete:done//动画执行完成回调函数
-        })
+        if(hiddenAnimation)
+        {
+            let tl = gsap.timeline();//创建时间线动画
+            tl.to(el,{
+                scale:1.3,
+                duration:0.25
+            }).to(el,{
+                scale:0,
+                duration:0.25,
+                onComplete:done
+            });
+        }
+        else
+        {
+            gsap.to(el,{
+                duration:0,//秒
+                onComplete:done//动画执行完成回调函数
+            })
+        }
     }
 
     //删除提醒框的对象
@@ -278,8 +302,8 @@
             loadingBar.finish()
             console.log(responseData)
             message.success(responseData.description)
-            //重新获取便签列表
-            getMemoList(false)
+            //重新获取便签列表 需要有删除动画
+            getMemoList(false,true)
         }
         else
         {
