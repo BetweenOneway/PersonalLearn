@@ -57,16 +57,16 @@ router.get("/getUserMemoList",async (req,res)=>{
         }
         if(searchText != undefined && searchText != null && searchText.length != 0)
         {
-            condition[[Op.or]]=[
+            condition[Op.or]=[
                 {
-                  tags: {
-                    [Op.like]: '%searchText%'
-                  }
+                    tags: {
+                    [Op.like]: `%${searchText}%`
+                    }
                 },
                 {
-                  content: {
-                    [Op.like]: '%searchText%'
-                  }
+                    content: {
+                    [Op.like]: `%${searchText}%`
+                    }
                 }
             ]
         }

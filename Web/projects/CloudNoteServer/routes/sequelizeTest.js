@@ -185,8 +185,8 @@ router.get('/order',async (req,res)=>{
 //组合条件查询 传什么条件组什么条件
 router.get('/getComposedCondition',async (req,res)=>{
     console.log('get by composed condition',req.query)
-    const {id,email,level} = req.query;
-    console.log('parsed:',id,email,level);
+    const {id,searchText,level} = req.query;
+    console.log('parsed:',id,searchText,level);
 
     console.log('typeof(id)',typeof(id));//string
     console.log('typeof(email)',typeof(email));//string
@@ -204,11 +204,23 @@ router.get('/getComposedCondition',async (req,res)=>{
         condition['id']=id;
     }
     
-    if(email.length != 0 )
+    if(searchText.length != 0 )
     {
-        condition['email'] = {
-            [Op.like]:'%'+email+'%'
-        };
+        if(searchText != undefined && searchText != null && searchText.length != 0)
+        {
+            condition[Op.or]=[
+                {
+                    email: {
+                    [Op.like]: `%${searchText}%`
+                    }
+                },
+                {
+                    nickname: {
+                    [Op.like]: `%${searchText}%`
+                    }
+                }
+            ]
+        }
     }
     
     if(level != undefined && level != null && level.length != 0)
