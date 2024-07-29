@@ -1,4 +1,9 @@
-﻿#include <iostream>
+﻿
+namespace STATIC_TEST {
+    static int num = 10;
+}
+
+#include <iostream>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -376,14 +381,14 @@ int main()
     //testWired();
     //testScope();
     //testStatic();
-    testClass();
+    //testClass();
     //testStruct();
     //testType();
     //testString();
     //testMacro();
 
     //testFunction();
-
+    cout << STATIC_TEST::num << endl;
     system("pause");
     return 0;
 }

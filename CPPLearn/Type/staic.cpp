@@ -3,7 +3,11 @@
 using namespace std;
 #include "static.h"
 
+
 namespace STATIC_TEST{
+
+    static int num = 20;
+
 void useStaic()
 {
 	static int num = 10;
