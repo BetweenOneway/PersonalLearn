@@ -123,13 +123,14 @@
 </template>
 
 <script setup>
-    import {computed,ref,h} from "vue"
+    import {computed,ref,h,onBeforeUnmount} from "vue"
     import {
         AddBoxRound,DeleteForeverFilled
     } from "@vicons/material"
     import {useNotification,NText,NSpace,useMessage,useLoadingBar} from 'naive-ui'
     import { getUserToken,loginInvalid } from "../../Utils/userLogin"
     import { noteBaseRequest } from "../../request/noteRequest"
+    import bus from 'vue3-eventbus'
 
     //是否显示编辑便签模态框
     const show = ref(false)
@@ -141,6 +142,17 @@
 
     //自定义事件
     const emits = defineEmits(['save'])
+
+    //监听是否触发新建便签事件
+    bus.on('newCreateMemo',()=>{
+        showEditModal(null)
+    });
+
+    //组件卸载之前
+    onBeforeUnmount(()=>{
+        //停止监听新建便签事件
+        bus.off('newCrteateMemo')
+    })
 
     //创建待办事项
     const onCreateTodoThing = ()=>{
