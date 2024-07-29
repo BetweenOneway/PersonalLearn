@@ -28,6 +28,8 @@ router.get("/getUserMemoList",async (req,res)=>{
 
     console.log("start getMemoList",req.query)
     var userToken = req.query.userToken
+    const searchText = req.query.searchText;
+    const filter = req.query.filter;
     let status = 1
     let userInfo = {}
 
@@ -46,15 +48,34 @@ router.get("/getUserMemoList",async (req,res)=>{
         userInfo = validateInfo.userInfo
         console.log("parsed userinfo")
         console.log(userInfo)
-        //查询当前用户的所有正常的便签
+        //组合查询条件
+        let condition = {};
+        condition['status'] = status;
+        if(filter != null)
+        {
+            condition['finished'] = filter;
+        }
+        if(searchText != undefined && searchText != null && searchText.length != 0)
+        {
+            condition[[Op.or]]=[
+                {
+                  tags: {
+                    [Op.like]: '%searchText%'
+                  }
+                },
+                {
+                  content: {
+                    [Op.like]: '%searchText%'
+                  }
+                }
+            ]
+        }
+
         //置顶在前 未完成在前 时间越近的越在前
         const users = await sqldb.Memo.findAll(
             {
                 attributes: ['id', 'title','top','tags','update_time','finished'],
-                where:{
-                    u_id:userInfo.id,
-                    status:status
-                },
+                where:condition,
                 order:[
                     ['id', 'DESC'],
                     ['finished', 'ASC'],

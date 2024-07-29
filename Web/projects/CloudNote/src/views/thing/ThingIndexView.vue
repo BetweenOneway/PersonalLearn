@@ -11,10 +11,10 @@
                     <!--搜索输入框-->
                     <n-input-group>
                         <n-input v-model:value="search" placeholder="搜索"></n-input>
-                        <n-button>搜索</n-button>
+                        <n-button @click="getMemoList(false)">搜索</n-button>
                     </n-input-group>
                     <!--过滤选项-->
-                    <n-select v-model:value="filter" :options="filterOptions" placeholder="过滤" style="width:130px"></n-select>
+                    <n-select v-model:value="filter" :options="filterOptions" @update-value="getMemoList(false)" placeholder="过滤" style="width:130px"></n-select>
                     <!--新增便签按钮-->
                     <n-button dashed @click="editMemoModalRef.showEditModal(null)">新增便签</n-button>
                 </n-space>
@@ -149,12 +149,15 @@
         const userToken = await getUserToken()
         //发送获取便签请求
         //头部加载进度条开始
-        loadingBar.start()
+        loadingBar.start();
+
         const {data:responseData} = await noteBaseRequest.get(
                 "/memo/getUserMemoList",
                 {
                     params:{
-                        userToken
+                        userToken,
+                        searchText:search.value,
+                        filter:filter.value
                     }
                 }
             ).catch(()=>{
