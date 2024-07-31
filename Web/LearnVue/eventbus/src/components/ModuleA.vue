@@ -1,10 +1,10 @@
 <!-- A.vue -->
 <template>
-    <button @click="sendMsg()">-</button>
+    <button @click="sendMsg()">Click Me SendMsg</button>
 </template>
 
 <script> 
-import { EventBus } from "../event-bus.js";
+import { EventBus } from "../utils/event-bus";
 export default {
   methods: {
     sendMsg() {
