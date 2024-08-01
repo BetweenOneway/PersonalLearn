@@ -1,20 +1,54 @@
 <template>
-    <n-dropdown :options="addBoxOptions" placement="right-start">
-        <n-button text type="primary">
-            <n-icon size="34" :component="AddBoxRound"></n-icon>
+    <n-space vertical>
+        <!--添加文件-->
+        <n-dropdown :options="addBoxOptions" placement="right-start">
+            <n-button text type="primary">
+                <n-icon size="34" :component="AddBoxRound"></n-icon>
+            </n-button>
+        </n-dropdown>
+
+        <!--搜索-->
+        <n-button text>
+            <n-icon size="26" :component="SearchRound"></n-icon>
         </n-button>
-    </n-dropdown>
+    </n-space>
+    <!--分割线-->
+    <n-divider style="width:34px;margin:15px auto"></n-divider>
+    <n-space vertical :size="26">
+        <n-popover v-for="menu in mainMenus" :key="menu.label" trigger="hover" placement="right" :show-arrow="false">
+            <template #trigger>
+                <n-button style="width:34px;padding:0" :text="routerPath !== menu.to" 
+                :type="routerPath === menu.to?'primary':'default'"
+                :tertiary="routerPath === menu.to?'primary':false"
+                @click="router.push(menu.to)">
+                    <n-icon size="menu.icon_size" :component="menu.icon"></n-icon>
+                </n-button>
+            </template>
+            <span>{{menu.label}}</span>
+        </n-popover>
+    </n-space>
 </template>
 
 <script setup>
-    import {AddBoxRound,EventNoteRound,StickyNote2Outlined,EventNoteRound} from "@vicons/material"
+    import {AddBoxRound,EventNoteRound,StickyNote2Outlined
+        ,SearchRound,AccessTimeRound
+        , StarBorderRound, ShoppingBagOutlined, DeleteOutlineRound} from "@vicons/material"
     import {NIcon} from "naive-ui"
-    import {h} from 'vue'
+    import {h,watch} from 'vue'
     import {useRouter} from 'vue-router'
     import bus from 'vue3-eventbus'
     
     //路由对象
     const router = useRouter()
+
+    const routerPath = ref(router.currentRoute.value.path);
+    //监控路由地址变化
+    watch(
+        ()=>router.currentRoute.value,
+        newData=>{
+            routerPath.value = newData.path;
+        }
+    );
     //读图标
     function renderIcon(icon,size,color){
         return ()=>h(NIcon,{size,color},{default:()=>h(icon)})
@@ -36,8 +70,8 @@
             icon:renderIcon(EventNoteRound,20,'#2080F0'),
             props:{
                 onClick:()=>{
-                    //跳转至路由为/thing
-                    router.push("/thing").then(()=>{
+                    //跳转至路由为/memo
+                    router.push("/memo").then(()=>{
                         //弹出便签编辑框
                         bus.emit('newCreateMemo');
                     })
@@ -45,4 +79,43 @@
             }
         }
     ]
+
+    const mainMenus = [
+        {
+            label:'最近操作',//弹出信息
+            icon:AccessTimeRound,//图标
+            icon_size:24,//图标大小
+            to:''//路由地址
+        },
+        {
+            label:'笔记',
+            icon:StickyNote2Outlined,
+            icon_size:24,
+            to:''
+        },
+        {
+            label:'便签',
+            icon:EventNoteRound,
+            icon_size:24,
+            to:'/memo'
+        },
+        {
+            label:'收藏',
+            icon:StarBorderRound,
+            icon_size:28,
+            to:''
+        },
+        {
+            label:'商城',
+            icon:ShoppingBagOutlined,
+            icon_size:24,
+            to:''
+        },
+        {
+            label:'回收站',
+            icon:DeleteOutlineRound,
+            icon_size:28,
+            to:''
+        },
+    ];
 </script>
