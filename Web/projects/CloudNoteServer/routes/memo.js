@@ -51,6 +51,7 @@ router.get("/getUserMemoList",async (req,res)=>{
         //组合查询条件
         let condition = {};
         condition['status'] = status;
+        condition['u_id'] = userInfo.id;
         if(filter != null)
         {
             condition['finished'] = filter;
