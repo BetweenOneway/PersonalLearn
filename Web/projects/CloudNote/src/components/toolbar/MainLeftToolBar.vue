@@ -14,12 +14,14 @@
     </n-space>
     <!--分割线-->
     <n-divider style="width:34px;margin:15px auto"></n-divider>
+
     <n-space vertical :size="26">
         <n-popover v-for="menu in mainMenus" :key="menu.label" trigger="hover" placement="right" :show-arrow="false">
             <template #trigger>
-                <n-button style="width:34px;padding:0" :text="routerPath !== menu.to" 
-                :type="routerPath === menu.to?'primary':'default'"
-                :tertiary="routerPath === menu.to?'primary':false"
+                <n-button style="width:34px;padding:0" 
+                :text="routerPath !== menu.to" 
+                :type="routerPath === menu.to?'primary':'default'" 
+                :tertiary="routerPath === menu.to?'primary':false" 
                 @click="router.push(menu.to)">
                     <n-icon size="menu.icon_size" :component="menu.icon"></n-icon>
                 </n-button>
