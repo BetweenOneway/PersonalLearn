@@ -25,17 +25,30 @@
 </template>
 
 <script setup>
-    import { onMounted } from "vue"
+    import { onMounted, watch } from "vue"
     import MainTopToolbar from "./components/toolbar/MainTopTooolbar.vue"
     import MainLeftToolBar from "./components/toolbar/MainLeftToolBar.vue"
 
     import {useThemeStore} from './stores/themeStore'
+    import useUserStore from './stores/userStore'
     import {storeToRefs} from 'pinia'
     import LoginModal from "./components/login/LoginModal.vue"
 
     const themeStore = useThemeStore()
     const {theme} = storeToRefs(themeStore)
     const {changeTheme} = themeStore
+
+    //用户的共享资源
+    const userStore = useUserStore();
+    const {token} = storeToRefs(userStore)
+
+    //如果用户的登陆状态发生改变，重新加载页面
+    watch(()=>token.value,newData =>{
+        if(newData !== null)
+        {
+            location.reload();
+        }
+    })
 
     //监听主题是否发生改变
     onMounted(()=>{
@@ -44,6 +57,12 @@
             {
                 const newTheme = JSON.parse(event.newValue)
                 changeTheme(newTheme.isDarkTheme)
+            }
+            else if(event.key === 'user')
+            {
+                console.log('用户登陆状态发生改变')
+                //用户登陆状态发生改变 重新刷新页面
+                location.reload();
             }
         })
     })

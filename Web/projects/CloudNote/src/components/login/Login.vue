@@ -151,11 +151,11 @@
                 //关闭登陆对话框
                 changeLoginModalShow(false)
                 //将Redis中的用户token存储到本地
-                localStorage.setItem("userToken",responseData.userToken)
+                //localStorage.setItem("userToken",responseData.userToken)
 
                 const user = responseData.userInfo
 
-                setUserInfo(user.id,user.email,user.nickName,user.headPic,user.level,user.time)
+                setUserInfo(responseData.userToken,user.id,user.email,user.nickName,user.headPic,user.level,user.time)
             }
             else
             {
