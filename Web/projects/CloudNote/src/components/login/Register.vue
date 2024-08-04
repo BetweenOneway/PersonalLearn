@@ -44,6 +44,7 @@
     import {ref} from 'vue'
     import { noteBaseRequest } from "../../request/noteRequest"
     import {useMessage,useLoadingBar} from 'naive-ui'
+    import {disabledBtn} from '../../utils/disabledBtn'
 
     //消息对象
     const message = useMessage()
@@ -120,7 +121,8 @@
             }
             //头部加载进度条开始
             loadingBar.start()
-            registerBtnDisabled.value = true
+            //禁用按钮
+            disabledBtn(registerBtnDisabled,true);
             //发送注册请求
             const {data:responseData} = await noteBaseRequest.post(
                 "/user/register",
@@ -134,9 +136,7 @@
                 loadingBar.error()//加载条异常结束
                 message.error("发送注册请求失败")
                 //解除禁用的登陆按钮
-                setTimeout(()=>{
-                    registerBtnDisabled.value = false
-                },1500)
+                disabledBtn(registerBtnDisabled,false,true,1.5);
 
                 throw "发送注册请求失败"
             })
@@ -157,9 +157,7 @@
                 //显示注册失败的通知
                 message.error(responseData.description)
                 //解除禁用的登陆按钮
-                setTimeout(()=>{
-                    registerBtnDisabled.value = false
-                },1500)
+                disabledBtn(registerBtnDisabled,false,true,1.5);
             }
           } 
         });

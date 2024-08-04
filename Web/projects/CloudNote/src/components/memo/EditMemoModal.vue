@@ -112,7 +112,7 @@
                             <n-button block tertiary @click="show=false">取消</n-button>
                         </n-gi>
                         <n-gi>
-                            <n-button block ghost type="primary" @click="saveNewAddMemo">保存</n-button>
+                            <n-button :disabled="saveBtnDisabled" block ghost type="primary" @click="saveNewAddMemo">保存</n-button>
                         </n-gi>
                     </n-grid>
                 </template>
@@ -131,6 +131,7 @@
     import { getUserToken,loginInvalid } from "../../Utils/userLogin"
     import { noteBaseRequest } from "../../request/noteRequest"
     import bus from 'vue3-eventbus'
+    import {disabledBtn} from '../../utils/disabledBtn'
 
     //是否显示编辑便签模态框
     const show = ref(false)
@@ -199,14 +200,18 @@
         }
     }
 
-    //新增便签的保存 修改便签的保存
+    //保存按钮是否需要禁用
+    const saveBtnDisabled = ref(false);
 
+    //新增便签的保存 修改便签的保存
     const saveUpdateMemo = async(isNewCreate)=>{
         //判断用户登录状态
         const userToken = await getUserToken()
         
         //头部加载进度条开始
         loadingBar.start()
+
+        disabledBtn(saveBtnDisabled,true);
 
         const memoId = formValue.value.id //只有修改的时候使用
         const title = formValue.value.title
@@ -241,12 +246,15 @@
             ).catch(()=>{
                 //加载条异常结束
                 loadingBar.error()
+                disabledBtn(saveBtnDisabled,false,true,2);//解除禁用按钮
                 //显示请求失败的通知
                 throw message.error('保存便签失败')
             }
         )
         console.log(responseData.success)
 
+        disabledBtn(saveBtnDisabled,false,true,2);//解除禁用按钮
+        
         if(responseData.success)
         {
             loadingBar.finish()
@@ -260,6 +268,7 @@
         else
         {
             loadingBar.error()
+            
             message.error(responseData.description)
             //登录失效处理
             if(responseData.status ==='SERVICE_008')
@@ -267,6 +276,7 @@
                 loginInvalid(true)
             }
         }
+        
     }
 
     //获取便签信息

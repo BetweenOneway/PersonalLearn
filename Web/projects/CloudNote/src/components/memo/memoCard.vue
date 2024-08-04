@@ -67,6 +67,7 @@
     import { getUserToken,loginInvalid } from "../../Utils/userLogin"
     import { noteBaseRequest } from "../../request/noteRequest"
     import {useMessage,useLoadingBar} from 'naive-ui'
+    import {disabledBtn} from '../../utils/disabledBtn'
 
     const themeStore = useThemeStore()
     const {isDarkTheme} = storeToRefs(themeStore)
@@ -128,8 +129,7 @@
         loadingBar.start()
 
         //禁用便签置顶按钮
-        topBtnDisabled.value = true
-
+        disabledBtn(topBtnDisabled,true);
         const {data:responseData} = await noteBaseRequest.get(
                 "/memo/setMemoTop",
                 {
@@ -142,13 +142,14 @@
             ).catch(()=>{
                 //加载条异常结束
                 loadingBar.error()
-                topBtnDisabled.value = false//解除禁用便签置顶按钮
+                /解除禁用便签置顶按钮
+                disabledBtn(topBtnDisabled,false,true,1);
                 //显示登陆失败的通知
                 throw message.error(isTop?"置顶便签失败":"取消置顶便签失败")
             }
         )
 
-        topBtnDisabled.value = false//解除禁用便签置顶按钮
+        disabledBtn(topBtnDisabled,false,true,1);
         if(responseData.success)
         {
             loadingBar.finish()

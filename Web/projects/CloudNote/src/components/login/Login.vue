@@ -49,6 +49,7 @@
     import {useMessage,useLoadingBar} from 'naive-ui'
     import {useLoginModalStore} from "../../stores/loginModalStore"
     import {useUserStore} from "../../stores/userStore"
+    import {disabledBtn} from '../../utils/disabledBtn'
 
     //消息对象
     const message = useMessage()
@@ -109,14 +110,17 @@
     //禁用登陆按钮
     const loginBtnDisabled = ref(false)
 
-    //
+    //去登陆
     const toLogin = (e)=>{
         e.preventDefault();
         loginFormRef.value?.validate(async (errors) => {
           if (!errors) {
             //头部加载进度条开始
             loadingBar.start()
-            loginBtnDisabled.value = true
+
+            //禁用按钮
+            disabledBtn(loginBtnDisabled,true);
+
             //密码MD5加密
             const encryptedPassword = md5(loginFormValue.value.password)
             //发送登录请求
@@ -130,10 +134,8 @@
                 //发送请求失败
                 loadingBar.error()//加载条异常结束
                 message.error("发送登录请求失败")
-                //解除禁用的登陆按钮
-                setTimeout(()=>{
-                    loginBtnDisabled.value = false
-                },1500)
+
+                disabledBtn(loginBtnDisabled,false,true,2.5);//解除禁用按钮
 
                 throw "发送登录请求失败"
             })
@@ -164,9 +166,7 @@
             }
 
             //解除禁用的登陆按钮
-            setTimeout(()=>{
-                loginBtnDisabled.value = false
-            },1500)
+            disabledBtn(loginBtnDisabled,false,true,2.5);
 
           } 
         });
