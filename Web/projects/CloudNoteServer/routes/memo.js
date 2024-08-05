@@ -56,7 +56,7 @@ router.get("/getUserMemoList",async (req,res)=>{
         {
             condition['finished'] = filter;
         }
-        if(searchText != undefined && searchText != null && searchText.length != 0)
+        if(!!searchText)
         {
             condition[Op.or]=[
                 {
