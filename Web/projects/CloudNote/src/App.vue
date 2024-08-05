@@ -14,28 +14,25 @@
 
 <script setup>
     import RootView from '@/views/RootView.vue'
-    import { onMounted, watch } from "vue"
+    import { onMounted, watch, ref,provide} from "vue"
     import {useThemeStore} from './stores/themeStore'
     import useUserStore from './stores/userStore'
     import {storeToRefs} from 'pinia'
-    
 
     const themeStore = useThemeStore()
     const {theme} = storeToRefs(themeStore)
-    const {changeTheme} = themeStore
+    //const {changeTheme} = themeStore
 
     //用户的共享资源
     const userStore = useUserStore();
-    const {token} = storeToRefs(userStore)
 
     //如果用户的登陆状态发生改变，重新加载页面
-    watch(()=>token.value,newData =>{
-        if(newData !== null)
-        {
-            location.reload();
-        }
-    })
+    //是否需要重新加载页面
+    const needReload = ref(false)
 
+    //为后代组件提供数据
+    provide('needReload',needReload);
+    
     //监听主题是否发生改变
     onMounted(()=>{
         window.addEventListener('storage',event=>{
@@ -45,6 +42,24 @@
                 themeStore.$hydrate();
                 // const newTheme = JSON.parse(event.newValue)
                 // changeTheme(newTheme.isDarkTheme)
+            }
+            else if(event.key === 'user')
+            {
+                //仅当token发生变化才重新加载页面
+                const newToken = JSON.parse(event.newValue).token;
+                const oldToken = JSON.parse(event.oldValue).token;
+                if(newToken === oldToken)
+                {
+                    //将本地存储的用户数据恢复到store中
+                    userStore.$hydrate();
+                }
+                else
+                {
+                    needReload.value = true;
+                    setTimeout(() => {
+                        needReload.value = false;
+                    }, 1000);
+                }
             }
         })
     })

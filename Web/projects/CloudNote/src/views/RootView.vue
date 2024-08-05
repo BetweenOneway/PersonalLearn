@@ -21,7 +21,7 @@
     import MainTopToolbar from "./components/toolbar/MainTopTooolbar.vue"
     import MainLeftToolBar from "./components/toolbar/MainLeftToolBar.vue"
     import LoginModal from "./components/login/LoginModal.vue"
-    import { onMounted, watch } from "vue"
+    import { ref,watch,inject } from "vue"
     import {useDialog} from 'naive-ui'
 
     //对话框对象
@@ -29,6 +29,18 @@
 
     const loginStatusDialog = ref(null);
 
+    //接收祖先组件提供的数据
+    const needReload = inject('needReload');
+
+    watch(
+        ()=>needReload.value,
+        newData=>{
+            if(newData)
+            {
+                changeLoginStatusDialog();
+            }
+        }
+    );
     //登录状态发生改变的对话框
     const changeLoginStatusDialog = ()=>{
         if(loginStatusDialog.value === null)
@@ -53,14 +65,4 @@
             });
         }
     };
-
-    //监听用户登录状态是否发生改变
-    onMounted(()=>{
-        window.addEventListener('storage',event=>{
-            if(event.key ==="user")
-            {
-                changeLoginStatusDialog();
-            }
-        })
-    })
 </script>
