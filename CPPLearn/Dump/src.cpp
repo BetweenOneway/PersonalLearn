@@ -2,17 +2,6 @@
 #include "DbgHelp.h"
 #include <tchar.h>
 
-#include <iostream>
-using namespace std;
-
-#include "../ClassDll/ClassDll.h"
-
-#ifdef _DEBUG
-#pragma comment(lib,"../Debug/ClassDll.lib")
-#else
-#pragma comment(lib,"../Release/ClassDll.lib")
-#endif
-
 int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
 {
     // 定义函数指针
@@ -41,7 +30,7 @@ int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
     }
     // 创建 dmp 文件件
     TCHAR szFileName[MAX_PATH] = { 0 };
-    const TCHAR* szVersion = _T("CoreDump");
+    const TCHAR* szVersion = _T("DumpDemo_v1.0");
     SYSTEMTIME stLocalTime;
     GetLocalTime(&stLocalTime);
     wsprintf(szFileName, L"%s-%04d%02d%02d-%02d%02d%02d.dmp",
@@ -81,8 +70,9 @@ int main()
 {
     // 加入崩溃dump文件功能
     SetUnhandledExceptionFilter(ExceptionFilter);
+    // 使程序崩溃产生 Dump 文件
+    int* p = NULL;
+    *p = 1;
 
-	CMath math;
-	cout << "sum="<<math.add(5, 4) << ",sub=" << math.sub(5, 4) << endl;
-	return 0;
+    return 0;
 }
