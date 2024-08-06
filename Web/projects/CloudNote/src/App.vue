@@ -16,7 +16,7 @@
     import RootView from '@/views/RootView.vue'
     import { onMounted, watch, ref,provide} from "vue"
     import {useThemeStore} from './stores/themeStore'
-    import useUserStore from './stores/userStore'
+    import {useUserStore} from './stores/userStore'
     import {storeToRefs} from 'pinia'
 
     const themeStore = useThemeStore()

@@ -453,7 +453,7 @@ router.get("/getMemoInfo",async (req,res)=>{
     try {
         const memo = await sqldb.Memo.findOne(
             {
-                attributes: ['title', 'top','tags','content'],
+                attributes: ['title', 'top','tags','content','u_id'],
                 where: {
                     id: memoId,
                     u_id:userInfo.id,

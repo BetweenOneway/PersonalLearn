@@ -139,8 +139,9 @@
 
                 throw "发送登录请求失败"
             })
+            
             //处理返回数据
-            console.log(responseData)
+            console.log("To Login ResponseData:",responseData)
             
             if(responseData.success)
             {

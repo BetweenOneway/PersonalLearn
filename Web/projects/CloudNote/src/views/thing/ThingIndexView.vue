@@ -93,6 +93,7 @@
         SubtitlesOffOutlined
     } from "@vicons/material"
     import { useThemeStore } from "../../stores/themeStore";
+    import {useUserStore} from '../../stores/userStore'
     import { getUserToken,loginInvalid } from "../../Utils/userLogin";
     import { noteBaseRequest } from "../../request/noteRequest"
     import {useMessage,useLoadingBar} from 'naive-ui'
@@ -103,6 +104,27 @@
 
     const themeStore = useThemeStore()
     const {isDarkTheme} = storeToRefs(themeStore)
+
+    const userStore = useUserStore();
+    const {token,id:user_id} = storeToRefs(userStore);
+    watch(
+        ()=>token.value,
+        newData=>{
+            //是否重新进行登录
+            if(newData !== null)
+            {
+                loadingBar.vaue = true;
+                //重新获取用户便签列表
+                getMemoList(true,false);
+                //判断编辑便签窗口是否需要关闭
+                if(editMemoModalRef.value.memoId != null && editMemoModalRef.value.userId !== user_id.value)
+                {
+                    //关闭编辑便签窗口
+                    editMemoModalRef.value.show = false;
+                }
+            }
+        }
+    );
 
     //消息对象
     const message = useMessage()
@@ -272,8 +294,6 @@
     //删除便签 
     //complete true彻底删除 false非彻底删除
     const deleteMemo = async (complete)=>{
-        //关闭提醒框
-        deleteRemind.value.show = false
         //判断用户登录状态
         const userToken = await getUserToken()
         //发送置顶/取消置顶便签请求

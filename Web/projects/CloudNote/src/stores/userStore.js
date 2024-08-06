@@ -20,7 +20,7 @@ export const useUserStore = defineStore(
         const time=ref('')
 
         const head_image = computed(()=>{
-            if(headPic.value === null)
+            if(headPic.value === null || headPic.value === undefined)
             {
                 return "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
             }
@@ -30,7 +30,7 @@ export const useUserStore = defineStore(
         })
 
         const userNickName = computed(()=>{
-            if(nickName.value === null)
+            if(nickName.value === null || nickName.value === undefined)
             {
                 return "暂未设置名称"
             }

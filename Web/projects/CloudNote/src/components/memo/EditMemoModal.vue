@@ -200,6 +200,10 @@
         }
     }
 
+    //该便签用户编号
+    const userId = ref(null);
+    const memoId = computed(()=>formValue.id);
+
     //保存按钮是否需要禁用
     const saveBtnDisabled = ref(false);
 
@@ -303,6 +307,8 @@
             ).catch(()=>{
                 //加载条异常结束
                 loadingBar.error()
+                //关闭编辑便签窗口
+                show.value = false;
                 //显示获取便签信息失败的通知
                 throw message.error('获取便签信息失败')
             }
@@ -313,6 +319,7 @@
         {
             loadingBar.finish()
             const memoInfo = responseData.data
+            userId.value = memoInfo.u_id;
             formValue.value.title = memoInfo.title
             formValue.value.top = !!memoInfo.top
             formValue.value.tags = memoInfo.tags.split(',')
@@ -322,6 +329,8 @@
         else
         {
             loadingBar.error()
+            //关闭编辑便签窗口
+            show.value = false;
             message.error(responseData.description)
             //登录失效处理
             if(responseData.status ==='SERVICE_008')
@@ -393,8 +402,9 @@
         formValue.value.tags=[] //标签
         formValue.value.content = [] //内容
     }
+    
     //将哪些函数导出
-    defineExpose({showEditModal})
+    defineExpose({showEditModal,show,userId,memoId})
 </script>
 
 <style scoped>
