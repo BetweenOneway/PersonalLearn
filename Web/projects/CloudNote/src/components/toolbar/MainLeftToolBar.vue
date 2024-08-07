@@ -93,7 +93,7 @@
             label:'笔记',
             icon:StickyNote2Outlined,
             icon_size:24,
-            to:''
+            to:'/note'
         },
         {
             label:'便签',

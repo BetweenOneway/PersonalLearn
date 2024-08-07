@@ -39,7 +39,7 @@ export default defineConfig({
         '/note-server':{
             target:'http://127.0.0.1:18081',
             changeOrigin:true,//允许跨域
-            rewrite:path=>path.replace(/^\/note/,'')
+            rewrite:path=>path.replace(/^\/note-server/,'')
         }
     }
   }
