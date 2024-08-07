@@ -34,8 +34,9 @@ export default defineConfig({
     }
   },
   server:{
+    port:18080,//端口号
     proxy:{
-        '/note':{
+        '/note-server':{
             target:'http://127.0.0.1:18081',
             changeOrigin:true,//允许跨域
             rewrite:path=>path.replace(/^\/note/,'')

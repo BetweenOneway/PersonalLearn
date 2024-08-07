@@ -19,7 +19,7 @@
         <n-popover v-for="menu in mainMenus" :key="menu.label" trigger="hover" placement="right" :show-arrow="false">
             <template #trigger>
                 <n-button style="width:34px;padding:0" 
-                :text="routerPath !== menu.to" 
+                :quaternary="routerPath !== menu.to" 
                 :type="routerPath === menu.to?'primary':'default'" 
                 :tertiary="routerPath === menu.to?'primary':false" 
                 @click="router.push(menu.to)">

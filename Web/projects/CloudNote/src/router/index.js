@@ -5,6 +5,10 @@ const routes = [
     {
         path:'/memo',
         component:ThingIndexView
+    },
+    {
+        path:'/note',
+        component:()=>import('@/views/note/IndexView.vue')
     }
 ]
 
