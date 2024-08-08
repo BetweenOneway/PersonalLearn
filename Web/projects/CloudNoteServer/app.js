@@ -12,6 +12,10 @@ const note=require("./routes/note");
 var sqldb = require('./sqldb');
 sqldb.sequelize.sync({force: false}).then(function() {
     console.log("Server successed to start");
+    let rawAttrs = sqldb.Note.rawAttributes;
+    console.log("note:",rawAttrs);
+    rawAttrs = sqldb.User.rawAttributes;
+    console.log("user:",rawAttrs);
 }).catch(function(err){
     console.log("Server failed to start due to error: %s", err);
 });

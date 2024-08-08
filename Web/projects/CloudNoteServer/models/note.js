@@ -25,10 +25,6 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.DATE
         },
         u_id:{
-            // references: {
-            //     model: User,
-            //     key: 'id'
-            // },
             type:DataTypes.INTEGER
         },
         top:{

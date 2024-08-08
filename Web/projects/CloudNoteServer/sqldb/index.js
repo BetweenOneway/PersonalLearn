@@ -21,10 +21,10 @@ db.Memo = memo(db.sequelize,Sequelize.DataTypes);
 db.Note = note(db.sequelize,Sequelize.DataTypes);
 db.NoteMemoLog = noteMemoLog(db.sequelize,Sequelize.DataTypes);
 
-db.Note.hasOne(db.User,
+db.User.hasOne(db.Note,
     {
-        foreignKey:db.User.id,
-        sourceKey:db.Note.u_id
+        foreignKey:'u_id',
+        sourceKey:'id'
     }
 );
 
