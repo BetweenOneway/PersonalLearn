@@ -18,9 +18,9 @@
 </template>
 
 <script setup>
-    import MainTopToolbar from "./components/toolbar/MainTopTooolbar.vue"
-    import MainLeftToolBar from "./components/toolbar/MainLeftToolBar.vue"
-    import LoginModal from "./components/login/LoginModal.vue"
+    import MainTopToolbar from "@/components/toolbar/MainTopTooolbar.vue"
+    import MainLeftToolBar from "@/components/toolbar/MainLeftToolBar.vue"
+    import LoginModal from "@/components/login/LoginModal.vue"
     import { ref,watch,inject } from "vue"
     import {useDialog} from 'naive-ui'
 

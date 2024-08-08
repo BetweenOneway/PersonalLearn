@@ -5,8 +5,8 @@
       <n-layout-sider
         bordered
         collapse-mode="width"
-        :collapsed-width="64"
-        :width="0"
+        :collapsed-width="0"
+        :width="340"
         :collapsed="collapsed"
         show-trigger
         @collapse="collapsed = true"
@@ -19,7 +19,7 @@
                 <n-space align="center" justify="space-between">
                     <h3 style="margin:0">笔记列表</h3>
                     <n-button circle type="primary">
-                        <n-icon :component="PlusRound" :size="22px"></n-icon>
+                        <n-icon :component="PlusRound" :size="22"></n-icon>
                     </n-button>
                 </n-space>
             </template>
@@ -37,7 +37,7 @@
 <script setup>
     import {ref} from 'vue'
     import {PlusRound} from'@vicons/material'
-    import {NoteCard} from '@/components/note/NoteCard.vue'
+    import NoteCard from '@/components/note/NoteCard.vue'
 
     //笔记列表容器是否被收缩
     const collapsed = ref(false)
@@ -50,6 +50,6 @@
 }
 
 .n-layout-sider.note-list .n-layout-toggle-button {
-    transition: right 1s;
+    transition: right 2s;
 }
 </style>

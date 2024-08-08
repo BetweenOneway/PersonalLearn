@@ -6,6 +6,7 @@ const cors=require("cors");
 const sequelizeTest = require("./routes/sequelizeTest")
 const user=require("./routes/user");
 const memo=require("./routes/memo");
+const note=require("./routes/note");
 
 //启动数据库
 var sqldb = require('./sqldb');
@@ -37,5 +38,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use("/user",user);
 //便签
 app.use("/memo",memo);
+//笔记
+app.use("/note",note);
 //测试用
 app.use("/sequelize",sequelizeTest)
