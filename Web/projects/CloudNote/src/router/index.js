@@ -8,7 +8,7 @@ const routes = [
     },
     {
         path:'/note',
-        component:()=>import('@/views/note/IndexView.vue')
+        component:()=>import('../views/note/IndexView.vue')
     }
 ]
 
