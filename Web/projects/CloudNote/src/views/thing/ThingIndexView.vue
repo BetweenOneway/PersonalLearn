@@ -69,7 +69,7 @@
                 <template #icon>
                     <n-icon :component="SubtitlesOffOutlined"></n-icon>
                 </template>
-                <template #exra>
+                <template #extra>
                     <n-button dashed @click="editMemoModalRef.showEditModal(null)">创建便签</n-button>
                 </template>
             </n-empty>
