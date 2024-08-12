@@ -1,7 +1,6 @@
 const express=require("express");
 const crypto = require("crypto")
 const redis = require('redis')
-const stringRandom = require("string-random");
 const { Op } = require("sequelize");
 
 //数据库
@@ -12,11 +11,9 @@ let validate = require("../utils/validate")
 
 var router=express.Router();
 
-//获取用户所有正常的笔记
+//获取用户笔记列表
 /**
  * userToken 用户编号
- * searchText 搜索关键词（标题含有 或者标签含有)
- * filter 过滤 null 默认 0 只查询未完成 1 只查询已完成
  */
 router.get("/getUserNoteList",async (req,res)=>{
     var output={
@@ -26,10 +23,8 @@ router.get("/getUserNoteList",async (req,res)=>{
         data:[]
     }
 
-    console.log("start getMemoList",req.query)
+    console.log("start getUserNoteList",req.query)
     var userToken = req.query.userToken
-    const searchText = req.query.searchText;
-    const filter = req.query.filter;
     let status = 1
     let userInfo = {}
 
@@ -48,55 +43,33 @@ router.get("/getUserNoteList",async (req,res)=>{
         userInfo = validateInfo.userInfo
         console.log("parsed userinfo")
         console.log(userInfo)
-        //组合查询条件
-        let condition = {};
-        condition['status'] = status;
-        condition['u_id'] = userInfo.id;
-        if(filter != null)
-        {
-            condition['finished'] = filter;
-        }
-        if(!!searchText)
-        {
-            condition[Op.or]=[
-                {
-                    tags: {
-                    [Op.like]: `%${searchText}%`
-                    }
-                },
-                {
-                    content: {
-                    [Op.like]: `%${searchText}%`
-                    }
-                }
-            ]
-        }
 
-        //置顶在前 未完成在前 时间越近的越在前
-        const users = await sqldb.Memo.findAll(
+        const notes = await sqldb.Note.findAll(
             {
-                attributes: ['id', 'title','top','tags','update_time','finished'],
-                where:condition,
+                attributes: ['id', 'title','body','top','update_time'],
+                where:{
+                    status: status,
+                    u_id:userInfo.id
+                },
                 order:[
-                    ['id', 'DESC'],
-                    ['finished', 'ASC'],
+                    ['top', 'DESC'],
                     ['update_time','DESC']
                 ]
             }
         );
-        output.success = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.success
-        output.status = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.status
-        output.description = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.description
-        output.data = users
+        output.success = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
+        output.data = notes
         res.send(output);
     } catch (error) {
         console.log(error)
-        output.success = statusCode.DB_STATUS.SELECT_FAIL.success
-        output.status = statusCode.DB_STATUS.SELECT_FAIL.status
-        output.description = statusCode.DB_STATUS.SELECT_FAIL.description
+        output.success = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
         res.send(output);
     }
-    console.log("End of get User's Memo List")
+    console.log("End of getUserNoteList")
     return;
 })
 
