@@ -10,7 +10,7 @@
         <template #description>
             <n-ellipsis line-clamp="2" :tooltip="false">
                 <n-text depth="3">
-                    {{desc}}
+                    {{htmlToText(desc)}}
                 </n-text>
             </n-ellipsis>
         </template>
@@ -26,6 +26,8 @@
 </template>
 
 <script setup>
+import {htmlToText} from"html-to-text"
+
 defineProps(
     {
         id:{type:Number,required:true},//编号
