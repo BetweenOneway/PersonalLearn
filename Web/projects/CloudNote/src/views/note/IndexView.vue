@@ -112,6 +112,7 @@
             gsap.set(el,{
                 position:'absolute',
                 boxShadow: '0 0 5px black',
+                width:'calc(100%-24px)',
                 zIndex:1,
                 top:top,
                 left:left,
@@ -124,13 +125,9 @@
     const leaveEvent = (el,done)=>{
         if(hiddenAnimation)
         {
-            let tl = gsap.timeline();//创建时间线动画
-            tl.to(el,{
-                scale:1.3,
-                duration:0.25
-            }).to(el,{
+            gsap.to(el,{
                 scale:0,
-                duration:0.25,
+                duration:0.5,
                 onComplete:done
             });
         }
