@@ -68,6 +68,7 @@
     :options="contextMenu.options"
     :show="contextMenu.show"
     :on-clickoutside="clickContextMenuOutSide"
+    @select="selectContextMenu"
     />
 </template>
 
@@ -265,6 +266,11 @@
     const clickContextMenuOutSide = ()=>{
         contextMenu.value.show = false;
     };
+
+    //点击了右键菜单某一项
+    const selectContextMenu = (key)=>{
+        contextMenu.value.show = false;
+    }
 </script>
 
 <style scoped>
