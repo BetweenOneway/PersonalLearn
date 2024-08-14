@@ -93,6 +93,12 @@
     <ClCompile Include="testCommonFunctions.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Algo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="testAlgo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MathUtil.h">
@@ -174,6 +180,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="testCommonFunctions.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Algo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="testAlgo.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

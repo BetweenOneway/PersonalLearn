@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Algo.cpp" />
     <ClCompile Include="BallConcave.cpp" />
     <ClCompile Include="Bezier.cpp" />
     <ClCompile Include="BSpine.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RotationMatrix.cpp" />
     <ClCompile Include="Spline.cpp" />
+    <ClCompile Include="testAlgo.cpp" />
     <ClCompile Include="testCommonFunctions.cpp" />
     <ClCompile Include="testLine.cpp" />
     <ClCompile Include="testPlane.cpp" />
@@ -171,6 +173,7 @@
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Algo.h" />
     <ClInclude Include="BallConcave.h" />
     <ClInclude Include="Bezier.h" />
     <ClInclude Include="BSpline.h" />
@@ -190,6 +193,7 @@
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RotationMatrix.h" />
     <ClInclude Include="Spline.h" />
+    <ClInclude Include="testAlgo.h" />
     <ClInclude Include="testCommonFunctions.h" />
     <ClInclude Include="testLine.h" />
     <ClInclude Include="testPlane.h" />

@@ -10,6 +10,7 @@ using namespace std;
 #include "ComputerGraphics.h"
 #include "CalcBoundary.h"
 #include "testCommonFunctions.h"
+#include "testAlgo.h"
 
 void Bezier()
 {
@@ -83,9 +84,13 @@ void testDot()
     std::cout<<dir1.AbsDot(dir3)<<std::endl;
 }
 
+void testAlgo()
+{
+    TEST_ALGO::testAlgo();
+}
 int main()
 {
-    testDot();
+    //testDot();
     //Vector();
     //Quaternion();
     //Ray();
@@ -94,6 +99,7 @@ int main()
     //Learn();
     //CalcBoundary();
     //CommonFunctions();
+    testAlgo();
     system("pause");
     return 0;
 }
