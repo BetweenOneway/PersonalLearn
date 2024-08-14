@@ -38,7 +38,10 @@
                 @before-leave="beforeLeave" @leave="leaveEvent"
                 move-class="move-transition">
                     <template v-if="!loading && noteList.length > 0">
-                        <n-list-item v-for="(note,index) in noteList" :key="note.id" :data-index="index">
+                        <n-list-item v-for="(note,index) in noteList" :key="note.id" 
+                        :data-index="index" 
+                        @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
+                        :class="{'contexting':(contextMenu.id === note.id && contextMenu.show)}">
                             <NoteCard :id="note.id" :title="note.title" :desc="note.body" :top="!!note.top" :time="note.update_time"></NoteCard>
                         </n-list-item>
                     </template>
@@ -56,11 +59,24 @@
         </n-scrollbar>
       </n-layout-sider>
     </n-layout>
+    <!---->
+    <n-dropdown
+    placement="bottom-start"
+    trigger="manual"
+    :x="contextMenu.x"
+    :y="contextMenu.y"
+    :options="contextMenu.options"
+    :show="contextMenu.show"
+    :on-clickoutside="clickContextMenuOutSide"
+    />
 </template>
 
 <script setup>
-    import {ref} from 'vue'
-    import {PlusRound,SubtitlesOffOutlined} from'@vicons/material'
+    import {computed, ref} from 'vue'
+    import {PlusRound,SubtitlesOffOutlined,
+        DriveFileRenameOutlineOutlined,
+        DeleteOutlineRound,ArrowCircleDownRound,
+        ArrowCircleUpRound} from'@vicons/material'
     import NoteCard from '@/components/note/NoteCard.vue'
     import { getUserToken,loginInvalid } from "../../Utils/userLogin";
     import { noteBaseRequest } from "../../request/noteRequest"
@@ -70,6 +86,11 @@
     //消息对象
     const message = useMessage()
     const loadingBar = useLoadingBar()
+
+    //读图标
+    function renderIcon(icon){
+        return ()=>h(NIcon,null,{default:()=>h(icon)})
+    }
 
     //是否处于加载状态
     const loading = ref(true)
@@ -190,6 +211,60 @@
     }
 
     getNoteList(true,false);
+
+    //右键菜单对象
+    const contextMenu = ref({
+        id:null,//笔记编号
+        title:'',//笔记标题
+        top:false,//笔记是否置顶
+        x:0,//X轴坐标
+        y:0,//Y轴坐标
+        show:false,//是否显示右键菜单
+        options:computed(()=>{
+            return [
+            {
+                label:"重命名",
+                key:"rename",
+                icon:renderIcon(DriveFileRenameOutlineOutlined)
+            },
+            {
+                label:"删除",
+                key:"delete",
+                icon:renderIcon(DeleteOutlineRound)
+            },
+            {
+                label:"取消置顶",
+                key:"cancel-top",
+                icon:renderIcon(ArrowCircleDownRound),
+                show:contextMenu.value.top
+            },
+            {
+                label:"置顶",
+                key:"top",
+                icon:renderIcon(ArrowCircleUpRound),
+                show:!contextMenu.value.top
+            },
+        ]
+        })
+    });
+
+    //
+    const showContentMenu = (e,id,top,title)=>{
+        e.preventDefault();
+        contextMenu.value.show = false;
+        nextTick().then(() => {
+            contextMenu.value.show = true;
+            contextMenu.value.x = e.clientX;
+            contextMenu.value.y = e.clientY;
+            contextMenu.value.id = id;
+            contextMenu.value.top = top,
+            contextMenu.value.title = title
+        });
+    };
+
+    const clickContextMenuOutSide = ()=>{
+        contextMenu.value.show = false;
+    };
 </script>
 
 <style scoped>
@@ -204,5 +279,9 @@
 
 .n-list .n-list-item.move-transition{
     transition:all .5s;
+}
+
+.n-list .n-list-item.contexting{
+    box-shadow: 0 0 5px #18A058;
 }
 </style>
