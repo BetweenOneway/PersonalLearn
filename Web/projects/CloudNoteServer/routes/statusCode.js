@@ -186,7 +186,17 @@ SERVICE_STATUS={
         success:false,
         status:'SERVICE_021',
         description:'获取用户笔记失败'
-    }
+    },
+    NOTE_SET_TOP_SUCCESS:{
+        success:true,
+        status:'SERVICE_022',
+        description:'便签置顶或取消置顶成功'
+    },
+    NOTE_SET_TOP_FAIL:{
+        success:false,
+        status:'SERVICE_023',
+        description:'便签置顶或取消置顶失败'
+    },
 }
 
 EVENT_LIST = {
@@ -221,7 +231,15 @@ EVENT_LIST = {
     UPDATE_MEMO:{
         code:'7',
         desc:'更新便签'
-    }
+    },
+    NOTE_SET_TOP:{
+        code:'8',
+        desc:'笔记置顶'
+    },
+    NOTE_UNSET_TOP:{
+        code:'9',
+        desc:'笔记取消置顶'
+    },
 }
 
 module.exports = {REDIS_STATUS,DB_STATUS,SERVICE_STATUS,EVENT_LIST}
