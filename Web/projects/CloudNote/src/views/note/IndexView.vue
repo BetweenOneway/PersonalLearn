@@ -59,7 +59,13 @@
         </n-scrollbar>
       </n-layout-sider>
     </n-layout>
-    <!---->
+    <!--删除提醒框-->
+    <DeleteRemindDialog 
+    :show="displayDeleteRemind"
+    :title="contextMenu.title"
+    @delete="deleteNote"
+    @cancel="displayDeleteRemind=false"></DeleteRemindDialog>
+    <!--右键菜单-->
     <n-dropdown
     placement="bottom-start"
     trigger="manual"
@@ -81,6 +87,7 @@
     import NoteCard from '@/components/note/NoteCard.vue'
     import { getUserToken,loginInvalid } from "../../Utils/userLogin";
     import { noteBaseRequest } from "../../request/noteRequest"
+    import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue"
     import {useMessage,useLoadingBar} from 'naive-ui'
     import gsap from "gsap"
 
@@ -280,11 +287,11 @@
         }
         else if(key=="rename")
         {
-
+            //重命名
         }
         else if(key == "delete")
         {
-
+            displayDeleteRemind.value = true;
         }
     }
 
@@ -319,6 +326,59 @@
             message.success(responseData.description);
             //重新获取笔记列表
             getNoteList(false,false);
+        }
+        else
+        {
+            loadingBar.error()
+            message.error(responseData.description)
+            //登录失效处理
+            if(responseData.status ==='SERVICE_008')
+            {
+                loginInvalid(true)
+            }
+        }
+    }
+
+    //删除提醒框的对象
+    const displayDeleteRemind = ref(false);
+
+    /**
+     * 删除笔记
+     * @param {Boolean} complete true彻底删除 false非彻底删除
+     */
+    const deleteNote = async (complete)=>{
+        //关闭提醒框
+        displayDeleteRemind.value = false;
+
+        //判断用户登录状态
+        const userToken = await getUserToken()
+        //发送置顶/取消置顶便签请求
+        //头部加载进度条开始
+        loadingBar.start()
+
+        const {data:responseData} = await noteBaseRequest.delete(
+                "/note/deleteNote",
+                {
+                    params:{
+                        isCompleteDel:complete,
+                        userToken:userToken,
+                        noteId:contextMenu.value.id
+                    }
+                }
+            ).catch(()=>{
+                //加载条异常结束
+                loadingBar.error()
+                //显示删除失败的通知
+                throw message.error(complete?"彻底删除笔记失败":"删除笔记失败")
+            }
+        )
+
+        if(responseData.success)
+        {
+            loadingBar.finish()
+            message.success(responseData.description)
+            //重新获取便签列表 需要有删除动画
+            getNoteList(false,true)
         }
         else
         {

@@ -79,7 +79,7 @@
     <!--删除提醒框-->
     <DeleteRemindDialog 
     :show="deleteRemind.show"
-    :description="deleteRemind.desc"
+    :title="deleteRemind.title"
     @delete="deleteMemo"
     @cancel="deleteRemind.show=false"></DeleteRemindDialog>
 
@@ -281,13 +281,13 @@
     const deleteRemind = ref({
         show:false,//是否显示
         id:null,//便签编号
-        desc:""//删除描述
+        title:""//删除单个文件名称
     })
 
     //显示删除便签提醒框
     const showDeleteRemindDialog = ({id,title})=>{
         deleteRemind.value.id = id //将要删除的便签编号
-        deleteRemind.value.desc = "删除《"+title+"》,可在回收站恢复。彻底删除无法恢复！" //将要删除的便签标题
+        deleteRemind.value.title = title //将要删除的便签标题
         deleteRemind.value.show = true
     }
 
@@ -312,7 +312,7 @@
             ).catch(()=>{
                 //加载条异常结束
                 loadingBar.error()
-                //显示登陆失败的通知
+                //显示删除失败的通知
                 throw message.error(complete?"彻底删除便签失败":"删除便签失败")
             }
         )

@@ -18,13 +18,34 @@
     } from "@vicons/material"
 
     //自定义属性
-    defineProps({
+    const propsData = defineProps({
         show:{type:Boolean,deafult:false},//是否显示提醒框
-        description:{type:String,required:true},//提醒描述
+        title:{type:String},//删除单个文件的标题
+        size:{type:Number,default:1},//删除文件个数
         deleteBtn:{type:Boolean,default:true},//删除按钮是否显示
         completeDeletBtn:{type:Boolean,default:true}//彻底删除按钮是否显示
     })
 
     //自定义事件 彻底删除 删除 取消
     const emits = defineEmits(['delete','cancel'])
+
+    const description = computed(()=>{
+        if(propsData.size == 1)
+        {
+            if(propsData.completeDeletBtn)
+            {
+                return '确认彻底删除('+propsData.title + ')？无法恢复！';
+                
+            }
+            else
+            {
+                return '确认删除('+propsData.title + ')？可在回收站中恢复。';
+            }
+            
+        }
+        else
+        {
+            return '批量删除多个文件？';
+        }
+    })
 </script>
