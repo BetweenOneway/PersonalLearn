@@ -144,7 +144,7 @@
                 loadingBar.error()
                 /解除禁用便签置顶按钮
                 disabledBtn(topBtnDisabled,false,true,1);
-                //显示登陆失败的通知
+                //显示请求失败的通知
                 throw message.error(isTop?"置顶便签失败":"取消置顶便签失败")
             }
         )

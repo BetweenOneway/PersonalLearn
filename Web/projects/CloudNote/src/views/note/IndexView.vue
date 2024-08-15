@@ -270,6 +270,66 @@
     //点击了右键菜单某一项
     const selectContextMenu = (key)=>{
         contextMenu.value.show = false;
+        if(key =="cancel-top")
+        {
+            SetNoteTop(false);
+        }
+        else if(key == "top")
+        {
+            SetNoteTop(true);
+        }
+        else if(key=="rename")
+        {
+
+        }
+        else if(key == "delete")
+        {
+
+        }
+    }
+
+    const SetNoteTop = async (isTop)=>{
+        //判断用户登录状态
+        const userToken = await getUserToken()
+        //发送置顶/取消置顶笔记请求
+        //头部加载进度条开始
+        loadingBar.start()
+
+        const {data:responseData} = await noteBaseRequest.get(
+                "/note/setNoteTop",
+                {
+                    params:{
+                        userToken:userToken,
+                        targetTop:isTop?1:0,
+                        noteId:contextMenu.value.id
+                    }
+                }
+            ).catch(()=>{
+                //加载条异常结束
+                loadingBar.error()
+                //显示请求失败的通知
+                throw message.error(isTop?"置顶笔记失败":"取消置顶笔记失败")
+            }
+        )
+
+        if(responseData.success)
+        {
+            loadingBar.finish()
+            console.log(responseData)
+            message.success(responseData.description);
+            //重新获取笔记列表
+            getNoteList(false,false);
+        }
+        else
+        {
+            loadingBar.error()
+            message.error(responseData.description)
+            //登录失效处理
+            if(responseData.status ==='SERVICE_008')
+            {
+                loginInvalid(true)
+            }
+        }
     }
 </script>
 
