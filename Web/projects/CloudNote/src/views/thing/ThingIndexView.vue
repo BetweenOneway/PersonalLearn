@@ -296,7 +296,7 @@
     const deleteMemo = async (complete)=>{
         //判断用户登录状态
         const userToken = await getUserToken()
-        //发送置顶/取消置顶便签请求
+
         //头部加载进度条开始
         loadingBar.start()
 
