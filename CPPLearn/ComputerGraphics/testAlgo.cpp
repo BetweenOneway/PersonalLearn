@@ -5,7 +5,12 @@ using namespace std;
 namespace TEST_ALGO {
     void testAlgo()
     {
-        Ray ray({ 1.0f,1.0f,-1.0f }, { 0.0f,0.0f,1.0f });
+        //不相交
+        //Ray ray({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,1.0f });
+        //Vector3 point0(1.0f, 2.0f, 0.0f);
+        //Vector3 point1(0.0f, 0.0f, 0.0f);
+        //Vector3 point2(2.0f, 0.0f, 0.0f);
+        Ray ray({ 0.0f,0.0f,0.0f }, { 2.0f,2.0f,1.0f });
         Vector3 point0(1.0f, 2.0f, 0.0f);
         Vector3 point1(0.0f, 0.0f, 0.0f);
         Vector3 point2(2.0f, 0.0f, 0.0f);
