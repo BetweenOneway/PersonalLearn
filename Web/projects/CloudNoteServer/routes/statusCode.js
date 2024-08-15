@@ -197,6 +197,16 @@ SERVICE_STATUS={
         status:'SERVICE_023',
         description:'便签置顶或取消置顶失败'
     },
+    DEL_NOTE_FAIL:{
+        success:false,
+        status:'SERVICE_024',
+        description:'删除或彻底删除笔记失败'
+    },
+    DEL_NOTE_SUCCESS:{
+        success:true,
+        status:'SERVICE_025',
+        description:'删除或彻底删除笔记成功'
+    }
 }
 
 EVENT_LIST = {
@@ -240,6 +250,14 @@ EVENT_LIST = {
         code:'9',
         desc:'笔记取消置顶'
     },
+    NOTE_DEL:{
+        code:'4',
+        desc:'删除笔记'
+    },
+    NOTE_COMPEL_DEL:{
+        code:'5',
+        desc:'彻底删除笔记'
+    }
 }
 
 module.exports = {REDIS_STATUS,DB_STATUS,SERVICE_STATUS,EVENT_LIST}

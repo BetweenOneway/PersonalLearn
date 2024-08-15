@@ -189,15 +189,15 @@ router.delete("/deleteNote",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start del memo,req.query:",req.query);
+    console.log("start del note,req.query:",req.query);
 
     //目标状态
     let isCompleteDel = req.query.isCompleteDel.toLowerCase() === 'true'
-    let memoId = req.query.memoId
+    let noteId = req.query.noteId
     let userToken = req.query.userToken
     if(0 == userToken.length)
     {
-        console.log("del memo, userToken empty")
+        console.log("del note, userToken empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
         output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
         output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
@@ -222,14 +222,14 @@ router.delete("/deleteNote",async (req,res)=>{
         let curTime = new Date().toLocaleString()
         let targetStatus = isCompleteDel? -1:0
 
-        const updateNum = await sqldb.Memo.update(
+        const updateNum = await sqldb.Note.update(
             {
                 status:targetStatus,
                 update_time:curTime
             },
             {
                 where:{
-                    id:memoId,
+                    id:noteId,
                     u_id:userInfo.id,
                     status:{
                         [Op.ne]:targetStatus
@@ -240,7 +240,7 @@ router.delete("/deleteNote",async (req,res)=>{
         );
         if(updateNum>0)
         {
-            let event = isCompleteDel? statusCode.EVENT_LIST.MEMO_COMPEL_DEL : statusCode.EVENT_LIST.MEMO_DEL;
+            let event = isCompleteDel? statusCode.EVENT_LIST.NOTE_COMPEL_DEL : statusCode.EVENT_LIST.NOTE_DEL;
             const users = await sqldb.NoteMemoLog.create(
                 {
                     time:curTime,
@@ -255,29 +255,29 @@ router.delete("/deleteNote",async (req,res)=>{
             );
 
             t.commit();
-            output.success = statusCode.SERVICE_STATUS.DEL_MEMO_SUCCESS.success
-            output.status = statusCode.SERVICE_STATUS.DEL_MEMO_SUCCESS.status
-            output.description = statusCode.SERVICE_STATUS.DEL_MEMO_SUCCESS.description
+            output.success = statusCode.SERVICE_STATUS.DEL_NOTE_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.DEL_NOTE_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.DEL_NOTE_SUCCESS.description
             res.send(output);
         }
         else{
-            console.log("Delete memo:updateNum=",updateNum);
+            console.log("Delete note:updateNum=",updateNum);
             t.rollback();
-            output.success = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.success
-            output.status = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.status
-            output.description = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.description
+            output.success = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.success
+            output.status = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.status
+            output.description = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.description
             res.send(output);
         }
     } catch (error) {
         console.log(error)
 
         t.rollback();
-        output.success = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.success
-        output.status = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.status
-        output.description = statusCode.SERVICE_STATUS.DEL_MEMO_FAIL.description
+        output.success = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.description
         res.send(output);
     }
-    console.log("End of delete memo")
+    console.log("End of delete note")
     return
 })
 
