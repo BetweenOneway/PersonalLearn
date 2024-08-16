@@ -283,14 +283,9 @@ router.delete("/deleteNote",async (req,res)=>{
 
 //新增笔记
 /**
- * userToken 用户编号
- * title 标题
- * tags 标签
- * content 内容
- * finished 是否已完成
- * top是否置顶
+ * userToken 用户信息
  */
-router.put("/addNote",async (req,res)=>{
+router.put("/createNote",async (req,res)=>{
     console.log(req.body);
 
     let output={
@@ -300,15 +295,10 @@ router.put("/addNote",async (req,res)=>{
     }
     let inputInfo = {}
     inputInfo.userToken = req.body.userToken
-    inputInfo.title = req.body.title
-    inputInfo.tags = req.body.tags
-    inputInfo.content = req.body.content
-    inputInfo.finished = req.body.finished
-    inputInfo.top = req.body.top
 
-    if(inputInfo.userToken == undefined || 0 == inputInfo.userToken.length)
+    if(!inputInfo.userToken)
     {
-        console.log("Add memo, userToken empty")
+        console.log("Add note, userToken empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
         output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
         output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
@@ -334,31 +324,26 @@ router.put("/addNote",async (req,res)=>{
         let userInfo = validateInfo.userInfo;
         let curTime = new Date().toLocaleString()
 
-        const newAddMemo = await sqldb.Memo.create(
+        const newAddNote = await sqldb.Note.create(
             {
-                title:inputInfo.title,
-                tags:inputInfo.tags,
-                content:inputInfo.content,
                 u_id:userInfo.id,
-                finished:inputInfo.finished,
                 time:curTime,
-                top:inputInfo.top,
                 status:1,
-                type:2
+                type:1
             },
             {
                 transaction:t
             }
         );
 
-        let event = statusCode.EVENT_LIST.ADD_MEMO;
+        let event = statusCode.EVENT_LIST.ADD_NOTE;
         const addLog = await sqldb.NoteMemoLog.create(
             {
                 time:curTime,
                 event:event.code,
                 desc:event.desc,
                 u_id:userInfo.id,
-                t_id:newAddMemo.id
+                t_id:newAddNote.id
             },
             {
                 transaction:t
@@ -366,21 +351,21 @@ router.put("/addNote",async (req,res)=>{
         );
 
         t.commit();
-        console.log("add memo success,commit database success")
-        output.success = statusCode.SERVICE_STATUS.ADD_MEMO_SUCCESS.success
-        output.status = statusCode.SERVICE_STATUS.ADD_MEMO_SUCCESS.status
-        output.description = statusCode.SERVICE_STATUS.ADD_MEMO_SUCCESS.description
+        console.log("add note success,commit database success")
+        output.success = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.description
         res.send(output);
     } catch (error) {
         console.log(error)
         t.rollback();
-        output.success = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.success
-        output.status = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.status
-        output.description = statusCode.SERVICE_STATUS.ADD_MEMO_FAIL.description
+        output.success = statusCode.SERVICE_STATUS.ADD_NOTE_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.ADD_NOTE_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.ADD_NOTE_FAIL.description
         res.send(output);
     }
 
-    console.log("End of add memo")
+    console.log("End of add note")
     return
 })
 

@@ -206,6 +206,16 @@ SERVICE_STATUS={
         success:true,
         status:'SERVICE_025',
         description:'删除或彻底删除笔记成功'
+    },
+    ADD_NOTE_SUCCESS:{
+        success:true,
+        status:'SERVICE_026',
+        description:'新增笔记成功'
+    },
+    ADD_NOTE_FAIL:{
+        success:false,
+        status:'SERVICE_027',
+        description:'新增笔记失败'
     }
 }
 
@@ -251,12 +261,16 @@ EVENT_LIST = {
         desc:'笔记取消置顶'
     },
     NOTE_DEL:{
-        code:'4',
+        code:'10',
         desc:'删除笔记'
     },
     NOTE_COMPEL_DEL:{
-        code:'5',
+        code:'11',
         desc:'彻底删除笔记'
+    },
+    ADD_NOTE:{
+        code:'12',
+        desc:'新增笔记'
     }
 }
 

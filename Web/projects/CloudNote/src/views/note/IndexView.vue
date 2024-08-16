@@ -15,7 +15,8 @@
                 <template #action>
                     <n-space align="center" justify="space-between">
                         <h3 style="margin:0">笔记列表</h3>
-                        <n-button circle type="primary">
+                        <!--创建笔记按钮-->
+                        <n-button circle type="primary" @click="createNote">
                             <n-icon :component="PlusRound" :size="22"></n-icon>
                         </n-button>
                     </n-space>
@@ -42,7 +43,7 @@
                         :data-index="index" 
                         @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
                         :class="{'contexting':(contextMenu.id === note.id && contextMenu.show)}">
-                            <NoteCard :id="note.id" :title="note.title" :desc="note.body" :top="!!note.top" :time="note.update_time"></NoteCard>
+                            <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.body" :top="!!note.top" :time="note.update_time"></NoteCard>
                         </n-list-item>
                     </template>
                 </TransitionGroup>
@@ -266,7 +267,7 @@
             contextMenu.value.y = e.clientY;
             contextMenu.value.id = id;
             contextMenu.value.top = top,
-            contextMenu.value.title = title
+            contextMenu.value.title = title??noteContent.defaultTitle
         });
     };
 
@@ -379,6 +380,55 @@
             message.success(responseData.description)
             //重新获取便签列表 需要有删除动画
             getNoteList(false,true)
+        }
+        else
+        {
+            loadingBar.error()
+            message.error(responseData.description)
+            //登录失效处理
+            if(responseData.status ==='SERVICE_008')
+            {
+                loginInvalid(true)
+            }
+        }
+    }
+
+    let noteContent = {
+        defaultTitle:'暂未设置标题',
+        defaultContent:'暂未设置内容'
+    }
+
+    /**
+     * 创建笔记
+     */
+    const createNote = async ()=>{
+        //判断用户登录状态
+        const userToken = await getUserToken()
+
+        //头部加载进度条开始
+        loadingBar.start()
+
+        const {data:responseData} = await noteBaseRequest.put(
+                "/note/createNote",
+                {
+                    params:{
+                        userToken:userToken
+                    }
+                }
+            ).catch(()=>{
+                //加载条异常结束
+                loadingBar.error()
+                //显示删除失败的通知
+                throw message.error("新建笔记失败")
+            }
+        )
+
+        if(responseData.success)
+        {
+            loadingBar.finish()
+            message.success(responseData.description)
+            //重新获取便签列表 新增笔记不需要显示的延迟动画
+            getNoteList(false,false)
         }
         else
         {

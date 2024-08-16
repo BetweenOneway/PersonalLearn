@@ -32,7 +32,7 @@ defineProps(
     {
         id:{type:Number,required:true},//编号
         title:{type:String,required:true},//标题
-        desc:{type:String,required:true},//简介
+        desc:{type:String,default:()=>'暂无内容'},//简介
         top:{type:Boolean,required:false},//是否置顶
         time:{type:String,required:true}//修改时间
     }
