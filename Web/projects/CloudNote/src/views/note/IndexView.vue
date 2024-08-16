@@ -11,7 +11,7 @@
         >
             <n-scrollbar>
                 <!--标题区 新增笔记按钮-->
-                <n-card :bordered="false" style="position:sticky;top:0;z-index:1">
+                <n-card :bordered="false" style="position:sticky;top:0;z-index:1;width:calc(100%-1px)">
                     <template #action>
                         <n-space align="center" justify="space-between">
                             <h3 style="margin:0">笔记列表</h3>
@@ -63,7 +63,7 @@
             </n-scrollbar>
         </n-layout-sider>
         <!--笔记编辑容器-->
-        <n-layout-content>
+        <n-layout-content embeded content-style="padding:20px">
             <!--子路由-->
             <router-view/>
         </n-layout-content>

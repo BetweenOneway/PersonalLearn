@@ -1,5 +1,10 @@
 <template>
-
+    <n-card :bordered="false" size="small">
+        <n-space justify-content="space-between" align="center">
+            <n-text depth="3">保存并发布于:2024-08-16</n-text>
+            <n-button>分享</n-button>
+        </n-space>
+    </n-card>
 </template>
 
 <script setup>
