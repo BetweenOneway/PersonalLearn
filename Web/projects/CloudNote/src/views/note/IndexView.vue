@@ -39,10 +39,13 @@
                     @before-leave="beforeLeave" @leave="leaveEvent"
                     move-class="move-transition">
                         <template v-if="!loading && noteList.length > 0">
-                            <n-list-item v-for="(note,index) in noteList" :key="note.id" 
-                            :data-index="index" 
-                            @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
-                            :class="{'contexting':(contextMenu.id === note.id && contextMenu.show)}">
+                            <n-list-item 
+                                v-for="(note,index) in noteList" :key="note.id" 
+                                :data-index="index" 
+                                @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
+                                :class="{'contexting':(contextMenu.id === note.id && contextMenu.show)}"
+                                @click="goEditNoteView(note.id)"
+                            >
                                 <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.body" :top="!!note.top" :time="note.update_time"></NoteCard>
                             </n-list-item>
                         </template>
@@ -59,6 +62,11 @@
                 </n-empty>
             </n-scrollbar>
         </n-layout-sider>
+        <!--笔记编辑容器-->
+        <n-layout-content>
+            <!--子路由-->
+            <router-view/>
+        </n-layout-content>
     </n-layout>
     <!--删除提醒框-->
     <DeleteRemindDialog 
@@ -91,6 +99,10 @@
     import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue"
     import {useMessage,useLoadingBar} from 'naive-ui'
     import gsap from "gsap"
+    import {useRouter} from 'vue-router'
+
+    //路由对象
+    const router = useRouter()
 
     //消息对象
     const message = useMessage()
@@ -398,6 +410,20 @@
         defaultContent:'暂未设置内容'
     }
 
+    //前往编辑笔记的视图
+    /**
+     * @param {Number} id 笔记编号
+     */
+    const goEditNoteView = (id)=>{
+        if(id)
+        {
+            router.push('/note/edit/'+id);
+        }
+        else
+        {
+            message.error("前往笔记编辑页失败");
+        }
+    }
     /**
      * 创建笔记
      */
@@ -425,10 +451,12 @@
 
         if(responseData.success)
         {
-            loadingBar.finish()
-            message.success(responseData.description)
+            loadingBar.finish();
+            message.success(responseData.description);
+            //跳转编辑笔记路由
+            goEditNoteView(responseData.data.noteId);
             //重新获取便签列表 新增笔记不需要显示的延迟动画
-            getNoteList(false,false)
+            getNoteList(false,false);
         }
         else
         {

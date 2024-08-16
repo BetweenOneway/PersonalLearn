@@ -291,7 +291,8 @@ router.put("/createNote",async (req,res)=>{
     let output={
         success:false,
         status:"",
-        description:""
+        description:"",
+        data:{}
     }
     let inputInfo = {}
     inputInfo.userToken = req.body.userToken
@@ -355,6 +356,7 @@ router.put("/createNote",async (req,res)=>{
         output.success = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.success
         output.status = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.description
+        output.data.noteId = newAddNote.id
         res.send(output);
     } catch (error) {
         console.log(error)
@@ -371,7 +373,7 @@ router.put("/createNote",async (req,res)=>{
 
 //获取笔记信息
 /**
- * memoId 便签编号
+ * noteId 笔记编号
  * userToken 用户
  */
 router.get("/getNoteInfo",async (req,res)=>{
@@ -381,14 +383,14 @@ router.get("/getNoteInfo",async (req,res)=>{
         description:'',
         data:{}
     }
-    console.log("start Get Memeo Info:",req.query);
+    console.log("start Get Note detail Info:",req.query);
     
     //目标状态
-    let memoId = req.query.memoId
+    let noteId = req.query.noteId
     let userToken = req.query.userToken
-    if(0 == userToken.length)
+    if(!userToken.length || !noteId)
     {
-        console.log("Get Memo Info, userToken empty")
+        console.log("Get Note Info, userToken or noteId empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
         output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
         output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
@@ -410,20 +412,29 @@ router.get("/getNoteInfo",async (req,res)=>{
     let userInfo = validateInfo.userInfo;
 
     try {
-        const memo = await sqldb.Memo.findOne(
+        const noteInfo = await sqldb.Note.findOne(
             {
-                attributes: ['title', 'top','tags','content','u_id'],
+                attributes: ['update_time', 'content','title'],
                 where: {
-                    id: memoId,
+                    id: noteId,
                     u_id:userInfo.id,
                     status:1
                 }
             }
         );
-        output.success = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.success
-        output.status = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.status
-        output.description = statusCode.SERVICE_STATUS.GET_MEMO_SUCCESS.description
-        output.data = memo;
+        if(noteInfo == null)
+        {
+            console.log("笔记获取失败，请稍后再试");
+            output.success = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.success
+            output.status = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.status
+            output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
+        }
+        else{
+            output.success = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
+            output.data = noteInfo;
+        }
         res.send(output);
     } catch (error) {
         console.log(error);
@@ -432,7 +443,7 @@ router.get("/getNoteInfo",async (req,res)=>{
         output.description = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.description
         res.send(output);
     }
-    console.log("End GetMemoInfo");
+    console.log("End Get Note Info");
     return
 })
 
