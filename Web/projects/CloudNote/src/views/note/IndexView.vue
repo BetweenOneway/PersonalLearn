@@ -2,63 +2,63 @@
     <!--笔记页面容器-->
     <n-layout has-sider>
         <!--笔记列表容器-->
-      <n-layout-sider
-        bordered
-        show-trigger
-        :collapsed-width="0"
-        :width="340"
-        class = "note-list"
-      >
-        <n-scrollbar>
-            <!--标题区 新增笔记按钮-->
-            <n-card :bordered="false" style="position:sticky;top:0;z-index:1">
-                <template #action>
-                    <n-space align="center" justify="space-between">
-                        <h3 style="margin:0">笔记列表</h3>
-                        <!--创建笔记按钮-->
-                        <n-button circle type="primary" @click="createNote">
-                            <n-icon :component="PlusRound" :size="22"></n-icon>
-                        </n-button>
-                    </n-space>
-                </template>
-            </n-card>
-            <!--笔记列表骨架屏-->
-            <n-space v-if="loading" vertical style="margin:12px">
-                <n-card size="small" v-for="n in 3" :key="n">
-                    <n-space vertical>
-                        <n-skeleton :height="26" :width="120"></n-skeleton>
-                        <n-skeleton text :repeat="2"></n-skeleton>
-                        <n-skeleton :height="23" :width="200"></n-skeleton>
-                    </n-space>
-                </n-card>
-            </n-space>
-            <!--笔记列表-->
-            <n-list hoverable clickable style="margin:12px">
-                <TransitionGroup 
-                @before-enter="beforeEnter" @enter="enterEvent" 
-                @before-leave="beforeLeave" @leave="leaveEvent"
-                move-class="move-transition">
-                    <template v-if="!loading && noteList.length > 0">
-                        <n-list-item v-for="(note,index) in noteList" :key="note.id" 
-                        :data-index="index" 
-                        @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
-                        :class="{'contexting':(contextMenu.id === note.id && contextMenu.show)}">
-                            <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.body" :top="!!note.top" :time="note.update_time"></NoteCard>
-                        </n-list-item>
+        <n-layout-sider
+            bordered
+            show-trigger
+            :collapsed-width="0"
+            :width="340"
+            class = "note-list"
+        >
+            <n-scrollbar>
+                <!--标题区 新增笔记按钮-->
+                <n-card :bordered="false" style="position:sticky;top:0;z-index:1">
+                    <template #action>
+                        <n-space align="center" justify="space-between">
+                            <h3 style="margin:0">笔记列表</h3>
+                            <!--创建笔记按钮-->
+                            <n-button circle type="primary" @click="createNote">
+                                <n-icon :component="PlusRound" :size="22"></n-icon>
+                            </n-button>
+                        </n-space>
                     </template>
-                </TransitionGroup>
-            </n-list>
-             <!--暂无笔记-->
-             <n-empty v-if="!loading && noteList.length == 0"  style="width:max-content;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)" size="huge" description="暂无笔记列表">
-                <template #icon>
-                    <n-icon :component="SubtitlesOffOutlined"></n-icon>
-                </template>
-                <template #extra>
-                    <n-button dashed>创建笔记</n-button>
-                </template>
-            </n-empty>
-        </n-scrollbar>
-      </n-layout-sider>
+                </n-card>
+                <!--笔记列表骨架屏-->
+                <n-space v-if="loading" vertical style="margin:12px">
+                    <n-card size="small" v-for="n in 3" :key="n">
+                        <n-space vertical>
+                            <n-skeleton :height="26" :width="120"></n-skeleton>
+                            <n-skeleton text :repeat="2"></n-skeleton>
+                            <n-skeleton :height="23" :width="200"></n-skeleton>
+                        </n-space>
+                    </n-card>
+                </n-space>
+                <!--笔记列表-->
+                <n-list hoverable clickable style="margin:12px">
+                    <TransitionGroup 
+                    @before-enter="beforeEnter" @enter="enterEvent" 
+                    @before-leave="beforeLeave" @leave="leaveEvent"
+                    move-class="move-transition">
+                        <template v-if="!loading && noteList.length > 0">
+                            <n-list-item v-for="(note,index) in noteList" :key="note.id" 
+                            :data-index="index" 
+                            @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
+                            :class="{'contexting':(contextMenu.id === note.id && contextMenu.show)}">
+                                <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.body" :top="!!note.top" :time="note.update_time"></NoteCard>
+                            </n-list-item>
+                        </template>
+                    </TransitionGroup>
+                </n-list>
+                <!--暂无笔记-->
+                <n-empty v-if="!loading && noteList.length == 0"  style="width:max-content;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)" size="huge" description="暂无笔记列表">
+                    <template #icon>
+                        <n-icon :component="SubtitlesOffOutlined"></n-icon>
+                    </template>
+                    <template #extra>
+                        <n-button dashed>创建笔记</n-button>
+                    </template>
+                </n-empty>
+            </n-scrollbar>
+        </n-layout-sider>
     </n-layout>
     <!--删除提醒框-->
     <DeleteRemindDialog 
