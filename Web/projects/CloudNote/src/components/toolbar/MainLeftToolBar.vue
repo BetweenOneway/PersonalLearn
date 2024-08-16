@@ -19,9 +19,9 @@
         <n-popover v-for="menu in mainMenus" :key="menu.label" trigger="hover" placement="right" :show-arrow="false">
             <template #trigger>
                 <n-button style="width:34px;padding:0" 
-                :quaternary="routerPath !== menu.to" 
-                :type="routerPath === menu.to?'primary':'default'" 
-                :tertiary="routerPath === menu.to?'primary':false" 
+                :quaternary="!isHighLightMenuItem(menu.to)" 
+                :type="isHighLightMenuItem(menu.to)?'primary':'default'" 
+                :tertiary="isHighLightMenuItem(menu.to)" 
                 @click="router.push(menu.to)">
                     <n-icon size="menu.icon_size" :component="menu.icon"></n-icon>
                 </n-button>
@@ -120,4 +120,16 @@
             to:''
         },
     ];
+
+    /**
+     * 是否高亮显示菜单按钮
+     * @param {String} toRouterPath 路由地址
+     */
+    const isHighLightMenuItem = (toRouterPath)=>{
+        if(!toRouterPath)
+        {
+            return false;
+        }
+        return routerPath.value.startWith(toRouterPath)
+    }
 </script>

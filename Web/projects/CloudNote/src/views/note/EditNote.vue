@@ -1,8 +1,28 @@
 <template>
     <n-card :bordered="false" size="small">
         <n-space justify-content="space-between" align="center">
-            <n-text depth="3">保存并发布于:2024-08-16</n-text>
-            <n-button>分享</n-button>
+            <!--发布时间-->
+            <n-space color="#18A058" align="center" :wrap-item="false">
+                <n-icon :component="FiberManualRecordRound"></n-icon>
+                <n-text depth="3">保存并发布于:{{ note.update_time }}</n-text>
+            </n-space>
+            <!--功能按钮区-->
+            <n-space align="center" :wrap-item="false" :size="8">
+                <n-button round dashed>分享</n-button>
+                <!--收藏-->
+                <n-popover>
+                    <template #trigger>
+                        <n-button quaternary circle>
+                            <n-icon size="20" :component="StarBorderRound"/>
+                        </n-button>
+                    </template>
+                    收藏
+                </n-popover>
+                
+                <n-button quaternary circle>
+                    <n-icon size="20" :component="MoreHorizRound"/>
+                </n-button>
+            </n-space>
         </n-space>
     </n-card>
 </template>
@@ -11,7 +31,10 @@
     import { getUserToken,loginInvalid } from "../../Utils/userLogin";
     import { noteBaseRequest } from "../../request/noteRequest";
     import {useMessage,useLoadingBar} from 'naive-ui'
-
+    import {FiberManualRecordRound,
+        StarBorderRound,
+        MoreHorizRound
+    } from'@vicons/material'
     //消息对象
     const message = useMessage()
     const loadingBar = useLoadingBar()
@@ -20,6 +43,8 @@
         id:{type:Number,required:true}
     })
 
+    //笔记信息
+    const note = ref({})
     /**
      * 获取编辑笔记信息
      */
@@ -50,6 +75,7 @@
         {
             loadingBar.finish();
             console.log(responseData.data)
+            note.value = responseData.data;
         }
         else
         {
