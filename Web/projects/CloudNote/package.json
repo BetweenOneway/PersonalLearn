@@ -7,8 +7,12 @@
     "preview": "vite preview --port 4173"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-decoupled-document": "^43.0.0",
+    "@ckeditor/ckeditor5-editor-decoupled": "^39.0.1",
+    "@ckeditor/ckeditor5-essentials": "^39.0.1",
+    "@ckeditor/ckeditor5-paragraph": "^39.0.1",
+    "@ckeditor/ckeditor5-theme-lark": "^39.0.1",
     "@ckeditor/ckeditor5-vue": "^7.0.0",
+    "@ckeditor/vite-plugin-ckeditor5": "^0.1.3",
     "axios": "^1.6.8",
     "crypto-js": "^4.2.0",
     "gsap": "^3.12.5",
