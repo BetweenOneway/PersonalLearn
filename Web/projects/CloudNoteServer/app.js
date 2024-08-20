@@ -7,6 +7,7 @@ const sequelizeTest = require("./routes/sequelizeTest")
 const user=require("./routes/user");
 const memo=require("./routes/memo");
 const note=require("./routes/note");
+const CKEditor=require("./routes/CKEditor");
 
 //启动数据库
 var sqldb = require('./sqldb');
@@ -44,5 +45,7 @@ app.use("/user",user);
 app.use("/memo",memo);
 //笔记
 app.use("/note",note);
+//
+app.use("/ckeditor",CKEditor)
 //测试用
 app.use("/sequelize",sequelizeTest)
