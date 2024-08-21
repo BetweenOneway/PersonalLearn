@@ -31,7 +31,8 @@ import {
     ImageCaption,
     ImageInsert
 } from '@ckeditor/ckeditor5-image'
-import {Base64UploadAdapter} from '@ckeditor/ckeditor5-upload'
+//import {Base64UploadAdapter} from '@ckeditor/ckeditor5-upload'
+import {SimpleUploadAdapter} from '@ckeditor/ckeditor5-upload'  // 简单图像上传适配器插件
 
 //编辑器的类型
 export const EditorType = DecoupledEditor
@@ -72,7 +73,8 @@ export const getEditorConfigs =()=>({
         ImageStyle,//图像样式
         ImageCaption,//图像标题
         ImageInsert,//图像插入
-        Base64UploadAdapter,//Base64上传适配器
+        //Base64UploadAdapter,//Base64上传适配器
+        SimpleUploadAdapter,//简单上传 不能与Base64共用
     ],
     fontSize: {
         supportAllValues:true,
@@ -256,6 +258,9 @@ export const getEditorConfigs =()=>({
             'resizeImage:50', // 50%
             'resizeImage:75', // 75%
         ]
+    },
+    simpleUpload: {
+        uploadUrl: '/note-server/ckeditor/upload/pic', // 上传图像服务器地址（可能需要解决跨域问题
     },
     toolbar: [
         'undo', // 撤消
