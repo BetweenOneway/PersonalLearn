@@ -1,7 +1,27 @@
 const express=require("express");
 const crypto = require("crypto")
-const stringRandom = require("string-random");
-let redisOper =require("../utils/redisOper")
+const path = require('path')
+//const stringRandom = require("string-random");
+//let redisOper =require("../utils/redisOper")
+
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination:function (req, file, cb) {
+        const targetDir = path.join(path.dirname(__dirname),'public','imgs');
+        console.log("save to:",targetDir);
+        cb(null, targetDir);
+    },
+    filename: function (req, file, cb) {
+        console.log("file:",file);
+        let targetFileName = file.fieldname + '-' + Date.now() + path.parse(file.originalname).ext;
+        console.log("rename to:",targetFileName);
+        cb(null, targetFileName);
+    }
+  }
+)
+
+var upload = multer({ storage: storage })
 
 //数据库
 var sqldb = require('../sqldb');
@@ -12,42 +32,10 @@ var mailOper =require("../utils/mail")
 var statusCode = require("./statusCode")
 var router=express.Router();
 
-/**
- * app.post('/upload-avatar', async (req, res) => {
-    try {
-        if(!req.files) {
-            res.send({
-                status: false,
-                message: 'No file uploaded'
-            });
-        } else {
-            //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
-            let avatar = req.files.avatar;
-            
-            //Use the mv() method to place the file in upload directory (i.e. "uploads")
-            avatar.mv('./uploads/' + avatar.name);
-
-            //send response
-            res.send({
-                status: true,
-                message: 'File is uploaded',
-                data: {
-                    name: avatar.name,
-                    mimetype: avatar.mimetype,
-                    size: avatar.size
-                }
-            });
-        }
-    } catch (err) {
-        res.status(500).send(err);
-    }
-});
- */
 //图片上传
-router.post("/upload/pic",async(req,res)=>{
-    console.log("uploadPic start,req:",req.body);
-    var userEmail = req.body.userEmail
-    var userPassword = req.body.userPassword
+router.post("/upload/pic",upload.any(),async(req,res)=>{
+    console.log("uploadPic start");
+
     var output={
         success:false,
         status:'',
@@ -55,8 +43,13 @@ router.post("/upload/pic",async(req,res)=>{
         userToken:'',
         userInfo:{}
     }
-
-    {
+    //An array of files will be stored in req.files
+    if(!req.files) {
+        res.send({
+            status: false,
+            message: 'No file uploaded'
+        });
+    } else {
         try {
             let originalFileName = ''
             //上传到哪个文件夹下
@@ -74,5 +67,9 @@ router.post("/upload/pic",async(req,res)=>{
             //出错处理
             res.send(output)
         }
+        output.success = true;
+        res.send(output)
     }
 })
+
+module.exports=router;
