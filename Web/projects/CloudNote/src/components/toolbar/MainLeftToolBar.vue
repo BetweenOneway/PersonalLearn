@@ -130,6 +130,8 @@
         {
             return false;
         }
-        return routerPath.value.startWith(toRouterPath)
+        
+        var reg=new RegExp("^" + toRouterPath,"ig")
+        return reg.test(routerPath.value)//.startWith(toRouterPath)
     }
 </script>

@@ -19,7 +19,6 @@ import {TodoList,ListProperties} from '@ckeditor/ckeditor5-list'
 import {Indent,IndentBlock} from '@ckeditor/ckeditor5-indent'
 import {CodeBlock} from '@ckeditor/ckeditor5-code-block'
 import {FindAndReplace} from '@ckeditor/ckeditor5-find-and-replace'
-import {insertTable} from '@ckeditor/ckeditor5-table'
 import {Link} from '@ckeditor/ckeditor5-link'
 import {Autoformat} from '@ckeditor/ckeditor5-autoformat'
 import {RemoveFormat} from '@ckeditor/ckeditor5-remove-format'
@@ -63,7 +62,6 @@ export const getEditorConfigs =()=>({
         IndentBlock,//块缩进（段落或标题）
         CodeBlock,//代码块
         FindAndReplace,//查找与替换
-        insertTable,//插入表格
         Link,//超链接
         Autoformat,//自动格式
         RemoveFormat,//移除格式
@@ -78,7 +76,7 @@ export const getEditorConfigs =()=>({
     ],
     fontSize: {
         supportAllValues:true,
-        options: [12,14,'default',25,30]
+        options: [12,14,25,30]
     },
     fontColor:{
         colums:10,

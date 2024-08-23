@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-    import CKEditor from '@ckeditor/ckeditor5-vue';
+    import CkEditor from '@ckeditor/ckeditor5-vue';
     import {EditorType,getEditorConfigs} from "@/editor"
     import { getUserToken,loginInvalid } from "../../Utils/userLogin";
     import { noteBaseRequest } from "../../request/noteRequest";
@@ -53,7 +53,7 @@
     const message = useMessage()
     const loadingBar = useLoadingBar()
 
-    const ckeditor5 = CKEditor.component;
+    const ckeditor5 = CkEditor.component;
 
     const propsData = defineProps({
         id:{type:Number,required:true}

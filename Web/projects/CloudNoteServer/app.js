@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors=require("cors");
+const fileUpload = require('express-fileupload');
 
 /*引入路由模块*/
 const sequelizeTest = require("./routes/sequelizeTest")
@@ -34,6 +35,9 @@ app.use(cors({
 
 //使用body-parser中间件
 app.use(bodyParser.urlencoded({extended:false}));
+
+// 配置文件上传模块
+app.use(fileUpload());
 
 //托管静态资源到public目录下
 app.use(express.static('public'));
