@@ -36,7 +36,7 @@ app.use(cors({
 app.use(bodyParser.urlencoded({extended:false}));
 
 //托管静态资源到public目录下
-//app.use(express.static('public'));
+app.use(express.static('public'));
 
 /*使用路由器来管理路由*/
 //用户相关

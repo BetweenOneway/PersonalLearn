@@ -30,7 +30,7 @@
         <n-card :bordered="false" size="small">
             <!--富文本编辑器-->
             <ckeditor5 
-            :editor="editorType" 
+            :editor="EditorType" 
             @ready="editorReady" 
             v-model="note.content"
             :config="getEditorConfigs()"/>
@@ -40,7 +40,7 @@
 
 <script setup>
     import CKEditor from '@ckeditor/ckeditor5-vue';
-    import {editorType,getEditorConfigs} from "@/editor"
+    import {EditorType,getEditorConfigs} from "@/editor"
     import { getUserToken,loginInvalid } from "../../Utils/userLogin";
     import { noteBaseRequest } from "../../request/noteRequest";
     import {useMessage,useLoadingBar} from 'naive-ui'
