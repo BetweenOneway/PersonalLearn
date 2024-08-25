@@ -29,7 +29,7 @@
         <!--富文本编辑器-->
         <n-card :bordered="false" size="small">
             <!--富文本编辑器-->
-            <ckeditor5 
+            <ckeditor5
             :editor="EditorType" 
             @ready="editorReady" 
             v-model="note.content"
@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-    import CkEditor from '@ckeditor/ckeditor5-vue';
+    import CKEditor from '@ckeditor/ckeditor5-vue';
     import {EditorType,getEditorConfigs} from "@/editor"
     import { getUserToken,loginInvalid } from "../../Utils/userLogin";
     import { noteBaseRequest } from "../../request/noteRequest";
@@ -53,7 +53,7 @@
     const message = useMessage()
     const loadingBar = useLoadingBar()
 
-    const ckeditor5 = CkEditor.component;
+    const ckeditor5 = CKEditor.component;
 
     const propsData = defineProps({
         id:{type:Number,required:true}
