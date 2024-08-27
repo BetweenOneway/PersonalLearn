@@ -32,28 +32,6 @@ import {
     Base64UploadAdapter,
     SimpleUploadAdapter,// 简单图像上传适配器插件
   } from 'ckeditor5'
-// import {BlockQuote} from  '@ckeditor/ckeditor5-block-quote' // 块引用插件
-// import {FontSize,FontColor,FontBackgroundColor} from '@ckeditor/ckeditor5-font'
-// import {Alignment} from '@ckeditor/ckeditor5-alignment'
-// import {HorizontalLine} from '@ckeditor/ckeditor5-horizontal-line'
-// import {Heading,Title} from '@ckeditor/ckeditor5-heading'
-// import {TodoList,ListProperties} from '@ckeditor/ckeditor5-list'
-// import {Indent,IndentBlock} from '@ckeditor/ckeditor5-indent'
-// import {CodeBlock} from '@ckeditor/ckeditor5-code-block'
-// import {FindAndReplace} from '@ckeditor/ckeditor5-find-and-replace'
-// import {Link} from '@ckeditor/ckeditor5-link'
-// import {Autoformat} from '@ckeditor/ckeditor5-autoformat'
-// import {RemoveFormat} from '@ckeditor/ckeditor5-remove-format'
-// import {
-//     Image,
-//     ImageResize,
-//     ImageStyle,
-//     ImageToolbar,
-//     ImageCaption,
-//     ImageInsert
-// } from '@ckeditor/ckeditor5-image'
-//import {Base64UploadAdapter} from '@ckeditor/ckeditor5-upload'
-//import {SimpleUploadAdapter} from '@ckeditor/ckeditor5-upload'  // 简单图像上传适配器插件
 
 //编辑器的类型
 export const EditorType = DecoupledEditor
