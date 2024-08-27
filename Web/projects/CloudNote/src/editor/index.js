@@ -1,37 +1,36 @@
-import {DecoupledEditor} from '@ckeditor/ckeditor5-editor-decoupled';
-import {Paragraph} from '@ckeditor/ckeditor5-paragraph'
-import {Essentials} from '@ckeditor/ckeditor5-essentials' // 基本功能插件
 import {
+    DecoupledEditor,
+    Essentials,
+    Paragraph,
     Bold, // 加粗
     Italic, // 斜体
     Strikethrough, // 删除线
     Underline, // 下划线
     Subscript, // 下标
     Superscript, // 上标
-    Code // 行内代码
-  } from '@ckeditor/ckeditor5-basic-styles'
-import {BlockQuote} from  '@ckeditor/ckeditor5-block-quote' // 块引用插件
-import {FontSize,FontColor,FontBackgroundColor} from '@ckeditor/ckeditor5-font'
-import {Alignment} from '@ckeditor/ckeditor5-alignment'
-import {HorizontalLine} from '@ckeditor/ckeditor5-horizontal-line'
-import {Heading,Title} from '@ckeditor/ckeditor5-heading'
-import {TodoList,ListProperties} from '@ckeditor/ckeditor5-list'
-import {Indent,IndentBlock} from '@ckeditor/ckeditor5-indent'
-import {CodeBlock} from '@ckeditor/ckeditor5-code-block'
-import {FindAndReplace} from '@ckeditor/ckeditor5-find-and-replace'
-import {Link} from '@ckeditor/ckeditor5-link'
-import {Autoformat} from '@ckeditor/ckeditor5-autoformat'
-import {RemoveFormat} from '@ckeditor/ckeditor5-remove-format'
-import {
+    Table, TableToolbar,//表格
+    Code, // 行内代码
+    BlockQuote,// 块引用插件
+    FontSize,FontColor,FontBackgroundColor,
+    Alignment,
+    HorizontalLine,
+    Heading,Title,
+    TodoList,ListProperties,
+    Indent,IndentBlock,
+    CodeBlock,
+    FindAndReplace,
+    Link,
+    Autoformat,
+    RemoveFormat,
     Image,
     ImageResize,
     ImageStyle,
     ImageToolbar,
     ImageCaption,
-    ImageInsert
-} from '@ckeditor/ckeditor5-image'
-//import {Base64UploadAdapter} from '@ckeditor/ckeditor5-upload'
-import {SimpleUploadAdapter} from '@ckeditor/ckeditor5-upload'  // 简单图像上传适配器插件
+    ImageInsert,
+    Base64UploadAdapter,
+    SimpleUploadAdapter,// 简单图像上传适配器插件
+  } from 'ckeditor5'
 
 //编辑器的类型
 export const EditorType = DecoupledEditor
@@ -47,6 +46,7 @@ export const getEditorConfigs =()=>({
         Underline, // 下划线
         Superscript, // 上标
         Subscript, // 下标
+        Table, TableToolbar,//
         Code, // 行内代码
         BlockQuote,//块引用
         FontSize,//字体大小
@@ -281,7 +281,6 @@ export const getEditorConfigs =()=>({
         'bulletedList',
         'numberedList',
         'todoList',
-        'autodent',
         'indent',
         'CodeBlock',
         'FindAndReplace',

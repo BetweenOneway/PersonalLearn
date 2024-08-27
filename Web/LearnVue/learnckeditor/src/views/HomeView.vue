@@ -4,12 +4,13 @@
             v-model="editorData"
             :editor="EditorType"
             :config="editorConfig"
+             @ready="editorReady"
         />
-        <!-- <ckeditor
+        <ckeditor
             :editor="EditorType" 
             @ready="editorReady" 
             v-model="editorData"
-            :config="editorConfig"/> -->
+            :config="getEditorConfigs()"/>
     </div>
 </template>
 
@@ -18,9 +19,8 @@ import { Ckeditor } from '@ckeditor/ckeditor5-vue';
 //import { DecoupledEditor,Bold, Essentials, Italic, Mention, Paragraph, Undo} from 'ckeditor5';
 import {EditorType} from "@/editor";
 //import {getEditorConfigs} from "@/editor";
+import {getEditorConfigs} from "@/editor";
 import {editorConfig} from "@/editor";
-
-
 
 import 'ckeditor5/ckeditor5.css';
 
