@@ -437,9 +437,7 @@
         const {data:responseData} = await noteBaseRequest.put(
                 "/note/createNote",
                 {
-                    params:{
-                        userToken:userToken
-                    }
+                    userToken:userToken
                 }
             ).catch(()=>{
                 //加载条异常结束

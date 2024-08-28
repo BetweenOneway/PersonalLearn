@@ -286,7 +286,7 @@ router.delete("/deleteNote",async (req,res)=>{
  * userToken 用户信息
  */
 router.put("/createNote",async (req,res)=>{
-    console.log(req.body);
+    console.log(req);
 
     let output={
         success:false,
@@ -336,7 +336,7 @@ router.put("/createNote",async (req,res)=>{
                 transaction:t
             }
         );
-
+        console.log("new added note info:",newAddNote);
         let event = statusCode.EVENT_LIST.ADD_NOTE;
         const addLog = await sqldb.NoteMemoLog.create(
             {
