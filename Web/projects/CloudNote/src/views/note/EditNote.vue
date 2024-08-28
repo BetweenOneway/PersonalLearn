@@ -48,7 +48,8 @@
         StarBorderRound,
         MoreHorizRound
     } from'@vicons/material'
-
+    import 'ckeditor5/ckeditor5.css';
+    
     //消息对象
     const message = useMessage()
     const loadingBar = useLoadingBar()
