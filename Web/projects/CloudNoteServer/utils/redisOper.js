@@ -15,14 +15,14 @@ process.on('beforeExit', () => {
 );
 
 // 错误处理
-redisClient.on('error', (error) => {
-    // 输出错误信息
-    console.error('Redis Error:', error);
+// redisClient.on('error', (error) => {
+//     // 输出错误信息
+//     console.error('Redis Error:', error);
 
-    // 自动重连
-    redisClient.quit();
-    redisClient.connect();
-});
+//     // 自动重连
+//     redisClient.quit();
+//     redisClient.connect();
+// });
 
 async function redisConnect()
 {
@@ -34,25 +34,28 @@ async function redisConnect()
         }
         
         redisClient.on('error',err=>{
-            console.log("redis connect error")
-            console.log(err)
+            console.log("redis connect error:",err)
         })
     }
     catch(e)
     {
-        console.log("redis connet error")
-        console.log(e)
+        console.log("redis connet error:",e)
         throw(e)
     }
 }
 
 async function redisGet(key) {
     return new Promise(async(resolve, reject) => {
-        await redisConnect()
-        redisClient.get(key).then(val=>{
-            resolve(val)
-            redisClient.quit()
-        })
+        try {
+            await redisConnect()
+            redisClient.get(key).then(val=>{
+                resolve(val)
+                redisClient.quit()
+            })
+        } catch (error) {
+            console.log("redis Get error:",error);
+        }
+        
     })
 }
 
