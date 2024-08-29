@@ -55,10 +55,10 @@ INSERT INTO `z_note` VALUES (26, '环保农场', '<h2 style=\"margin-left:0;\">1
 INSERT INTO `z_note` VALUES (27, '做个云笔记App', '<p>今天<strong>第一次</strong>做项目</p>', '<h1>做个云笔记App</h1><p>今天<strong>第一次</strong>做项目</p>', '2023-06-05 16:34:25', '2023-06-05 16:38:33', 8, 0, '1', 1);
 
 -- ----------------------------
--- Table structure for z_thing
+-- Table structure for z_memo
 -- ----------------------------
-DROP TABLE IF EXISTS `z_thing`;
-CREATE TABLE `z_thing`  (
+DROP TABLE IF EXISTS `z_memo`;
+CREATE TABLE `z_memo`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标题',
   `tags` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标签',
@@ -76,40 +76,40 @@ CREATE TABLE `z_thing`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '小记' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
--- Records of z_thing
+-- Records of z_memo
 -- ----------------------------
-INSERT INTO `z_thing` VALUES (8, '六一儿童节给小朋友的礼物', '六一,礼物,儿童节', '[{\"checked\":true,\"thing\":\"气球\"},{\"checked\":true,\"thing\":\"棒棒糖\"},{\"checked\":true,\"thing\":\"奥特曼玩具\"},{\"checked\":true,\"thing\":\"芭比娃娃\"}]', 8, 1, '2023-06-02 14:28:35', '2023-06-05 13:19:40', 0, 1, 2);
-INSERT INTO `z_thing` VALUES (9, '明日发布会需要做的准备', '发布会,打工仔', '[{\"checked\":true,\"thing\":\"整理会场\"},{\"checked\":false,\"thing\":\"调音设备\"},{\"checked\":false,\"thing\":\"开启直播\"}]', 8, 0, '2023-06-02 14:31:02', '2023-06-05 16:37:01', 0, 1, 2);
-INSERT INTO `z_thing` VALUES (10, '2023-05-20 晚上加班', '加班,挣钱,打工仔', '[{\"checked\":true,\"thing\":\"整理会议纪要\"},{\"checked\":true,\"thing\":\"预约客户见面时间\"},{\"checked\":true,\"thing\":\"打卡下班\"}]', 8, 1, '2023-06-02 14:48:47', '2023-06-05 16:37:01', 0, 1, 2);
-INSERT INTO `z_thing` VALUES (11, '2023 春节送礼购物清单', '清单,送礼', '[{\"checked\":true,\"thing\":\"酒*6\"},{\"checked\":false,\"thing\":\"鸡蛋*120\"},{\"checked\":true,\"thing\":\"大豆油*7\"},{\"checked\":true,\"thing\":\"特仑苏*7\"}]', 8, 0, '2023-06-02 14:50:02', '2023-06-05 16:38:33', 1, 1, 2);
-INSERT INTO `z_thing` VALUES (12, '2023 春季开学准备', '开学,2023,大学生', '[{\"checked\":true,\"thing\":\"笔记本\"},{\"checked\":true,\"thing\":\"身份证\"},{\"checked\":true,\"thing\":\"行李箱\"},{\"checked\":false,\"thing\":\"寒假作业\"}]', 8, 0, '2023-06-04 21:54:38', '2023-06-05 16:36:31', 1, 1, 2);
-INSERT INTO `z_thing` VALUES (13, '五一假期计划', '五一,放假,旅游', '[{\"checked\":true,\"thing\":\"南京雨花台\"},{\"checked\":true,\"thing\":\"北京长城\"},{\"checked\":true,\"thing\":\"西安大雁塔\"}]', 8, 1, '2023-06-04 21:55:56', '2023-06-05 14:38:48', 0, 1, 2);
-INSERT INTO `z_thing` VALUES (14, '2023 春节第一周作业', '作业,大学生', '[{\"checked\":true,\"thing\":\"JavaWeb\"},{\"checked\":true,\"thing\":\"Hadoop\"},{\"checked\":false,\"thing\":\"高等数学\"}]', 8, 0, '2023-06-04 21:57:12', '2023-06-05 16:37:18', 0, 1, 2);
-INSERT INTO `z_thing` VALUES (15, '实训课', '大学生,实训', '[{\"checked\":true,\"thing\":\"云笔记\"},{\"checked\":true,\"thing\":\"电脑\"}]', 8, 1, '2023-06-05 08:24:38', '2023-06-05 08:24:38', 0, 1, 2);
+INSERT INTO `z_memo` VALUES (8, '六一儿童节给小朋友的礼物', '六一,礼物,儿童节', '[{\"checked\":true,\"thing\":\"气球\"},{\"checked\":true,\"thing\":\"棒棒糖\"},{\"checked\":true,\"thing\":\"奥特曼玩具\"},{\"checked\":true,\"thing\":\"芭比娃娃\"}]', 8, 1, '2023-06-02 14:28:35', '2023-06-05 13:19:40', 0, 1, 2);
+INSERT INTO `z_memo` VALUES (9, '明日发布会需要做的准备', '发布会,打工仔', '[{\"checked\":true,\"thing\":\"整理会场\"},{\"checked\":false,\"thing\":\"调音设备\"},{\"checked\":false,\"thing\":\"开启直播\"}]', 8, 0, '2023-06-02 14:31:02', '2023-06-05 16:37:01', 0, 1, 2);
+INSERT INTO `z_memo` VALUES (10, '2023-05-20 晚上加班', '加班,挣钱,打工仔', '[{\"checked\":true,\"thing\":\"整理会议纪要\"},{\"checked\":true,\"thing\":\"预约客户见面时间\"},{\"checked\":true,\"thing\":\"打卡下班\"}]', 8, 1, '2023-06-02 14:48:47', '2023-06-05 16:37:01', 0, 1, 2);
+INSERT INTO `z_memo` VALUES (11, '2023 春节送礼购物清单', '清单,送礼', '[{\"checked\":true,\"thing\":\"酒*6\"},{\"checked\":false,\"thing\":\"鸡蛋*120\"},{\"checked\":true,\"thing\":\"大豆油*7\"},{\"checked\":true,\"thing\":\"特仑苏*7\"}]', 8, 0, '2023-06-02 14:50:02', '2023-06-05 16:38:33', 1, 1, 2);
+INSERT INTO `z_memo` VALUES (12, '2023 春季开学准备', '开学,2023,大学生', '[{\"checked\":true,\"thing\":\"笔记本\"},{\"checked\":true,\"thing\":\"身份证\"},{\"checked\":true,\"thing\":\"行李箱\"},{\"checked\":false,\"thing\":\"寒假作业\"}]', 8, 0, '2023-06-04 21:54:38', '2023-06-05 16:36:31', 1, 1, 2);
+INSERT INTO `z_memo` VALUES (13, '五一假期计划', '五一,放假,旅游', '[{\"checked\":true,\"thing\":\"南京雨花台\"},{\"checked\":true,\"thing\":\"北京长城\"},{\"checked\":true,\"thing\":\"西安大雁塔\"}]', 8, 1, '2023-06-04 21:55:56', '2023-06-05 14:38:48', 0, 1, 2);
+INSERT INTO `z_memo` VALUES (14, '2023 春节第一周作业', '作业,大学生', '[{\"checked\":true,\"thing\":\"JavaWeb\"},{\"checked\":true,\"thing\":\"Hadoop\"},{\"checked\":false,\"thing\":\"高等数学\"}]', 8, 0, '2023-06-04 21:57:12', '2023-06-05 16:37:18', 0, 1, 2);
+INSERT INTO `z_memo` VALUES (15, '实训课', '大学生,实训', '[{\"checked\":true,\"thing\":\"云笔记\"},{\"checked\":true,\"thing\":\"电脑\"}]', 8, 1, '2023-06-05 08:24:38', '2023-06-05 08:24:38', 0, 1, 2);
 
 -- ----------------------------
--- Table structure for z_note_thing_log
+-- Table structure for z_note_memo_log
 -- ----------------------------
-DROP TABLE IF EXISTS `z_note_thing_log`;
-CREATE TABLE `z_note_thing_log`  (
+DROP TABLE IF EXISTS `z_note_memo_log`;
+CREATE TABLE `z_note_memo_log`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `time` datetime NOT NULL COMMENT '时间',
   `event` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '事件',
   `desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '描述',
   `u_id` int(11) NOT NULL COMMENT '用户编号',
   `n_id` int(11) NULL DEFAULT NULL COMMENT '笔记编号',
-  `t_id` int(11) NULL DEFAULT NULL,
+  `t_id` int(11) NULL DEFAULT NULL COMMENT '便签编号',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `z_note_log_z_note_id_fk`(`n_id`) USING BTREE,
   INDEX `z_note_log_z_user_id_fk`(`u_id`) USING BTREE,
   INDEX `z_note_thing_log_z_thing_id_fk`(`t_id`) USING BTREE,
-  CONSTRAINT `z_note_log_z_note_id_fk` FOREIGN KEY (`n_id`) REFERENCES `z_note` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `z_note_log_z_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `z_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `z_note_thing_log_z_thing_id_fk` FOREIGN KEY (`t_id`) REFERENCES `z_thing` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `z_note_log_z_note_id_fk` FOREIGN KEY (`n_id`) REFERENCES `z_note` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `z_note_thing_log_z_thing_id_fk` FOREIGN KEY (`t_id`) REFERENCES `z_memo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '笔记日志表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
--- Records of z_note_thing_log
+-- Records of z_note_memo_log
 -- ----------------------------
 
 -- ----------------------------

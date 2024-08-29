@@ -344,7 +344,7 @@ router.put("/createNote",async (req,res)=>{
                 event:event.code,
                 desc:event.desc,
                 u_id:userInfo.id,
-                t_id:newAddNote.id
+                n_id:newAddNote.id
             },
             {
                 transaction:t
