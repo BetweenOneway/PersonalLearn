@@ -28,7 +28,7 @@ import {
     ImageToolbar,
     ImageCaption,
     ImageInsert,
-    Base64UploadAdapter,
+    //Base64UploadAdapter,
     SimpleUploadAdapter,// 简单图像上传适配器插件
   } from 'ckeditor5'
 

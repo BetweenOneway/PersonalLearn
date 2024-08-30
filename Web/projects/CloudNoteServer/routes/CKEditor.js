@@ -42,6 +42,7 @@ router.post("/upload/pic",async(req,res)=>{
         //验证用户是否登陆
         let userToken = req.body.userToken
         let validateInfo = await validate.IsUserValidate(userToken);
+        
         if(!validateInfo.isValidated)
         {
             output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success

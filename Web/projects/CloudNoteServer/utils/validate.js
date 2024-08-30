@@ -8,6 +8,10 @@ async function IsUserValidate(userToken)
     }
     //验证用户是否登录
     try{
+        if(!userToken)
+        {
+            return validateInfo;
+        }
         let userTokenRedisValue = await redisOper.RedisGet(userToken)
         console.log("retrived redis value:")
         console.log(userTokenRedisValue)
