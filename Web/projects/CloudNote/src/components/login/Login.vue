@@ -156,7 +156,7 @@
 
                 const user = responseData.userInfo
 
-                setUserInfo(responseData.userToken,user.id,user.email,user.nickName,user.headPic,user.level,user.time)
+                setUserInfo(responseData.userToken,user.id,user.email,user.nickname,user.head_pic,user.level,user.time)
             }
             else
             {

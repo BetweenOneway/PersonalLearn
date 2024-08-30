@@ -20,7 +20,8 @@ export const useUserStore = defineStore(
         const time=ref('')
 
         const head_image = computed(()=>{
-            if(headPic.value === null || headPic.value === undefined)
+            console.log("get user headPic:",headPic.value);
+            if(!headPic.value)
             {
                 return "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
             }
@@ -30,7 +31,8 @@ export const useUserStore = defineStore(
         })
 
         const userNickName = computed(()=>{
-            if(nickName.value === null || nickName.value === undefined)
+            console.log("get user nickname:",nickName.value);
+            if(!nickName.value)
             {
                 return "暂未设置名称"
             }
@@ -40,6 +42,7 @@ export const useUserStore = defineStore(
         })
 
         const userLevel = computed(()=>{
+            console.log("get user level:",level.value);
             if(level.value == 0)
             {
                 return "会员"
