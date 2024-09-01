@@ -1,5 +1,14 @@
 <template>
-    <n-space vertical>
+    <!--骨架屏-->
+    <n-space vertical :wrap-item="false" v-if="loading">
+        <n-skelton :height="36" width="100%"></n-skelton>
+        <n-skelton text width="30%"></n-skelton>
+        <n-skelton text width="60%"></n-skelton>
+        <n-skelton text width="40%"></n-skelton>
+        <n-skelton text width="80%"></n-skelton>
+    </n-space>
+    <n-space vertical v-else>
+        <!--发布时间 分享 更多操作-->
         <n-card :bordered="false" size="small">
             <n-space justify-content="space-between" align="center">
                 <!--发布时间-->
@@ -36,6 +45,7 @@
             :config="getEditorConfigs()"/>
         </n-card>
     </n-space>
+    
 </template>
 
 <script setup>
@@ -60,12 +70,17 @@
         id:{type:Number,required:true}
     })
 
+    //是否处于加载中
+    const loading = ref(true);
+
     //笔记信息
     const note = ref({})
     /**
      * 获取编辑笔记信息
      */
      const getNoteInfo = async ()=>{
+        //加载中
+        loading.value = true;
         //判断用户登录状态
         const userToken = await getUserToken()
 
@@ -90,6 +105,7 @@
 
         if(responseData.success)
         {
+            loading.value = false;
             loadingBar.finish();
             console.log(responseData.data)
             note.value = responseData.data;
