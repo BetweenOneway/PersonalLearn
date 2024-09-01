@@ -9,7 +9,7 @@
             :width="340"
             class = "note-list"
         >
-            <n-scrollbar>
+            <n-scrollbar @scroll="contextMenu.show=false">
                 <!--标题区 新增笔记按钮-->
                 <n-card :bordered="false" style="position:sticky;top:0;z-index:1;width:calc(100%-1px)">
                     <template #action>
@@ -43,7 +43,7 @@
                                 v-for="(note,index) in noteList" :key="note.id" 
                                 :data-index="index" 
                                 @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
-                                :class="{'contexting':(contextMenu.id === note.id && contextMenu.show)}"
+                                :class="{'contexting':(contextMenu.id === note.id && contextMenu.show) ,'editing':(selectNoteId === note.id)}"
                                 @click="goEditNoteView(note.id)"
                             >
                                 <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.body" :top="!!note.top" :time="note.update_time"></NoteCard>
@@ -88,7 +88,7 @@
 </template>
 
 <script setup>
-    import {computed, ref} from 'vue'
+    import {computed, ref,inject} from 'vue'
     import {PlusRound,SubtitlesOffOutlined,
         DriveFileRenameOutlineOutlined,
         DeleteOutlineRound,ArrowCircleDownRound,
@@ -103,6 +103,21 @@
 
     //路由对象
     const router = useRouter()
+
+    //路由地址
+    const routerPath = inject('routerPath');
+
+    const selectNoteId = computed(()=>{
+        const indexOf = routerPath.value.indexOf('/note/edit/');
+        if(indexOf === -1)
+        {
+            return null;
+        }
+        else
+        {
+            return parseInt(routerPath.value.subString('/note/edit/'.length));
+        }
+    });
 
     //消息对象
     const message = useMessage()
@@ -483,7 +498,13 @@
     transition:all .5s;
 }
 
+/*右键效果*/
 .n-list .n-list-item.contexting{
+    box-shadow: 0 0 5px #A2A2A2;
+}
+
+/*选中效果*/
+.n-list .n-list-item.editing{
     box-shadow: 0 0 5px #18A058;
 }
 </style>

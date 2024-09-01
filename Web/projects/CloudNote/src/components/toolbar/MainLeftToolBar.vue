@@ -36,21 +36,15 @@
         ,SearchRound,AccessTimeRound
         , StarBorderRound, ShoppingBagOutlined, DeleteOutlineRound} from "@vicons/material"
     import {NIcon} from "naive-ui"
-    import {h,watch} from 'vue'
+    import {h,watch,inject} from 'vue'
     import {useRouter} from 'vue-router'
     import bus from 'vue3-eventbus'
     
     //路由对象
     const router = useRouter()
+    
+    const routerPath = inject('routerPath');
 
-    const routerPath = ref(router.currentRoute.value.path);
-    //监控路由地址变化
-    watch(
-        ()=>router.currentRoute.value,
-        newData=>{
-            routerPath.value = newData.path;
-        }
-    );
     //读图标
     function renderIcon(icon,size,color){
         return ()=>h(NIcon,{size,color},{default:()=>h(icon)})

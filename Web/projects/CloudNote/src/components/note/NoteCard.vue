@@ -1,5 +1,5 @@
 <template>
-    <n-thing>
+    <n-thing class="note-card">
         <!--标题-->
         <template #header>
             <n-ellipsis line-clamp="1">
@@ -38,3 +38,12 @@ defineProps(
     }
 )
 </script>
+
+<style>
+    /*
+    解决笔记列表换行问题
+    */
+    .n-thing.note-card{
+        word-break:break-all;
+    }
+</style>

@@ -213,3 +213,25 @@
         }
     }
 </script>
+
+<style>
+    /*
+    隐藏powered by ckeditor logo
+    */
+    .ck.ck-balloon-panel.ck-balloon-panel_visible{
+        display:none;
+    }
+
+    /*编辑器为选中时的边框*/
+    .ck.ck-editor__editable_inline{
+        border:none;
+    }
+
+    /*去除编辑器聚焦时边框*/
+    .ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable){
+        border:none;
+        box-shadow: none;
+    }
+
+    
+</style>

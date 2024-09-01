@@ -18,6 +18,7 @@
     import {useThemeStore} from './stores/themeStore'
     import {useUserStore} from './stores/userStore'
     import {storeToRefs} from 'pinia'
+    import {useRoute} from 'vue-router'
 
     const themeStore = useThemeStore()
     const {theme} = storeToRefs(themeStore)
@@ -25,6 +26,21 @@
 
     //用户的共享资源
     const userStore = useUserStore();
+
+    //路由对象
+    const router = useRouter()
+
+    const routerPath = ref(router.currentRoute.value.path);
+    //监控路由地址变化
+    watch(
+        ()=>router.currentRoute.value,
+        newData=>{
+            routerPath.value = newData.path;
+        }
+    );
+
+    //为后代提供路由地址数据
+    provide('routerPath',routerPath);
 
     //如果用户的登陆状态发生改变，重新加载页面
     //是否需要重新加载页面
