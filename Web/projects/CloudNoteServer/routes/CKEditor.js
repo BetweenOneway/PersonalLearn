@@ -31,34 +31,28 @@ router.post("/upload/pic",async(req,res)=>{
     console.log("uploadPic start,req.body:",req.body);
 
     //定义返回结构
-    var output={
-        success:false,
-        status:'',
-        description:'',
-        data:{}
+    let output={
     }
 
     try{
-        //验证用户是否登陆
-        let userToken = req.body.userToken
-        let validateInfo = await validate.IsUserValidate(userToken);
+        // //验证用户是否登陆
+        // let userToken = req.body.userToken
+        // let validateInfo = await validate.IsUserValidate(userToken);
         
-        if(!validateInfo.isValidated)
-        {
-            output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-            output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-            output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
-            res.send(output)
-            return
-        }
-        let userInfo = validateInfo.userInfo;
+        // if(!validateInfo.isValidated)
+        // {
+        //     output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
+        //     output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
+        //     output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
+        //     res.send(output)
+        //     return
+        // }
+        // let userInfo = validateInfo.userInfo;
 
         //An array of files will be stored in req.files
         if(!req.files) {
             console.log("no files uploaded");
-            output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-            output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-            output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
+            output['error']="No files upload";
             res.send(output);
             return
         } 
@@ -66,12 +60,17 @@ router.post("/upload/pic",async(req,res)=>{
         var files = req.files;
         for (var key in files) {
             let file = files[key];
-
-            //上传到哪个文件夹下 分用户存储
-            let fileStorePath = path.join(path.dirname(__dirname),'public','imgs',userInfo.id);
+            console.log("file Info:",file);
+            let fileName = file.name;
+            let fileSuffixNameArr = fileName.split('.');
+            let fileSuffixName = fileSuffixNameArr[fileSuffixNameArr.length - 1];
+            
+            //上传到哪个文件夹下
+            let fileStorePath = path.join(path.dirname(__dirname),'public','imgs');
+            console.log("fileStorePath:",fileStorePath);
 
             //存储在网络上的文件名 时间戳+后缀
-            let storageFileName = 'pic' + '-' + Date.now() + file.suffixName;
+            let storageFileName = 'pic' + '-' + Date.now() + "."+ fileSuffixName;
             console.log('storageFileName:',storageFileName);
 
             //判断存储路径是否存在 如果不存在则创建文件夹
@@ -79,25 +78,32 @@ router.post("/upload/pic",async(req,res)=>{
 
             //上传文件 将文件保存到指定目录下
             file.mv(fileStorePath+'/'+storageFileName,err =>{
-                //上传失败错误处理
-                console.log("upload fail");
+                if(err)
+                {
+                    //上传失败错误处理
+                    console.log("upload fail:",err);
+                }
+                else
+                {
+                    console.log("file move success");
+                }
             })
             
             //生成图片的虚拟地址 http://localhost:80/image/8081.jpg
-            let imageURL = req.protocol + '://' + req.get('host') + '/imgs' +'/'+ userInfo.id +'/'+storageFileName;
+            let imageURL = req.protocol + '://' + req.get('host') + '/imgs' +'/'+storageFileName;
             console.log('imageURL',imageURL);
 
-            output.data.imageURL = imageURL;
+            output['url']=imageURL;
         }
     }catch (error) {
-        console.log("catch error:",error)
+        console.log("upload pic error catched:",error);
+        output['error']="Unexpected error happened";
         //出错处理
         res.send(output)
         return
     }
-
-    output.success = true;
     res.send(output)
+    return;
 })
 
 module.exports=router;

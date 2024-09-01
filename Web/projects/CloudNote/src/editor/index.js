@@ -28,7 +28,6 @@ import {
     ImageToolbar,
     ImageCaption,
     ImageInsert,
-    //Base64UploadAdapter,
     SimpleUploadAdapter,// 简单图像上传适配器插件
   } from 'ckeditor5'
 
@@ -71,7 +70,6 @@ export const getEditorConfigs =()=>({
         ImageStyle,//图像样式
         ImageCaption,//图像标题
         ImageInsert,//图像插入
-        //Base64UploadAdapter,//Base64上传适配器
         SimpleUploadAdapter,//简单上传 不能与Base64共用
     ],
     fontSize: {
@@ -259,6 +257,10 @@ export const getEditorConfigs =()=>({
     },
     simpleUpload: {
         uploadUrl: '/note-server/ckeditor/upload/pic', // 上传图像服务器地址（可能需要解决跨域问题
+        // withCredentials: true, // 启用 XMLHttpRequest.withCredentials 属性
+        // headers: {
+        //     'Accept-Api-Key': 'ASK_D_FF', // 请求头设置来验证身份的（自己定义属性）
+        // }
     },
     toolbar: [
         'undo', // 撤消
