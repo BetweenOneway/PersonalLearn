@@ -132,15 +132,84 @@
     //获取选定笔记信息
     getNoteInfo();
 
+    //编辑器对象
+    let editor = null;
     /**
      * 编辑器加载完成处理函数
      * 
      */
-    const editorReady = (editor)=>{
+    const editorReady = (editorObj)=>{
+        //保存编辑器对象
+        editor = editorObj;
         // 在编辑器区域插入工具栏
-        editor.ui.getEditableElement().parentElement.insertBefore(
-            editor.ui.view.toolbar.element,
-            editor.ui.getEditableElement()
+        editorObj.ui.getEditableElement().parentElement.insertBefore(
+            editorObj.ui.view.toolbar.element,
+            editorObj.ui.getEditableElement()
         );
+    }
+
+    onMounted(()=>{
+        windows.addEventListener('keydown',(e)=>{
+            console.log(e);
+            //ctrl+s
+            if(e.keycode === 83 && e.ctrlkey === true)
+            {
+                e.preventDefault();
+                e.returnValue = false;
+                //保存笔记
+                saveNote();
+            }
+        })
+    })
+
+    const saveNote = async ()=>{
+        //编号
+        const noteId = propsData.id;
+        //标题
+        const title = editor.plugins.get('Title').getTitle();
+        //内容
+        const body = editor.plugins.get('Title').getBody();
+        //笔记完整内容
+        const content = note.value.content;
+
+        //判断用户登录状态
+        const userToken = await getUserToken()
+
+        loadingBar.start();
+        const {data:responseData} = await noteBaseRequest.post(
+                "/note/saveNote",
+                {
+                    params:{
+                        userToken:userToken,
+                        noteId:propsData.id,
+                        title:title,
+                        body:body,
+                        content:content
+                    }
+                }
+            ).catch(()=>{
+                loadingBar.error();
+                //显示失败的通知
+                throw message.error("保存笔记失败")
+            }
+        )
+
+        if(responseData.success)
+        {
+            loadingBar.finish();
+            message.success(responseData.message);
+            console.log(responseData.data)
+            note.update_time = responseData.data.update_time;
+        }
+        else
+        {
+            loadingBar.error()
+            message.error(responseData.description)
+            //登录失效处理
+            if(responseData.status ==='SERVICE_008')
+            {
+                loginInvalid(true)
+            }
+        }
     }
 </script>

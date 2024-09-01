@@ -448,4 +448,123 @@ router.get("/getNoteInfo",async (req,res)=>{
 })
 
 
+//保存（更新）笔记
+/**
+ * userToken 用户编号
+ * noteId 笔记编号
+ * title 标题
+ * body 笔记内容
+ * content 笔记内容（完整 包含title和body）
+ */
+router.post("/saveNote",async (req,res)=>{
+    console.log("start update Note :",req.query);
+
+    let output={
+        success:false,
+        status:"",
+        description:"",
+        data:{
+            update_time:''
+        }
+    }
+
+    let inputInfo = {}
+    inputInfo.userToken = req.query.userToken
+    inputInfo.noteId = req.query.noteId
+    inputInfo.title = req.query.title
+    inputInfo.body = req.query.body
+    inputInfo.content = req.query.content
+
+    if(inputInfo.userToken === undefined || 0 == inputInfo.userToken.length || inputInfo.noteId.length == 0)
+    {
+        console.log("update note, userToken or noteId empty")
+        output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
+        output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
+        output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
+        res.send(output)
+        return
+    }
+
+    //验证用户是否登陆
+    let validateInfo = await validate.IsUserValidate(inputInfo.userToken);
+    if(!validateInfo.isValidated)
+    {
+        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
+        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
+        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
+        res.send(output)
+        return
+    }
+
+    const t = await sqldb.sequelize.transaction();
+
+    try {
+        let userInfo = validateInfo.userInfo;
+        let curTime = new Date().toLocaleString()
+
+        const targetNote = sqldb.Note.findOne(
+            {
+                where: {
+                    id: inputInfo.noteId,
+                    u_id:userInfo.id,
+                    status:1
+                }
+            }
+        )
+        if(targetNote !== undefined)
+        {
+            //更新便签
+            const updateNum = await sqldb.Note.update(
+                {
+                    title:inputInfo.title,
+                    body:inputInfo.body,
+                    content:inputInfo.content,
+                    update_time:curTime,
+                },
+                {
+                    where:{
+                        id: inputInfo.noteId,
+                        u_id:userInfo.id,
+                        status:1
+                    },
+                    transaction:t
+                }
+            );
+            //记录日志
+            let event = statusCode.EVENT_LIST.UPDATE_NOTE;
+            const addLog = await sqldb.NoteMemoLog.create(
+                {
+                    time:curTime,
+                    event:event.code,
+                    desc:event.desc,
+                    u_id:userInfo.id,
+                    t_id:inputInfo.memoId
+                },
+                {
+                    transaction:t
+                }
+            );
+
+            t.commit();
+            console.log("update note success,commit database success")
+            output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.description;
+            output.data.update_time = curTime;
+            res.send(output);
+        }
+
+        
+    } catch (error) {
+        console.log("update note error:",error);
+        t.rollback();
+        output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.description
+        res.send(output);
+    }
+    console.log("End of Update note");
+    return
+})
+
 module.exports=router;

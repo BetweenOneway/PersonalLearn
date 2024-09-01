@@ -216,6 +216,16 @@ SERVICE_STATUS={
         success:false,
         status:'SERVICE_027',
         description:'新增笔记失败'
+    },
+    UPDATE_NOTE_SUCCESS:{
+        success:true,
+        status:'SERVICE_028',
+        description:'更新笔记成功'
+    },
+    UPDATE_NOTE_FAIL:{
+        success:false,
+        status:'SERVICE_029',
+        description:'更新笔记失败'
     }
 }
 
@@ -271,6 +281,10 @@ EVENT_LIST = {
     ADD_NOTE:{
         code:'12',
         desc:'新增笔记'
+    },
+    UPDATE_NOTE:{
+        code:'13',
+        desc:'更新笔记'
     }
 }
 
