@@ -18,7 +18,7 @@
     import {useThemeStore} from './stores/themeStore'
     import {useUserStore} from './stores/userStore'
     import {storeToRefs} from 'pinia'
-    import {useRoute} from 'vue-router'
+    import {useRouter} from 'vue-router'
 
     const themeStore = useThemeStore()
     const {theme} = storeToRefs(themeStore)

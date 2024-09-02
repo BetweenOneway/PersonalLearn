@@ -1,11 +1,11 @@
 <template>
     <!--骨架屏-->
     <n-space vertical :wrap-item="false" v-if="loading">
-        <n-skelton :height="36" width="100%"></n-skelton>
-        <n-skelton text width="30%"></n-skelton>
-        <n-skelton text width="60%"></n-skelton>
-        <n-skelton text width="40%"></n-skelton>
-        <n-skelton text width="80%"></n-skelton>
+        <n-skeleton :height="36" width="100%"></n-skeleton>
+        <n-skeleton text width="30%"></n-skeleton>
+        <n-skeleton text width="60%"></n-skeleton>
+        <n-skeleton text width="40%"></n-skeleton>
+        <n-skeleton text width="80%"></n-skeleton>
     </n-space>
     <n-space vertical v-else>
         <!--发布时间 分享 更多操作-->
@@ -149,7 +149,7 @@
     }
 
     onMounted(()=>{
-        windows.addEventListener('keydown',(e)=>{
+        window.addEventListener('keydown',(e)=>{
             console.log(e);
             //ctrl+s
             if(e.keycode === 83 && e.ctrlkey === true)

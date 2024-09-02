@@ -1,3 +1,5 @@
+const process = require('node:process');
+
 const redis = require('redis');
 const redisClient = redis.createClient({port:'6379', host:'127.0.0.1',socket: {
     family: 4
@@ -7,22 +9,26 @@ const redisClient = redis.createClient({port:'6379', host:'127.0.0.1',socket: {
 //global.redisClient = redisClient;
 
 // 监听beforeExit事件
-process.on('beforeExit', () => {
-    console.log("before exit");
-    // 关闭Redis连接
-    redisClient.quit();
-  }
-);
+// process.on('exit', (code) => {
+//     console.log(`About to exit with code: ${code}`);
+//     if(redisClient.isOpen)
+//     {
+//         console.log("redisClient is open to close");
+//         // 关闭Redis连接
+//         //redisClient.quit();
+//     }
+//   }
+// );
 
 // 错误处理
-// redisClient.on('error', (error) => {
-//     // 输出错误信息
-//     console.error('Redis Error:', error);
+redisClient.on('error', (error) => {
+    // 输出错误信息
+    console.error('Redis Error:', error);
 
-//     // 自动重连
-//     redisClient.quit();
-//     redisClient.connect();
-// });
+    // 自动重连
+    //redisClient.quit();
+    //redisClient.connect();
+});
 
 async function redisConnect()
 {
@@ -30,9 +36,10 @@ async function redisConnect()
     {
         // Check if the socket is already opened
         if (!redisClient.isOpen) {
-            await redisClient.connect()
+            console.log("redis connecting...")
+            await redisClient.connect().catch(error => console.log(error));
         }
-        
+        console.log("redis connected");
         redisClient.on('error',err=>{
             console.log("redis connect error:",err)
         })
@@ -47,10 +54,20 @@ async function redisConnect()
 async function redisGet(key) {
     return new Promise(async(resolve, reject) => {
         try {
+            console.log("redis get,key:",key);
             await redisConnect()
-            redisClient.get(key).then(val=>{
-                resolve(val)
-                redisClient.quit()
+            redisClient.get(key).then((val,err)=>{
+                console.log("err:",err);
+                console.log("val:",val);
+                if(err)
+                {
+                    reject(err);
+                }
+                else
+                {
+                    resolve(val);
+                    redisClient.quit();
+                }
             })
         } catch (error) {
             console.log("redis Get error:",error);

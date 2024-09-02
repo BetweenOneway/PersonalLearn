@@ -412,6 +412,7 @@ router.get("/getNoteInfo",async (req,res)=>{
     let userInfo = validateInfo.userInfo;
 
     try {
+        console.log("get note info from db");
         const noteInfo = await sqldb.Note.findOne(
             {
                 attributes: ['update_time', 'content','title'],
@@ -422,6 +423,7 @@ router.get("/getNoteInfo",async (req,res)=>{
                 }
             }
         );
+        //console.log("retrived info from db:",noteInfo);
         if(noteInfo == null)
         {
             console.log("笔记获取失败，请稍后再试");
@@ -430,6 +432,7 @@ router.get("/getNoteInfo",async (req,res)=>{
             output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
         }
         else{
+            console.log("笔记获取信息成功");
             output.success = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
@@ -437,7 +440,7 @@ router.get("/getNoteInfo",async (req,res)=>{
         }
         res.send(output);
     } catch (error) {
-        console.log(error);
+        console.log("Get note info error:",error);
         output.success = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.success
         output.status = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.status
         output.description = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.description

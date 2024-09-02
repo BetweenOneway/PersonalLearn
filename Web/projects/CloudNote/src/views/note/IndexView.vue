@@ -115,7 +115,7 @@
         }
         else
         {
-            return parseInt(routerPath.value.subString('/note/edit/'.length));
+            return parseInt(routerPath.value.substring('/note/edit/'.length));
         }
     });
 
