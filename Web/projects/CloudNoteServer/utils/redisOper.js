@@ -1,64 +1,81 @@
 const process = require('node:process');
 
 const redis = require('redis');
-const redisClient = redis.createClient({port:'6379', host:'127.0.0.1',socket: {
-    family: 4
-  }})
 
-// 将Redis连接实例作为全局变量
-//global.redisClient = redisClient;
-
-// 监听beforeExit事件
-// process.on('exit', (code) => {
-//     console.log(`About to exit with code: ${code}`);
-//     if(redisClient.isOpen)
-//     {
-//         console.log("redisClient is open to close");
-//         // 关闭Redis连接
-//         //redisClient.quit();
-//     }
-//   }
-// );
-
-// 错误处理
-redisClient.on('error', (error) => {
-    // 输出错误信息
-    console.error('Redis Error:', error);
-
-    // 自动重连
-    //redisClient.quit();
-    //redisClient.connect();
-});
-
-async function redisConnect()
-{
-    try
-    {
-        // Check if the socket is already opened
-        if (!redisClient.isOpen) {
-            console.log("redis connecting...")
-            await redisClient.connect().catch(error => console.log(error));
+class RedisOper {
+    constructor(){
+        this.redisClient = redis.createClient({port:'6379', host:'127.0.0.1',socket: {
+            family: 4
+        }});
+        
+        // 配置redis的监听事件
+        this.redisClient.on('ready', function() {
+            console.log('Redis Client: ready')
+        })
+        
+        // 连接到redis-server回调事件
+        this.redisClient.on('connect', function () {
+            console.log(new Date(), 'redis is now connected!');
+        });
+        
+        this.redisClient.on('reconnecting', function () {
+            console.log(new Date(), 'redis reconnecting', arguments);
+        });
+        
+        this.redisClient.on('end', function () {
+            console.log('Redis Closed!');
+        });
+        
+        this.redisClient.on('warning', function () {
+            console.log('Redis client: warning', arguments);
+        });
+ 
+        this.redisClient.on('error', err => {
+            console.log('Redis Error ' + err);
+        });
+        
+        // 判断redis是否连接
+        if (this.redisClient.isOpen) {
+            console.log('rredis is now connected!')
+        } else {
+            this.redisClient.connect().catch(error => console.log(error));
         }
-        console.log("redis connected");
-        redisClient.on('error',err=>{
-            console.log("redis connect error:",err)
+    }
+
+    async contect() {
+        await this.redisClient.connect().catch(error => console.log(error));
+    }
+
+    quit() {
+        this.redisClient.quit();
+    }
+
+    async RedisGet(key) {
+        return new Promise(async(resolve, reject) => {
+            try {
+                console.log("redis get,key:",key);
+                this.redisClient.get(key).then((val,err)=>{
+                    console.log("err:",err);
+                    console.log("val:",val);
+                    if(err)
+                    {
+                        reject(err);
+                    }
+                    else
+                    {
+                        resolve(val);
+                    }
+                })
+            } catch (error) {
+                console.log("redis Get error:",error);
+            }
+            
         })
     }
-    catch(e)
-    {
-        console.log("redis connet error:",e)
-        throw(e)
-    }
-}
 
-async function redisGet(key) {
-    return new Promise(async(resolve, reject) => {
-        try {
-            console.log("redis get,key:",key);
-            await redisConnect()
-            redisClient.get(key).then((val,err)=>{
-                console.log("err:",err);
-                console.log("val:",val);
+    async RedisDel(key) {
+        return new Promise(async(resolve, reject) => {
+            this.redisClient.del(key).then((val,err)=>{
                 if(err)
                 {
                     reject(err);
@@ -66,46 +83,33 @@ async function redisGet(key) {
                 else
                 {
                     resolve(val);
-                    redisClient.quit();
                 }
             })
-        } catch (error) {
-            console.log("redis Get error:",error);
-        }
-        
-    })
-}
-
-async function redisDel(key) {
-    return new Promise(async(resolve, reject) => {
-        await redisConnect()
-        redisClient.del(key).then(val=>{
-            resolve(val)
-            redisClient.quit()
         })
-    })
+    }
+
+    async RedisSet(key,value,expireSeconds) {
+        return new Promise(async(resolve, reject) => {
+            try
+            {
+                this.redisClient.setEx(key,expireSeconds,value).then((val,err)=>{
+                    if(err)
+                    {
+                        reject(err);
+                    }
+                    else
+                    {
+                        resolve(val);
+                    }
+                })
+            }
+            catch(e)
+            {
+                console.log("set redis error:key:["+key+"],value:["+value+"]")
+                reject()
+            }
+        })
+    }
 }
 
-async function redisSet(key,value,expireSeconds) {
-    return new Promise(async(resolve, reject) => {
-        await redisConnect()
-        try
-        {
-            redisClient.setEx(key,expireSeconds,value).then(val=>{
-                resolve(val)
-                redisClient.quit()
-            })
-        }
-        catch(e)
-        {
-            console.log("set redis error:key:["+key+"],value:["+value+"]")
-            reject()
-        }
-    })
-}
-
-module.exports = {
-    RedisSet : redisSet,
-    RedisGet : redisGet,
-    RedisDel : redisDel
-}
+module.exports = new RedisOper()
