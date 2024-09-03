@@ -7,7 +7,7 @@
             show-trigger
             :collapsed-width="0"
             :width="340"
-            class = "note-list"
+            class="note-list"
         >
             <n-scrollbar @scroll="contextMenu.show=false">
                 <!--标题区 新增笔记按钮-->
@@ -22,6 +22,7 @@
                         </n-space>
                     </template>
                 </n-card>
+
                 <!--笔记列表骨架屏-->
                 <n-space v-if="loading" vertical style="margin:12px">
                     <n-card size="small" v-for="n in 3" :key="n">
@@ -32,25 +33,21 @@
                         </n-space>
                     </n-card>
                 </n-space>
+
                 <!--笔记列表-->
                 <n-list hoverable clickable style="margin:12px">
-                    <TransitionGroup 
-                    @before-enter="beforeEnter" @enter="enterEvent" 
-                    @before-leave="beforeLeave" @leave="leaveEvent"
-                    move-class="move-transition">
                         <template v-if="!loading && noteList.length > 0">
                             <n-list-item 
-                                v-for="(note,index) in noteList" :key="note.id" 
-                                :data-index="index" 
-                                @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
-                                :class="{'contexting':(contextMenu.id === note.id && contextMenu.show) ,'editing':(selectNoteId === note.id)}"
-                                @click="goEditNoteView(note.id)"
-                            >
+                            v-for="(note,index) in noteList" :key="note.id" 
+                            :data-index="index" 
+                            @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
+                            :class="{'contexting':(contextMenu.id === note.id && contextMenu.show) ,'editing':(selectNoteId === note.id)}"
+                            @click="goEditNoteView(note.id)">
                                 <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.body" :top="!!note.top" :time="note.update_time"></NoteCard>
                             </n-list-item>
                         </template>
-                    </TransitionGroup>
                 </n-list>
+
                 <!--暂无笔记-->
                 <n-empty v-if="!loading && noteList.length == 0"  style="width:max-content;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)" size="huge" description="暂无笔记列表">
                     <template #icon>
@@ -60,14 +57,18 @@
                         <n-button dashed>创建笔记</n-button>
                     </template>
                 </n-empty>
+
             </n-scrollbar>
         </n-layout-sider>
+
         <!--笔记编辑容器-->
         <n-layout-content embeded content-style="padding:20px">
             <!--子路由-->
             <router-view/>
         </n-layout-content>
+
     </n-layout>
+
     <!--删除提醒框-->
     <DeleteRemindDialog 
     :show="displayDeleteRemind"
@@ -97,10 +98,11 @@
     import { getUserToken,loginInvalid } from "../../Utils/userLogin";
     import { noteBaseRequest } from "../../request/noteRequest"
     import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue"
-    import {useMessage,useLoadingBar} from 'naive-ui'
+    import {useMessage,useLoadingBar,NIcon} from 'naive-ui'
     import gsap from "gsap"
     import {useRouter} from 'vue-router'
 
+    const collapsed=ref(false);
     //路由对象
     const router = useRouter()
 
@@ -484,18 +486,10 @@
     }
 </script>
 
-<style scoped>
+<style>
 /*只有将笔记列表容器收起来时，切换按钮的位置才会向右偏移*/
 .n-layout-sider.n-layout-sider--collapsed.note-list .n-layout-toggle-button {
     right: -30px;
-}
-
-.n-layout-sider.note-list .n-layout-toggle-button {
-    transition: right 2s;
-}
-
-.n-list .n-list-item.move-transition{
-    transition:all .5s;
 }
 
 /*右键效果*/
