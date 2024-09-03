@@ -102,7 +102,6 @@
     import gsap from "gsap"
     import {useRouter} from 'vue-router'
 
-    const collapsed=ref(false);
     //路由对象
     const router = useRouter()
 
@@ -233,6 +232,7 @@
             loadingBar.finish()
             //封装笔记列表
             noteList.value = responseData.data;
+            console.log("retrived note list:",noteList.value);
             //停止显示骨架屏
             loading.value = false;
         }

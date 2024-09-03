@@ -1,5 +1,5 @@
 <template>
-    <n-modal :show="show" preset="dialog" title="删除提醒" type="warning" closable="false" transform-origin="center">
+    <n-modal :show="show" preset="dialog" title="删除提醒" type="warning" :closable="false" transform-origin="center">
         <template #icon>
             <n-icon style="position:relative;top:-2px" :component="ReportGmailerrorredRound"></n-icon>
         </template>
