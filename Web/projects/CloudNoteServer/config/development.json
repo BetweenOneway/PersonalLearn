@@ -12,7 +12,11 @@
         "sequelize":{
             "host": "127.0.0.1",
             "dialect": "mysql",
-            "timezone": "+08:00", //东八时区
+            "timezone": "+08:00",
+            "dialectOptions": {
+                "dateStrings": true,
+                "typeCast": true
+            },
             "pool": {
                 "max": 10,
                 "min": 0,

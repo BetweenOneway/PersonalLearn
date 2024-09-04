@@ -54,12 +54,14 @@ router.get("/getUserNoteList",async (req,res)=>{
                 order:[
                     ['top', 'DESC'],
                     ['update_time','DESC']
-                ]
+                ],
+                raw:true,
             }
         );
         output.success = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.success
         output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
+
         output.data = notes
         res.send(output);
     } catch (error) {
@@ -286,7 +288,7 @@ router.delete("/deleteNote",async (req,res)=>{
  * userToken 用户信息
  */
 router.put("/createNote",async (req,res)=>{
-    console.log(req);
+    console.log("create note request info:",req);
 
     let output={
         success:false,
@@ -311,7 +313,7 @@ router.put("/createNote",async (req,res)=>{
     let validateInfo = await validate.IsUserValidate(inputInfo.userToken);
     if(!validateInfo.isValidated)
     {
-        console.log("Add memo,user info invalidated")
+        console.log("Add note,user info invalidated")
         output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
         output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
         output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
@@ -329,6 +331,7 @@ router.put("/createNote",async (req,res)=>{
             {
                 u_id:userInfo.id,
                 time:curTime,
+                update_time:curTime,
                 status:1,
                 type:1
             },
