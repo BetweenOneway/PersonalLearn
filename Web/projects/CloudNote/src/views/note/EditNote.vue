@@ -67,7 +67,7 @@
     //const ckeditor5 = CKEditor.component;
 
     const propsData = defineProps({
-        id:{type:Number,required:true}
+        id:{type:String,required:true}
     })
 
     //是否处于加载中

@@ -75,6 +75,7 @@
     :title="contextMenu.title"
     @delete="deleteNote"
     @cancel="displayDeleteRemind=false"></DeleteRemindDialog>
+
     <!--右键菜单-->
     <n-dropdown
     placement="bottom-start"
@@ -466,6 +467,7 @@
 
         if(responseData.success)
         {
+            console.log("Create Note responseData:",responseData)
             loadingBar.finish();
             message.success(responseData.description);
             //跳转编辑笔记路由
