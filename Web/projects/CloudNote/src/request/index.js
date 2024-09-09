@@ -52,7 +52,8 @@ const requestResponse = response =>{
         {
             loginInvalid(true)
         }
-        return null
+        console.log("login Invalid");
+        return null;
     }
     loadingBar.finish();
     //判断是否需要弹出成功消息 如登陆
@@ -60,6 +61,7 @@ const requestResponse = response =>{
     {
         message.success(response.config.name + "成功");
     }
+
     return responseData;
 }
 
@@ -75,12 +77,10 @@ noteServerRequest.interceptors.request.use(
 );
 
 noteServerRequest.interceptors.response.use(
-    response=>{
-        requestResponse(response);
+    response =>{
+        return requestResponse(response)
     },
-    error=>{
-        requestError(error);
-    }
+    error=>requestError(error)
 );
 
 //导出请求对象
