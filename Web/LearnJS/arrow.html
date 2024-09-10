@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function promiseFunc(params){
+            return new Promise(
+                function(suc,err)
+                {
+                    params++
+                    console.log("params=",params)
+                    suc(params);
+                }
+            );
+        }
+        function finalCall()
+        {
+            console.log("final call");
+        }
+
+        //这样Promise不起作用
+        const arrowFunction = (params) => {
+            promiseFunc(params)
+        }
+
+        //arrowFunction(0).then(finalCall);
+
+        //这样Promise起作用
+        const arrowFunction1 = (params) =>promiseFunc(params)
+
+        //arrowFunction1(1).then(finalCall);
+
+        //Promise起作用
+        const arrowFunction2 = (params) => {
+            return promiseFunc(params)
+        }
+        arrowFunction2(2).then(finalCall);
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
