@@ -48,14 +48,9 @@
     import { noteBaseRequest } from "../../request/noteRequest"
     import noteServerRequest  from "../../request"
     import userApi from "../../request/api/userApi"
-    import {useMessage,useLoadingBar} from 'naive-ui'
     import {useLoginModalStore} from "../../stores/loginModalStore"
     import {useUserStore} from "../../stores/userStore"
     import {disabledBtn} from '../../utils/disabledBtn'
-
-    //消息对象
-    const message = useMessage()
-    const loadingBar = useLoadingBar()
 
     //自定义事件
     const emits = defineEmits(['changeStep']);

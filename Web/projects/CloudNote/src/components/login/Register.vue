@@ -40,16 +40,15 @@
 </template>
 
 <script setup>
-    import {EmailOutlined, LockOpenOutlined} from "@vicons/material"
+    import {EmailOutlined} from "@vicons/material"
     import {ref} from 'vue'
-    import { noteBaseRequest } from "../../request/noteRequest"
-    import {useMessage,useLoadingBar} from 'naive-ui'
+    import noteServerRequest  from "../../request"
+    import mailApi from "../../request/api/mailApi"
+    import userApi from "../../request/api/userApi"
     import {disabledBtn} from '../../utils/disabledBtn'
 
     //消息对象
     const message = useMessage()
-    //进度条对象
-    const loadingBar = useLoadingBar()
 
     //验证码查询关键词
     const emailVerifyCodeToken = ref("")
@@ -100,67 +99,52 @@
 
     const registerBtnDisabled = ref(false)
 
-    const toRegister = (e)=>{
+    const toRegister = async (e)=>{
+        //取消默认行为
         e.preventDefault();
-        registerFormRef.value?.validate(async (errors) => {
-          if (!errors) {
-            //是否已经获取过验证码
-            const verifyCodeKey = emailVerifyCodeToken.value
-            if(verifyCodeKey === "" || verifyCodeKey === null)
-            {
-                console.log(verifyCodeKey)
-                throw message.error("请先获取验证码")
-            }
-            console.log(verifyCodeKey)
-            //判断接收验证码邮箱是否与注册邮箱一致
-            const vc_email = verifyCodeKey.split(":")[1]//获取验证码的邮箱
-            const email = registerFormValue.value.email;//注册邮箱
-            if(email !== vc_email)
-            {
-                throw message.error("注册邮箱账号发生改变")
-            }
-            //头部加载进度条开始
-            loadingBar.start()
-            //禁用按钮
-            disabledBtn(registerBtnDisabled,true);
-            //发送注册请求
-            const {data:responseData} = await noteBaseRequest.post(
-                "/user/register",
-                {
-                    userEmail:email,
-                    verifyCode:registerFormValue.value.verifyCode,
-                    verifyCodeKey:verifyCodeKey
-                }
-            ).catch(()=>{
-                //发送请求失败
-                loadingBar.error()//加载条异常结束
-                message.error("发送注册请求失败")
-                //解除禁用的登陆按钮
-                disabledBtn(registerBtnDisabled,false,true,1.5);
+        //验证表单
+        await registerFormRef.value?.validate((errors) => {
+            if(errors) throw "表单验证失败"
+        });
 
-                throw "发送注册请求失败"
-            })
-            //处理返回数据
-            console.log(responseData)
-            
+        //是否已经获取过验证码
+        const verifyCodeKey = emailVerifyCodeToken.value
+        if(!verifyCodeKey)
+        {
+            console.log(verifyCodeKey)
+            throw message.error("请先获取验证码")
+        }
+
+        //判断接收验证码邮箱是否与注册邮箱一致
+        const vc_email = verifyCodeKey.split(":")[1]//获取验证码的邮箱
+        const email = registerFormValue.value.email;//注册邮箱
+        if(email !== vc_email)
+        {
+            throw message.error("注册邮箱账号发生改变")
+        }
+
+        //禁用按钮
+        disabledBtn(registerBtnDisabled,true);
+
+        //获取请求API
+        let API = {...userApi.emailRegister};
+        //封装请求体中的数据
+        API.data = {
+            userEmail:email,
+            verifyCode:registerFormValue.value.verifyCode,
+            verifyCodeKey:verifyCodeKey
+        }
+        //发送注册请求
+        await noteServerRequest(API).then(responseData=>{
             if(responseData.success)
             {
-                //加载条正常结束
-                loadingBar.finish()
                 //跳转到注册成功的界面
                 emits('changeStep',3)
             }
-            else
-            {
-                //加载条异常结束
-                loadingBar.error()
-                //显示注册失败的通知
-                message.error(responseData.description)
-                //解除禁用的登陆按钮
-                disabledBtn(registerBtnDisabled,false,true,1.5);
-            }
-          } 
         });
+
+        //解除禁用的登陆按钮
+        disabledBtn(registerBtnDisabled,false,true,1.5);
     }
 
     const btnStatus = ref({
@@ -195,52 +179,31 @@
         btnStatus.value.disabled = false
     }
 
-    const getEmailVC = ()=>{
-        registerFormRef.value?.validate(
-            async (errors) => {
+    const getEmailVC = async ()=>{
+        //表单邮箱验证
+        await registerFormRef.value?.validate(
+            (errors) => {
                 if (!errors) {
-                    btnCountDown()
-                    //发送获取验证码请求
-                    loadingBar.start()
-                    const {data:responseData} = await noteBaseRequest.get(
-                        "/user/SendVerifyCode",
-                        {
-                            params:{
-                                userEmail:registerFormValue.value.email
-                            }
-                        }
-                    ).catch(()=>{
-                        //发送请求失败
-                        loadingBar.error()//加载条异常结束
-                        message.error("获取验证码失败")
-
-                        throw "获取验证码失败"
-                    })
-
-                    //处理返回数据
-                    console.log(responseData)
-                    
-                    if(responseData.success)
-                    {
-                        //加载条正常结束
-                        loadingBar.finish()
-                        //显示获取成功的通知
-                        message.success(responseData.description)
-
-                        emailVerifyCodeToken.value = responseData.data.userToken
-                    }
-                    else
-                    {
-                        //加载条异常结束
-                        loadingBar.error()
-                        //显示获取验证码失败的通知
-                        message.error(responseData.description)
-                    }
-                } 
+                    throw "表单验证失败"
+                }
             },
             (rule)=>{
                 return rule?.key === 'mail';
             }
         );
+
+        btnCountDown();
+        //获取请求API
+        let API = {...mailApi.getRegisterVC}
+        API.params = {
+            userEmail:registerFormValue.value.email
+        }
+
+        //发送请求
+        noteServerRequest(API).then(responseData =>{
+            if(!responseData) return;
+            //存储验证码关键词
+            emailVerifyCodeToken.value = responseData.data.userToken
+        })
     }
 </script>
