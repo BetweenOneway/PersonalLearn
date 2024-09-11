@@ -298,6 +298,10 @@
         }
     }
 
+    /**
+     * 置顶/取消置顶笔记
+     * @param {Boolean} isTop true置顶 false非彻底删除
+     */
     const SetNoteTop = async (isTop)=>{
         let API = {...noteApi.topNote};
         API.name = isTop ? API.name[0]:API.name[1];
@@ -328,46 +332,22 @@
         //关闭提醒框
         displayDeleteRemind.value = false;
 
-        //判断用户登录状态
-        const userToken = await getUserToken()
-
-        //头部加载进度条开始
-        loadingBar.start()
-
-        const {data:responseData} = await noteBaseRequest.delete(
-                "/note/deleteNote",
-                {
-                    params:{
-                        isCompleteDel:complete,
-                        userToken:userToken,
-                        noteId:contextMenu.value.id
-                    }
-                }
-            ).catch(()=>{
-                //加载条异常结束
-                loadingBar.error()
-                //显示删除失败的通知
-                throw message.error(complete?"彻底删除笔记失败":"删除笔记失败")
-            }
-        )
-
-        if(responseData.success)
-        {
-            loadingBar.finish()
-            message.success(responseData.description)
-            //重新获取便签列表 需要有删除动画
-            getNoteList(false,true)
+        //获取API
+        let API = {...noteApi.deleteNote}
+        API.name = complete?API.name[1]:API.name[0];
+        //请求URL的参数
+        API.params = {
+            isCompleteDel:complete,
+            noteId:contextMenu.value.id
         }
-        else
-        {
-            loadingBar.error()
-            message.error(responseData.description)
-            //登录失效处理
-            if(responseData.status ==='SERVICE_008')
+
+        noteServerRequest(API).then(responseData=>{
+            if(responseData)
             {
-                loginInvalid(true)
+                //重新获取便签列表 需要有删除动画
+                getNoteList(false,true)
             }
-        }
+        })
     }
 
     let noteContent = {
@@ -375,8 +355,8 @@
         defaultContent:'暂未设置内容'
     }
 
-    //前往编辑笔记的视图
     /**
+     * 前往编辑笔记的视图
      * @param {Number} id 笔记编号
      */
     const goEditNoteView = (id)=>{
