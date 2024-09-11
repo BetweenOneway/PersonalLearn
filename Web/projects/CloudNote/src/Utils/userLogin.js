@@ -11,6 +11,8 @@ export const getUserToken =async ()=>{
         const {changeLoginModalShow} = useLoginModalStore()
 
         await changeLoginModalShow(true)
+
+        throw "登录失效"
     }
     else{
         return token

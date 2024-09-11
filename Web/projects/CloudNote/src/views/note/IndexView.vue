@@ -98,6 +98,8 @@
     import NoteCard from '@/components/note/NoteCard.vue'
     import { getUserToken,loginInvalid } from "../../Utils/userLogin";
     import { noteBaseRequest } from "../../request/noteRequest"
+    import noteServerRequest  from "../../request"
+    import noteApi from '../../request/api/noteApi';
     import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue"
     import {useMessage,useLoadingBar,NIcon} from 'naive-ui'
     import gsap from "gsap"
@@ -207,46 +209,16 @@
      const getNoteList =async (ed,ha)=>{
         enterDelay = ed;
         hiddenAnimation = ha;
-        //判断用户登录状态
-        const userToken = await getUserToken()
-        //发送获取便签请求
-        //头部加载进度条开始
-        loadingBar.start();
 
-        const {data:responseData} = await noteBaseRequest.get(
-                "/note/getUserNoteList",
-                {
-                    params:{
-                        userToken
-                    }
-                }
-            ).catch(()=>{
-                //加载条异常结束
-                loadingBar.error()
-                //显示登陆失败的通知
-                throw message.error(responseData.description)
-            }
-        )
-
-        if(responseData.success)
-        {
-            loadingBar.finish()
-            //封装笔记列表
-            noteList.value = responseData.data;
-            console.log("retrived note list:",noteList.value);
-            //停止显示骨架屏
-            loading.value = false;
-        }
-        else
-        {
-            loadingBar.error()
-            message.error(responseData.description)
-            //登录失效处理
-            if(responseData.status ==='SERVICE_008')
+        noteServerRequest(noteApi.getNoteList).then(responseData=>{
+            if(responseData)
             {
-                loginInvalid(true)
+                //封装笔记列表
+                noteList.value = responseData.data;
+                //停止显示骨架屏
+                loading.value = false;
             }
-        }
+        })
     }
 
     getNoteList(true,false);
@@ -327,47 +299,22 @@
     }
 
     const SetNoteTop = async (isTop)=>{
-        //判断用户登录状态
-        const userToken = await getUserToken()
-        //发送置顶/取消置顶笔记请求
-        //头部加载进度条开始
-        loadingBar.start()
+        let API = {...noteApi.topNote};
+        API.name = isTop ? API.name[0]:API.name[1];
+        //请求URL的参数
+        API.params= {
+            targetTop:isTop?1:0,
+            noteId:contextMenu.value.id
+        };
 
-        const {data:responseData} = await noteBaseRequest.get(
-                "/note/setNoteTop",
-                {
-                    params:{
-                        userToken:userToken,
-                        targetTop:isTop?1:0,
-                        noteId:contextMenu.value.id
-                    }
-                }
-            ).catch(()=>{
-                //加载条异常结束
-                loadingBar.error()
-                //显示请求失败的通知
-                throw message.error(isTop?"置顶笔记失败":"取消置顶笔记失败")
-            }
-        )
-
-        if(responseData.success)
-        {
-            loadingBar.finish()
-            console.log(responseData)
-            message.success(responseData.description);
-            //重新获取笔记列表
-            getNoteList(false,false);
-        }
-        else
-        {
-            loadingBar.error()
-            message.error(responseData.description)
-            //登录失效处理
-            if(responseData.status ==='SERVICE_008')
+        //发送请求
+        noteServerRequest(API).then(responseData=>{
+            if(responseData)
             {
-                loginInvalid(true)
+                //重新获取笔记列表
+                getNoteList(false,false);
             }
-        }
+        })
     }
 
     //删除提醒框的对象

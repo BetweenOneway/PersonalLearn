@@ -30,8 +30,14 @@ const request = async config =>{
 const requestError = error =>{
     //加载条异常结束
     loadingBar.error();
-    //采用消息显示失败的原因
-    message.error("发送"+error.config.name+"请求失败");
+    if(error.config)
+    {
+        //采用消息显示失败的原因
+        message.error("发送"+error.config.name+"请求失败");
+    }
+    else{
+        message.error(error);
+    }
     //返回失败的原因
     //return Promise.reject(error);
 }
