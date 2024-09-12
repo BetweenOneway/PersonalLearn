@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>dome6</title>
+</head>
+
+<body>
+    <div id="dome">
+        <h3>v-bind</h3>
+        <!-- 属性绑定 -->
+        <input type="text" v-bind:value="bind"><br>
+        v-bind的简写:<input type="text" :value="bind">
+        <p>{{bind}}</p>
+
+        <h3>v-model</h3>
+        <input type="text" v-model:value="model"><br>
+        v-model的简写:<input type="text" v-model="model">
+        <p>{{model}}</p>
+        <!-- 事件绑定 -->
+        <h3>v-on</h3>
+        <button v-on:click="von">我被点了{{on}}次</button>
+        <button @click="von">简写版被点了{{on}}次</button>
+        <input :placeholder="on" />
+    </div>    
+</body>
+
+<script src="./js/vue.js"></script>
+<script>
+    new Vue({
+        el: "#dome",
+        data: {
+            bind : '我是属性绑定',
+            model : '我是双向绑定', 
+            on : 0
+        },
+        methods: {
+            von(){
+                this.on += 1
+            }
+        }
+        
+    })
+</script>
+</html>
