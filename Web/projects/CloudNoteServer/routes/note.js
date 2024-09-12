@@ -94,7 +94,9 @@ router.get("/setNoteTop",async (req,res)=>{
     let noteId = req.query.noteId
     let userToken = req.get('userToken')
 
-    if(!userToken.length || !noteId || targetTop ===undefined || 0!= targetTop || 1!= targetTop)
+    console.log("user Token:",userToken);
+
+    if(!userToken.length || !noteId || targetTop === undefined || (0!= targetTop && 1!= targetTop))
     {
         console.log("note set top, userToken or noteId or targetTop empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
@@ -148,7 +150,7 @@ router.get("/setNoteTop",async (req,res)=>{
                     event: event.code,
                     desc:event.desc,
                     u_id:userInfo.id,
-                    t_id:noteId
+                    n_id:noteId
                 }, 
                 { 
                     transaction: t 
@@ -198,8 +200,9 @@ router.delete("/deleteNote",async (req,res)=>{
     let isCompleteDel = req.query.isCompleteDel.toLowerCase() === 'true'
     let noteId = req.query.noteId
     let userToken = req.get('userToken')
-    
-    if(0 == userToken.length)
+
+    console.log("userToken:",userToken);
+    if(!userToken || 0 == userToken.length)
     {
         console.log("del note, userToken empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
@@ -251,7 +254,7 @@ router.delete("/deleteNote",async (req,res)=>{
                     event:event.code,
                     desc:event.desc,
                     u_id:userInfo.id,
-                    t_id:memoId,
+                    n_id:noteId,
                 },
                 {
                     transaction:t
@@ -546,7 +549,7 @@ router.post("/saveNote",async (req,res)=>{
                     event:event.code,
                     desc:event.desc,
                     u_id:userInfo.id,
-                    t_id:inputInfo.memoId
+                    n_id:inputInfo.noteId
                 },
                 {
                     transaction:t
