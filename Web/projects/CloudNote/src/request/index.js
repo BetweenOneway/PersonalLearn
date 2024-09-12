@@ -15,12 +15,16 @@ const request = async config =>{
     //加载条开始
     loadingBar.start();
     //判断是否需要请求头中的userToken
-    if(config.userPower) config.headers.userToken = await getUserToken();
+    if(config.userPower) 
+    {
+        config.headers.userToken = await getUserToken();
+    }
     //是否需要将请求体中的参数转换成URL参数
     if(config.dataParam)
     {
         config.transformRequest=[(data)=>qs.stringify(data)]
     }
+
     return config;
 }
 

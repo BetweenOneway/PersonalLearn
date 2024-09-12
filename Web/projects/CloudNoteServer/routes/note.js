@@ -23,8 +23,9 @@ router.get("/getUserNoteList",async (req,res)=>{
         data:[]
     }
 
-    console.log("start getUserNoteList",req.query)
-    var userToken = req.query.userToken
+    console.log("start getUserNoteList")
+    
+    var userToken = req.get('userToken')
     let status = 1
     let userInfo = {}
 
@@ -91,7 +92,7 @@ router.get("/setNoteTop",async (req,res)=>{
     //目标状态
     let targetTop = req.query.targetTop
     let noteId = req.query.noteId
-    let userToken = req.query.userToken
+    let userToken = req.get('userToken')
 
     if(!userToken.length || !noteId || targetTop ===undefined || 0!= targetTop || 1!= targetTop)
     {
@@ -196,7 +197,8 @@ router.delete("/deleteNote",async (req,res)=>{
     //目标状态
     let isCompleteDel = req.query.isCompleteDel.toLowerCase() === 'true'
     let noteId = req.query.noteId
-    let userToken = req.query.userToken
+    let userToken = req.get('userToken')
+    
     if(0 == userToken.length)
     {
         console.log("del note, userToken empty")
