@@ -22,6 +22,30 @@ const noteApi = {
         userPower:true,
         dataParam:false,
         successMessage:true
+    },
+    createNote:{
+        name:'创建笔记',
+        url:'/note/createNote',
+        method:'PUT',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
+    saveNote:{
+        name:'保存笔记',
+        url:'/note/saveNote',
+        method:'POST',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
+    getNoteInfo:{
+        name:'获取笔记信息',
+        url:'/note/getNoteInfo',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:false
     }
 }
 

@@ -64,7 +64,7 @@
         <!--笔记编辑容器-->
         <n-layout-content embeded content-style="padding:20px">
             <!--子路由-->
-            <router-view/>
+            <router-view @save="getNoteList(false,false)"/>
         </n-layout-content>
 
     </n-layout>
@@ -96,8 +96,6 @@
         DeleteOutlineRound,ArrowCircleDownRound,
         ArrowCircleUpRound} from'@vicons/material'
     import NoteCard from '@/components/note/NoteCard.vue'
-    import { getUserToken,loginInvalid } from "../../Utils/userLogin";
-    import { noteBaseRequest } from "../../request/noteRequest"
     import noteServerRequest  from "../../request"
     import noteApi from '../../request/api/noteApi';
     import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue"
@@ -373,45 +371,16 @@
      * 创建笔记
      */
     const createNote = async ()=>{
-        //判断用户登录状态
-        const userToken = await getUserToken()
-
-        //头部加载进度条开始
-        loadingBar.start()
-
-        const {data:responseData} = await noteBaseRequest.put(
-                "/note/createNote",
-                {
-                    userToken:userToken
-                }
-            ).catch(()=>{
-                //加载条异常结束
-                loadingBar.error()
-                //显示删除失败的通知
-                throw message.error("新建笔记失败")
-            }
-        )
-
-        if(responseData.success)
-        {
-            console.log("Create Note responseData:",responseData)
-            loadingBar.finish();
-            message.success(responseData.description);
-            //跳转编辑笔记路由
-            goEditNoteView(responseData.data.noteId);
-            //重新获取便签列表 新增笔记不需要显示的延迟动画
-            getNoteList(false,false);
-        }
-        else
-        {
-            loadingBar.error()
-            message.error(responseData.description)
-            //登录失效处理
-            if(responseData.status ==='SERVICE_008')
+        //发送请求
+        noteServerRequest(noteApi.createNote).then(responseData=>{
+            if(responseData) 
             {
-                loginInvalid(true)
+                //跳转编辑笔记路由
+                goEditNoteView(responseData.data.noteId);
+                //重新获取便签列表 新增笔记不需要显示的延迟动画
+                getNoteList(false,false);
             }
-        }
+        })
     }
 </script>
 

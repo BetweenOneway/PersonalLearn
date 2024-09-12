@@ -51,8 +51,9 @@
 <script setup>
     import { Ckeditor } from '@ckeditor/ckeditor5-vue';
     import {EditorType,getEditorConfigs} from "@/editor"
-    import { getUserToken,loginInvalid } from "../../Utils/userLogin";
-    import { noteBaseRequest } from "../../request/noteRequest";
+    import { getUserToken } from "../../Utils/userLogin";
+    import noteServerRequest from '../../request';
+    import noteApi from '../../request/api/noteApi';
     import {useMessage,useLoadingBar} from 'naive-ui'
     import {FiberManualRecordRound,
         StarBorderRound,
@@ -60,6 +61,8 @@
     } from'@vicons/material'
     import 'ckeditor5/ckeditor5.css';
     
+    //自定义事件
+    const emits = defineEmits(['save']);
     //消息对象
     const message = useMessage()
     const loadingBar = useLoadingBar()
@@ -81,45 +84,22 @@
      const getNoteInfo = async ()=>{
         //加载中
         loading.value = true;
-        //判断用户登录状态
-        const userToken = await getUserToken()
 
-        //头部加载进度条开始
-        loadingBar.start()
+        let API = {...noteApi.getNoteInfo};
+        //请求的URL参数
+        API.params = {noteId:propsData.id}
 
-        const {data:responseData} = await noteBaseRequest.get(
-                "/note/getNoteInfo",
-                {
-                    params:{
-                        userToken:userToken,
-                        noteId:propsData.id
-                    }
-                }
-            ).catch(()=>{
-                //加载条异常结束
-                loadingBar.error()
-                //显示失败的通知
-                throw message.error("获取笔记信息失败")
+        //发送请求
+        noteServerRequest(API).then(
+            responseData=>{
+                if(!responseData) return;
+
+                //笔记的信息
+                note.value = responseData.data;
+                //加载已完毕
+                loading.value = false;
             }
         )
-
-        if(responseData.success)
-        {
-            loading.value = false;
-            loadingBar.finish();
-            console.log(responseData.data)
-            note.value = responseData.data;
-        }
-        else
-        {
-            loadingBar.error()
-            message.error(responseData.description)
-            //登录失效处理
-            if(responseData.status ==='SERVICE_008')
-            {
-                loginInvalid(true)
-            }
-        }
     }
 
     //如果笔记编号发生改变 重新获取指定笔记信息
@@ -173,44 +153,25 @@
         const content = note.value.content;
 
         //判断用户登录状态
-        const userToken = await getUserToken()
+        const userToken = await getUserToken();
 
-        loadingBar.start();
-        const {data:responseData} = await noteBaseRequest.post(
-                "/note/saveNote",
-                {
-                    params:{
-                        userToken:userToken,
-                        noteId:propsData.id,
-                        title:title,
-                        body:body,
-                        content:content
-                    }
-                }
-            ).catch(()=>{
-                loadingBar.error();
-                //显示失败的通知
-                throw message.error("保存笔记失败")
-            }
-        )
+        //表单
+        let formData = new FormData();
+        formData.append("noteId",noteId)
+        formData.append("title",title)
+        formData.append("body",body)
+        formData.append("content",content)
 
-        if(responseData.success)
-        {
-            loadingBar.finish();
-            message.success(responseData.message);
-            console.log(responseData.data)
-            note.update_time = responseData.data.update_time;
-        }
-        else
-        {
-            loadingBar.error()
-            message.error(responseData.description)
-            //登录失效处理
-            if(responseData.status ==='SERVICE_008')
-            {
-                loginInvalid(true)
-            }
-        }
+        let API = {...noteApi.saveNote}
+        API.data = formData;
+        noteServerRequest(API).then(responseData=>{
+            if(!responseData) return;
+
+            //更新笔记最后一次操作时间
+            note.value.update_time = responseData.data.update_time;
+            //告诉父组件重新获取列表
+            emits('save');
+        })
     }
 </script>
 

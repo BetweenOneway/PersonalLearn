@@ -302,7 +302,7 @@ router.put("/createNote",async (req,res)=>{
         data:{}
     }
     let inputInfo = {}
-    inputInfo.userToken = req.body.userToken
+    inputInfo.userToken = req.get('userToken')
 
     if(!inputInfo.userToken)
     {
@@ -395,8 +395,8 @@ router.get("/getNoteInfo",async (req,res)=>{
     
     //目标状态
     let noteId = req.query.noteId
-    let userToken = req.query.userToken
-    if(!userToken.length || !noteId)
+    let userToken = req.get('userToken')
+    if(!userToken?.length || !noteId)
     {
         console.log("Get Note Info, userToken or noteId empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
@@ -480,7 +480,7 @@ router.post("/saveNote",async (req,res)=>{
     }
 
     let inputInfo = {}
-    inputInfo.userToken = req.query.userToken
+    inputInfo.userToken = req.get('userToken')
     inputInfo.noteId = req.query.noteId
     inputInfo.title = req.query.title
     inputInfo.body = req.query.body
