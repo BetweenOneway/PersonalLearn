@@ -1,0 +1,52 @@
+const memoApi = {
+    getMemoList:{
+        name:'获取便签列表',
+        url:'/memo/getUserMemoList',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:false
+    },
+    topMemo:{
+        name:['置顶便签','取消置顶便签'],
+        url:'/memo/setMemoTop',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
+    deleteMemo:{
+        name:['删除便签','彻底删除便签'],
+        url:'/memo/deleteMemo',
+        method:'DELETE',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
+    createNote:{
+        name:'创建笔记',
+        url:'/note/createNote',
+        method:'PUT',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
+    saveNote:{
+        name:'保存笔记',
+        url:'/note/saveNote',
+        method:'POST',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
+    getNoteInfo:{
+        name:'获取笔记信息',
+        url:'/note/getNoteInfo',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:false
+    }
+}
+
+export default noteApi
