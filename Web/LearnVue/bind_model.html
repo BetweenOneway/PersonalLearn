@@ -21,13 +21,12 @@
         <h3>v-on</h3>
         <button v-on:click="von">我被点了{{on}}次</button>
         <button @click="von">简写版被点了{{on}}次</button>
-        <input :placeholder="on" />
     </div>    
 </body>
 
 <script src="./js/vue.js"></script>
 <script>
-    new Vue({
+    let vm = new Vue({
         el: "#dome",
         data: {
             bind : '我是属性绑定',
