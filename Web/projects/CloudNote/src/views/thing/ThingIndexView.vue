@@ -58,9 +58,9 @@
                         :top="!!memo.top" 
                         :tags="memo.tags.split(',')" 
                         :time="memo.update_time" 
-                        @changeStatus="getMemoList(false,false)"
                         @delete="showDeleteRemindDialog"
-                        @edit="editMemoModalRef.showEditModal(memo.id)"></meoCard>
+                        @edit="editMemoModalRef.showEditModal(memo.id)"
+                        @top="SetMemoTop"></meoCard>
                     </template>
                 </TransitionGroup>
             </n-space>
@@ -94,9 +94,9 @@
     } from "@vicons/material"
     import { useThemeStore } from "../../stores/themeStore";
     import {useUserStore} from '../../stores/userStore'
-    import { getUserToken,loginInvalid } from "../../Utils/userLogin";
-    import { noteBaseRequest } from "../../request/noteRequest"
-    import {useMessage,useLoadingBar} from 'naive-ui'
+    import noteServerRequest  from "../../request"
+    import memoApi from '../../request/api/memoApi';
+    import {useLoadingBar} from 'naive-ui'
     import meoCard from '../../components/memo/memoCard.vue'
     import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue";
     import EditMemoModal from "../../components/memo/EditMemoModal.vue";
@@ -113,7 +113,7 @@
             //是否重新进行登录
             if(newData !== null)
             {
-                loadingBar.vaue = true;
+                loadingBar.value = true;
                 //重新获取用户便签列表
                 getMemoList(true,false);
                 //判断编辑便签窗口是否需要关闭
@@ -127,7 +127,6 @@
     );
 
     //消息对象
-    const message = useMessage()
     const loadingBar = useLoadingBar()
 
     //是否处于加载中
@@ -171,47 +170,20 @@
     const getMemoList =async (ed,ha)=>{
         enterDelay = ed;
         hiddenAnimation = ha;
-        //判断用户登录状态
-        const userToken = await getUserToken()
-        //发送获取便签请求
-        //头部加载进度条开始
-        loadingBar.start();
 
-        const {data:responseData} = await noteBaseRequest.get(
-                "/memo/getUserMemoList",
-                {
-                    params:{
-                        userToken,
-                        searchText:search.value,
-                        filter:filter.value
-                    }
-                }
-            ).catch(()=>{
-                //加载条异常结束
-                loadingBar.error()
-                //显示登陆失败的通知
-                throw message.error(responseData.description)
-            }
-        )
+        let API = {...memoApi.getMemoList};
+        API.params={
+            searchText:search.value,
+            filter:filter.value
+        }
 
-        if(responseData.success)
-        {
-            loadingBar.finish()
-            console.log(responseData)
+        noteServerRequest(API).then(responseData=>{
+            if(!responseData) return;
+
             memos.value = responseData.data
             //加载完成 骨架屏不再显示
             loading.value = false
-        }
-        else
-        {
-            loadingBar.error()
-            message.error(responseData.description)
-            //登录失效处理
-            if(responseData.status ==='SERVICE_008')
-            {
-                loginInvalid(true)
-            }
-        }
+        })
     }
 
     //首次进入页面 获取便签列表
@@ -294,47 +266,44 @@
     //删除便签 
     //complete true彻底删除 false非彻底删除
     const deleteMemo = async (complete)=>{
-        //判断用户登录状态
-        const userToken = await getUserToken()
+        //关闭提醒框
+        deleteRemind.value.show = false;
 
-        //头部加载进度条开始
-        loadingBar.start()
-
-        const {data:responseData} = await noteBaseRequest.delete(
-                "/memo/deleteMemo",
-                {
-                    params:{
-                        isCompleteDel:complete,
-                        userToken:userToken,
-                        memoId:deleteRemind.value.id
-                    }
-                }
-            ).catch(()=>{
-                //加载条异常结束
-                loadingBar.error()
-                //显示删除失败的通知
-                throw message.error(complete?"彻底删除便签失败":"删除便签失败")
-            }
-        )
-
-        if(responseData.success)
-        {
-            loadingBar.finish()
-            console.log(responseData)
-            message.success(responseData.description)
-            //重新获取便签列表 需要有删除动画
-            getMemoList(false,true)
+        let API = {...memoApi.deleteMemo};
+        API.name = complete ? API.name[1]:API.name[0];
+        API.params = {
+            isCompleteDel:complete,
+            memoId:deleteRemind.value.id
         }
-        else
-        {
-            loadingBar.error()
-            message.error(responseData.description)
-            //登录失效处理
-            if(responseData.status ==='SERVICE_008')
-            {
-                loginInvalid(true)
-            }
+
+        noteServerRequest(API).then(responseData=>{
+            if(!responseData) return;
+            getMemoList(false,true);
+        })
+    }
+
+    /**
+     * 置顶或取消置顶便签
+     * @param {Boolean} isTop 是否置顶 目标状态
+     * @param {Boolean} memoId 便签编号
+     * @param btnDisabled 置顶按钮是否被禁用
+     */
+    const SetMemoTop = async (isTop,memoId,btnDisabled)=>{
+        //禁用便签置顶按钮
+        disabledBtn(btnDisabled,true);
+
+        let API = {...memoApi.topMemo};
+        API.name = isTop ? API.name[0] : API.name[1];
+        API.params = {
+            targetTop:isTop?1:0,
+            memoId:memoId
         }
+        await noteServerRequest(API).then(responseData=>{
+            if(!responseData) return;
+            getMemoList(false,false);
+        })
+        //解除禁用便签置顶按钮
+        disabledBtn(btnDisabled,false,true,1);
     }
 
     //编辑便签模态框引用

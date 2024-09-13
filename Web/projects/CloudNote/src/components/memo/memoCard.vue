@@ -18,7 +18,7 @@
             <n-popover>
                 <template #trigger>
                     <!--memo.top 0 非置顶 1 置顶-->
-                    <n-button :disabled="topBtnDisabled" text style="margin-left:8px" @click="SetMemoTop(!top)">
+                    <n-button :disabled="topBtnDisabled" text style="margin-left:8px" @click="clickTopBtn">
                         <n-icon :size="18" :component="memoCardTopIconText.icon"></n-icon>
                     </n-button>
                 </template>
@@ -64,17 +64,8 @@
         EditNoteRound
     } from "@vicons/material"
 
-    import { getUserToken,loginInvalid } from "../../Utils/userLogin"
-    import { noteBaseRequest } from "../../request/noteRequest"
-    import {useMessage,useLoadingBar} from 'naive-ui'
-    import {disabledBtn} from '../../utils/disabledBtn'
-
     const themeStore = useThemeStore()
     const {isDarkTheme} = storeToRefs(themeStore)
-
-    //消息对象
-    const message = useMessage()
-    const loadingBar = useLoadingBar()
 
     //自定义属性
     const propsData = defineProps({
@@ -87,7 +78,7 @@
     })
     
     //自定义事件
-    const emits = defineEmits(['changeStatus','delete','edit'])
+    const emits = defineEmits(['delete','edit','top'])
 
     //便签已完成图片影子的颜色
     const thingFinishedShadowColor = computed(()=>{
@@ -118,57 +109,11 @@
         }
     })
 
-    //置顶或取消置顶便签
-    //isTop bool 是否置顶 目标状态
-    const SetMemoTop = async (isTop)=>{
-        
-        //判断用户登录状态
-        const userToken = await getUserToken()
-        //发送置顶/取消置顶便签请求
-        //头部加载进度条开始
-        loadingBar.start()
-
-        //禁用便签置顶按钮
-        disabledBtn(topBtnDisabled,true);
-        const {data:responseData} = await noteBaseRequest.get(
-                "/memo/setMemoTop",
-                {
-                    params:{
-                        userToken:userToken,
-                        targetTop:isTop?1:0,
-                        memoId:propsData.id
-                    }
-                }
-            ).catch(()=>{
-                //加载条异常结束
-                loadingBar.error()
-                /解除禁用便签置顶按钮
-                disabledBtn(topBtnDisabled,false,true,1);
-                //显示请求失败的通知
-                throw message.error(isTop?"置顶便签失败":"取消置顶便签失败")
-            }
-        )
-
-        disabledBtn(topBtnDisabled,false,true,1);
-        if(responseData.success)
-        {
-            loadingBar.finish()
-            console.log(responseData)
-            message.success(responseData.description)
-            //通知父组件重新获取便签列表
-            emits('changeStatus')
-        }
-        else
-        {
-            loadingBar.error()
-            message.error(responseData.description)
-            //登录失效处理
-            if(responseData.status ==='SERVICE_008')
-            {
-                loginInvalid(true)
-            }
-        }
+    //点击置顶按钮
+    const clickTopBtn = ()=>{
+        emits('top',!propsData.top,propsData.id,topBtnDisabled)
     }
+    
 </script>
 
 <style scoped>
