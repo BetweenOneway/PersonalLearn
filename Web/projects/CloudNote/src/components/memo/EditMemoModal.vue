@@ -127,9 +127,7 @@
     import {
         AddBoxRound,DeleteForeverFilled
     } from "@vicons/material"
-    import {useNotification,NText,NSpace,useMessage,useLoadingBar} from 'naive-ui'
-    import { getUserToken,loginInvalid } from "../../Utils/userLogin"
-    import { noteBaseRequest } from "../../request/noteRequest"
+    import {useNotification,NText,NSpace} from 'naive-ui'
     import noteServerRequest  from "../../request"
     import memoApi from '../../request/api/memoApi';
     import bus from 'vue3-eventbus'
@@ -140,8 +138,7 @@
 
     //通知对象
     const notification = useNotification()
-    const message = useMessage()
-    const loadingBar = useLoadingBar()
+
 
     //自定义事件
     const emits = defineEmits(['save'])
@@ -211,14 +208,10 @@
 
     //新增便签的保存 修改便签的保存
     const saveUpdateMemo = async(isNewCreate)=>{
-        //判断用户登录状态
-        const userToken = await getUserToken()
-        
-        //头部加载进度条开始
-        loadingBar.start()
-
+        //禁用保存按钮
         disabledBtn(saveBtnDisabled,true);
 
+        //请求参数
         const memoId = formValue.value.id //只有修改的时候使用
         const title = formValue.value.title
         const tags = formValue.value.tags.join()
@@ -226,63 +219,31 @@
         const finished = formValue.value.finished
         const top = formValue.value.top
 
-        //发送保存请求
-        let url = '/memo/updateMemo'
-        let method = 'POST'
-        if(isNewCreate)
-        {
-            method='PUT'
-            url="/memo/addMemo"
-        }
+        let API = {...memoApi.saveMemo};
 
-        const {data:responseData} = await noteBaseRequest(
-                {
-                    method,
-                    url,
-                    data:{
-                        userToken:userToken,
-                        memoId:memoId,
-                        title:title,
-                        tags:tags,
-                        content:content,
-                        finished:finished,
-                        top:top
-                    }
-                }
-            ).catch(()=>{
-                //加载条异常结束
-                loadingBar.error()
-                disabledBtn(saveBtnDisabled,false,true,2);//解除禁用按钮
-                //显示请求失败的通知
-                throw message.error('保存便签失败')
-            }
-        )
-        console.log(responseData.success)
+        API.url = isNewCreate? API.url[1]:API.url[0];
+        API.method = isNewCreate? API.method[1]:API.method[0];
 
-        disabledBtn(saveBtnDisabled,false,true,2);//解除禁用按钮
-        
-        if(responseData.success)
-        {
-            loadingBar.finish()
-            //显示发送成功的通知
-            message.success(responseData.description)
+        let formData = new FormData();
+        formData.append("memoId",memoId);
+        formData.append("title",title);
+        formData.append("tags",tags);
+        formData.append("content",content);
+        formData.append("finished",finished);
+        formData.append("top",top);
+
+        API.data = fromData;
+
+        await noteServerRequest(API).then(responseData=>{
+            if(!responseData) return;
             //关闭编辑便签窗口
             show.value = false
             //重新获取便签列表
             emits('save',false,false)
-        }
-        else
-        {
-            loadingBar.error()
-            
-            message.error(responseData.description)
-            //登录失效处理
-            if(responseData.status ==='SERVICE_008')
-            {
-                loginInvalid(true)
-            }
-        }
-        
+        })
+
+        //解除禁用按钮
+        disabledBtn(saveBtnDisabled,false,true,2);
     }
 
     /**
@@ -311,18 +272,19 @@
         })
     }
 
+    let formNotification = null;
+
     //保存新增便签
-    const saveNewAddMemo = (e)=>{
-        formRef.value?.validate(errors=>{
-            if(!errors)
-            {
-                saveUpdateMemo(formValue.value.id === null)
-            }
-            else
+    const saveNewAddMemo = async(e)=>{
+        //销毁之前的通知
+        if(formNotification) formNotification.destroy()
+        //表单验证
+        await formRef.value?.validate(errors=>{
+            if(errors)
             {
                 //所有验证出错消息对象
                 const errorMessage = [].concat(...errors)
-                notification.error({
+                formNotification = notification.error({
                     title:'新增便签保存提醒',
                     content:()=>h(NSpace,{
                         vertical:true
@@ -336,8 +298,11 @@
                         )
                     })
                 })
+                throw "表单验证失败"
             }
         })
+
+        saveUpdateMemo(formValue.value.id === null)
     }
 
     //是否处于加载中
@@ -351,6 +316,8 @@
         if(id === null)
         {
             show.value = true
+            //结束加载状态
+            loading.value = false;
         }
         else
         {

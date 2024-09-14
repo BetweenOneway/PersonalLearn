@@ -23,10 +23,10 @@ const memoApi = {
         dataParam:false,
         successMessage:true
     },
-    saveNote:{
-        name:'保存笔记',
-        url:'/note/saveNote',
-        method:'POST',
+    saveMemo:{
+        name:'新增便签',
+        url:['/memo/updateMemo','/memo/addMemo'],
+        method:['POST','PUT'],
         userPower:true,
         dataParam:false,
         successMessage:true
