@@ -1,13 +1,13 @@
 <template>
     <n-card :segmented="{'content':soft}" 
-                :class="{'thing-card-finished' : finished}" size="small" 
-                :bordered="isDarkTheme" style="min-width:220px;max-width:max-content"
-                :embedded :title="title">
+            :class="{'thing-card-finished' : finished}" size="small" 
+            :bordered="isDarkTheme" style="min-width:220px;max-width:max-content"
+            :embedded :title="title" hoverable>
         <template #header-extra>
             <!--删除按钮-->
             <n-popover>
                 <template #trigger>
-                    <n-button text style="margin-left:16px" @click="emits('delete',{id,title})">
+                    <n-button text style="margin-left:16px" @click.stop="emits('delete',{id,title})">
                         <n-icon :size="18" :component="DeleteOutlineRound"></n-icon>
                     </n-button>
                 </template>
@@ -18,21 +18,11 @@
             <n-popover>
                 <template #trigger>
                     <!--memo.top 0 非置顶 1 置顶-->
-                    <n-button :disabled="topBtnDisabled" text style="margin-left:8px" @click="clickTopBtn">
+                    <n-button :disabled="topBtnDisabled" text style="margin-left:8px" @click.stop="clickTopBtn">
                         <n-icon :size="18" :component="memoCardTopIconText.icon"></n-icon>
                     </n-button>
                 </template>
                 {{ memoCardTopIconText.text }}
-            </n-popover>
-
-            <!--编辑按钮-->
-            <n-popover>
-                <template #trigger>
-                    <n-button text style="margin-left:8px" @click="emits('edit')">
-                        <n-icon :size="18" :component="EditNoteRound"></n-icon>
-                    </n-button>
-                </template>
-                编辑
             </n-popover>
         </template>
         <!--便签标签-->
@@ -78,7 +68,7 @@
     })
     
     //自定义事件
-    const emits = defineEmits(['delete','edit','top'])
+    const emits = defineEmits(['delete','top'])
 
     //便签已完成图片影子的颜色
     const thingFinishedShadowColor = computed(()=>{

@@ -130,6 +130,8 @@
     import {useNotification,NText,NSpace,useMessage,useLoadingBar} from 'naive-ui'
     import { getUserToken,loginInvalid } from "../../Utils/userLogin"
     import { noteBaseRequest } from "../../request/noteRequest"
+    import noteServerRequest  from "../../request"
+    import memoApi from '../../request/api/memoApi';
     import bus from 'vue3-eventbus'
     import {disabledBtn} from '../../utils/disabledBtn'
 
@@ -283,41 +285,20 @@
         
     }
 
-    //获取便签信息
     /**
-     * 
+     * 获取便签信息
      * @param {Integer} id 
      */
     const getMemoInfo = async (id) =>{
-        //判断用户登录状态
-        const userToken = await getUserToken()
-        
-        //头部加载进度条开始
-        loadingBar.start()
+        //处于加载中
+        loading.value = true;
+        //
+        let API = {...memoApi.getMemoInfo};
+        API.params = {memoId:id}
 
-        //发送获取便签请求
-        const {data:responseData} = await noteBaseRequest.get(
-                "/memo/getMemoInfo",
-                {
-                    params:{
-                        userToken:userToken,
-                        memoId:id
-                    }
-                }
-            ).catch(()=>{
-                //加载条异常结束
-                loadingBar.error()
-                //关闭编辑便签窗口
-                show.value = false;
-                //显示获取便签信息失败的通知
-                throw message.error('获取便签信息失败')
-            }
-        )
-        console.log(responseData.success)
-
-        if(responseData.success)
-        {
-            loadingBar.finish()
+        //
+        noteServerRequest(API).then(responseData=>{
+            if(!responseData) return;
             const memoInfo = responseData.data
             userId.value = memoInfo.u_id;
             formValue.value.title = memoInfo.title
@@ -325,19 +306,9 @@
             formValue.value.tags = memoInfo.tags.split(',')
             formValue.value.content = JSON.parse(memoInfo.content)
             loading.value = false
-        }
-        else
-        {
-            loadingBar.error()
-            //关闭编辑便签窗口
-            show.value = false;
-            message.error(responseData.description)
-            //登录失效处理
-            if(responseData.status ==='SERVICE_008')
-            {
-                loginInvalid(true)
-            }
-        }
+            //显示编辑便签的窗口
+            show.value = true;
+        })
     }
 
     //保存新增便签
@@ -372,18 +343,14 @@
     //是否处于加载中
     const loading = ref(true)
 
-    //显示便签编辑模态框
     /**
-     * 
+     * 显示便签编辑模态框
      * @param {Number} id 无值 新增 有值编辑
      */
     const showEditModal = (id)=>{
-        show.value = true
-        loading.value = true
         if(id === null)
         {
-            //新增便签
-            loading.value = false
+            show.value = true
         }
         else
         {

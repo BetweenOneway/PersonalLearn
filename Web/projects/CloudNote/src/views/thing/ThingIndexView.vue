@@ -50,7 +50,8 @@
                 @before-leave="beforeLeave" @leave="leaveEvent"
                 move-class="move-transition">
                     <template v-if="!loading && memos.length > 0">
-                        <meoCard v-for="(memo,index) in memos" :key="memo.id" 
+                        <meoCard style="cursor:pointer" 
+                        v-for="(memo,index) in memos" :key="memo.id" 
                         :data-index="index"
                         :id="memo.id" 
                         :title="memo.title" 
@@ -59,7 +60,7 @@
                         :tags="memo.tags.split(',')" 
                         :time="memo.update_time" 
                         @delete="showDeleteRemindDialog"
-                        @edit="editMemoModalRef.showEditModal(memo.id)"
+                        @click="editMemoModalRef.showEditModal(memo.id)"
                         @top="SetMemoTop"></meoCard>
                     </template>
                 </TransitionGroup>
