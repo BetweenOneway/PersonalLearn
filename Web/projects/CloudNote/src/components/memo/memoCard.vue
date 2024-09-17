@@ -1,8 +1,8 @@
 <template>
-    <n-card :segmented="{'content':soft}" 
+    <n-card :segmented="{'content':'soft'}" 
             :class="{'thing-card-finished' : finished}" size="small" 
             :bordered="isDarkTheme" style="min-width:220px;max-width:max-content"
-            :embedded :title="title" hoverable>
+            :embedded="isDarkTheme" :title="title" hoverable>
         <template #header-extra>
             <!--删除按钮-->
             <n-popover>

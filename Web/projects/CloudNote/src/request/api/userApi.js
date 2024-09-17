@@ -14,6 +14,14 @@ const userApi = {
         userPower:false,
         dataParam:true,
         successMessage:false
+    },
+    logout:{
+        name:'退出登陆',
+        url:'/user/logout',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:false
     }
 }
 

@@ -131,7 +131,7 @@ router.get("/logout",(req,res)=>{
         description:''
     }
     console.log("退出登录",req.query);
-    var userToken = req.query.userToken
+    var userToken = req.get('userToken')
     if(!userToken && userToken==="" )
     {
         output.success = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.success

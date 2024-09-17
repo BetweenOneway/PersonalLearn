@@ -211,6 +211,7 @@
         //禁用保存按钮
         disabledBtn(saveBtnDisabled,true);
 
+        console.log("save memo:",formValue.value);
         //请求参数
         const memoId = formValue.value.id //只有修改的时候使用
         const title = formValue.value.title
@@ -218,6 +219,8 @@
         const content = JSON.stringify(formValue.value.content) //[{},{}] => '[{},{}]'
         const finished = formValue.value.finished
         const top = formValue.value.top
+
+        console.log("top:",top);
 
         let API = {...memoApi.saveMemo};
 
@@ -232,7 +235,7 @@
         formData.append("finished",finished);
         formData.append("top",top);
 
-        API.data = fromData;
+        API.data = formData;
 
         await noteServerRequest(API).then(responseData=>{
             if(!responseData) return;
@@ -242,6 +245,7 @@
             emits('save',false,false)
         })
 
+        console.log("before call disabledBtn");
         //解除禁用按钮
         disabledBtn(saveBtnDisabled,false,true,2);
     }
@@ -303,6 +307,7 @@
         })
 
         saveUpdateMemo(formValue.value.id === null)
+        console.log("after call saveUpdateMemo");
     }
 
     //是否处于加载中
@@ -330,6 +335,7 @@
 
     //重置便签编辑框中内容
     const resetEditMemo =()=>{
+        console.log("call reset edit memo");
         formValue.value.id = null
         formValue.value.title = '' //标题
         formValue.value.top = false //是否置顶

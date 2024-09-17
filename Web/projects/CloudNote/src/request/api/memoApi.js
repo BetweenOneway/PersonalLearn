@@ -41,4 +41,4 @@ const memoApi = {
     }
 }
 
-export default noteApi
+export default memoApi

@@ -54,8 +54,9 @@
     import { useUserStore } from "../../stores/userStore"
     import {storeToRefs} from 'pinia'
     import { NIcon,useMessage,useLoadingBar } from 'naive-ui'
-    import { noteBaseRequest } from "../../request/noteRequest"
-    import { loginInvalid,getUserToken } from "../../Utils/userLogin";
+    import noteServerRequest  from "../../request";
+    import userApi from '../../request/api/userApi';
+    import { loginInvalid } from "../../Utils/userLogin";
     import {ref} from "vue"
 
     const themeStore = useThemeStore()
@@ -107,37 +108,13 @@
     }
 
     const signOutLogin = async ()=>{
-        const userToken =await getUserToken();
-        //加载条开始
-        loadingBar.start()
-        //发送退出登录请求 服务器删除redis中存储的key 
-        const {data:responseData} = await noteBaseRequest.get(
-                "/user/logout",
-                {
-                    params:{
-                        userToken
-                    }
-                }
-            ).catch(()=>{
-                loadingBar.error()
-                throw message.error("退出登录失败")
-            }
-        )
-        
-        console.log(responseData)
-        if(responseData.success)
-        {
-            loadingBar.finish()
+        noteServerRequest(userApi.logout).then(responseData=>{
+            if(!responseData) return;
             //登录失效处理
             loginInvalid(false)
-        }
-        else
-        {
-            loadingBar.error()
-            message.error(responseData.description)
-        }
-        
+        })
     }
+
     //点击头像的菜单
     const userMenu =[
         {

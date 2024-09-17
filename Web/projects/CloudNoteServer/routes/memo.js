@@ -12,8 +12,8 @@ let validate = require("../utils/validate")
 
 var router=express.Router();
 
-//获取用户所有正常的便签
 /**
+ * 获取用户所有正常的便签
  * userToken 用户编号
  * searchText 搜索关键词（标题含有 或者标签含有)
  * filter 过滤 null 默认 0 只查询未完成 1 只查询已完成
@@ -27,7 +27,7 @@ router.get("/getUserMemoList",async (req,res)=>{
     }
 
     console.log("start getMemoList",req.query)
-    var userToken = req.query.userToken
+    var userToken = req.get('userToken');
     const searchText = req.query.searchText;
     const filter = req.query.filter;
     let status = 1
@@ -100,9 +100,8 @@ router.get("/getUserMemoList",async (req,res)=>{
     return;
 })
 
-//置顶 取消置顶
 /**
- * 
+ * 置顶 取消置顶
  */
 router.get("/setMemoTop",async (req,res)=>{
     let output={
@@ -116,7 +115,7 @@ router.get("/setMemoTop",async (req,res)=>{
     //目标状态
     let targetTop = req.query.targetTop
     let memoId = req.query.memoId
-    let userToken = req.query.userToken
+    let userToken = req.get('userToken')
     if(0 == userToken.length)
     {
         console.log("memo set top, userToken empty")
@@ -139,7 +138,6 @@ router.get("/setMemoTop",async (req,res)=>{
     }
 
     let userInfo = validateInfo.userInfo;
-    let sql = `UPDATE z_thing SET \`top\` =? WHERE \`id\` = ? AND \`u_id\` = ? AND \`top\` != ? AND \`status\` = 1;`
 
     const t = await sqldb.sequelize.transaction();
 
@@ -204,9 +202,8 @@ router.get("/setMemoTop",async (req,res)=>{
     return
 })
 
-//删除便签
 /**
- * 
+ * 删除便签
  */
 router.delete("/deleteMemo",async (req,res)=>{
     let output={
@@ -220,7 +217,7 @@ router.delete("/deleteMemo",async (req,res)=>{
     //目标状态
     let isCompleteDel = req.query.isCompleteDel.toLowerCase() === 'true'
     let memoId = req.query.memoId
-    let userToken = req.query.userToken
+    let userToken = req.get('userToken')
     if(0 == userToken.length)
     {
         console.log("del memo, userToken empty")
@@ -325,7 +322,7 @@ router.put("/addMemo",async (req,res)=>{
         description:""
     }
     let inputInfo = {}
-    inputInfo.userToken = req.body.userToken
+    inputInfo.userToken = req.get('userToken')
     inputInfo.title = req.body.title
     inputInfo.tags = req.body.tags
     inputInfo.content = req.body.content
@@ -426,7 +423,7 @@ router.get("/getMemoInfo",async (req,res)=>{
     
     //目标状态
     let memoId = req.query.memoId
-    let userToken = req.query.userToken
+    let userToken = req.get('userToken')
     if(0 == userToken.length)
     {
         console.log("Get Memo Info, userToken empty")
@@ -497,7 +494,7 @@ router.post("/updateMemo",async (req,res)=>{
     }
 
     let inputInfo = {}
-    inputInfo.userToken = req.body.userToken
+    inputInfo.userToken = req.get('userToken')
     inputInfo.memoId = req.body.memoId
     inputInfo.title = req.body.title
     inputInfo.tags = req.body.tags

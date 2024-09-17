@@ -45,7 +45,6 @@
     import {EmailOutlined, LockOpenOutlined} from "@vicons/material"
     import {ref} from 'vue'
     import {md5} from "js-md5"
-    import { noteBaseRequest } from "../../request/noteRequest"
     import noteServerRequest  from "../../request"
     import userApi from "../../request/api/userApi"
     import {useLoginModalStore} from "../../stores/loginModalStore"

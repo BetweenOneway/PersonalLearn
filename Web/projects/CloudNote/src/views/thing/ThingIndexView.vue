@@ -56,7 +56,7 @@
                         :id="memo.id" 
                         :title="memo.title" 
                         :finished="!!memo.finished" 
-                        :top="!!memo.top" 
+                        :top="!memo.top" 
                         :tags="memo.tags.split(',')" 
                         :time="memo.update_time" 
                         @delete="showDeleteRemindDialog"
@@ -101,6 +101,7 @@
     import meoCard from '../../components/memo/memoCard.vue'
     import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue";
     import EditMemoModal from "../../components/memo/EditMemoModal.vue";
+    import {disabledBtn} from '../../utils/disabledBtn'
     import gsap from "gsap"
 
     const themeStore = useThemeStore()
