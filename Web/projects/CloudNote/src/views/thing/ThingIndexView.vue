@@ -24,12 +24,12 @@
         <n-card size="small" :bordered="false" style="margin-top:20px" >
             <!--便签列表骨架屏-->
             <n-space v-if="loading">
-                <n-card embeded size="small" :bordered="isDarkTheme" :segmented="{'content':soft}" v-for="n in 9">
+                <n-card embeded size="small" :bordered="isDarkTheme" :segmented="{'content':'soft'}" v-for="n in 9">
                     <template #header>
                         <n-skeleton :width="180" size="small" />
                     </template>
                     <template #header-extra>
-                        <n-skeleton repeat="3" :width="20" circle style="margin-left:6px" />
+                        <n-skeleton :repeat=3 :width="20" circle style="margin-left:6px" />
                     </template>
                     <template #default>
                         <n-space>
@@ -56,7 +56,7 @@
                         :id="memo.id" 
                         :title="memo.title" 
                         :finished="!!memo.finished" 
-                        :top="!memo.top" 
+                        :top="!!memo.top" 
                         :tags="memo.tags.split(',')" 
                         :time="memo.update_time" 
                         @delete="showDeleteRemindDialog"
@@ -181,7 +181,7 @@
 
         noteServerRequest(API).then(responseData=>{
             if(!responseData) return;
-
+            console.log("reget memo list:",responseData);
             memos.value = responseData.data
             //加载完成 骨架屏不再显示
             loading.value = false

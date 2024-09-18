@@ -500,7 +500,9 @@ router.post("/updateMemo",async (req,res)=>{
     inputInfo.tags = req.body.tags
     inputInfo.content = req.body.content
     inputInfo.finished = req.body.finished
-    inputInfo.top = req.body.top
+    inputInfo.top = req.body.top;
+
+    console.log("inputInfo:",inputInfo);
 
     if(inputInfo.userToken === undefined || 0 == inputInfo.userToken.length || inputInfo.memoId.length == 0)
     {

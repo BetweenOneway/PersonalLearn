@@ -139,7 +139,6 @@
     //通知对象
     const notification = useNotification()
 
-
     //自定义事件
     const emits = defineEmits(['save'])
 
@@ -218,12 +217,13 @@
         const tags = formValue.value.tags.join()
         const content = JSON.stringify(formValue.value.content) //[{},{}] => '[{},{}]'
         const finished = formValue.value.finished
-        const top = formValue.value.top
+        const top = formValue.value.top? 1:0;
 
         console.log("top:",top);
 
         let API = {...memoApi.saveMemo};
 
+        API.name = isNewCreate? API.name[1]:API.name[0];
         API.url = isNewCreate? API.url[1]:API.url[0];
         API.method = isNewCreate? API.method[1]:API.method[0];
 

@@ -55,14 +55,14 @@ class RedisOper {
             try {
                 console.log("redis get,key:",key);
                 this.redisClient.get(key).then((val,err)=>{
-                    console.log("err:",err);
-                    console.log("val:",val);
                     if(err)
                     {
+                        console.log("err:",err);
                         reject(err);
                     }
                     else
                     {
+                        console.log("val:",val);
                         resolve(val);
                     }
                 })

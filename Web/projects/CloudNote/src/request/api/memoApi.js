@@ -24,7 +24,7 @@ const memoApi = {
         successMessage:true
     },
     saveMemo:{
-        name:'新增便签',
+        name:['保存便签','新增便签'],
         url:['/memo/updateMemo','/memo/addMemo'],
         method:['POST','PUT'],
         userPower:true,

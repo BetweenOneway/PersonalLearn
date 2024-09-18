@@ -28,7 +28,7 @@
                     <n-card size="small" v-for="n in 3" :key="n">
                         <n-space vertical>
                             <n-skeleton :height="26" :width="120"></n-skeleton>
-                            <n-skeleton text :repeat="2"></n-skeleton>
+                            <n-skeleton text :repeat=2></n-skeleton>
                             <n-skeleton :height="23" :width="200"></n-skeleton>
                         </n-space>
                     </n-card>
