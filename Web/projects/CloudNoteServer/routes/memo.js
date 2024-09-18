@@ -78,9 +78,10 @@ router.get("/getUserMemoList",async (req,res)=>{
                 attributes: ['id', 'title','top','tags','update_time','finished'],
                 where:condition,
                 order:[
-                    ['id', 'DESC'],
                     ['finished', 'ASC'],
-                    ['update_time','DESC']
+                    ['top', 'DESC'],
+                    ['update_time','DESC'],
+                    ['id', 'DESC']
                 ]
             }
         );
