@@ -93,7 +93,7 @@
         noteServerRequest(API).then(
             responseData=>{
                 if(!responseData) return;
-
+                console.log("get note info:",responseData)
                 //笔记的信息
                 note.value = responseData.data;
                 //加载已完毕

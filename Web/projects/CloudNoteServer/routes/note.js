@@ -7,7 +7,8 @@ const { Op } = require("sequelize");
 var sqldb = require('../sqldb');
 
 let statusCode = require("./statusCode")
-let validate = require("../utils/validate")
+let validate = require("../utils/validate");
+const note = require("../models/note");
 
 var router=express.Router();
 
@@ -445,6 +446,15 @@ router.get("/getNoteInfo",async (req,res)=>{
             output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
             output.data = noteInfo;
+            if(!noteInfo.title)
+            {
+                output.data.title = "";
+            }
+
+            if(!noteInfo.content)
+            {
+                output.data.content = "";
+            }
         }
         res.send(output);
     } catch (error) {
