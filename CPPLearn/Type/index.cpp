@@ -275,8 +275,8 @@ void testContainer()
     //CONTAINER_TEST::testVectorAddress();
     //CONTAINER_TEST::testPair();
     //CONTAINER_TEST::testVectorErase();
-    CONTAINER_TEST::compareVectorArray();
-
+    //CONTAINER_TEST::compareVectorArray();
+    CONTAINER_TEST::testVectorConstruct();
 }
 
 void testWired()
@@ -376,8 +376,8 @@ int main()
     //testStream();
     //testDist();
     //testBit();
-    //testContainer();
-   // testWString();
+    testContainer();
+   //testWString();
     //testWired();
     //testScope();
     //testStatic();
@@ -388,7 +388,7 @@ int main()
     //testMacro();
 
     //testFunction();
-    cout << STATIC_TEST::num << endl;
+    //cout << STATIC_TEST::num << endl;
     system("pause");
     return 0;
 }

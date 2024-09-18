@@ -391,6 +391,27 @@ void testVectorRange()
     //cout << vi.at(10) << endl;
 }
 
+void testVectorConstruct()
+{
+    std::vector<int>  v1;
+    v1.clear();
+    for (int i = 0; i < 20; i++)
+    {
+        v1.push_back(i);
+    }
+
+    auto endPos = v1.begin();
+    std::advance(endPos, 10);
+    std::cout << "endpos = " << *endPos << std::endl;
+    //前包后不包
+    std::vector<int> v2(v1.begin(), endPos);
+
+    for (const auto& num : v2)
+    {
+        cout << num << ' ';
+    }
+    std::cout << std::endl;
+}
 void CallFunc(std::pair<std::vector<int>, std::vector<int>>&& p)
 {
     std::pair<std::vector<int>, std::vector<int>> p1;

@@ -9,5 +9,6 @@ namespace CONTAINER_TEST {
     void testVectorErase();
     void testPair();
     void compareVectorArray();
+    void testVectorConstruct();
 }
 
