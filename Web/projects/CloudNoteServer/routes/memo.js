@@ -365,6 +365,7 @@ router.put("/addMemo",async (req,res)=>{
                 u_id:userInfo.id,
                 finished:inputInfo.finished,
                 time:curTime,
+                update_time:curTime,
                 top:inputInfo.top,
                 status:1,
                 type:2
