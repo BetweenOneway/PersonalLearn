@@ -42,6 +42,11 @@ app.use(fileUpload());
 //托管静态资源到public目录下
 app.use(express.static('public'));
 
+app.all('*', (req, res, next) => {
+    console.log('Accessing interceptor ...')
+    next() // pass control to the next handler
+  })
+  
 /*使用路由器来管理路由*/
 //用户相关
 app.use("/user",user);
@@ -53,3 +58,10 @@ app.use("/note",note);
 app.use("/ckeditor",CKEditor)
 //测试用
 app.use("/sequelize",sequelizeTest)
+
+
+
+app.use(function(err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+  });

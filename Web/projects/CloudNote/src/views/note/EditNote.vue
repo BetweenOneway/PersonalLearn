@@ -60,7 +60,10 @@
         MoreHorizRound
     } from'@vicons/material'
     import 'ckeditor5/ckeditor5.css';
-    
+    import {useRouter} from 'vue-router'
+
+    const router = useRouter();
+
     //自定义事件
     const emits = defineEmits(['save']);
     //消息对象
@@ -70,8 +73,30 @@
     //const ckeditor5 = CKEditor.component;
 
     const propsData = defineProps({
-        id:{type:String,required:true}
+        id:{type:String,required:true},
+        changeState:{type:Number},
+        actionId:{type:Number}
     })
+
+    watch(
+        ()=>propsData.changeState,
+        newData=>{
+            if(propsData.actionId == Number.parseInt(propsData.id))
+            {
+                switch(newData)
+                {
+                    case 1:
+                        //重新获取编辑的笔记
+                        getNoteInfo();
+                        break;
+                    case 2:
+                        //路由跳转到笔记首页
+                        router.push('/note');
+                        break;
+                }
+            }
+        }
+    )
 
     //是否处于加载中
     const loading = ref(true);

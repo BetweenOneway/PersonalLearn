@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 'use strict'
 module.exports = function(sequelize,DataTypes){
-    var User = sequelize.define('z_note_memo_log',{
+    var User = sequelize.define('z_oper_log',{
         id:{
             type:DataTypes.INTEGER,
             primaryKey:true,
@@ -20,10 +20,10 @@ module.exports = function(sequelize,DataTypes){
         u_id:{
             type:DataTypes.INTEGER
         },
-        n_id:{
+        o_id:{
             type:DataTypes.INTEGER
         },
-        t_id:{
+        type:{
             type:DataTypes.INTEGER
         }
     },{

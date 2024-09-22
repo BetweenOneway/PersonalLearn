@@ -64,7 +64,7 @@
         <!--笔记编辑容器-->
         <n-layout-content embeded content-style="padding:20px">
             <!--子路由-->
-            <router-view @save="getNoteList(false,false)"/>
+            <router-view @save="getNoteList(false,false)" :change-state="isChangeEditNote" :action-id="contextMenu.id"/>
         </n-layout-content>
 
     </n-layout>
@@ -99,7 +99,7 @@
     import noteServerRequest  from "../../request"
     import noteApi from '../../request/api/noteApi';
     import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue"
-    import {useMessage,useLoadingBar,NIcon} from 'naive-ui'
+    import {useMessage,NIcon} from 'naive-ui'
     import gsap from "gsap"
     import {useRouter} from 'vue-router'
 
@@ -123,7 +123,6 @@
 
     //消息对象
     const message = useMessage()
-    const loadingBar = useLoadingBar()
 
     //读图标
     function renderIcon(icon){
@@ -319,6 +318,18 @@
         })
     }
 
+    //----------------删除笔记-------------------
+
+    const isChangeEditNote = ref(0)//0 不需要改变 1 需要重新加载 2 需要关闭
+
+    //改变编辑笔记状态
+    const changeEditNoteState = state =>{
+        isChangeEditNote.value = state;
+        setTimeout(() => {
+            isChangeEditNote.value = 0;
+        }, 1000);
+    }
+
     //删除提醒框的对象
     const displayDeleteRemind = ref(false);
 
@@ -344,6 +355,8 @@
             {
                 //重新获取便签列表 需要有删除动画
                 getNoteList(false,true)
+                //
+                changeEditNoteState(2)
             }
         })
     }

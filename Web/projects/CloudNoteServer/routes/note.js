@@ -145,13 +145,14 @@ router.get("/setNoteTop",async (req,res)=>{
         {
             let event = targetTop === 1? statusCode.EVENT_LIST.NOTE_SET_TOP : statusCode.EVENT_LIST.NOTE_UNSET_TOP;
             
-            const newAddedLog = await sqldb.NoteMemoLog.create(
+            const newAddedLog = await sqldb.operLog.create(
                 {
                     time: curTime,
                     event: event.code,
                     desc:event.desc,
                     u_id:userInfo.id,
-                    n_id:noteId
+                    o_id:noteId,
+                    type:1
                 }, 
                 { 
                     transaction: t 
@@ -249,13 +250,14 @@ router.delete("/deleteNote",async (req,res)=>{
         if(updateNum>0)
         {
             let event = isCompleteDel? statusCode.EVENT_LIST.NOTE_COMPEL_DEL : statusCode.EVENT_LIST.NOTE_DEL;
-            const users = await sqldb.NoteMemoLog.create(
+            const users = await sqldb.operLog.create(
                 {
                     time:curTime,
                     event:event.code,
                     desc:event.desc,
                     u_id:userInfo.id,
-                    n_id:noteId,
+                    o_id:noteId,
+                    type:1
                 },
                 {
                     transaction:t
@@ -347,13 +349,14 @@ router.put("/createNote",async (req,res)=>{
         );
         console.log("new added note info:",newAddNote);
         let event = statusCode.EVENT_LIST.ADD_NOTE;
-        const addLog = await sqldb.NoteMemoLog.create(
+        const addLog = await sqldb.operLog.create(
             {
                 time:curTime,
                 event:event.code,
                 desc:event.desc,
                 u_id:userInfo.id,
-                n_id:newAddNote.id
+                o_id:newAddNote.id,
+                type:1
             },
             {
                 transaction:t
@@ -553,13 +556,14 @@ router.post("/saveNote",async (req,res)=>{
             );
             //记录日志
             let event = statusCode.EVENT_LIST.UPDATE_NOTE;
-            const addLog = await sqldb.NoteMemoLog.create(
+            const addLog = await sqldb.operLog.create(
                 {
                     time:curTime,
                     event:event.code,
                     desc:event.desc,
                     u_id:userInfo.id,
-                    n_id:inputInfo.noteId
+                    o_id:inputInfo.noteId,
+                    type:1
                 },
                 {
                     transaction:t

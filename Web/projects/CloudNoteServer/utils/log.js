@@ -6,13 +6,14 @@ var sqldb = require('../sqldb');
 async function AddEventLog(userId,noteId,event,transaction)
 {
     try {
-        const newAddedLog = await sqldb.NoteMemoLog.create(
+        const newAddedLog = await sqldb.operLog.create(
             {
                 time: date,
                 event: event.code,
                 desc:event.desc,
                 u_id:userId,
-                t_id:noteId
+                o_id:noteId,
+                type:1
             }, 
             { 
                 transaction: transaction 

@@ -164,13 +164,14 @@ router.get("/setMemoTop",async (req,res)=>{
             var date = new Date().toLocaleString();
             let event = targetTop === 1? statusCode.EVENT_LIST.MEMO_SET_TOP : statusCode.EVENT_LIST.MEMO_UNSET_TOP;
             
-            const newAddedLog = await sqldb.NoteMemoLog.create(
+            const newAddedLog = await sqldb.operLog.create(
                 {
                     time: date,
                     event: event.code,
                     desc:event.desc,
                     u_id:userInfo.id,
-                    t_id:memoId
+                    o_id:memoId,
+                    type:2
                 }, 
                 { 
                     transaction: t 
@@ -265,13 +266,14 @@ router.delete("/deleteMemo",async (req,res)=>{
         if(updateNum>0)
         {
             let event = isCompleteDel? statusCode.EVENT_LIST.MEMO_COMPEL_DEL : statusCode.EVENT_LIST.MEMO_DEL;
-            const users = await sqldb.NoteMemoLog.create(
+            const users = await sqldb.operLog.create(
                 {
                     time:curTime,
                     event:event.code,
                     desc:event.desc,
                     u_id:userInfo.id,
-                    t_id:memoId,
+                    o_id:memoId,
+                    type:2
                 },
                 {
                     transaction:t
@@ -377,13 +379,14 @@ router.put("/addMemo",async (req,res)=>{
         );
 
         let event = statusCode.EVENT_LIST.ADD_MEMO;
-        const addLog = await sqldb.NoteMemoLog.create(
+        const addLog = await sqldb.operLog.create(
             {
                 time:curTime,
                 event:event.code,
                 desc:event.desc,
                 u_id:userInfo.id,
-                t_id:newAddMemo.id
+                o_id:newAddMemo.id,
+                type:2
             },
             {
                 transaction:t
@@ -565,13 +568,14 @@ router.post("/updateMemo",async (req,res)=>{
             );
             //记录日志
             let event = statusCode.EVENT_LIST.UPDATE_MEMO;
-            const addLog = await sqldb.NoteMemoLog.create(
+            const addLog = await sqldb.operLog.create(
                 {
                     time:curTime,
                     event:event.code,
                     desc:event.desc,
                     u_id:userInfo.id,
-                    t_id:inputInfo.memoId
+                    o_id:inputInfo.memoId,
+                    type:2
                 },
                 {
                     transaction:t

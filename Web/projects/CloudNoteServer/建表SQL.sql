@@ -88,28 +88,24 @@ INSERT INTO `z_memo` VALUES (14, '2023 春节第一周作业', '作业,大学生
 INSERT INTO `z_memo` VALUES (15, '实训课', '大学生,实训', '[{\"checked\":true,\"thing\":\"云笔记\"},{\"checked\":true,\"thing\":\"电脑\"}]', 8, 1, '2023-06-05 08:24:38', '2023-06-05 08:24:38', 0, 1, 2);
 
 -- ----------------------------
--- Table structure for z_note_memo_log
+-- Table structure for z_oper_log
 -- ----------------------------
-DROP TABLE IF EXISTS `z_note_memo_log`;
-CREATE TABLE `z_note_memo_log`  (
+DROP TABLE IF EXISTS `z_oper_log`;
+CREATE TABLE `z_oper_log`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `time` datetime NOT NULL COMMENT '时间',
   `event` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '事件',
   `desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '描述',
   `u_id` int(11) NOT NULL COMMENT '用户编号',
-  `n_id` int(11) NULL DEFAULT NULL COMMENT '笔记编号',
-  `t_id` int(11) NULL DEFAULT NULL COMMENT '便签编号',
+  `o_id` int(11) NULL DEFAULT NULL COMMENT '操作对象编号',
+  `type` int(11) NULL DEFAULT NULL COMMENT '对象类型 1:笔记 2:便签',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `z_note_log_z_note_id_fk`(`n_id`) USING BTREE,
-  INDEX `z_note_log_z_user_id_fk`(`u_id`) USING BTREE,
-  INDEX `z_note_thing_log_z_thing_id_fk`(`t_id`) USING BTREE,
-  CONSTRAINT `z_note_log_z_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `z_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `z_note_log_z_note_id_fk` FOREIGN KEY (`n_id`) REFERENCES `z_note` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `z_note_thing_log_z_thing_id_fk` FOREIGN KEY (`t_id`) REFERENCES `z_memo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  INDEX `z_oper_log_z_user_id_fk`(`u_id`) USING BTREE,
+  CONSTRAINT `z_oper_log_z_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `z_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '笔记日志表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
--- Records of z_note_memo_log
+-- Records of z_oper_log
 -- ----------------------------
 
 -- ----------------------------
