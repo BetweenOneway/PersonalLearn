@@ -9,8 +9,7 @@ router.get("/testMultiCallback",function (req, res, next) {
   }, function (req, res) {
     console.log('Hello from B!');
     console.log("req.last_name",req.last_name);
-    
-    res.send('Hello from B!')
+    res.send("Hello B!");
   }
 )
 
