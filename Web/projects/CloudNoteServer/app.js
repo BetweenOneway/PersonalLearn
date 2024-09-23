@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const cors=require("cors");
 const fileUpload = require('express-fileupload');
 
+//拦截器
+const interceptor = require('./utils/interceptor');
+
 /*引入路由模块*/
 const sequelizeTest = require("./routes/sequelizeTest")
 const user=require("./routes/user");
@@ -42,10 +45,20 @@ app.use(fileUpload());
 //托管静态资源到public目录下
 app.use(express.static('public'));
 
+//拦截要放在所有路由之前
 app.all('*', (req, res, next) => {
     console.log('Accessing interceptor ...')
-    next() // pass control to the next handler
-  })
+    let outputInfo = {};
+    if(interceptor.Interceptor_ValidateUserToken(req,outputInfo))
+    {
+        req.userInfo = outputInfo;
+        next() // pass control to the next handler
+    }
+    else{
+        res.send(outputInfo);
+    }
+  }
+)
   
 /*使用路由器来管理路由*/
 //用户相关
@@ -58,10 +71,3 @@ app.use("/note",note);
 app.use("/ckeditor",CKEditor)
 //测试用
 app.use("/sequelize",sequelizeTest)
-
-
-
-app.use(function(err, req, res, next) {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
-  });

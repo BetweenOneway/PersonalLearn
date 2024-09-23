@@ -12,8 +12,8 @@ const note = require("../models/note");
 
 var router=express.Router();
 
-//获取用户笔记列表
 /**
+ * 获取用户笔记列表
  * userToken 用户编号
  */
 router.get("/getUserNoteList",async (req,res)=>{
@@ -77,8 +77,8 @@ router.get("/getUserNoteList",async (req,res)=>{
     return;
 })
 
-//置顶 取消置顶
 /**
+ * 置顶 取消置顶
  * 
  */
 router.get("/setNoteTop",async (req,res)=>{
@@ -185,9 +185,8 @@ router.get("/setNoteTop",async (req,res)=>{
     return
 })
 
-//删除笔记
 /**
- * 
+ * 删除笔记
  */
 router.delete("/deleteNote",async (req,res)=>{
     let output={
@@ -291,8 +290,8 @@ router.delete("/deleteNote",async (req,res)=>{
     return
 })
 
-//新增笔记
 /**
+ * 新增笔记
  * userToken 用户信息
  */
 router.put("/createNote",async (req,res)=>{
@@ -383,8 +382,8 @@ router.put("/createNote",async (req,res)=>{
     return
 })
 
-//获取笔记信息
 /**
+ * 获取笔记信息
  * noteId 笔记编号
  * userToken 用户
  */
