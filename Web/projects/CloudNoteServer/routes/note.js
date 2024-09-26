@@ -470,9 +470,8 @@ router.get("/getNoteInfo",async (req,res)=>{
     return
 })
 
-
-//保存（更新）笔记
 /**
+ * 保存（更新）笔记
  * userToken 用户编号
  * noteId 笔记编号
  * title 标题
@@ -480,7 +479,7 @@ router.get("/getNoteInfo",async (req,res)=>{
  * content 笔记内容（完整 包含title和body）
  */
 router.post("/saveNote",async (req,res)=>{
-    console.log("start update Note :",req.query);
+    console.log("start update Note :",req.body);
 
     let output={
         success:false,
@@ -492,37 +491,16 @@ router.post("/saveNote",async (req,res)=>{
     }
 
     let inputInfo = {}
-    inputInfo.userToken = req.get('userToken')
-    inputInfo.noteId = req.query.noteId
-    inputInfo.title = req.query.title
-    inputInfo.body = req.query.body
-    inputInfo.content = req.query.content
-
-    if(inputInfo.userToken === undefined || 0 == inputInfo.userToken.length || inputInfo.noteId.length == 0)
-    {
-        console.log("update note, userToken or noteId empty")
-        output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
-        output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
-        output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
-        res.send(output)
-        return
-    }
-
-    //验证用户是否登陆
-    let validateInfo = await validate.IsUserValidate(inputInfo.userToken);
-    if(!validateInfo.isValidated)
-    {
-        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
-        res.send(output)
-        return
-    }
+    inputInfo.noteId = req.body.noteId
+    inputInfo.title = req.body.title
+    inputInfo.body = req.body.body
+    inputInfo.content = req.body.content
 
     const t = await sqldb.sequelize.transaction();
 
     try {
-        let userInfo = validateInfo.userInfo;
+        console.log("userInfo:",req.userInfo);
+        let userInfo = req.userInfo;
         let curTime = new Date().toLocaleString()
 
         const targetNote = sqldb.Note.findOne(

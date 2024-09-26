@@ -9,32 +9,28 @@
     </n-space>
     <n-space vertical v-else>
         <!--发布时间 分享 更多操作-->
-        <n-card :bordered="false" size="small">
-            <n-space justify-content="space-between" align="center">
-                <!--发布时间-->
-                <n-space color="#18A058" align="center" :wrap-item="false">
-                    <n-icon :component="FiberManualRecordRound"></n-icon>
-                    <n-text depth="3">保存并发布于:{{ note.update_time }}</n-text>
-                </n-space>
-                <!--功能按钮区-->
-                <n-space align="center" :wrap-item="false" :size="8">
-                    <n-button round dashed>分享</n-button>
-                    <!--收藏-->
-                    <n-popover>
-                        <template #trigger>
-                            <n-button quaternary circle>
-                                <n-icon size="20" :component="StarBorderRound"/>
-                            </n-button>
-                        </template>
-                        收藏
-                    </n-popover>
-                    
-                    <n-button quaternary circle>
-                        <n-icon size="20" :component="MoreHorizRound"/>
-                    </n-button>
-                </n-space>
-            </n-space>
+        <n-card size="small">
+            <n-grid x-gap="20" cols="12" item-responsive responsive="screen">
+                <n-gi span="0 m:10 l:10">
+                    <n-input v-model:value="note.title" size="large" placeholder="笔记标题" 
+                    style="--n-border:none;background-color: transparent"></n-input>
+                </n-gi>
+                <n-gi span="0 m:2 l:2">
+                    <n-space justify="space-between" align="center">
+                        <n-button type="primary" @click="saveNote()">
+                            保存
+                        </n-button>
+                        <n-button type="primary" @click="">
+                            删除
+                        </n-button>
+                        <n-button quaternary circle>
+                            <n-icon size="20" :component="MoreHorizRound"/>
+                        </n-button>
+                    </n-space>
+                </n-gi>
+            </n-grid>
         </n-card>
+
         <!--富文本编辑器-->
         <n-card :bordered="false" size="small">
             <!--富文本编辑器-->
@@ -43,6 +39,17 @@
             @ready="editorReady" 
             v-model="note.content"
             :config="getEditorConfigs()"/>
+        </n-card>
+
+        <!--底部状态栏-->
+        <n-card :bordered="false" size="small">
+            <n-space justify-content="space-between" align="center">
+                <!--发布时间-->
+                <n-space color="#18A058" align="center" :wrap-item="false">
+                    <n-icon :component="FiberManualRecordRound"></n-icon>
+                    <n-text depth="3">保存并发布于:{{ note.update_time }}</n-text>
+                </n-space>
+            </n-space>
         </n-card>
     </n-space>
     
@@ -57,7 +64,8 @@
     import {useMessage,useLoadingBar} from 'naive-ui'
     import {FiberManualRecordRound,
         StarBorderRound,
-        MoreHorizRound
+        MoreHorizRound,
+        SaveAsOutlined
     } from'@vicons/material'
     import 'ckeditor5/ckeditor5.css';
     import { toHerf } from "../../router/go"
@@ -169,7 +177,7 @@
         //编号
         const noteId = propsData.id;
         //标题
-        const title = editor.plugins.get('Title').getTitle();
+        const title = note.value.title;
         //内容
         const body = editor.plugins.get('Title').getBody();
         //笔记完整内容

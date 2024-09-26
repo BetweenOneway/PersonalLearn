@@ -13,6 +13,8 @@ const memo=require("./routes/memo");
 const note=require("./routes/note");
 const CKEditor=require("./routes/CKEditor");
 
+let statusCode = require("./routes/statusCode")
+
 //启动数据库
 var sqldb = require('./sqldb');
 sqldb.sequelize.sync({force: false}).then(function() {
@@ -46,16 +48,26 @@ app.use(fileUpload());
 app.use(express.static('public'));
 
 //拦截要放在所有路由之前
-app.all('*', (req, res, next) => {
+app.all('*', async (req, res, next) => {
     console.log('Accessing interceptor ...')
-    let outputInfo = {};
-    if(interceptor.Interceptor_ValidateUserToken(req,outputInfo))
+    let outputInfo = await interceptor.Interceptor_ValidateUserToken(req);
+    if(!outputInfo)
     {
-        req.userInfo = outputInfo;
-        next() // pass control to the next handler
+        let output={
+            success:true,
+            status:'',
+            description:'',
+            data:{}
+        }
+        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
+        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
+        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
+        res.send(output)
     }
     else{
-        res.send(outputInfo);
+        req.userInfo = outputInfo;
+        console.log("app userInfo:",req.userInfo);
+        next() // pass control to the next handler
     }
   }
 )
