@@ -101,10 +101,7 @@
     import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue"
     import {useMessage,NIcon} from 'naive-ui'
     import gsap from "gsap"
-    import {useRouter} from 'vue-router'
-
-    //路由对象
-    const router = useRouter()
+    import { toHerf } from '../../router/go';
 
     //路由地址
     const routerPath = inject('routerPath');
@@ -373,7 +370,7 @@
     const goEditNoteView = (id)=>{
         if(id)
         {
-            router.push('/note/edit/'+id);
+            toHerf(`/note/edit/${id}`);
         }
         else
         {

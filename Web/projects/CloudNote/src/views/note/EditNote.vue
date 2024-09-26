@@ -60,9 +60,7 @@
         MoreHorizRound
     } from'@vicons/material'
     import 'ckeditor5/ckeditor5.css';
-    import {useRouter} from 'vue-router'
-
-    const router = useRouter();
+    import { toHerf } from "../../router/go"
 
     //自定义事件
     const emits = defineEmits(['save']);
@@ -91,7 +89,7 @@
                         break;
                     case 2:
                         //路由跳转到笔记首页
-                        router.push('/note');
+                        toHerf('/note');
                         break;
                 }
             }

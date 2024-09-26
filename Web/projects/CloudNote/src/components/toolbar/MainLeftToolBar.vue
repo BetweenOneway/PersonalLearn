@@ -22,7 +22,7 @@
                 :quaternary="!isHighLightMenuItem(menu.to)" 
                 :type="isHighLightMenuItem(menu.to)?'primary':'default'" 
                 :tertiary="isHighLightMenuItem(menu.to)" 
-                @click="router.push(menu.to)">
+                @click="toHerf(menu.to)">
                     <n-icon size="menu.icon_size" :component="menu.icon"></n-icon>
                 </n-button>
             </template>
@@ -37,11 +37,8 @@
         , StarBorderRound, ShoppingBagOutlined, DeleteOutlineRound} from "@vicons/material"
     import {NIcon} from "naive-ui"
     import {h,watch,inject} from 'vue'
-    import {useRouter} from 'vue-router'
     import bus from 'vue3-eventbus'
-    
-    //路由对象
-    const router = useRouter()
+    import { toHerf } from "../../router/go"
     
     const routerPath = inject('routerPath');
 
@@ -67,7 +64,7 @@
             props:{
                 onClick:()=>{
                     //跳转至路由为/memo
-                    router.push("/memo").then(()=>{
+                    toHerf("/memo",()=>{
                         //弹出便签编辑框
                         bus.emit('newCreateMemo');
                     })
