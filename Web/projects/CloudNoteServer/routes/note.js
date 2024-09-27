@@ -48,7 +48,7 @@ router.get("/getUserNoteList",async (req,res)=>{
 
         const notes = await sqldb.Note.findAll(
             {
-                attributes: ['id', 'title','body','top','update_time'],
+                attributes: ['id', 'title','content','top','update_time'],
                 where:{
                     status: status,
                     u_id:userInfo.id

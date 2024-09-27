@@ -43,7 +43,7 @@
                         @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
                         :class="{'contexting':(contextMenu.id === note.id && contextMenu.show) ,'editing':(selectNoteId === note.id)}"
                         @click="goEditNoteView(note.id)">
-                            <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.body" :top="!!note.top" :time="note.update_time"></NoteCard>
+                            <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.content" :top="!!note.top" :time="note.update_time"></NoteCard>
                         </n-list-item>
                     </template>
                 </n-list>
