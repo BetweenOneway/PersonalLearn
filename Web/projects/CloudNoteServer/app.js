@@ -50,8 +50,8 @@ app.use(express.static('public'));
 //拦截要放在所有路由之前
 app.all('*', async (req, res, next) => {
     console.log('Accessing interceptor ...')
-    let outputInfo = await interceptor.Interceptor_ValidateUserToken(req);
-    if(!outputInfo)
+    let validateSuccess = await interceptor.Interceptor_ValidateUserToken(req);
+    if(!validateSuccess)
     {
         let output={
             success:true,
@@ -65,7 +65,7 @@ app.all('*', async (req, res, next) => {
         res.send(output)
     }
     else{
-        req.userInfo = outputInfo;
+        //req.userInfo = outputInfo;
         console.log("app userInfo:",req.userInfo);
         next() // pass control to the next handler
     }

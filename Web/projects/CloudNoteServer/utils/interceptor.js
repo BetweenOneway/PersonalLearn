@@ -10,17 +10,18 @@ async function ValidateUserToken(req)
     if(!userToken)
     {
         console.log(userToken,'interceptor user token invalid......');
-        return null;
+        return true;
     }
     //验证用户是否登录
     let validateInfo = await validate.IsUserValidate(userToken);
     if(!validateInfo.isValidated)
     {
         console.log("用户登录状态无效"+validateInfo.isValidated)
-        return null
+        return false;
     }
     console.log("Interceptor userInfo:",validateInfo.userInfo);
-    return validateInfo.userInfo;
+    req.userInfo = validateInfo.userInfo;
+    return true
 }
 
 module.exports.Interceptor_ValidateUserToken = ValidateUserToken;

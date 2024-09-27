@@ -54,7 +54,7 @@ export const getEditorConfigs =()=>({
         Alignment,//文本对齐
         HorizontalLine,//水平线
         Heading,//
-        Title,//
+        //Title,//
         TodoList,//待办事项列表
         ListProperties,//列表(有序和无序)
         Indent,//缩进
@@ -72,6 +72,7 @@ export const getEditorConfigs =()=>({
         ImageInsert,//图像插入
         SimpleUploadAdapter,//简单上传 不能与Base64共用
     ],
+    removePlugins: ['Title'],
     fontSize: {
         supportAllValues:true,
         options: [12,14,25,30]

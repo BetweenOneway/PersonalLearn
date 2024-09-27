@@ -36,16 +36,16 @@
 
                 <!--笔记列表-->
                 <n-list hoverable clickable style="margin:12px">
-                        <template v-if="!loading && noteList.length > 0">
-                            <n-list-item 
-                            v-for="(note,index) in noteList" :key="note.id" 
-                            :data-index="index" 
-                            @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
-                            :class="{'contexting':(contextMenu.id === note.id && contextMenu.show) ,'editing':(selectNoteId === note.id)}"
-                            @click="goEditNoteView(note.id)">
-                                <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.body" :top="!!note.top" :time="note.update_time"></NoteCard>
-                            </n-list-item>
-                        </template>
+                    <template v-if="!loading && noteList.length > 0">
+                        <n-list-item 
+                        v-for="(note,index) in noteList" :key="note.id" 
+                        :data-index="index" 
+                        @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
+                        :class="{'contexting':(contextMenu.id === note.id && contextMenu.show) ,'editing':(selectNoteId === note.id)}"
+                        @click="goEditNoteView(note.id)">
+                            <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.body" :top="!!note.top" :time="note.update_time"></NoteCard>
+                        </n-list-item>
+                    </template>
                 </n-list>
 
                 <!--暂无笔记-->

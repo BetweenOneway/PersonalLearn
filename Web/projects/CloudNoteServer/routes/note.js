@@ -493,7 +493,6 @@ router.post("/saveNote",async (req,res)=>{
     let inputInfo = {}
     inputInfo.noteId = req.body.noteId
     inputInfo.title = req.body.title
-    inputInfo.body = req.body.body
     inputInfo.content = req.body.content
 
     const t = await sqldb.sequelize.transaction();
@@ -518,7 +517,6 @@ router.post("/saveNote",async (req,res)=>{
             const updateNum = await sqldb.Note.update(
                 {
                     title:inputInfo.title,
-                    body:inputInfo.body,
                     content:inputInfo.content,
                     update_time:curTime,
                 },

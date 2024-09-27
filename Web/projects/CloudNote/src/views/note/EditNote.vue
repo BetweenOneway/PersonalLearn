@@ -159,9 +159,10 @@
         );
     }
 
+    //快捷键Ctrl+s保存笔记
     onMounted(()=>{
         window.addEventListener('keydown',(e)=>{
-            console.log(e);
+            //console.log(e);
             //ctrl+s
             if(e.keycode === 83 && e.ctrlkey === true)
             {
@@ -178,19 +179,16 @@
         const noteId = propsData.id;
         //标题
         const title = note.value.title;
-        //内容
-        const body = editor.plugins.get('Title').getBody();
-        //笔记完整内容
+        //笔记主体内容(不含标题)
+        //const body = note.value.content;//editor.plugins.get('Title').getBody();
+        //笔记主体内容（不含标题）
         const content = note.value.content;
-
-        //判断用户登录状态
-        const userToken = await getUserToken();
 
         //表单
         let formData = new FormData();
         formData.append("noteId",noteId)
         formData.append("title",title)
-        formData.append("body",body)
+        //formData.append("body",body)
         formData.append("content",content)
 
         let API = {...noteApi.saveNote}
