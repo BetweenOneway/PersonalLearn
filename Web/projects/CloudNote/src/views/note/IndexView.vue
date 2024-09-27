@@ -102,6 +102,7 @@
     import {useMessage,NIcon} from 'naive-ui'
     import gsap from "gsap"
     import { toHerf } from '../../router/go';
+    import bus from 'vue3-eventbus'
 
     //路由地址
     const routerPath = inject('routerPath');
@@ -377,10 +378,11 @@
             message.error("前往笔记编辑页失败");
         }
     }
+
     /**
      * 创建笔记
      */
-    const createNote = async ()=>{
+    const createNote = ()=>{
         //发送请求
         noteServerRequest(noteApi.createNote).then(responseData=>{
             if(responseData) 
@@ -392,6 +394,8 @@
             }
         })
     }
+
+    //bus.on('createNewNote',)
 </script>
 
 <style>

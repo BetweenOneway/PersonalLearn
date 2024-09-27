@@ -54,7 +54,13 @@
             key:"note",
             icon:renderIcon(StickyNote2Outlined,20,'#18A058'),
             props:{
-                onClick:()=>{}
+                onClick:()=>{
+                    //跳转至路由为/note
+                    toHerf("/note",()=>{
+                        //弹出便签编辑框
+                        //bus.emit('newCreateMemo');
+                    })
+                }
             }
         },
         {
