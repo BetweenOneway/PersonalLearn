@@ -21,9 +21,13 @@ const routes = [
         ]
     },
     {
-        path:'/:pathMatch(.*)',
+        path:'/404',
         component:()=>import('../views/result/NoteFoundView.vue'),
         meta:{title:'404'}
+    },
+    {
+        path:'/:pathMatch(.*)',
+        redirect:'/404'
     }
 ]
 

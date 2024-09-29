@@ -2,6 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import { createDiscreteApi } from 'naive-ui'
 import { getUserToken, loginInvalid } from '../Utils/userLogin'
+import { toHerf } from '../router/go'
 
 //脱离上下文的消息和加载条对象
 const { message, loadingBar } = createDiscreteApi(
@@ -61,8 +62,14 @@ const requestResponse = response =>{
         if(responseData.status ==='SERVICE_008')
         {
             loginInvalid(true)
+            console.log("login Invalid");
         }
-        console.log("login Invalid");
+        //判断是否资源未找到
+        if(responseData.status ==='RESOURCE_NOT_FOUND')
+        {
+            toHerf('/404');
+        }
+        
         return null;
     }
     loadingBar.finish();
