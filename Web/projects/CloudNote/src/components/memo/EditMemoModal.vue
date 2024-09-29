@@ -142,17 +142,6 @@
     //自定义事件
     const emits = defineEmits(['save'])
 
-    //监听是否触发新建便签事件
-    bus.on('newCreateMemo',()=>{
-        showEditModal(null)
-    });
-
-    //组件卸载之前
-    onBeforeUnmount(()=>{
-        //停止监听新建便签事件
-        bus.off('newCrteateMemo')
-    })
-
     //创建待办事项
     const onCreateTodoThing = ()=>{
         return {
@@ -318,7 +307,7 @@
      * @param {Number} id 无值 新增 有值编辑
      */
     const showEditModal = (id)=>{
-        if(id === null)
+        if(!id)
         {
             show.value = true
             //结束加载状态
@@ -343,6 +332,15 @@
         formValue.value.content = [] //内容
     }
     
+    //监听是否触发新建便签事件
+    bus.on('newCreateMemo',showEditModal);
+
+    //组件卸载之前
+    onBeforeUnmount(()=>{
+        //停止监听新建便签事件
+        bus.off('newCrteateMemo',showEditModal)
+    })
+
     //将哪些函数导出
     defineExpose({showEditModal,show,userId,memoId})
 </script>

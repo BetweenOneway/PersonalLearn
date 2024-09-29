@@ -57,8 +57,8 @@
                 onClick:()=>{
                     //跳转至路由为/note
                     toHerf("/note",()=>{
-                        //弹出便签编辑框
-                        //bus.emit('newCreateMemo');
+                        //出发新增笔记事件
+                        bus.emit('createNewNote');
                     })
                 }
             }

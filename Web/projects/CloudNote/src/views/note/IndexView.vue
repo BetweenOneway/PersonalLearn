@@ -90,7 +90,7 @@
 </template>
 
 <script setup>
-    import {computed, ref,inject} from 'vue'
+    import {computed, ref,inject, onBeforeUnmount} from 'vue'
     import {PlusRound,SubtitlesOffOutlined,
         DriveFileRenameOutlineOutlined,
         DeleteOutlineRound,ArrowCircleDownRound,
@@ -395,7 +395,13 @@
         })
     }
 
-    //bus.on('createNewNote',)
+    bus.on('createNewNote',createNote)
+
+    //当组件卸载完毕之前 移除监听
+    onBeforeUnmount(()=>{
+        //
+        bus.off('createNewNote',createNote)
+    })
 </script>
 
 <style>
