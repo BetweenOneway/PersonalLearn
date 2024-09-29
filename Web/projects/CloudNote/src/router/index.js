@@ -19,6 +19,11 @@ const routes = [
                 meta:{title:'笔记编辑页'}
             }
         ]
+    },
+    {
+        path:'/:pathMatch(.*)',
+        component:()=>import('../views/result/NoteFoundView.vue'),
+        meta:{title:'404'}
     }
 ]
 
