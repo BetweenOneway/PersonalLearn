@@ -208,7 +208,7 @@
     /*
     隐藏powered by ckeditor logo
     */
-    .ck.ck-balloon-panel.ck-balloon-panel_visible{
+    .ck.ck-balloon-panel.ck-balloon-panel_visible.ck-powered-by-ballon{
         display:none;
     }
 

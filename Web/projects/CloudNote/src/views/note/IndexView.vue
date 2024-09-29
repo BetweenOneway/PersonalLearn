@@ -54,7 +54,7 @@
                         <n-icon :component="SubtitlesOffOutlined"></n-icon>
                     </template>
                     <template #extra>
-                        <n-button dashed>创建笔记</n-button>
+                        <n-button dashed @click="createNote">创建笔记</n-button>
                     </template>
                 </n-empty>
 
