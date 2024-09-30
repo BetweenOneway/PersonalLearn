@@ -426,7 +426,7 @@ router.get("/getNoteInfo",async (req,res)=>{
         console.log("get note info from db");
         const noteInfo = await sqldb.Note.findOne(
             {
-                attributes: ['update_time', 'content','title'],
+                attributes: ['update_time', 'content','title','u_id'],
                 where: {
                     id: noteId,
                     u_id:userInfo.id,

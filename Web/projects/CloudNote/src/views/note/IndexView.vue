@@ -90,7 +90,8 @@
 </template>
 
 <script setup>
-    import {computed, ref,inject, onBeforeUnmount} from 'vue'
+    import {computed, ref,inject, onBeforeUnmount, provide} from 'vue'
+    import {useUserStore} from '../../stores/userStore'
     import {PlusRound,SubtitlesOffOutlined,
         DriveFileRenameOutlineOutlined,
         DeleteOutlineRound,ArrowCircleDownRound,
@@ -103,6 +104,31 @@
     import gsap from "gsap"
     import { toHerf } from '../../router/go';
     import bus from 'vue3-eventbus'
+
+    const userStore = useUserStore();
+    const {token,id:user_id} = storeToRefs(userStore);
+    watch(
+        ()=>token.value,
+        newData=>{
+            //是否重新进行登录
+            if(newData !== null)
+            {
+                //处于加载状态
+                loading.value = true;
+                //重新获取用户笔记列表
+                getNoteList(true,false);
+                //判断编辑笔记用户编号是否和登录用户编号一致 不一致则关闭笔记页面
+                if(editNoteUID.value && user_id.value !== editNoteUID)
+                {
+                    toHerf('/note');
+                }
+            }
+        }
+    );
+
+    const editNoteUID = ref(null)
+
+    provide('editNoteUID',editNoteUID);
 
     //路由地址
     const routerPath = inject('routerPath');

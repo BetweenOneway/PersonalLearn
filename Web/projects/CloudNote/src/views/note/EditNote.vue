@@ -56,6 +56,7 @@
 </template>
 
 <script setup>
+    import { inject } from 'vue';
     import { Ckeditor } from '@ckeditor/ckeditor5-vue';
     import {EditorType,getEditorConfigs} from "@/editor"
     import { getUserToken } from "../../Utils/userLogin";
@@ -83,6 +84,9 @@
         changeState:{type:Number},
         actionId:{type:Number}
     })
+
+    //当前正在编辑笔记所属的用户编号
+    const editNoteUID = inject("editNoteUID")
 
     watch(
         ()=>propsData.changeState,
@@ -127,6 +131,8 @@
                 console.log("get note info:",responseData)
                 //笔记的信息
                 note.value = responseData.data;
+                //编辑笔记的用户编号
+                editNoteUID.value = note.value.u_id;
                 //加载已完毕
                 loading.value = false;
             }
