@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ThingIndexView from "../views/thing/ThingIndexView.vue"
+//预加载
+import EditNoteView from '../views/note/EditNote.vue';
 
 const routes = [
     {
         path:'/memo',
-        component:ThingIndexView,
+        component:import("../views/thing/ThingIndexView.vue"),
         meta:{title:'便签页'}
     },
     {
@@ -15,7 +16,7 @@ const routes = [
             {
                 path:'edit/:id',
                 props:true,
-                component:()=>import('../views/note/EditNote.vue'),
+                component:EditNoteView,
                 meta:{title:'笔记编辑页'}
             }
         ]
