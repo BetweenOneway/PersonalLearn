@@ -65,7 +65,7 @@
             title: "操作",
             key: "action",
             render:row=>{
-                //渲染成标签元素
+                //渲染成间距元素 按钮元素
                 return h(
                     NSpace, null,
                     [
