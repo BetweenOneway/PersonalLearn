@@ -114,7 +114,7 @@
             label:'回收站',
             icon:DeleteOutlineRound,
             icon_size:28,
-            to:''
+            to:'/dumpster'
         },
     ];
 

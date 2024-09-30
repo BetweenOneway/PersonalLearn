@@ -22,6 +22,11 @@ const routes = [
         ]
     },
     {
+        path:'/dumpster',
+        component:()=>import('../views/dumpster/IndexView.vue'),
+        meta:{title:'回收站'}
+    },
+    {
         path:'/404',
         component:()=>import('../views/result/NoteFoundView.vue'),
         meta:{title:'404'}
