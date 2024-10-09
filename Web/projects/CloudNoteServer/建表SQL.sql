@@ -127,4 +127,12 @@ CREATE TABLE `z_user_log`  (
 -- Records of z_user_log
 -- ----------------------------
 
+-- ----------------------------
+-- View Structure for file_dumpster
+-- ----------------------------
+CREATE VIEW file_dumpster AS
+SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_memo WHERE `status`=0
+UNION ALL
+SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_note WHERE `status`=0
+
 SET FOREIGN_KEY_CHECKS = 1;
