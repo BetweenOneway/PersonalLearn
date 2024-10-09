@@ -8,6 +8,7 @@ const userLog = require('../models/userLog.js')
 const memo = require('../models/memo.js')
 const operLog = require('../models/operLog.js')
 const note = require('../models/note.js')
+const dumpsterFile = require('../models/dumpster.js')
 
 var dbSettings = config.get("mysql");
 
@@ -20,6 +21,7 @@ db.UserLog = userLog(db.sequelize,Sequelize.DataTypes);
 db.Memo = memo(db.sequelize,Sequelize.DataTypes);
 db.Note = note(db.sequelize,Sequelize.DataTypes);
 db.operLog = operLog(db.sequelize,Sequelize.DataTypes);
+db.Dumpster = dumpsterFile(db.sequelize,Sequelize.DataTypes);
 
 db.User.hasOne(db.Note,
     {
