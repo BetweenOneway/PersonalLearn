@@ -1,5 +1,5 @@
 <template>
-    <n-config-provider :theme="theme.name">
+    <n-config-provider :theme="theme.name" :locale="zhCN" :date-locale="dateZhCN">
         <n-loading-bar-provider>
             <n-notification-provider>
                 <n-dialog-provider>
@@ -23,6 +23,8 @@
     const themeStore = useThemeStore()
     const {theme} = storeToRefs(themeStore)
     //const {changeTheme} = themeStore
+
+    import { zhCN, dateZhCN } from 'naive-ui'
 
     //用户的共享资源
     const userStore = useUserStore();

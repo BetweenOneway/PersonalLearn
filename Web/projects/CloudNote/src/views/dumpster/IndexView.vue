@@ -10,8 +10,14 @@
         </n-space>
         <!--表格-->
         <n-data-table
+            flex-height
+            striped
             :columns="columns"
             :data="data"
+            :pagination="pagination"
+            v-model:checked-row-keys="rowChecked"
+            @update:page="rowChecked=[]"
+            style="height:calc(100% - 34px - 20px)"
         />
     </n-layout>
 </template>
@@ -88,16 +94,28 @@
     //表中的数据
     const data=ref([
         {
+            key:1,
             title:"123",
             type:1,
             updateTime:'2024-09-30 11:11:11',
             action:''
         },
         {
+            key:2,
             title:"456",
             type:2,
             updateTime:'2024-09-30 12:11:11',
             action:''
         },
     ])
+
+    //分页配置
+    const pagination = ref({
+        pageSizes:[10,20,50],
+        showSizePicker:true,
+        size:'large'
+    })
+
+    //选中了哪些行
+    const rowChecked = ref([]);
 </script>
