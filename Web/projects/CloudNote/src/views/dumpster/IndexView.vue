@@ -23,7 +23,9 @@
 </template>
 
 <script setup>
-    import {NTag,NSpace,NButton} from 'naive-ui'
+    import {NTag,NSpace,NButton,NText} from 'naive-ui'
+    import noteServerRequest  from "../../request"
+    import dumpsterApi from '../../request/api/dumpsterApi';
 
     //表格中的列
     const columns = [
@@ -32,7 +34,17 @@
         },
         {
             title: "名称",
-            key: "title"
+            key: "title",
+            render:row=>{
+                let title = row.title;
+                let depth = 1;//文字深度 颜色
+                if(!title) 
+                {
+                    title="未设置文件名称"
+                    depth = 3;
+                }
+                return h(NText,{depth},{default:()=>title})
+            }
         },
         {
             title: "类型",
@@ -92,22 +104,7 @@
     ];
 
     //表中的数据
-    const data=ref([
-        {
-            key:1,
-            title:"123",
-            type:1,
-            updateTime:'2024-09-30 11:11:11',
-            action:''
-        },
-        {
-            key:2,
-            title:"456",
-            type:2,
-            updateTime:'2024-09-30 12:11:11',
-            action:''
-        },
-    ])
+    const data=ref([])
 
     //分页配置
     const pagination = ref({
@@ -118,4 +115,22 @@
 
     //选中了哪些行
     const rowChecked = ref([]);
+
+    //
+    const getFileList = ()=>{
+        //发送请求
+        noteServerRequest(dumpsterApi.getFileList).then(responseData=>{
+            if(!responseData) return;
+            //回收站中的文件
+            const files = responseData.data;
+            //封装文件的key值（id:type）
+            files.forEach(item=>{
+                item.key = item.id+':'+item.type;
+            });
+            //显示回收站中的文件
+            data.value = files;
+        });
+    };
+
+    getFileList();
 </script>
