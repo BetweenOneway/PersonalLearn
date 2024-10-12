@@ -1,6 +1,7 @@
 <template>
     <n-modal :show="show" preset="dialog" title="删除提醒" 
-    type="warning" :closable="false" transform-origin="center">
+    type="warning" :closable="false" transform-origin="center"
+    @after-leave="reset">
         <template #icon>
             <n-icon style="position:relative;top:-2px" :component="ReportGmailerrorredRound"></n-icon>
         </template>
@@ -30,6 +31,9 @@
         completeDeletBtn,//彻底删除按钮是否显示
         type//删除文件类型 1 笔记 2 便签
     } = storeToRefs(deleteRemindDialogStore)
+
+    //删除提醒框重置函数
+    const {reset} = deleteRemindDialogStore;
 
     //自定义事件 彻底删除 删除 取消
     const emits = defineEmits(['delete','cancel'])

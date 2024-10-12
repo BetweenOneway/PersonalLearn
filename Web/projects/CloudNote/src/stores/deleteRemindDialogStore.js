@@ -70,22 +70,18 @@ export const deleteRemindDialogStore = defineStore(
             show.value = true;
         }
 
-        //关闭窗口，恢复初始值
-        watch(
-            ()=>show.value,
-            newData=>{
-                if(!newData){
-                    fileName.value = null;
-                    size.value = 1;
-                    deleteBtn.value = true;
-                    completeDeleteBtn.value = true;
-                    type.value =1;
-                    id.value = null;
-                }
-            })
+        const reset = ()=>{
+            fileName.value = null;
+            size.value = 1;
+            deleteBtn.value = true;
+            completeDeleteBtn.value = true;
+            type.value =1;
+        }
+
         return {
             show,fileName,size,deleteBtn,completeDeleteBtn,type,
             showDefault,showFromNote,showFromMemo,
-            showFromDumpsterSingle,showFromDumpsterMulti}
+            showFromDumpsterSingle,showFromDumpsterMulti,
+            reset}
     }
 )
