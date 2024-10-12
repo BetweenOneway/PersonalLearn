@@ -4,8 +4,8 @@
         <n-space justify="space-between" align="center" style="margin-bottom:20px">
             <h3 style="margin:0">回收站</h3>
             <n-space>
-                <n-button ghost type="success">批量回复</n-button>
-                <n-button ghost type="error">批量彻底删除</n-button>
+                <n-button ghost type="success">批量恢复</n-button>
+                <n-button ghost type="error" @click="clickBatchDeleteBtn">批量彻底删除</n-button>
             </n-space>
         </n-space>
         <!--表格-->
@@ -20,13 +20,23 @@
             style="height:calc(100% - 34px - 20px)"
         />
     </n-layout>
+    <!--删除提醒框-->
+    <DeleteRemindDialog @delete=""></DeleteRemindDialog>
 </template>
 
 <script setup>
-    import {NTag,NSpace,NButton,NText} from 'naive-ui'
+    import {NTag,NSpace,NButton,NText, useMessage} from 'naive-ui'
     import noteServerRequest  from "../../request"
     import dumpsterApi from '../../request/api/dumpsterApi';
+    import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue";
+    import {useDeleteRemindDialogStore} from '../../stores/deleteRemindDialogStore'
 
+    const deleteRemindDialogStore = useDeleteRemindDialogStore();
+    //是否显示删除提醒框
+    const {show} = storeToRefs(deleteRemindDialogStore);
+    const {showFromDumpsterSingle,showFromDumpsterMulti} = deleteRemindDialogStore;
+
+    const message = useMessage();
     //表格中的列
     const columns = [
         {
@@ -94,7 +104,13 @@
                         ),
                         h(
                             NButton,
-                            {size:'small',type:'error',tertiary:true},
+                            {
+                                size:'small',type:'error',tertiary:true,
+                                onClick:()=>{
+                                    //显示删除提醒框
+                                    showFromDumpsterSingle(row.title,row.type);
+                                }
+                            },
                             {default:()=>"彻底删除"}
                         )
                     ]
@@ -133,4 +149,32 @@
     };
 
     getFileList();
+
+    //批量删除
+    const clickBatchDeleteBtn = ()=>{
+        let numOfToDelete = rowChecked.value.length;
+        switch(numOfToDelete)
+        {
+            case 0:
+                throw message.warning("未勾选任何文件");
+                break;
+            case 1:
+                let title = '';
+                let type = 2;
+
+                data.value.some(item=>{
+                    if(item.key == rowChecked.value[0])
+                    {
+                        title = item.title;
+                        type = item.type;
+                        return true;
+                    }
+                })
+                showFromDumpsterSingle(title,type);
+                break;
+            default:
+                showFromDumpsterMulti(numOfToDelete);
+                break;
+        }
+    }
 </script>
