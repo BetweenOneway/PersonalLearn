@@ -78,11 +78,7 @@
     </n-layout>
 
     <!--删除提醒框-->
-    <DeleteRemindDialog 
-    :show="deleteRemind.show"
-    :title="deleteRemind.title"
-    @delete="deleteMemo"
-    @cancel="deleteRemind.show=false"></DeleteRemindDialog>
+    <DeleteRemindDialog @delete="deleteMemo"></DeleteRemindDialog>
 
     <!--便签编辑-->
     <EditMemoModal ref="editMemoModalRef" @save="getMemoList"/>
@@ -95,6 +91,7 @@
     } from "@vicons/material"
     import { useThemeStore } from "../../stores/themeStore";
     import {useUserStore} from '../../stores/userStore'
+    import {useDeleteRemindDialogStore} from '../../stores/deleteRemindDialogStore'
     import noteServerRequest  from "../../request"
     import memoApi from '../../request/api/memoApi';
     import {useLoadingBar} from 'naive-ui'
@@ -127,6 +124,11 @@
             }
         }
     );
+
+    const deleteRemindDialogStore = useDeleteRemindDialogStore();
+    //是否显示删除提醒框
+    const {show} = storeToRefs(deleteRemindDialogStore);
+    const {showFromMemo} = deleteRemindDialogStore;
 
     //消息对象
     const loadingBar = useLoadingBar()
@@ -251,31 +253,26 @@
         }
     }
 
-    //删除提醒框的对象
-    const deleteRemind = ref({
-        show:false,//是否显示
-        id:null,//便签编号
-        title:""//删除单个文件名称
-    })
+    //待删除便签ID
+    const toDeleteMemoId = ref(null);
 
     //显示删除便签提醒框
     const showDeleteRemindDialog = ({id,title})=>{
-        deleteRemind.value.id = id //将要删除的便签编号
-        deleteRemind.value.title = title //将要删除的便签标题
-        deleteRemind.value.show = true
+        toDeleteMemoId.value = id //将要删除的便签编号
+        showFromMemo(title);
     }
 
     //删除便签 
     //complete true彻底删除 false非彻底删除
     const deleteMemo = async (complete)=>{
         //关闭提醒框
-        deleteRemind.value.show = false;
+        show.value = false;
 
         let API = {...memoApi.deleteMemo};
         API.name = complete ? API.name[1]:API.name[0];
         API.params = {
             isCompleteDel:complete,
-            memoId:deleteRemind.value.id
+            memoId:toDeleteMemoId.value
         }
 
         noteServerRequest(API).then(responseData=>{
