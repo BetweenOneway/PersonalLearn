@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, ref,watch } from 'vue'
+import { computed, ref } from 'vue'
 
 export const deleteRemindDialogStore = defineStore(
     "delete-remind-dialog",
@@ -7,81 +7,78 @@ export const deleteRemindDialogStore = defineStore(
         //共享属性
         //是否显示
         const show = ref(false)
-        //删除的文件名
-        const fileName=ref(null)
-        //删除文件个数
-        const size=ref(1)
-        //是否显示删除按钮
-        const deleteBtn = ref(true)
-        //彻底删除按钮
-        const completeDeleteBtn = ref(true)
-        //删除的文件类型 1 笔记 2 便签
-        const type =ref(1)
+
+        //删除文件对象数组 {id,title,type,key}
+        const files=ref([])
+        //场景 1 正常场景 2 回收站场景
+        const scene = ref(1)
+        //删除权限 0 无权限 1删除权限 2 彻底删除权限 3 删除+彻底删除权限
+        const deletePer = ref(3)
 
         /**
-         * 默认窗口
-         * @param {String} file 
-         * @param {Number} fileType 
+         * 默认窗口(scene)
+         * @param {OBject} file 
          */
-        const showDefault = (file,fileType)=>{
+        const showDefault = (file)=>{
+            files.value[0] = file;
             show.value = true;
-            fileName.value = file;
-            type.value = fileType;
-        }
-
-        /**
-         * 笔记删除提醒框
-         * @param {String} file 
-         */
-        const showFromNote = (file)=>{
-            show.value = true;
-            fileName.value = file;
-            type.value = 1;
-        }
-
-        /**
-         * 便签删除提醒框
-         * @param {String} file 
-         */
-        const showFromMemo = (file)=>{
-            show.value = true;
-            fileName.value = file;
-            type.value = 2;
         }
 
         /**
          * 回收站单文件删除
          * @param {*} file 
-         * @param {*} fileType 
          */
-        const showFromDumpsterSingle = (file,fileType)=>{
+        const showFromDumpsterSingle = (file)=>{
             show.value = true;
-            fileName.value = file;
-            type.value = fileType;
-            deleteBtn.value = false;
+            scene.value = 2;
+            files.value[0] = file;
+            deletePer = 2;
         }
 
         /**
          * 回收站多文件删除
-         * @param {*} numOfFiles 
+         * @param {Array} multiFiles 
          */
-        const showFromDumpsterMulti = (numOfFiles)=>{
-            size.value = numOfFiles;
+        const showFromDumpsterMulti = (multiFiles)=>{
+            files.value = multiFiles;
             show.value = true;
+            scene.value = 2;
+            deletePer = 2;
         }
 
         const reset = ()=>{
-            fileName.value = null;
-            size.value = 1;
-            deleteBtn.value = true;
-            completeDeleteBtn.value = true;
-            type.value =1;
+            show.value = false;
+            files.value=[];
+            scene.value = 1;
+            deletePer.value = 3;
         }
 
+        //
+        const fileArr = computed(()=>{
+            //拷贝原数组对象
+            const newFileArr = JSON.parse(JSON.stringify(files.value));
+
+            newFileArr.value.forEach(element => {
+                switch(element.type)
+                {
+                    case 1:
+                        element.theme = 'success';
+                        element.icon =StickyNote2Outlined;
+                        element.tip='笔记'
+                        break;
+                    case 2:
+                        element.theme = 'info';
+                        element.icon =EventNoteRound;
+                        element.tip='便签'
+                        break;
+                }
+            });
+            return newFileArr;
+        });
+
         return {
-            show,fileName,size,deleteBtn,completeDeleteBtn,type,
-            showDefault,showFromNote,showFromMemo,
-            showFromDumpsterSingle,showFromDumpsterMulti,
-            reset}
+            show,files,scene,deletePer,fileArr,
+            reset,showDefault,
+            showFromDumpsterSingle,showFromDumpsterMulti}
     }
 )
