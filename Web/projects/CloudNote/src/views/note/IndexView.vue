@@ -70,11 +70,7 @@
     </n-layout>
 
     <!--删除提醒框-->
-    <DeleteRemindDialog 
-    :show="displayDeleteRemind"
-    :title="contextMenu.title"
-    @delete="deleteNote"
-    @cancel="displayDeleteRemind=false"></DeleteRemindDialog>
+    <DeleteRemindDialog @delete="deleteNote"></DeleteRemindDialog>
 
     <!--右键菜单-->
     <n-dropdown
@@ -92,6 +88,7 @@
 <script setup>
     import {computed, ref,inject, onBeforeUnmount, provide} from 'vue'
     import {useUserStore} from '../../stores/userStore'
+    import {useDeleteRemindDialogStore} from '../../stores/deleteRemindDialogStore'
     import {PlusRound,SubtitlesOffOutlined,
         DriveFileRenameOutlineOutlined,
         DeleteOutlineRound,ArrowCircleDownRound,
@@ -104,6 +101,7 @@
     import gsap from "gsap"
     import { toHerf } from '../../router/go';
     import bus from 'vue3-eventbus'
+import { storeToRefs } from 'pinia'
 
     const userStore = useUserStore();
     const {token,id:user_id} = storeToRefs(userStore);
@@ -125,6 +123,11 @@
             }
         }
     );
+
+    const deleteRemindDialogStore = useDeleteRemindDialogStore();
+    //是否显示删除提醒框
+    const {show} = storeToRefs(deleteRemindDialogStore);
+    const {showFromNote} = deleteRemindDialogStore;
 
     const editNoteUID = ref(null)
 
@@ -315,7 +318,7 @@
         }
         else if(key == "delete")
         {
-            displayDeleteRemind.value = true;
+            showFromNote(contextMenu.value.title)
         }
     }
 
@@ -354,16 +357,13 @@
         }, 1000);
     }
 
-    //删除提醒框的对象
-    const displayDeleteRemind = ref(false);
-
     /**
      * 删除笔记
      * @param {Boolean} complete true彻底删除 false非彻底删除
      */
     const deleteNote = async (complete)=>{
         //关闭提醒框
-        displayDeleteRemind.value = false;
+        show.value = false;
 
         //获取API
         let API = {...noteApi.deleteNote}

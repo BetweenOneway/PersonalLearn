@@ -33,7 +33,7 @@ export const deleteRemindDialogStore = defineStore(
          * 笔记删除提醒框
          * @param {String} file 
          */
-        const showFromNote = (fileId,file)=>{
+        const showFromNote = (file)=>{
             show.value = true;
             fileName.value = file;
             type.value = 1;
@@ -43,7 +43,7 @@ export const deleteRemindDialogStore = defineStore(
          * 便签删除提醒框
          * @param {String} file 
          */
-        const showFromMemo = (fileId,file)=>{
+        const showFromMemo = (file)=>{
             show.value = true;
             fileName.value = file;
             type.value = 2;
@@ -54,7 +54,7 @@ export const deleteRemindDialogStore = defineStore(
          * @param {*} file 
          * @param {*} fileType 
          */
-        const showFromDumpsterSingle = (fileId,file,fileType)=>{
+        const showFromDumpsterSingle = (file,fileType)=>{
             show.value = true;
             fileName.value = file;
             type.value = fileType;
@@ -83,6 +83,9 @@ export const deleteRemindDialogStore = defineStore(
                     id.value = null;
                 }
             })
-        return {show,fileName,size,deleteBtn,completeDeleteBtn,type}
+        return {
+            show,fileName,size,deleteBtn,completeDeleteBtn,type,
+            showDefault,showFromNote,showFromMemo,
+            showFromDumpsterSingle,showFromDumpsterMulti}
     }
 )
