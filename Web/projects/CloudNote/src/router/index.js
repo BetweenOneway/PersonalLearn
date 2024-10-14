@@ -4,6 +4,15 @@ import EditNoteView from '../views/note/EditNote.vue';
 
 const routes = [
     {
+        path:'/',
+        redirect:'/recent'
+    },
+    {
+        path:'/recent',
+        component:import("../views/recent/IndexView.vue"),
+        meta:{title:'最近操作'}
+    },
+    {
         path:'/memo',
         component:import("../views/thing/ThingIndexView.vue"),
         meta:{title:'便签页'}
