@@ -1,5 +1,5 @@
 <template>
-    <n-modal :show="show" preset="dialog" title="删除提醒" 
+    <n-modal v-model:show="show" preset="dialog" title="删除提醒" 
     type="warning" :closable="false" transform-origin="center"
     @after-leave="reset">
         <template #icon>
@@ -8,16 +8,24 @@
         <template #default>
             <n-space vertical>
                 <!--删除提醒-->
-                <n-text v-text="description"></n-text>
-                <!--删除文件列表-->
-                <n-space v-show="fileArr.length > 1">
-                    <n-tag v-for="file in fileArr" :key="file.key" :type="file.theme">
-                        {{ file.title }}
-                        <template #icon>
-                            <n-icon :component="file.icon"></n-icon>
-                        </template>
-                    </n-tag>
-                </n-space>
+                <n-p>
+                    <n-text v-text="description"></n-text>
+                    <n-button v-show="fileArr.length > 1" text type="success" @click="showDetails= !showDetails">{{showDetails?"收起详情":"查看详情"}}</n-button>
+                </n-p>
+                <div v-show="showDetails">
+                    <n-divider style="margin:0 0 14px" />
+                    <!--删除文件列表-->
+                    <n-scrollbar style="max-height: 260px;" trigger="none">
+                        <n-space>
+                            <n-tag :bordered="false" v-for="file in fileArr" :key="file.key" :type="file.theme">
+                                {{ file.title }}
+                                <template #icon>
+                                    <n-icon :component="file.icon"></n-icon>
+                                </template>
+                            </n-tag>
+                        </n-space>
+                    </n-scrollbar>
+                </div>
             </n-space>
         </template>
         <template #action>
@@ -41,6 +49,7 @@
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
     const {
         show,//是否显示提醒框
+        showDetails,//是否显示详情
         fileArr,//删除文件对象数组
         deletePer,//删除权限
         scene,//删除场景

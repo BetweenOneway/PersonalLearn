@@ -101,10 +101,11 @@
     import gsap from "gsap"
     import { toHerf } from '../../router/go';
     import bus from 'vue3-eventbus'
-import { storeToRefs } from 'pinia'
+    import { storeToRefs } from 'pinia'
 
     const userStore = useUserStore();
     const {token,id:user_id} = storeToRefs(userStore);
+
     watch(
         ()=>token.value,
         newData=>{
@@ -127,7 +128,7 @@ import { storeToRefs } from 'pinia'
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
     //是否显示删除提醒框
     const {show} = storeToRefs(deleteRemindDialogStore);
-    const {showFromNote} = deleteRemindDialogStore;
+    const {DefaultDeleteRemind} = deleteRemindDialogStore;
 
     const editNoteUID = ref(null)
 
@@ -318,7 +319,12 @@ import { storeToRefs } from 'pinia'
         }
         else if(key == "delete")
         {
-            showFromNote(contextMenu.value.title)
+            DefaultDeleteRemind({
+                id:contextMenu.value.id,
+                title:contextMenu.value.title,
+                type:1,
+                key:id+':'+1
+            })
         }
     }
 

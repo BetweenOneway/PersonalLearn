@@ -7,7 +7,8 @@ export const deleteRemindDialogStore = defineStore(
         //共享属性
         //是否显示
         const show = ref(false)
-
+        //查看详情
+        const showDetails = ref(false);
         //删除文件对象数组 {id,title,type,key}
         const files=ref([])
         //场景 1 正常场景 2 回收站场景
@@ -19,7 +20,7 @@ export const deleteRemindDialogStore = defineStore(
          * 默认窗口(scene)
          * @param {OBject} file 
          */
-        const showDefault = (file)=>{
+        const DefaultDeleteRemind = (file)=>{
             files.value[0] = file;
             show.value = true;
         }
@@ -48,6 +49,7 @@ export const deleteRemindDialogStore = defineStore(
 
         const reset = ()=>{
             show.value = false;
+            showDetails.value = false;
             files.value=[];
             scene.value = 1;
             deletePer.value = 3;
@@ -77,8 +79,8 @@ export const deleteRemindDialogStore = defineStore(
         });
 
         return {
-            show,files,scene,deletePer,fileArr,
-            reset,showDefault,
+            show,showDetails,files,scene,deletePer,fileArr,
+            reset,DefaultDeleteRemind,
             showFromDumpsterSingle,showFromDumpsterMulti}
     }
 )

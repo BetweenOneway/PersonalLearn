@@ -17,6 +17,7 @@
             :pagination="pagination"
             v-model:checked-row-keys="rowChecked"
             @update:page="rowChecked=[]"
+            @update-checked-row-keys="updateCheckedRowKeys"
             style="height:calc(100% - 34px - 20px)"
         />
     </n-layout>
@@ -108,7 +109,7 @@
                                 size:'small',type:'error',tertiary:true,
                                 onClick:()=>{
                                     //显示删除提醒框
-                                    showFromDumpsterSingle(row.title,row.type);
+                                    showFromDumpsterSingle(row);
                                 }
                             },
                             {default:()=>"彻底删除"}
@@ -159,22 +160,20 @@
                 throw message.warning("未勾选任何文件");
                 break;
             case 1:
-                let title = '';
-                let type = 2;
-
-                data.value.some(item=>{
-                    if(item.key == rowChecked.value[0])
-                    {
-                        title = item.title;
-                        type = item.type;
-                        return true;
-                    }
-                })
-                showFromDumpsterSingle(title,type);
+                showFromDumpsterSingle(checkedRowsObjects[0]);
                 break;
             default:
-                showFromDumpsterMulti(numOfToDelete);
+                showFromDumpsterMulti(checkedRowsObjects);
                 break;
         }
     }
+
+    /**
+     * 表格中勾选状态发生改变
+     */
+    let checkedRowsObjects = [];
+    const updateCheckedRowKeys = (keys,rows)=>{
+        checkedRowsObjects = rows;
+    }
+
 </script>

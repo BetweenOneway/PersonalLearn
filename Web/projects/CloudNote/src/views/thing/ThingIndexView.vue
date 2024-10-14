@@ -128,7 +128,7 @@
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
     //是否显示删除提醒框
     const {show} = storeToRefs(deleteRemindDialogStore);
-    const {showFromMemo} = deleteRemindDialogStore;
+    const {DefaultDeleteRemind} = deleteRemindDialogStore;
 
     //消息对象
     const loadingBar = useLoadingBar()
@@ -259,7 +259,7 @@
     //显示删除便签提醒框
     const showDeleteRemindDialog = ({id,title})=>{
         toDeleteMemoId.value = id //将要删除的便签编号
-        showFromMemo(title);
+        DefaultDeleteRemind({id,title,type:2,key:id+':'+2});
     }
 
     //删除便签 
