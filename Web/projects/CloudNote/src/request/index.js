@@ -1,20 +1,14 @@
 import axios from 'axios'
 import qs from 'qs'
-import { createDiscreteApi } from 'naive-ui'
 import { getUserToken, loginInvalid } from '../Utils/userLogin'
 import { toHerf } from '../router/go'
-
-//脱离上下文的消息和加载条对象
-const { message, loadingBar } = createDiscreteApi(
-    ['message', 'loadingBar']
-)
 
 /*
 请求时处理
 */
 const request = async config =>{
     //加载条开始
-    loadingBar.start();
+    window.$loadingBar.start();
     //判断是否需要请求头中的userToken
     if(config.userPower) 
     {
@@ -34,14 +28,14 @@ const request = async config =>{
 */
 const requestError = error =>{
     //加载条异常结束
-    loadingBar.error();
+    window.$loadingBar.error();
     if(error.config)
     {
         //采用消息显示失败的原因
-        message.error("发送"+error.config.name+"请求失败");
+        window.$message.error("发送"+error.config.name+"请求失败");
     }
     else{
-        message.error(error);
+        window.$message.error(error);
     }
     //返回失败的原因
     //return Promise.reject(error);
@@ -56,8 +50,8 @@ const requestResponse = response =>{
     //
     if(!responseData.success)
     {
-        loadingBar.error();
-        message.error(responseData.description)
+        window.$loadingBar.error();
+        window.$message.error(responseData.description)
         //判断是否登陆失败
         if(responseData.status ==='SERVICE_008')
         {
@@ -72,11 +66,11 @@ const requestResponse = response =>{
         
         return null;
     }
-    loadingBar.finish();
+    window.$loadingBar.finish();
     //判断是否需要弹出成功消息 如登陆
     if(response.config.successMessage)
     {
-        message.success(response.config.name + "成功");
+        window.$message.success(response.config.name + "成功");
     }
 
     return responseData;

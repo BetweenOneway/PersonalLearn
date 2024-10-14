@@ -22,7 +22,12 @@
     import MainLeftToolBar from "@/components/toolbar/MainLeftToolBar.vue"
     import LoginModal from "@/components/login/LoginModal.vue"
     import { ref,watch,inject } from "vue"
-    import {useDialog} from 'naive-ui'
+    import {useDialog, useLoadingBar, useMessage} from 'naive-ui'
+
+    //将消息对象挂在到window
+    window.$message = useMessage();
+    //将加载条对象挂载到window
+    window.$loadingBar = useLoadingBar();
 
     //对话框对象
     const dialog = useDialog();
