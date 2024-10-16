@@ -84,7 +84,7 @@
             label:'最近操作',//弹出信息
             icon:AccessTimeRound,//图标
             icon_size:24,//图标大小
-            to:''//路由地址
+            to:'/recent'//路由地址
         },
         {
             label:'笔记',
