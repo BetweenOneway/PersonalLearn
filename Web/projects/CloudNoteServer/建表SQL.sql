@@ -135,4 +135,9 @@ SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_memo WHERE `status`=0
 UNION ALL
 SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_note WHERE `status`=0
 
+CREATE VIEW recent_access_file AS
+SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_memo WHERE `status`=1
+UNION ALL
+SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_note WHERE `STATUS` = 1
+
 SET FOREIGN_KEY_CHECKS = 1;
