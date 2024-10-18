@@ -1,5 +1,5 @@
 <template>
-    <n-space vertical style="width:100%;padding:25px" :size="25">
+    <n-layout embedded content-style="padding:25px">
         <!--轮播图-->
         <n-carousel show-arrow dot-type="line" autoplay>
             <n-a v-for="banner in banners" :key="banner.id" 
@@ -9,7 +9,7 @@
         </n-carousel>
 
         <!--快捷按钮-->
-        <n-card :bordered="false">
+        <n-card style="margin:25px 0" :bordered="false">
             <n-space>
                 <n-button tertiary v-for="btn in actionButton" :key="btn.key" 
                 :type="btn.type" @click="btn.onClick()">
@@ -22,18 +22,21 @@
         </n-card>
 
         <!--最近记录-->
-        <n-card :bordered="false">
+        <n-card style="height:calc(100% - 140px - 50px - 74px);" content-style="height:calc(100% - 72.69px);" :bordered="false">
             <template #header>
                 <h3 style="margin:0">最近记录</h3>
             </template>
             <template #default>
-                <n-space>
-                    <!--文件卡片-->
-                    <fileCard></fileCard>
-                </n-space>
+                <n-scrollbar trigger="none" style="height:100%">
+                    <n-space>
+                        <!--文件卡片-->
+                        <fileCard v-for="file in files" :key="file.id+':'+file.type"
+                        :id="file.id" :title="file.title" :type="file.type" :time="file.time"></fileCard>
+                    </n-space>
+                </n-scrollbar>
             </template>
         </n-card>
-    </n-space>
+    </n-layout>
 </template>
 
 <script setup>
@@ -114,6 +117,23 @@
             }
         },
     ];
+
+    //最近操作的文件
+    const files = ref([
+        {
+            id:1,
+            title:'vue3知识点整理',
+            type:1,
+            time:'2023-10-11 22:22:33'
+        },
+        {
+            id:2,
+            title:'购物清单',
+            type:0,
+            time:'2023-10-11 22:22:33'
+        }
+    ]);
+
 </script>
 
 <style scoped>
