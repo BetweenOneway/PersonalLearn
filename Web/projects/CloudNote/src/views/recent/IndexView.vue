@@ -44,6 +44,8 @@
     import { toHerf } from '../../router/go';
     import { EventNoteRound,StickyNote2Outlined,ShoppingBagOutlined } from '@vicons/material';
     import fileCard from '../../components/card/fileCard.vue';
+    import noteServerRequest from "@/request"
+    import fileApi from "@/request/api/fileApi"
 
     //广告图
     const banners= ref([
@@ -133,6 +135,14 @@
             time:'2023-10-11 22:22:33'
         }
     ]);
+
+    const getRecentFiles = ()=>{
+        noteServerRequest(fileApi.getRecentlyUse).then(responseData=>{
+            if(!responseData) return;
+            files.value = responseData.data;
+        }
+        )
+    }
 
 </script>
 

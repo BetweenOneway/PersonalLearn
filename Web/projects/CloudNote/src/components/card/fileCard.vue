@@ -8,7 +8,7 @@
             <!--文件标题和时间-->
             <n-space vertical :size="4">
                 <n-text>{{title}}</n-text>
-                <n-text depth="3">{{time}}</n-text>
+                <n-text depth="3">{{fromNow(time)}}</n-text>
             </n-space>
         </n-space>
     </n-card>
@@ -17,7 +17,7 @@
 <script setup>
     import { useThemeStore } from "../../stores/themeStore";
     import { EventNoteRound,StickyNote2Outlined,ShoppingBagOutlined } from '@vicons/material';
-
+    import {fromNow} from '@/utils/dayUtil'
     const themeStore = useThemeStore()
     const {isDarkTheme} = storeToRefs(themeStore)
 
