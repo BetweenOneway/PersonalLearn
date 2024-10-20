@@ -46,7 +46,7 @@
         </n-space>
     </n-space>
     <!--用户基本信息-->
-    <user-basic-info-drawer/>
+    <user-basic-info-drawer ref="userBasicInfoRef"/>
 </template>
 
 <script setup>
@@ -92,17 +92,16 @@
 
         //关闭用户菜单弹出信息
         userMenuShow.value = false
-        if(key==="sign-out")
-        {
-            signOutLogin()
-        }
-        else if(key==="user-center")
-        {
 
-        }
-        else if(key==="account-setting")
-        {
-
+        switch(key){
+            case "sign-out":
+                signOutLogin();
+                break;
+            case "user-center":
+                userBasicInfoRef.value.changeActive();
+                break;
+            case "account-setting":
+                break;
         }
     }
 
@@ -132,4 +131,7 @@
             label:'退出登录'
         }
     ]
+
+    //用户基本信息抽屉组件实例
+    const userBasicInfoRef = ref(null);
 </script>
