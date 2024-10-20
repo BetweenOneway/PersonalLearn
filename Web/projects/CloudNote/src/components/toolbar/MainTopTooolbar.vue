@@ -45,6 +45,8 @@
             <n-button v-if="user_id === null" tertiary type="primary" @click="showLoginModal">登录</n-button>
         </n-space>
     </n-space>
+    <!--用户基本信息-->
+    <user-basic-info-drawer/>
 </template>
 
 <script setup>
@@ -58,16 +60,13 @@
     import userApi from '../../request/api/userApi';
     import { loginInvalid } from "../../Utils/userLogin";
     import {ref} from "vue"
+    import UserBasicInfoDrawer from '../user/UserBasicInfoDrawer.vue'
 
     const themeStore = useThemeStore()
     const {theme,isDarkTheme} = storeToRefs(themeStore)
     const {changeTheme} = themeStore
 
     const loginModalStore = useLoginModalStore()
-
-    //消息对象
-    const message = useMessage()
-    const loadingBar = useLoadingBar()
 
     //改变登录模态框显示状态
     const {changeLoginModalShow} = loginModalStore
