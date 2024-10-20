@@ -332,13 +332,13 @@
         formValue.value.content = [] //内容
     }
     
-    //监听是否触发新建便签事件
-    bus.on('newCreateMemo',showEditModal);
+    //监听是否触发显示编辑便签窗口的事件
+    bus.on('showEditMemoModal',showEditModal);
 
     //组件卸载之前
     onBeforeUnmount(()=>{
-        //停止监听新建便签事件
-        bus.off('newCrteateMemo',showEditModal)
+        //停止监听显示编辑便签窗口的事件
+        bus.off('showEditMemoModal',showEditModal)
     })
 
     //将哪些函数导出

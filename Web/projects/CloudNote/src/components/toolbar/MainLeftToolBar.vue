@@ -37,8 +37,7 @@
         , StarBorderRound, ShoppingBagOutlined, DeleteOutlineRound} from "@vicons/material"
     import {NIcon} from "naive-ui"
     import {h,watch,inject} from 'vue'
-    import bus from 'vue3-eventbus'
-    import { toHerf } from "../../router/go"
+    import { toHerf,showEditMemoWindow,createNewNote } from "../../router/go"
     
     const routerPath = inject('routerPath');
 
@@ -55,11 +54,8 @@
             icon:renderIcon(StickyNote2Outlined,20,'#18A058'),
             props:{
                 onClick:()=>{
-                    //跳转至路由为/note
-                    toHerf("/note",()=>{
-                        //出发新增笔记事件
-                        bus.emit('createNewNote');
-                    })
+                    //前往笔记页，并新增笔记
+                    createNewNote();
                 }
             }
         },
@@ -70,10 +66,7 @@
             props:{
                 onClick:()=>{
                     //跳转至路由为/memo
-                    toHerf("/memo",()=>{
-                        //弹出便签编辑框
-                        bus.emit('newCreateMemo');
-                    })
+                    showEditMemoWindow()
                 }
             }
         }

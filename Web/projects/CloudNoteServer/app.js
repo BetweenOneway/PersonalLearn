@@ -88,6 +88,6 @@ app.use("/ckeditor",CKEditor)
 //回收站操作
 app.use("/dumpster",dumpster);
 //
-app.use("",recent);
+app.use("/recently",recent);
 //测试用
 app.use("/sequelize",sequelizeTest)

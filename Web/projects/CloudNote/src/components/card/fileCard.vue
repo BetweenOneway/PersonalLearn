@@ -1,5 +1,5 @@
 <template>
-    <n-card embedded :bordered="isDarkTheme" size="small" hoverable>
+    <n-card embedded :bordered="isDarkTheme" size="small" hoverable style="cursor:pointer" @click="clickCard()">
         <n-space align="center" :wrap-item="false">
             <!--文件图标-->
             <n-button text type="iconTheme.theme">
@@ -20,6 +20,7 @@
     import {fromNow} from '@/utils/dayUtil'
     const themeStore = useThemeStore()
     const {isDarkTheme} = storeToRefs(themeStore)
+    import { toHerf,showEditMemoWindow } from "../../router/go";
 
     //自定义属性
     const props = defineProps(
@@ -41,4 +42,18 @@
             icon:EventNoteRound
         };
     });
+
+    //点击文件卡片
+    const clickCard = ()=>{
+        //跳转笔记编辑页面
+        if(props.type === 1)
+        {
+            toHerf('/note/edit/'+props.id);
+        }
+        else if(type ===2)
+        {
+            //跳转到便签页面
+            showEditMemoWindow(props.id);
+        }
+    }
 </script>

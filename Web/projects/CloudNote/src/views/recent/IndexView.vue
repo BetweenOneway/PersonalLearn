@@ -31,7 +31,8 @@
                     <n-space>
                         <!--文件卡片-->
                         <fileCard v-for="file in files" :key="file.id+':'+file.type"
-                        :id="file.id" :title="file.title" :type="file.type" :time="file.time"></fileCard>
+                        :id="file.id" :title="file.title" :type="file.type" 
+                        :time="file.time"></fileCard>
                     </n-space>
                 </n-scrollbar>
             </template>
@@ -41,7 +42,7 @@
 
 <script setup>
     import bus from 'vue3-eventbus'
-    import { toHerf } from '../../router/go';
+    import { toHerf,showEditMemoWindow,createNewNote } from '../../router/go';
     import { EventNoteRound,StickyNote2Outlined,ShoppingBagOutlined } from '@vicons/material';
     import fileCard from '../../components/card/fileCard.vue';
     import noteServerRequest from "@/request"
@@ -87,12 +88,8 @@
             icon:StickyNote2Outlined,
             type:'success',
             onClick:()=>{
-                //跳转至路由为/note
-                toHerf("/note",()=>{
-                        //出发新增笔记事件
-                        bus.emit('createNewNote');
-                    }
-                )
+                //前往笔记页，并新增笔记
+                createNewNote()
             }
         },
         {
@@ -101,12 +98,8 @@
             icon:EventNoteRound,
             type:'info',
             onClick:()=>{
-                //跳转至路由为/memo
-                toHerf("/memo",()=>{
-                        //弹出便签编辑框
-                        bus.emit('newCreateMemo');
-                    }
-                )
+                //跳转到便签页 
+                showEditMemoWindow()
             }
         },
         {

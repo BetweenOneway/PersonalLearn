@@ -1,4 +1,5 @@
 import router from "@/router/index"
+import bus from 'vue3-eventbus'
 
 /**
  * 
@@ -18,4 +19,23 @@ export const toHerf = (path='/',callback=()=>{},isRouter=true,isNew)=>{
         const target = isNew ? '_blank':'_self';
         window.open(path,target)
     }
+}
+
+/**
+ * 前往便签页，并打开编辑便签窗口
+ * @param {Number} id 便签编号 无值新增 有值编辑
+ */
+export const showEditMemoWindow = (id)=>{
+    toHerf('/memo',()=>{
+        bus.emits('showEditMemoModal',props.id);
+    });
+}
+
+/**
+ * 前往笔记页，并打开新增笔记
+ */
+export const createNewNote = ()=>{
+    toHerf('/note',()=>{
+        bus.emits('createNewNote');
+    });
 }
