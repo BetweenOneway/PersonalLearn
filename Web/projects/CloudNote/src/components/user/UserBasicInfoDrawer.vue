@@ -16,7 +16,7 @@
                     <n-text class="ml-3">{{email}}</n-text>
                 </n-form-item>
                 <n-form-item label="昵称：" path="nickname">
-                    <n-input v-model:value="fromValue.nickname" style="--n-border:none;--n-color:transparent"></n-input>
+                    <n-input v-model:value="formValue.nickname" style="--n-border:none;--n-color:transparent"></n-input>
                 </n-form-item>
                 <n-form-item label="等级：">
                     <n-tag :bordered="false" class="ml-3" type="success">{{userLevel}}</n-tag>
