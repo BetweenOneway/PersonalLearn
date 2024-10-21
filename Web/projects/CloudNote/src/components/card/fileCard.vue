@@ -18,9 +18,11 @@
     import { useThemeStore } from "../../stores/themeStore";
     import { EventNoteRound,StickyNote2Outlined,ShoppingBagOutlined } from '@vicons/material';
     import {fromNow} from '@/utils/dayUtil'
+    import { toHerf,showEditMemoWindow } from "../../router/go";
+    import {storeToRefs} from 'pinia'
+
     const themeStore = useThemeStore()
     const {isDarkTheme} = storeToRefs(themeStore)
-    import { toHerf,showEditMemoWindow } from "../../router/go";
 
     //自定义属性
     const props = defineProps(
@@ -45,12 +47,13 @@
 
     //点击文件卡片
     const clickCard = ()=>{
+        console.log("props:",props);
         //跳转笔记编辑页面
         if(props.type === 1)
         {
             toHerf('/note/edit/'+props.id);
         }
-        else if(type ===2)
+        else if(props.type ===2)
         {
             //跳转到便签页面
             showEditMemoWindow(props.id);

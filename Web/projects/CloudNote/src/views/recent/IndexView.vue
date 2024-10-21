@@ -114,20 +114,11 @@
     ];
 
     //最近操作的文件
-    const files = ref([
-        {
-            id:1,
-            title:'vue3知识点整理',
-            type:1,
-            time:'2023-10-11 22:22:33'
-        },
-        {
-            id:2,
-            title:'购物清单',
-            type:0,
-            time:'2023-10-11 22:22:33'
-        }
-    ]);
+    /**
+     * 最近操作的文件 对象数组
+     * {id,title,type,time}
+     */
+    const files = ref([]);
 
     const getRecentFiles = ()=>{
         noteServerRequest(fileApi.getRecentlyUse).then(responseData=>{
@@ -136,6 +127,8 @@
         }
         )
     }
+
+    getRecentFiles();
 
 </script>
 

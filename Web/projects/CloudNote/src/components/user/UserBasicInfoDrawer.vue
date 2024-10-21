@@ -33,9 +33,9 @@
 </template>
 
 <script setup>
-    import {ref} from 'vue'
+    import {ref,watch} from 'vue'
     import { useUserStore } from "../../stores/userStore"
-    import { watch } from 'vue';
+    import {storeToRefs} from 'pinia'
 
     const userStore = useUserStore()
     const {head_image,userNickName,userLevel,email,time} = storeToRefs(userStore)

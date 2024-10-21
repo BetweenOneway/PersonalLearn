@@ -4,7 +4,7 @@ module.exports = function(sequelize,DataTypes){
     var User = sequelize.define('file_dumpster',{
         id:{
             type:DataTypes.INTEGER,
-            // primaryKey:true,
+            primaryKey:true,
             // allowNull:false,
             // autoIncrement:true
         },
@@ -20,6 +20,7 @@ module.exports = function(sequelize,DataTypes){
         },
         type:{
             type:DataTypes.INTEGER,
+            primaryKey:true,
             defaultValue:2
         },
     },{

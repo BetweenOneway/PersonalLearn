@@ -27,7 +27,7 @@ export const toHerf = (path='/',callback=()=>{},isRouter=true,isNew)=>{
  */
 export const showEditMemoWindow = (id)=>{
     toHerf('/memo',()=>{
-        bus.emits('showEditMemoModal',props.id);
+        bus.emit('showEditMemoModal',id);
     });
 }
 

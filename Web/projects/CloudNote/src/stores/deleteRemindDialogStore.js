@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-export const deleteRemindDialogStore = defineStore(
+export const useDeleteRemindDialogStore = defineStore(
     "delete-remind-dialog",
     ()=>{
         //共享属性
@@ -14,7 +14,7 @@ export const deleteRemindDialogStore = defineStore(
         //场景 1 正常场景 2 回收站场景
         const scene = ref(1)
         //删除权限 0 无权限 1删除权限 2 彻底删除权限 3 删除+彻底删除权限
-        const deletePer = ref(3)
+        let deletePer = ref(3)
 
         /**
          * 默认窗口(scene)
