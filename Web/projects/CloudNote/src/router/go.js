@@ -36,6 +36,6 @@ export const showEditMemoWindow = (id)=>{
  */
 export const createNewNote = ()=>{
     toHerf('/note',()=>{
-        bus.emits('createNewNote');
+        bus.emit('createNewNote');
     });
 }
