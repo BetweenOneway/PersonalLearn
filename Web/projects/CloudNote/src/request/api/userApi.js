@@ -22,6 +22,14 @@ const userApi = {
         userPower:true,
         dataParam:false,
         successMessage:false
+    },
+    getBasicInfo:{
+        name:'获取用户基本信息',
+        url:'/user/getUserInfo',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:false
     }
 }
 

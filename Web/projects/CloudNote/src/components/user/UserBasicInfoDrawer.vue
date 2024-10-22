@@ -36,9 +36,12 @@
     import {ref,watch} from 'vue'
     import { useUserStore } from "../../stores/userStore"
     import {storeToRefs} from 'pinia'
+    import noteServerRequest from "../../request"
+    import userApi from '../../request/api/userApi'
 
     const userStore = useUserStore()
     const {head_image,userNickName,userLevel,email,time} = storeToRefs(userStore)
+    const {setUserBasicInfo} = userStore;
 
     //表单组件实例对象
     const formRef = ref(null);
@@ -50,7 +53,13 @@
      * 改变激活状态
      * @param {Boolean} show 是否显示抽屉
      */
-    const changeActive = (show=true)=>{
+    const changeActive = async (show=true)=>{
+        //等待获取用户的基本信息
+        if(show)
+        {
+            await getUserBasicInfo();
+        }
+        //更改抽屉激活状态
         active.value = show;
     }
 
@@ -76,6 +85,16 @@
             }
         }
     )
+
+    //获取用户基本信息
+    const getUserBasicInfo = ()=>{
+        noteServerRequest(userApi.getBasicInfo).then(responseData=>{
+            if(!responseData) throw "获取用户基本信息失败";
+            const userData = responseData.data;
+            setUserBasicInfo(userData.id,userData.email,userData.nickname,
+            userData.head_pic,userData.level,userData.time);
+        });
+    }
 
     //更新用户基本信息
     const toUpdateBasicInfo = ()=>{

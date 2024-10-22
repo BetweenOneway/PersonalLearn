@@ -73,6 +73,24 @@ export const useUserStore = defineStore(
             time.value=u_time
         }
 
+        /**
+         * 设置用户信息
+         * @param {*} u_id 
+         * @param {*} u_email 
+         * @param {*} u_nickName 
+         * @param {*} u_headPic 
+         * @param {*} u_level 
+         * @param {*} u_time 
+         */
+        const setUserBasicInfo = (u_id,u_email,u_nickName,u_headPic,u_level,u_time)=>{
+            id.value=u_id
+            nickName.value = u_nickName
+            headPic.value = u_headPic
+            level.value=u_level
+            email.value=u_email
+            time.value=u_time
+        }
+
         //重置用户信息
         const resetUserInfo = ()=>{
             token.value = null;
@@ -90,7 +108,8 @@ export const useUserStore = defineStore(
             }
         })
 
-        return {token,id,email,userNickName,headPic,userLevel,time,setUserInfo,resetUserInfo,head_image}
+        return {token,id,email,userNickName,headPic,userLevel,time,
+            setUserInfo,setUserBasicInfo,resetUserInfo,head_image}
     },
     {
         persist: {

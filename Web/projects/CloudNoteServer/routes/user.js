@@ -360,6 +360,9 @@ router.post("/register",async (req,res)=>{
     res.send(output)
 })
 
+/**
+ * 获取用户基本信息
+ */
 router.get("/getUserInfo",async(req,res)=>{
     console.log("get User Info service start",req.query);
 
@@ -369,8 +372,8 @@ router.get("/getUserInfo",async(req,res)=>{
         description:'',
         data:{}
     }
-    let userId = req.query.id;
-    let user = req.userInfo;
+
+    let userId = req.userInfo.id;
 
     {
         //事务处理
@@ -378,7 +381,7 @@ router.get("/getUserInfo",async(req,res)=>{
         try {
             const userBasicInfo = await sqldb.User.findOne(
                 {
-                    attributes: ['email','nickname','head_pic','level','time'],
+                    attributes: ['id','email','nickname','head_pic','level','time'],
                     where: {
                         id:userId,
                         status:1
