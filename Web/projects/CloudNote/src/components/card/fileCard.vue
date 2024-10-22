@@ -2,7 +2,7 @@
     <n-card embedded :bordered="isDarkTheme" size="small" hoverable style="cursor:pointer" @click="clickCard()">
         <n-space align="center" :wrap-item="false">
             <!--文件图标-->
-            <n-button text type="iconTheme.theme">
+            <n-button text :type="iconTheme.theme">
                 <n-icon :size="32" :component="iconTheme.icon"></n-icon>
             </n-button>
             <!--文件标题和时间-->
