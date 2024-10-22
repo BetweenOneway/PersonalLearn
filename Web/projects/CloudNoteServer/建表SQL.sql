@@ -14,6 +14,8 @@ CREATE TABLE `z_user`  (
   `level` int(11) NOT NULL DEFAULT 0 COMMENT '用户等级【0：普通用户，1：Vip用户】',
   `time` datetime NOT NULL COMMENT '注册时间',
   `status` int(11) NOT NULL DEFAULT 1 COMMENT '状态【0：锁定，1：正常】',
+  `sex` int(1) DEFAULT 1 COMMENT '0 女 1 男',
+  `birthday` date COMMENT '出生日期',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `email`(`email`) USING BTREE COMMENT '唯一不重复'
 ) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = COMPACT;

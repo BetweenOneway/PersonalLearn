@@ -33,6 +33,13 @@ module.exports = function(sequelize,DataTypes){
         status:{
             type:DataTypes.INTEGER,
             defaultValue:1
+        },
+        sex:{
+            type:DataTypes.INTEGER,
+            defaultValue:1
+        },
+        birthday:{
+            type:DataTypes.DATE
         }
     },{
         freezeTableName: true,
