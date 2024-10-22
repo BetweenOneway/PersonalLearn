@@ -360,4 +360,61 @@ router.post("/register",async (req,res)=>{
     res.send(output)
 })
 
+router.get("/getUserInfo",async(req,res)=>{
+    console.log("get User Info service start",req.query);
+
+    var output={
+        success:false,
+        status:'',
+        description:'',
+        data:{}
+    }
+    let userId = req.query.id;
+    let user = req.userInfo;
+
+    {
+        //事务处理
+        const t = await sqldb.sequelize.transaction();
+        try {
+            const userBasicInfo = await sqldb.User.findOne(
+                {
+                    attributes: ['email','nickname','head_pic','level','time'],
+                    where: {
+                        id:userId,
+                        status:1
+                    }
+                }
+            );
+
+            var curDate = new Date().toLocaleString();
+            //记录用户登录日志
+            await sqldb.UserLog.create(
+                {
+                    u_id: userId,
+                    desc: '用户信息查询',
+                    time:curDate,
+                    event:'用户信息查询'
+                }, 
+                { 
+                    transaction: t 
+                }
+            );
+            await t.commit();
+            output.success = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.description
+            output.data = userBasicInfo;
+            res.send(output)
+        } catch (error) {
+            //出错处理
+            console.log("get user info error:",error)
+            await t.rollback();
+            output.success = statusCode.SERVICE_STATUS.GET_USERINFO_FAIL.success
+            output.status = statusCode.SERVICE_STATUS.GET_USERINFO_FAIL.status
+            output.description = statusCode.SERVICE_STATUS.GET_USERINFO_FAIL.description
+            res.send(output)
+        }
+    }
+})
+
 module.exports=router;

@@ -226,6 +226,16 @@ SERVICE_STATUS={
         success:false,
         status:'SERVICE_029',
         description:'更新笔记失败'
+    },
+    GET_USERINFO_SUCCESS:{
+        success:true,
+        status:'SERVICE_030',
+        description:'查询用户信息成功'
+    },
+    GET_USERINFO_FAIL:{
+        success:false,
+        status:'SERVICE_031',
+        description:'查询用户信息失败'
     }
 }
 
