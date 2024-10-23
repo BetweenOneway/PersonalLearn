@@ -45,25 +45,17 @@ router.post("/login",async(req,res)=>{
         //事务处理
         const t = await sqldb.sequelize.transaction();
         try {
-            const users = await sqldb.User.findAll(
+            const userInfo = await sqldb.User.findOne(
                 {
-                    attributes: ['id', 'email','nickname','head_pic','level','time','status'],
+                    attributes: ['id', 'email',['nickname','nickName'],['head_pic','headPic'],'level','time','status','sex','birthday'],
                     where: {
                         email: userEmail,
                         password:userPassword
                     }
                 }
             );
-            if (users.length == 0) {
-                console.log("login account password not matched")
-                output.success = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.success
-                output.status = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.status
-                output.description = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.description
-                res.send(output);
-                return
-            }
             //账号状态异常
-            if(users[0].status == 0)
+            if(userInfo.status == 0)
             {
                 console.log("login account locked")
                 output.success = statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.success
@@ -72,7 +64,6 @@ router.post("/login",async(req,res)=>{
                 res.send(output);
                 return
             }
-            var userInfo = users[0];
             var curDate = new Date().toLocaleString();
             //记录用户登录日志
             await sqldb.UserLog.create(
@@ -381,7 +372,7 @@ router.get("/getUserInfo",async(req,res)=>{
         try {
             const userBasicInfo = await sqldb.User.findOne(
                 {
-                    attributes: ['id','email','nickname','head_pic','level','time'],
+                    attributes: ['id','email',['nickname','nickName'],['head_pic','headPic'],'level','time','sex','birthday'],
                     where: {
                         id:userId,
                         status:1

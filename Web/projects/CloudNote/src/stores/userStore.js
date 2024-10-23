@@ -18,6 +18,10 @@ export const useUserStore = defineStore(
         const email = ref('')
         //注册时间
         const time=ref('')
+        //性别 0 女 1 男
+        const sex = ref(null)
+        //出生日期
+        const birthday = ref(null)
 
         const head_image = computed(()=>{
             console.log("get user headPic:",headPic.value);
@@ -54,41 +58,28 @@ export const useUserStore = defineStore(
 
         /**
          * 设置用户信息
-         * @param {string} u_token 登陆的token值
-         * @param {*} u_id 
-         * @param {*} u_email 
-         * @param {*} u_nickName 
-         * @param {*} u_headPic 
-         * @param {*} u_level 
-         * @param {*} u_time 
+         * @param {string} userToken 登陆的token值
+         * @param {Object} user 
          */
-        const setUserInfo = (u_token,u_id,u_email,u_nickName,u_headPic,u_level,u_time)=>{
+        const setUserInfo = (userToken,user)=>{
             //
-            token.value = u_token;
-            id.value=u_id
-            nickName.value = u_nickName
-            headPic.value = u_headPic
-            level.value=u_level
-            email.value=u_email
-            time.value=u_time
+            token.value = userToken;
+            setUserBasicInfo(user);
         }
 
         /**
          * 设置用户信息
-         * @param {*} u_id 
-         * @param {*} u_email 
-         * @param {*} u_nickName 
-         * @param {*} u_headPic 
-         * @param {*} u_level 
-         * @param {*} u_time 
+         * @param {Object} user 
          */
-        const setUserBasicInfo = (u_id,u_email,u_nickName,u_headPic,u_level,u_time)=>{
-            id.value=u_id
-            nickName.value = u_nickName
-            headPic.value = u_headPic
-            level.value=u_level
-            email.value=u_email
-            time.value=u_time
+        const setUserBasicInfo = (user)=>{
+            id.value=user.id
+            nickName.value = user.nickName
+            headPic.value = user.headPic
+            level.value=user.level
+            email.value=user.email
+            time.value=user.time
+            sex.value=user.sex;
+            birthday.value = user.birthday;
         }
 
         //重置用户信息
@@ -105,10 +96,12 @@ export const useUserStore = defineStore(
                 level.value=null
                 email.value=null
                 time.value=null
+                sex.value = null
+                birthday.value = null
             }
         })
 
-        return {token,id,email,userNickName,headPic,userLevel,time,
+        return {token,id,email,userNickName,headPic,userLevel,time,sex,birthday,
             setUserInfo,setUserBasicInfo,resetUserInfo,head_image}
     },
     {

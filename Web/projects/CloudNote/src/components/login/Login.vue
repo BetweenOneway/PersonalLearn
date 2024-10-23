@@ -137,10 +137,8 @@
             changeLoginModalShow(false)
             //将Redis中的用户token存储到本地
             //localStorage.setItem("userToken",responseData.userToken)
-
-            const user = responseData.userInfo
-
-            setUserInfo(responseData.userToken,user.id,user.email,user.nickname,user.head_pic,user.level,user.time)
+            
+            setUserInfo(responseData.userToken,responseData.userInfo)
         })
 
         //解除禁用按钮
