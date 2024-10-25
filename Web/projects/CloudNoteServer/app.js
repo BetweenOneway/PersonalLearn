@@ -13,6 +13,7 @@ const memo=require("./routes/memo");
 const note=require("./routes/note");
 const dumpster=require("./routes/dumpster");
 const recent=require("./routes/recent")
+const fileOper=require("./routes/fileOper")
 const CKEditor=require("./routes/CKEditor");
 
 const sequelizeTest = require("./routes/sequelizeTest")
@@ -87,7 +88,10 @@ app.use("/note",note);
 app.use("/ckeditor",CKEditor)
 //回收站操作
 app.use("/dumpster",dumpster);
-//
+//最近操作
 app.use("/recently",recent);
+//文件操作
+app.use("/file",fileOper);
+
 //测试用
 app.use("/sequelize",sequelizeTest)

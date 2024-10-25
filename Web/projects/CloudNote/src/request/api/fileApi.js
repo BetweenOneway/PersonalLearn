@@ -1,7 +1,7 @@
 const fileApi = {
     delete:{
         name:['删除','彻底删除','批量删除','批量彻底删除'],
-        url:'/file/delete',
+        url:'/file/deleteFiles',
         method:'DELTE',
         userPower:true,
         dataParam:false,
