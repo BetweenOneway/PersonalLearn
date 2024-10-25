@@ -78,7 +78,7 @@
     </n-layout>
 
     <!--删除提醒框-->
-    <DeleteRemindDialog @delete="deleteMemo"></DeleteRemindDialog>
+    <DeleteRemindDialog @deleteSuccess="deleteMemoSuccess"></DeleteRemindDialog>
 
     <!--便签编辑-->
     <EditMemoModal ref="editMemoModalRef" @save="getMemoList"/>
@@ -262,23 +262,9 @@
         DefaultDeleteRemind({id,title,type:2,key:id+':'+2});
     }
 
-    //删除便签 
-    //complete true彻底删除 false非彻底删除
-    const deleteMemo = async (complete)=>{
-        //关闭提醒框
-        show.value = false;
-
-        let API = {...memoApi.deleteMemo};
-        API.name = complete ? API.name[1]:API.name[0];
-        API.params = {
-            isCompleteDel:complete,
-            memoId:toDeleteMemoId.value
-        }
-
-        noteServerRequest(API).then(responseData=>{
-            if(!responseData) return;
-            getMemoList(false,true);
-        })
+    //删除便签成功操作 
+    const deleteMemoSuccess = ()=>{
+        getMemoList(false,true);
     }
 
     /**

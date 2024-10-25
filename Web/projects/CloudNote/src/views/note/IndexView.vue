@@ -70,7 +70,7 @@
     </n-layout>
 
     <!--删除提醒框-->
-    <DeleteRemindDialog @delete="deleteNote"></DeleteRemindDialog>
+    <DeleteRemindDialog @deleteSuccess="deleteNoteSuccess"></DeleteRemindDialog>
 
     <!--右键菜单-->
     <n-dropdown
@@ -364,31 +364,14 @@
     }
 
     /**
-     * 删除笔记
+     * 删除笔记成功操作
      * @param {Boolean} complete true彻底删除 false非彻底删除
      */
-    const deleteNote = async (complete)=>{
-        //关闭提醒框
-        show.value = false;
+    const deleteNoteSuccess = ()=>{
 
-        //获取API
-        let API = {...noteApi.deleteNote}
-        API.name = complete?API.name[1]:API.name[0];
-        //请求URL的参数
-        API.params = {
-            isCompleteDel:complete,
-            noteId:contextMenu.value.id
-        }
-
-        noteServerRequest(API).then(responseData=>{
-            if(responseData)
-            {
-                //重新获取便签列表 需要有删除动画
-                getNoteList(false,true)
-                //
-                changeEditNoteState(2)
-            }
-        })
+        getNoteList(false,true)
+        //
+        changeEditNoteState(2)
     }
 
     let noteContent = {

@@ -29,8 +29,10 @@
             </n-space>
         </template>
         <template #action>
-            <n-button v-if="deletePer===2 || deletePer === 3" size="small" tertiary type="error" @click="emits('delete',true)">彻底删除</n-button>
-            <n-button v-if="deletePer===1 || deletePer===3" size="small" secondary type="error" @click="emits('delete',false)">删除</n-button>
+            <n-button v-if="deletePer===2 || deletePer === 3" size="small" 
+            tertiary type="error" @click="delteFile(true)">彻底删除</n-button>
+            <n-button v-if="deletePer===1 || deletePer===3" size="small" 
+            secondary type="error" @click="delteFile(false)">删除</n-button>
             <n-button size="small" tertiary @click="show=false">取消</n-button>
         </template>
     </n-modal>
@@ -45,6 +47,8 @@
 
     import {useDeleteRemindDialogStore} from '@/stores/deleteRemindDialogStore'
     import { storeToRefs } from "pinia";
+    import { useMessage } from "naive-ui";
+    import fileApi from "../../request/api/fileApi";
 
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
     const {
@@ -98,4 +102,39 @@
         deleteDescription = deleteDescription.concat("。");
         return deleteDescription;
     })
+
+    //消息对象
+    const message = useMessage();
+    //
+    const delteFile = async complete=>{
+
+        show.value = false;
+
+        const toDeleteFiles = fileArr.value;
+        if(toDeleteFiles.length === 0)
+        {
+            throw message.error("未选中任何文件");
+            return;
+        }
+        let API;
+        API = {...fileApi.delte}
+        if(toDeleteFiles.length === 1)
+        {
+            //单文件删除
+            API.name = complete?API.name[1]:API.name[0];
+        }
+        else{
+            //多文件删除
+            API.name = complete?API.name[3]:API.name[2];
+        }
+        API.data = {
+            complete,
+            files:fileArr
+        }
+
+        noteServerRequest(API).then(responseData=>{
+            if(!responseData) return;
+            emits('deleteSuccess');
+        })
+    }
 </script>
