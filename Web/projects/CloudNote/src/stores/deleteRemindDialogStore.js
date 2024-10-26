@@ -59,18 +59,17 @@ export const useDeleteRemindDialogStore = defineStore(
         const fileArr = computed(()=>{
             //拷贝原数组对象
             const newFileArr = JSON.parse(JSON.stringify(files.value));
-
-            newFileArr.value.forEach(element => {
+            newFileArr.forEach(element => {
                 switch(element.type)
                 {
                     case 1:
                         element.theme = 'success';
-                        element.icon =StickyNote2Outlined;
+                        element.icon ='StickyNote2Outlined';
                         element.tip='笔记'
                         break;
                     case 2:
                         element.theme = 'info';
-                        element.icon =EventNoteRound;
+                        element.icon ='EventNoteRound';
                         element.tip='便签'
                         break;
                 }

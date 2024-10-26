@@ -24,8 +24,8 @@ CREATE TABLE `z_user`  (
 -- Records of z_user
 -- ----------------------------
 -- 31315105654@qq.com  eVF4TJ 1737895547@qq.com xdavd8
-INSERT INTO `z_user` VALUES (8, '315105654@qq.com', 'd3424c2d0c11c6b6b13a5a620f8eb41b', '爱思考的飞飞', 'https://cdn.vuetifyjs.com/images/john.jpg', 0, '2023-05-05 15:03:33', 1);
-INSERT INTO `z_user` VALUES (15, '1737895547@qq.com', 'a0098d3228a3a4f94ccda7670a8f2c4d', '斯科拉', 'https://avatars.githubusercontent.com/u/58872083?v=4', 0, '2023-06-12 17:15:22', 1);
+INSERT INTO `z_user` VALUES (8, '315105654@qq.com', 'd3424c2d0c11c6b6b13a5a620f8eb41b', '爱思考的飞飞', 'https://cdn.vuetifyjs.com/images/john.jpg', 0, '2023-05-05 15:03:33', 1,1,'');
+INSERT INTO `z_user` VALUES (15, '1737895547@qq.com', 'a0098d3228a3a4f94ccda7670a8f2c4d', '斯科拉', 'https://avatars.githubusercontent.com/u/58872083?v=4', 0, '2023-06-12 17:15:22', 1,1,'');
 
 -- ----------------------------
 -- Table structure for z_note
@@ -135,11 +135,11 @@ CREATE TABLE `z_user_log`  (
 CREATE VIEW file_dumpster AS
 SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_memo WHERE `status`=0
 UNION ALL
-SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_note WHERE `status`=0
+SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_note WHERE `status`=0;
 
 CREATE VIEW recent_access_file AS
 SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_memo WHERE `status`=1
 UNION ALL
-SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_note WHERE `STATUS` = 1
+SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_note WHERE `STATUS` = 1;
 
 SET FOREIGN_KEY_CHECKS = 1;

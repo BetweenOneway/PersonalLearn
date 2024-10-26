@@ -395,32 +395,8 @@ router.get("/getNoteInfo",async (req,res)=>{
         data:{}
     }
     console.log("start Get Note detail Info:",req.query);
-    
-    //目标状态
-    let noteId = req.query.noteId
-    let userToken = req.get('userToken')
-    if(!userToken?.length || !noteId)
-    {
-        console.log("Get Note Info, userToken or noteId empty")
-        output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
-        output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
-        output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
-        res.send(output)
-        return
-    }
 
-    //验证用户是否登陆
-    let validateInfo = await validate.IsUserValidate(userToken);
-    if(!validateInfo.isValidated)
-    {
-        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
-        res.send(output)
-        return
-    }
-
-    let userInfo = validateInfo.userInfo;
+    let userInfo = req.userInfo;
 
     try {
         console.log("get note info from db");

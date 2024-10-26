@@ -24,9 +24,9 @@ router.delete("/deleteFiles",async (req,res)=>{
     //目标状态
     let userInfo = req.userInfo;
 
+    /*
     const t = await sqldb.sequelize.transaction();
     try {
-        let userInfo = validateInfo.userInfo;
         let curTime = new Date().toLocaleString()
         let targetStatus = isCompleteDel? -1:0
 
@@ -86,7 +86,9 @@ router.delete("/deleteFiles",async (req,res)=>{
         output.description = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.description
         res.send(output);
     }
+    */
     console.log("End of delete files")
     return
 })
+
 module.exports=router;

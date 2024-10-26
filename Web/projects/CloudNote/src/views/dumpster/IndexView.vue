@@ -33,8 +33,6 @@
     import {useDeleteRemindDialogStore} from '../../stores/deleteRemindDialogStore'
 
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
-    //是否显示删除提醒框
-    const {show} = storeToRefs(deleteRemindDialogStore);
     const {showFromDumpsterSingle,showFromDumpsterMulti} = deleteRemindDialogStore;
 
     const message = useMessage();

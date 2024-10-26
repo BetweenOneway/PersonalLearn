@@ -48,6 +48,7 @@
     import {useDeleteRemindDialogStore} from '@/stores/deleteRemindDialogStore'
     import { storeToRefs } from "pinia";
     import { useMessage } from "naive-ui";
+    import noteServerRequest  from "../../request"
     import fileApi from "../../request/api/fileApi";
 
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
@@ -116,8 +117,7 @@
             throw message.error("未选中任何文件");
             return;
         }
-        let API;
-        API = {...fileApi.delte}
+        let API = {...fileApi.delete}
         if(toDeleteFiles.length === 1)
         {
             //单文件删除
@@ -132,7 +132,9 @@
             files:fileArr
         }
 
+        console.log("start delte file,API",API)
         noteServerRequest(API).then(responseData=>{
+            console.log("responseData",responseData);
             if(!responseData) return;
             emits('deleteSuccess');
         })

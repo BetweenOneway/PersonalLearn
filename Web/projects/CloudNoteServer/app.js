@@ -70,8 +70,6 @@ app.all('*', async (req, res, next) => {
         res.send(output)
     }
     else{
-        //req.userInfo = outputInfo;
-        console.log("app userInfo:",req.userInfo);
         next() // pass control to the next handler
     }
   }
