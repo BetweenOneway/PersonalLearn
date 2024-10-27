@@ -20,7 +20,9 @@ router.delete("/deleteFiles",async (req,res)=>{
     }
     console.log("start del files,req.query:",req.query);
 
-    let toDeleteFiles = req.query.data;
+    let isCompleteDel = req.query.complete;
+    //[{id,title,type,key,theme,icon,tip},{}...]
+    let toDeleteFiles = req.query.files;
     //目标状态
     let userInfo = req.userInfo;
 
