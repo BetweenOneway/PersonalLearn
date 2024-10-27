@@ -119,7 +119,7 @@
 
     //显示更新按钮的时机
     const showUpdateBtn = computed(()=>{
-        const {nickname:nn,sex:s,birthday:b} = fromValue.value;
+        const {nickname:nn,sex:s,birthday:b} = formValue.value;
 
         return (nn !== userNickName.value || s !== sex.value|| b !== birthday.value)
          

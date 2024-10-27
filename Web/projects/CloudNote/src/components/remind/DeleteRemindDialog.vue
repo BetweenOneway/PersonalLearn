@@ -48,8 +48,9 @@
     import {useDeleteRemindDialogStore} from '@/stores/deleteRemindDialogStore'
     import { storeToRefs } from "pinia";
     import { useMessage } from "naive-ui";
+
     import noteServerRequest  from "../../request"
-    import fileApi from "../../request/api/fileApi";
+    import fileApi from '../../request/api/fileApi';
 
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
     const {
@@ -107,7 +108,7 @@
     //消息对象
     const message = useMessage();
     //
-    const delteFile = async complete=>{
+    const delteFile = async isComplete=>{
 
         show.value = false;
 
@@ -117,19 +118,20 @@
             throw message.error("未选中任何文件");
             return;
         }
-        let API = {...fileApi.delete}
+
+        let API = {...fileApi.deleteFile}
         if(toDeleteFiles.length === 1)
         {
             //单文件删除
-            API.name = complete?API.name[1]:API.name[0];
+            API.name = isComplete?API.name[1]:API.name[0];
         }
         else{
             //多文件删除
-            API.name = complete?API.name[3]:API.name[2];
+            API.name = isComplete?API.name[3]:API.name[2];
         }
-        API.data = {
-            complete,
-            files:fileArr
+        API.params = {
+            complete:isComplete,
+            files:toDeleteFiles
         }
 
         console.log("start delte file,API",API)

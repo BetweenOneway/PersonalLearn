@@ -58,6 +58,7 @@ app.all('*', async (req, res, next) => {
     let validateSuccess = await interceptor.Interceptor_ValidateUserToken(req);
     if(!validateSuccess)
     {
+        console.log("用户信息验证失败");
         let output={
             success:true,
             status:'',

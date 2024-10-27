@@ -1,29 +1,14 @@
-# cloudnote
+# 云笔记前端
 
-This template should help get you started developing with Vue 3 in Vite.
+## 项目介绍
 
-## Recommended IDE Setup
+该项目为云笔记的前端程序。配套的后端程序库为`CloudnoteServer`。
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## 相关技术
 
-## Customize configuration
+Vue 3 + Native UI
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## 运行该项目
 
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+执行`npm install`安装相应库依赖。
+在项目根目录下执行`npm run dev`以运行本项目
