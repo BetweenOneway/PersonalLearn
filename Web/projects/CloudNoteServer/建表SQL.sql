@@ -40,7 +40,7 @@ CREATE TABLE `z_note`  (
   `update_time` datetime NOT NULL COMMENT '最后修改时间',
   `u_id` int(11) NOT NULL COMMENT '用户编号',
   `top` int(11) NULL DEFAULT 0 COMMENT '置顶（1：置顶，0：不置顶）',
-  `status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态【-1：彻底被移除，0：被移除，1：正常】',
+  `status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态【0：被删除，1：正常/私有 2:公开】',
   `type` int(11) NULL DEFAULT 1 COMMENT '类型',
   UNIQUE INDEX `z_note_pk`(`id`) USING BTREE,
   INDEX `z_note_z_user_id_fk`(`u_id`) USING BTREE,

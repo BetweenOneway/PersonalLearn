@@ -27,21 +27,12 @@ router.delete("/deleteFiles",async (req,res)=>{
     let userInfo = req.userInfo;
 
     /*
-    const rows = await sqldb.Note.destroy(
-        {
-            where:{
-                type:1,
-                id:fileInfo.id,
-            },
-            transaction:t
-        }
-    );
+    
     */
 
     try {
         const t = await sqldb.sequelize.transaction();
         let curTime = new Date().toLocaleString()
-        let targetStatus = isCompleteDel? -1:0
 
         let noteIdList = [];
         let memoIdList = [];
@@ -67,53 +58,92 @@ router.delete("/deleteFiles",async (req,res)=>{
             res.send(output);
             return;
         }
-        let noteUpdateNum = 0;
-        let memoUpdateNum = 0;
+        let noteEffectedNum = 0;
+        let memoEffectedNum = 0;
 
         //笔记
         if(noteIdList.length != 0)
         {
-            noteUpdateNum = await sqldb.Note.update(
-                {
-                    status:targetStatus,
-                    update_time:curTime
-                },
-                {
-                    where:{
-                        id:noteIdList,
-                        u_id:userInfo.id,
-                        status:{
-                            [Op.ne]:targetStatus
-                        }
+            if(isCompleteDel)
+            {
+                //彻底删除 则移除数据
+                noteEffectedNum = await sqldb.Note.destroy(
+                    {
+                        where:{
+                            type:1,
+                            id:noteIdList,
+                        },
+                        transaction:t
+                    }
+                );
+                console.log("noteEffectedNum:",noteEffectedNum);
+            }
+            else
+            {
+                let targetStatus = 0;
+                noteEffectedNum = await sqldb.Note.update(
+                    {
+                        status:targetStatus,
+                        update_time:curTime
                     },
-                    transaction:t
-                }
-            );
+                    {
+                        where:{
+                            id:noteIdList,
+                            u_id:userInfo.id,
+                            status:{
+                                [Op.ne]:targetStatus
+                            }
+                        },
+                        transaction:t
+                    }
+                );
+            }
+            
         }
         //删除便签
         if(memoIdList.length != 0)
         {
             //便签
-            memoUpdateNum = await sqldb.Memo.update(
-                {
-                    status:targetStatus,
-                    update_time:curTime
-                },
-                {
-                    where:{
-                        id:fileInfo.id,
-                        u_id:userInfo.id,
-                        status:{
-                            [Op.ne]:targetStatus
-                        }
+            if(isCompleteDel)
+            {
+                //彻底删除 则移除数据
+                memoEffectedNum = await sqldb.Note.destroy(
+                    {
+                        where:{
+                            type:1,
+                            id:memoIdList,
+                        },
+                        transaction:t
+                    }
+                );
+                console.log("noteEffectedNum:",noteEffectedNum);
+            }
+            else
+            {
+                let targetStatus = 0;
+                memoEffectedNum = await sqldb.Memo.update(
+                    {
+                        status:targetStatus,
+                        update_time:curTime
                     },
-                    transaction:t
-                }
-            );
+                    {
+                        where:{
+                            id:memoIdList,
+                            u_id:userInfo.id,
+                            status:{
+                                [Op.ne]:targetStatus
+                            }
+                        },
+                        transaction:t
+                    }
+                );
+            }
+            
         }
 
-        if((memoIdList.length != 0 && memoUpdateNum != memoIdList.length) 
-            || (noteIdList.length != 0 && noteUpdateNum != noteIdList.length))
+        //操作文件数量与传入数量不一致 回滚
+        if((memoIdList.length != 0 && memoEffectedNum != memoIdList.length) 
+            || (noteIdList.length != 0 && noteEffectedNum != noteIdList.length))
         {
             t.rollback();
             if(isCompleteDel)
@@ -135,6 +165,7 @@ router.delete("/deleteFiles",async (req,res)=>{
 
         //记录日志
         {
+            //笔记相关日志
             let event = isCompleteDel? statusCode.EVENT_LIST.NOTE_COMPEL_DEL : statusCode.EVENT_LIST.NOTE_DEL;
             let logList = [];
             for(let noteId of noteIdList)
@@ -157,6 +188,7 @@ router.delete("/deleteFiles",async (req,res)=>{
 
             console.log("operNum:",operNum);
 
+            //便签相关日志
             event = isCompleteDel? statusCode.EVENT_LIST.MEMO_COMPEL_DEL : statusCode.EVENT_LIST.MEMO_DEL;
             logList = [];
             for(let memoId of memoIdList)
@@ -194,6 +226,7 @@ router.delete("/deleteFiles",async (req,res)=>{
         res.send(output);
         return;
     } catch (error) {
+        //出错处理
         console.log(error)
 
         t.rollback();
