@@ -236,7 +236,27 @@ SERVICE_STATUS={
         success:false,
         status:'SERVICE_031',
         description:'查询用户信息失败'
-    }
+    },
+    DEL_FILE_SUCCESS:{
+        success:true,
+        status:'SERVICE_025',
+        description:'删除文件成功'
+    },
+    DEL_FILE_FAIL:{
+        success:false,
+        status:'SERVICE_025',
+        description:'删除文件失败'
+    },
+    COMPLETE_DEL_FILE_SUCCESS:{
+        success:true,
+        status:'SERVICE_025',
+        description:'彻底删除文件成功'
+    },
+    COMPLETE_DEL_FILE_FAIL:{
+        success:false,
+        status:'SERVICE_025',
+        description:'彻底删除文件失败'
+    },
 }
 
 EVENT_LIST = {
