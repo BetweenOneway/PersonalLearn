@@ -20,18 +20,16 @@ router.delete("/deleteFiles",async (req,res)=>{
     }
     console.log("start del files,req.query:",req.query);
 
-    let isCompleteDel = req.query.complete;
+    let isCompleteDel = req.query.complete =='true'?true:false;
     //[{id,title,type,key,theme,icon,tip},{}...]
     let toDeleteFiles = req.query.files;
     //目标状态
     let userInfo = req.userInfo;
 
-    /*
-    
-    */
+    const t = await sqldb.sequelize.transaction();
 
     try {
-        const t = await sqldb.sequelize.transaction();
+        
         let curTime = new Date().toLocaleString()
 
         let noteIdList = [];
@@ -49,6 +47,8 @@ router.delete("/deleteFiles",async (req,res)=>{
             }
         }
 
+        console.log("noteIdList=",noteIdList);
+        console.log("memoIdList=",memoIdList);
         //数据为空
         if(noteIdList.length == 0 && memoIdList.length == 0)
         {
@@ -107,7 +107,7 @@ router.delete("/deleteFiles",async (req,res)=>{
             if(isCompleteDel)
             {
                 //彻底删除 则移除数据
-                memoEffectedNum = await sqldb.Note.destroy(
+                memoEffectedNum = await sqldb.Memo.destroy(
                     {
                         where:{
                             type:1,
@@ -165,49 +165,60 @@ router.delete("/deleteFiles",async (req,res)=>{
 
         //记录日志
         {
-            //笔记相关日志
-            let event = isCompleteDel? statusCode.EVENT_LIST.NOTE_COMPEL_DEL : statusCode.EVENT_LIST.NOTE_DEL;
+            let operNum = 0;
+            let event = null;
             let logList = [];
-            for(let noteId of noteIdList)
-            {
-                let log = {
-                    time:curTime,
-                    event:event.code,
-                    desc:event.desc,
-                    u_id:userInfo.id,
-                    o_id:noteId,
-                    type:1
-                }
-                logList.push(log);
-            }
-            const operNum = await sqldb.operLog.bulkCreate(logList,
-                {
-                    transaction:t
-                }
-            );
 
-            console.log("operNum:",operNum);
+            //笔记相关日志
+            if(noteIdList.length > 0)
+            {
+                event = isCompleteDel? statusCode.EVENT_LIST.NOTE_COMPEL_DEL : statusCode.EVENT_LIST.NOTE_DEL;
+                for(let noteId of noteIdList)
+                {
+                    let log = {
+                        time:curTime,
+                        event:event.code,
+                        desc:event.desc,
+                        u_id:userInfo.id,
+                        o_id:noteId,
+                        type:1
+                    }
+                    logList.push(log);
+                }
+                operNum = await sqldb.operLog.bulkCreate(logList,
+                    {
+                        transaction:t
+                    }
+                );
+    
+                console.log("add note log operNum:",operNum);
+            }
+            
 
             //便签相关日志
-            event = isCompleteDel? statusCode.EVENT_LIST.MEMO_COMPEL_DEL : statusCode.EVENT_LIST.MEMO_DEL;
-            logList = [];
-            for(let memoId of memoIdList)
+            if(noteIdList.length > 0)
             {
-                let log = {
-                    time:curTime,
-                    event:event.code,
-                    desc:event.desc,
-                    u_id:userInfo.id,
-                    o_id:memoId,
-                    type:2
-                }
-                logList.push(log);
-            }
-            operNum = await sqldb.operLog.bulkCreate(logList,
+                event = isCompleteDel? statusCode.EVENT_LIST.MEMO_COMPEL_DEL : statusCode.EVENT_LIST.MEMO_DEL;
+                logList = [];
+                for(let memoId of memoIdList)
                 {
-                    transaction:t
+                    let log = {
+                        time:curTime,
+                        event:event.code,
+                        desc:event.desc,
+                        u_id:userInfo.id,
+                        o_id:memoId,
+                        type:2
+                    }
+                    logList.push(log);
                 }
-            );
+                operNum = await sqldb.operLog.bulkCreate(logList,
+                    {
+                        transaction:t
+                    }
+                );
+                console.log("add memo log operNum:",operNum);
+            }
         }
 
         t.commit();
