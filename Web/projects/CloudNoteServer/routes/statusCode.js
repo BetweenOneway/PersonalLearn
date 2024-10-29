@@ -122,6 +122,11 @@ SERVICE_STATUS={
         status:'SERVICE_008',
         description:'用户未登录'
     },
+    NOT_LOGIN:{
+        success:false,
+        status:'SERVICE_008',
+        description:'用户未登录'
+    },
     GET_MEMO_SUCCESS:{
         success:true,
         status:'SERVICE_009',

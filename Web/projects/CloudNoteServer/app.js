@@ -65,9 +65,9 @@ app.all('*', async (req, res, next) => {
             description:'',
             data:{}
         }
-        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
+        output.success = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.success
+        output.status = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.status
+        output.description = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.description
         res.send(output)
     }
     else{

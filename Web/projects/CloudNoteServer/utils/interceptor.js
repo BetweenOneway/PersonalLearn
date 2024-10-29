@@ -9,6 +9,7 @@ async function ValidateUserToken(req)
     let userToken = req.get('userToken')
     if(!userToken)
     {
+        //没有传递userToken参数 跳过校验
         console.log(userToken,'interceptor user token invalid......');
         return true;
     }

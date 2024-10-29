@@ -54,6 +54,16 @@ router.post("/login",async(req,res)=>{
                     }
                 }
             );
+            console.log("get userInfo:",userInfo);
+            if(!userInfo)
+            {
+                console.log("account & password not matched")
+                output.success = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.success
+                output.status=statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.status
+                output.description=statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.description
+                res.send(output);
+                return
+            }
             //账号状态异常
             if(userInfo.status == 0)
             {
