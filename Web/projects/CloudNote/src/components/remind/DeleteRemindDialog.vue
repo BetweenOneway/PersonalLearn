@@ -40,9 +40,7 @@
 
 <script setup>
     import {
-        EventNoteRound,
-        ReportGmailerrorredRound,
-        StickyNote2Outlined
+        ReportGmailerrorredRound
     } from "@vicons/material"
 
     import {useDeleteRemindDialogStore} from '@/stores/deleteRemindDialogStore'
