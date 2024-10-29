@@ -39,20 +39,20 @@ router.get("/getFileList",async (req,res)=>{
             }
         );
         output.data = fileLists;
-        output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.success
-        output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.status
-        output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.description
+        output.success = statusCode.SERVICE_STATUS.GET_DUMPSTER_FILE_LIST_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.GET_DUMPSTER_FILE_LIST_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.GET_DUMPSTER_FILE_LIST_SUCCESS.description
         res.send(output);
 
     } catch (error) {
         console.log("get dumpster file lists error:",error);
         t.rollback();
-        output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.success
-        output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.status
-        output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.description
+        output.success = statusCode.SERVICE_STATUS.GET_DUMPSTER_FILE_LIST_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.GET_DUMPSTER_FILE_LIST_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.GET_DUMPSTER_FILE_LIST_FAIL.description
         res.send(output);
     }
-    console.log("End of Update note");
+    console.log("End of get dumpster file lists");
     return
 })
 

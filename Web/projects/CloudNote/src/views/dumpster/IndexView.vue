@@ -36,6 +36,7 @@
     const {showFromDumpsterSingle,showFromDumpsterMulti} = deleteRemindDialogStore;
 
     const message = useMessage();
+    
     //表格中的列
     const columns = [
         {
@@ -73,14 +74,14 @@
                         break;
                     case 2:
                         color="info"
-                        label = "笔记"
+                        label = "便签"
                         break;
                 }
                 //渲染成标签元素
                 return h(
                     NTag,
                     {size:'small',bordered:false,type:color},
-                    {defaault:()=>{label}}
+                    {default:()=>label}
                 )
             }
         },

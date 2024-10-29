@@ -122,11 +122,6 @@ SERVICE_STATUS={
         status:'SERVICE_008',
         description:'用户未登录'
     },
-    NOT_LOGIN:{
-        success:false,
-        status:'SERVICE_008',
-        description:'用户未登录'
-    },
     GET_MEMO_SUCCESS:{
         success:true,
         status:'SERVICE_009',
@@ -258,6 +253,16 @@ SERVICE_STATUS={
         description:'彻底删除文件成功'
     },
     COMPLETE_DEL_FILE_FAIL:{
+        success:false,
+        status:'SERVICE_025',
+        description:'彻底删除文件失败'
+    },
+    GET_DUMPSTER_FILE_LIST_SUCCESS:{
+        success:true,
+        status:'SERVICE_025',
+        description:'彻底删除文件成功'
+    },
+    GET_DUMPSTER_FILE_LIST_FAIL:{
         success:false,
         status:'SERVICE_025',
         description:'彻底删除文件失败'
