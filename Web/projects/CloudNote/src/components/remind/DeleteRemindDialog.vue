@@ -56,7 +56,7 @@
         showDetails,//是否显示详情
         fileArr,//删除文件对象数组
         deletePer,//删除权限
-    } = storeToRefs(deleteRemindDialogStore)
+    } = storeToRefs(deleteRemindDialogStore);
 
     //删除提醒框重置函数
     const {reset} = deleteRemindDialogStore;

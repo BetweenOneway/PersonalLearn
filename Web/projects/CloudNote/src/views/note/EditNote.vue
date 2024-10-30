@@ -70,7 +70,7 @@
 
     import {useDeleteRemindDialogStore} from '../../stores/deleteRemindDialogStore'
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
-    const {showFromDumpsterSingle} = deleteRemindDialogStore;
+    const {DefaultDeleteRemind} = deleteRemindDialogStore;
 
     //自定义事件
     const emits = defineEmits(['save']);
@@ -225,7 +225,7 @@
             title:title,
             type:1,
         };
-        showFromDumpsterSingle(noteInfo);
+        DefaultDeleteRemind(noteInfo);
     }
 
 </script>

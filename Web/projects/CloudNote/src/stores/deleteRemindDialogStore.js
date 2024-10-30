@@ -37,7 +37,7 @@ export const useDeleteRemindDialogStore = defineStore(
             show.value = true;
             scene.value = 2;
             files.value[0] = file;
-            deletePer = 2;
+            deletePer.value = 2;
         }
 
         /**
