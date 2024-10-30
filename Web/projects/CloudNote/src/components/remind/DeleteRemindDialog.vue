@@ -56,7 +56,6 @@
         showDetails,//是否显示详情
         fileArr,//删除文件对象数组
         deletePer,//删除权限
-        scene,//删除场景
     } = storeToRefs(deleteRemindDialogStore)
 
     //删除提醒框重置函数
@@ -80,7 +79,7 @@
             deleteDescription = deleteDescription.concat(size,"个");
         }
 
-        deleteDescription = deleteDescription.concat("文件即将被删除");
+        deleteDescription = deleteDescription.concat("文件即将被删除。");
 
         let delDesc = '删除可在回收站中恢复'
         let completeDelDesc = '彻底删除将无法恢复'
@@ -93,7 +92,7 @@
                 deleteDescription = deleteDescription.concat(completeDelDesc);
                 break;
             case 3:
-                deleteDescription = deleteDescription.concat(delDesc,',',completeDelDesc);
+                deleteDescription = deleteDescription.concat(delDesc,'，',completeDelDesc);
                 break;
             default:
                 deleteDescription = deleteDescription.concat('该文件无法被删除');

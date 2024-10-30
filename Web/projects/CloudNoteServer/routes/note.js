@@ -398,6 +398,8 @@ router.get("/getNoteInfo",async (req,res)=>{
 
     let userInfo = req.userInfo;
 
+    let noteId = req.query.noteId;
+
     try {
         console.log("get note info from db");
         const noteInfo = await sqldb.Note.findOne(

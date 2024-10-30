@@ -20,7 +20,7 @@
                         <n-button type="primary" @click="saveNote()">
                             保存
                         </n-button>
-                        <n-button type="primary" @click="">
+                        <n-button type="primary" @click="deleteNote()">
                             删除
                         </n-button>
                         <n-button quaternary circle>
@@ -59,23 +59,23 @@
     import { inject } from 'vue';
     import { Ckeditor } from '@ckeditor/ckeditor5-vue';
     import {EditorType,getEditorConfigs} from "@/editor"
-    import { getUserToken } from "../../Utils/userLogin";
     import noteServerRequest from '../../request';
     import noteApi from '../../request/api/noteApi';
-    import {useMessage,useLoadingBar} from 'naive-ui'
+    import {useMessage} from 'naive-ui'
     import {FiberManualRecordRound,
-        StarBorderRound,
-        MoreHorizRound,
-        SaveAsOutlined
+        MoreHorizRound
     } from'@vicons/material'
     import 'ckeditor5/ckeditor5.css';
     import { toHerf } from "../../router/go"
+
+    import {useDeleteRemindDialogStore} from '../../stores/deleteRemindDialogStore'
+    const deleteRemindDialogStore = useDeleteRemindDialogStore();
+    const {showFromDumpsterSingle} = deleteRemindDialogStore;
 
     //自定义事件
     const emits = defineEmits(['save']);
     //消息对象
     const message = useMessage()
-    const loadingBar = useLoadingBar()
 
     //const ckeditor5 = CKEditor.component;
 
@@ -153,7 +153,6 @@
     let editor = null;
     /**
      * 编辑器加载完成处理函数
-     * 
      */
     const editorReady = (editorObj)=>{
         //保存编辑器对象
@@ -180,6 +179,9 @@
         })
     })
 
+    /**
+     * 保存笔记
+     */
     const saveNote = async ()=>{
         //编号
         const noteId = propsData.id;
@@ -208,6 +210,24 @@
             emits('save');
         })
     }
+
+    /**
+     * 删除笔记
+     */
+    const deleteNote = async()=>{
+        //编号
+        const noteId = propsData.id;
+        //标题
+        const title = note.value.title;
+
+        let noteInfo = {
+            id:noteId,
+            title:title,
+            type:1,
+        };
+        showFromDumpsterSingle(noteInfo);
+    }
+
 </script>
 
 <style>
