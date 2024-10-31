@@ -4,7 +4,7 @@
         <n-space justify="space-between" align="center" style="margin-bottom:20px">
             <h3 style="margin:0">回收站</h3>
             <n-space>
-                <n-button ghost type="success">批量恢复</n-button>
+                <n-button ghost type="success" @click="batchRestoreFiles">批量恢复</n-button>
                 <n-button ghost type="error" @click="clickBatchDeleteBtn">批量彻底删除</n-button>
             </n-space>
         </n-space>
@@ -99,7 +99,13 @@
                     [
                         h(
                             NButton,
-                            {size:'small',type:'success',tertiary:true},
+                            {
+                                size:'small',type:'success',tertiary:true,
+                                onClick:()=>{
+                                    //恢复单文件
+                                    restoreFile(row);
+                                }
+                            },
                             {default:()=>"恢复"}
                         ),
                         h(
@@ -166,6 +172,54 @@
                 break;
         }
     }
+
+    /**
+     * 恢复文件
+     */
+     const restoreFile = (file)=>{
+
+        let files = [];
+        files[0] = file;
+
+        let API = {...dumpsterApi.restoreFiles};
+
+        API.name = API.name[0];
+
+        API.data = {
+            files:files
+        }
+
+        //发送请求
+        noteServerRequest(API).then(responseData=>{
+            if(!responseData) return;
+            //重新获取回收站中文件列表
+            getFileList();
+        });
+    };
+
+    /**
+     * 批量恢复文件
+     */
+    const batchRestoreFiles = ()=>{
+
+        const length = rowChecked.value.length;
+        if(length === 0) throw message.warning('未选择任何文件')
+
+        let API = {...dumpsterApi.restoreFiles};
+
+        API.name = length === 1 ? API.name[0]:API.name[1];
+
+        API.data = {
+            files:checkedRowsObjects
+        }
+
+        //发送请求
+        noteServerRequest(API).then(responseData=>{
+            if(!responseData) return;
+            //重新获取回收站中文件列表
+            getFileList();
+        });
+    };
 
     /**
      * 表格中勾选状态发生改变
