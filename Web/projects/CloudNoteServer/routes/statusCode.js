@@ -267,6 +267,16 @@ SERVICE_STATUS={
         status:'SERVICE_025',
         description:'彻底删除文件失败'
     },
+    RESTORE_FILE_SUCCESS:{
+        success:false,
+        status:'SERVICE_025',
+        description:'恢复文件成功'
+    },
+    RESTORE_FILE_FAIL:{
+        success:false,
+        status:'SERVICE_025',
+        description:'恢复文件失败'
+    },
 }
 
 EVENT_LIST = {
@@ -325,6 +335,14 @@ EVENT_LIST = {
     UPDATE_NOTE:{
         code:'13',
         desc:'更新笔记'
+    },
+    RESTORE_NOTE:{
+        code:'13',
+        desc:'恢复笔记'
+    },
+    RESTORE_MEMO:{
+        code:'13',
+        desc:'恢复便签'
     }
 }
 
