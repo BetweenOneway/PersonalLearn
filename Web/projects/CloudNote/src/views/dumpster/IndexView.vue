@@ -21,13 +21,14 @@
         />
     </n-layout>
     <!--删除提醒框-->
-    <DeleteRemindDialog @delete=""></DeleteRemindDialog>
+    <DeleteRemindDialog @delete="getFileList" @remove="removeRowChecked"></DeleteRemindDialog>
 </template>
 
 <script setup>
     import {NTag,NSpace,NButton,NText, useMessage} from 'naive-ui'
     import noteServerRequest  from "../../request"
     import dumpsterApi from '../../request/api/dumpsterApi';
+    import fileApi from '../../request/api/fileApi';
     import DeleteRemindDialog from "../../components/remind/DeleteRemindDialog.vue";
     import {useDeleteRemindDialogStore} from '../../stores/deleteRemindDialogStore'
 
@@ -206,7 +207,7 @@
         const length = rowChecked.value.length;
         if(length === 0) throw message.warning('未选择任何文件')
 
-        let API = {...dumpsterApi.restoreFiles};
+        let API = {...fileApi.restoreFiles};
 
         API.name = length === 1 ? API.name[0]:API.name[1];
 
@@ -246,4 +247,8 @@
         rowChecked.value = keys;
     }
 
+    //指定文件取消勾选
+    const removeRowChecked = (key)=>{
+        rowChecked.value = rowChecked.value.filter(item=> item !== key);
+    }
 </script>

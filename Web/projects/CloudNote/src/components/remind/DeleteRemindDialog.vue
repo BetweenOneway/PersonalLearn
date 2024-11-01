@@ -12,12 +12,14 @@
                     <n-text v-text="description"></n-text>
                     <n-button v-show="fileArr.length > 1" text type="success" @click="showDetails= !showDetails">{{showDetails?"收起详情":"查看详情"}}</n-button>
                 </n-p>
-                <div v-show="showDetails">
+                <div v-show="showDetails && fileArr.length > 1">
                     <n-divider style="margin:0 0 14px" />
                     <!--删除文件列表-->
                     <n-scrollbar style="max-height: 260px;" trigger="none">
                         <n-space>
-                            <n-tag :bordered="false" v-for="file in fileArr" :key="file.key" :type="file.theme">
+                            <n-tag closable :bordered="false" 
+                            v-for="file in fileArr" :key="file.key" :type="file.theme"
+                            @close="closeFileTag(file.key)">
                                 {{ file.title }}
                                 <template #icon>
                                     <n-icon :component="file.icon"></n-icon>
@@ -54,7 +56,8 @@
     const {
         show,//是否显示提醒框
         showDetails,//是否显示详情
-        fileArr,//删除文件对象数组
+        files,//删除的文件对象数组
+        fileArr,//删除文件对象数组 files每一项多加了点属性
         deletePer,//删除权限
     } = storeToRefs(deleteRemindDialogStore);
 
@@ -62,7 +65,7 @@
     const {reset} = deleteRemindDialogStore;
 
     //自定义事件 彻底删除 删除 取消
-    const emits = defineEmits(['delete','cancel'])
+    const emits = defineEmits(['delete','remove'])
 
     //提醒框描述拼接
     const description = computed(()=>{
@@ -137,5 +140,12 @@
             if(!responseData) return;
             emits('deleteSuccess');
         })
+    }
+
+    //点击待移除文件关闭标签
+    const closeFileTag = (key)=>{
+        files.value = files.value.filter(item=>item.key !== key);
+        //通知父组件移除某个文件
+        emits('remove',key);
     }
 </script>

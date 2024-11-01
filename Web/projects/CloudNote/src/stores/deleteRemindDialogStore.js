@@ -48,7 +48,7 @@ export const useDeleteRemindDialogStore = defineStore(
             files.value = multiFiles;
             show.value = true;
             scene.value = 2;
-            deletePer = 2;
+            deletePer.value = 2;
         }
 
         const reset = ()=>{
