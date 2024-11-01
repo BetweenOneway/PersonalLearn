@@ -17,7 +17,6 @@
             :pagination="pagination"
             v-model:checked-row-keys="rowChecked"
             @update:page="rowChecked=[]"
-            @update-checked-row-keys="updateCheckedRowKeys"
             style="height:calc(100% - 34px - 20px)"
         />
     </n-layout>
@@ -96,7 +95,7 @@
                 //渲染成间距元素 按钮元素
                 return h(
                     NSpace, null,
-                    [
+                    {default:()=>[
                         h(
                             NButton,
                             {
@@ -119,7 +118,7 @@
                             },
                             {default:()=>"彻底删除"}
                         )
-                    ]
+                    ]}
                 )
             }
         }
@@ -151,6 +150,8 @@
             });
             //显示回收站中的文件
             data.value = files;
+            //整理被勾选的记录
+            clearRowChecked()
         });
     };
 
@@ -165,10 +166,10 @@
                 throw message.warning("未勾选任何文件");
                 break;
             case 1:
-                showFromDumpsterSingle(checkedRowsObjects[0]);
+                showFromDumpsterSingle(checkedRowsObjects.value[0]);
                 break;
             default:
-                showFromDumpsterMulti(checkedRowsObjects);
+                showFromDumpsterMulti(checkedRowsObjects.value);
                 break;
         }
     }
@@ -210,7 +211,7 @@
         API.name = length === 1 ? API.name[0]:API.name[1];
 
         API.data = {
-            files:checkedRowsObjects
+            files:checkedRowsObjects.value
         }
 
         //发送请求
@@ -224,9 +225,25 @@
     /**
      * 表格中勾选状态发生改变
      */
-    let checkedRowsObjects = [];
-    const updateCheckedRowKeys = (keys,rows)=>{
-        checkedRowsObjects = rows;
+    const checkedRowsObjects = computed(()=>{
+        return data.value.filter(item =>{
+            return rowChecked.value.indexOf(item.key) !== -1;
+        })
+    });
+
+    /**
+     * 清除无效数据
+     */
+    const clearRowChecked = ()=>{
+        let keys = [];
+        data.value.forEach(item=>{
+            if(rowChecked.value.indexOf(item.key) !== -1)
+            {
+                keys.push(item.key)
+            }
+        })
+
+        rowChecked.value = keys;
     }
 
 </script>
