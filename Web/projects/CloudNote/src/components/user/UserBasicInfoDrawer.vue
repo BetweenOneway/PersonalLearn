@@ -1,5 +1,5 @@
 <template>
-    <n-drawer v-model:show="active" :width="400">
+    <n-drawer v-model:show="active" :width="400" @after-leave="updateFormItem = false">
         <n-drawer-content closable title="用户基本信息">
             <!--用户头像-->
             <n-space justify="center">
@@ -13,42 +13,50 @@
             <n-form ref="formRef" label-placement="left" label-width="auto" :show-require-mark="false" 
             :model="formValue" :rules="formRules" style="margin-top:16px">
                 <n-form-item label="邮箱：">
-                    <n-text class="ml-3">{{email}}</n-text>
+                    <n-text >{{email}}</n-text>
                 </n-form-item>
                 <n-form-item label="昵称：" path="nickname">
-                    <n-input v-model:value="formValue.nickname" style="--n-border:none;--n-color:transparent"></n-input>
+                    <n-text v-if="!updateFormItem">{{ formValue.nickname }}</n-text>
+                    <n-input v-else v-model:value="formValue.nickname" maxlength="6" showcount></n-input>
                 </n-form-item>
                 <n-form-item label="性别：">
-                    <n-radio-group class="ml-3" v-model:value="formValue.sex">
+                    <n-text v-if="!updateFormItem">{{ !!formValue.sex?'男':'女' }}</n-text>
+                    <n-radio-group v-else v-model:value="formValue.sex">
                         <n-space>
                             <n-radio :value="0">女</n-radio>
                             <n-radio :value="1">男</n-radio>
                         </n-space>
                     </n-radio-group>
                 </n-form-item>
+                <n-form-item label="等级：">
+                    <n-tag :bordered="false" type="success">{{userLevel}}</n-tag>
+                </n-form-item>
                 <n-form-item label="出生日期：">
-                    <n-date-picker class="ml-3" type="date" 
+                    <n-text v-if="!updateFormItem">{{ dayjs(formValue.birthday).format('YYYY-MM-DD') }}</n-text>
+                    <n-date-picker v-else type="date" 
                     v-model:formatted-value="formValue.birthday"
                     value-format="yyyy-MM-dd HH:mm:ss"></n-date-picker>
                 </n-form-item>
-                <n-form-item label="等级：">
-                    <n-tag :bordered="false" class="ml-3" type="success">{{userLevel}}</n-tag>
-                </n-form-item>
-                <n-form-item label="邮箱：">
-                    <n-text class="ml-3">{{time}}</n-text>
-                </n-form-item>
-                <n-form-item v-show="showUpdateBtn">
-                    <n-button type="success" secondary block @click="toUpdateBasicInfo">更新</n-button>
+                <n-form-item label="注册时间：">
+                    <n-text >{{time}}</n-text>
                 </n-form-item>
             </n-form>
+
+            <template #footer>
+                <n-space>
+                    <n-button v-show="updateFormItem" :disabled="!showUpdateBtn" type="success" @click="toUpdateBasicInfo">更新</n-button>
+                    <n-button v-bind="editBtnObj.props" type="success" ghost @click="clickEditBtn(!updateFormItem)">{{editBtnObj.text}}</n-button>
+                </n-space>
+            </template>
         </n-drawer-content>
     </n-drawer>
 </template>
 
 <script setup>
-    import {ref,watch} from 'vue'
+    import {computed, ref,watch} from 'vue'
     import { useUserStore } from "../../stores/userStore"
     import {storeToRefs} from 'pinia'
+    import dayjs from 'dayjs'
     import noteServerRequest from "../../request"
     import userApi from '../../request/api/userApi'
 
@@ -71,6 +79,8 @@
         if(show)
         {
             await getUserBasicInfo();
+            //设置控件值
+            restoreFormValue();
         }
         //更改抽屉激活状态
         active.value = show;
@@ -85,23 +95,21 @@
 
     //表单验证规则
     const formRules ={
-        nickname:{
-            required:true,
-            message:'请输入昵称',
-            trigger:['input','blur']
-        }
-    }
-
-    watch(
-        ()=>active.vlaue,
-        newData=>{
-            if(newData){
-                formValue.value.nickname = userNickName.value;
-                formValue.value.sex = sex.value;
-                formValue.value.birthday = birthday.value
+        nickname:[
+            {
+                required:true,
+                message:'请输入昵称',
+                trigger:['input','blur']
+            },
+            {
+                trigger:['input','blur'],
+                message:'昵称长度需在 2-6 个字符之间',
+                validator:(rule,value)=>{
+                    return !!value && value !=="" && value.length >= 2 && value.length <= 6;
+                }
             }
-        }
-    )
+        ]
+    }
 
     //获取用户基本信息
     const getUserBasicInfo = ()=>{
@@ -110,6 +118,28 @@
             const userData = responseData.data;
             setUserBasicInfo(userData);
         });
+    }
+
+    //表单编辑控件的显示
+    const updateFormItem = ref(false);
+
+    //重置表单值
+    const restoreFormValue = ()=>{
+        formValue.value.nickname = userNickName.value;
+        formValue.value.sex = sex.value;
+        formValue.value.birthday = birthday.value
+    }
+    /**
+     * 编辑/取消编辑按钮操作
+     * @param edit 
+     */
+    const clickEditBtn = (edit = true)=>{
+        //取消编辑 恢复表单值
+        if(!edit)
+        {
+            restoreFormValue();
+        }
+        updateFormItem.value = edit;
     }
 
     //更新用户基本信息
@@ -125,6 +155,22 @@
          
     });
 
+    //编辑按钮对象
+    const editBtnObj = computed(()=>{
+        return updateFormItem.value ?
+        {
+            text:'取消编辑',
+            props:{
+                type:'tertiary'
+            }
+        }:
+        {
+            text:'编辑',
+            props:{
+                type:'success'
+            }
+        };
+    });
     defineExpose({changeActive})
 </script>
 
