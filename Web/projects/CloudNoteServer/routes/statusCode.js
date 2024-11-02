@@ -268,7 +268,7 @@ SERVICE_STATUS={
         description:'彻底删除文件失败'
     },
     RESTORE_FILE_SUCCESS:{
-        success:false,
+        success:true,
         status:'SERVICE_025',
         description:'恢复文件成功'
     },
@@ -276,6 +276,16 @@ SERVICE_STATUS={
         success:false,
         status:'SERVICE_025',
         description:'恢复文件失败'
+    },
+    UPDATE_USER_INFO_SUCCESS:{
+        success:true,
+        status:'SERVICE_025',
+        description:'更新用户信息成功'
+    },
+    UPDATE_USER_INFO_FAIL:{
+        success:false,
+        status:'SERVICE_025',
+        description:'更新用户信息失败'
     },
 }
 
@@ -343,7 +353,15 @@ EVENT_LIST = {
     RESTORE_MEMO:{
         code:'13',
         desc:'恢复便签'
-    }
+    },
+    QUERY_USER_INFO:{
+        code:'13',
+        desc:'查询用户信息'
+    },
+    UPDATE_USER_INFO:{
+        code:'13',
+        desc:'更新用户信息'
+    },
 }
 
 module.exports = {REDIS_STATUS,DB_STATUS,SERVICE_STATUS,EVENT_LIST}

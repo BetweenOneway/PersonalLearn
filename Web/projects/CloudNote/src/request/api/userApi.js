@@ -30,6 +30,14 @@ const userApi = {
         userPower:true,
         dataParam:false,
         successMessage:false
+    },
+    updateUserInfo:{
+        name:'更新用户基本信息',
+        url:'/user/updateUserInfo',
+        method:'POST',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
     }
 }
 

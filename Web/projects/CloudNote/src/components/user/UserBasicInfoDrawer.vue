@@ -143,8 +143,24 @@
     }
 
     //更新用户基本信息
-    const toUpdateBasicInfo = ()=>{
-        formRef.value?.validate();
+    const toUpdateBasicInfo = async ()=>{
+        await formRef.value?.validate();
+
+        let API = {...userApi.updateUserInfo};
+
+        API.data= {
+            ...formValue.value
+        }
+
+        noteServerRequest(API).then(responseData=>{
+            if(!responseData) return;
+            //关闭编辑状态
+            updateFormItem.value = false;
+            //重置用户信息
+            setUserBasicInfo(responseData.data);
+            //重置用户表单值
+            restoreFormValue();
+        })
     }
 
     //显示更新按钮的时机
