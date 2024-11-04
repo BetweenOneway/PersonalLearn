@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	</head>
+	<body>
+        <form action="http://127.0.0.1:8080/login" method="post">
+            <input type="text" name="uname" value="aaa">
+            <input type="text" name="upwd" value="111">
+            <input type="submit" value="登录">  
+        </form>
+
+		<button onclick="getUser()">ajax</button>
+		<script>
+            async function getUser() {
+                const instance = axios.create({
+                    baseURL: 'http://127.0.0.1:8080/',
+                    timeout: 1000,
+                });
+                try {
+                    const config = {
+                        //url:'/user',
+                        data:{
+                            id:'12345',
+                            name:'world',
+                            method:'post'
+                        }
+                    }
+                    let response = {};
+                    let method = 'post2'
+                    if(method=='get')
+                    {
+                        response = await instance.get('/user?ID=12345');
+                    }
+                    else if(method=='post')
+                    {
+                        instance.post('/user', {
+                            firstName: 'Fred',
+                            lastName: 'Flintstone'
+                        })
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    }
+                    else if(method=='post1')
+                    {
+                        response = await instance.post('/user/',{
+                            id:'12345',
+                            name:'world',
+                            method:'post'
+                        });
+                    }
+                    else if(method=="post2")
+                    {
+                        response = await instance.post('/user/',config);
+                    }
+                    console.log(response);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+		</script>
+	</body>
+</html>
