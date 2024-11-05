@@ -45,6 +45,10 @@ app.use(cors({
 
 //使用body-parser中间件
 app.use(bodyParser.urlencoded({extended:false}));
+// parse application/json
+app.use(bodyParser.json())
+app.use(bodyParser.raw());
+app.use(bodyParser.text());
 
 // 配置文件上传模块
 app.use(fileUpload());
