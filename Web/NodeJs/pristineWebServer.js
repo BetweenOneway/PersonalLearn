@@ -55,27 +55,25 @@ app.on('request',function(req,res){
         req.body = querystring.parse(str); // querystring.parse是将字符串转成对象{id:1,bane:zs,age:43}
 
         console.log("params:",req.params);
-    console.log("query:",req.query);
-    console.log("data:",req.data);
-    console.log("body",req.body);
+        console.log("query:",req.query);
+        console.log("data:",req.data);
+        console.log("body",req.body);
 
-    res.writeHead(200,{
-        //"Access-Control-Allow-Origin":"http://127.0.0.1:5500",
-        "Access-Control-Allow-Origin":"*",//可伪装成任意网址
-        "Access-Control-Allow-Headers":" Origin, X-Requested-With, Content-Type, Accept",
-        //内容类型      普通文本
-        "Content-Type":"text/plain;charset=utf-8",//避免乱码
-        //'Content-Type':'application/json;charset=utf-8',
-        'Access-Control-Allow-Methods':'PUT,POST,GET,DELETE,OPTIONS'
-      })
-      res.write("Hello world!");
-      res.end()
-      //仍然会打印
-      console.log("after end")
-      return
-      //不会打印
-      console.log("after return")
+        res.writeHead(200,{
+            //"Access-Control-Allow-Origin":"http://127.0.0.1:5500",
+            "Access-Control-Allow-Origin":"*",//可伪装成任意网址
+            "Access-Control-Allow-Headers":" Origin, X-Requested-With, Content-Type, Accept",
+            //内容类型      普通文本
+            "Content-Type":"text/plain;charset=utf-8",//避免乱码
+            //'Content-Type':'application/json;charset=utf-8',
+            'Access-Control-Allow-Methods':'PUT,POST,GET,DELETE,OPTIONS'
+        })
+        res.write("Hello world!");
+        res.end()
+        //仍然会打印
+        console.log("after end")
+        return
+        //不会打印
+        console.log("after return")
     });
-
-    
 });
