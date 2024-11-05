@@ -1,11 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+// create application/json parser
+var jsonParser = bodyParser.json()
+
 const cors=require("cors");
 
 const test=require("./routes/test");
+const user=require("./routes/user");
 
 var app = express();
-var server = app.listen(18081);//这里监听的是请求的端口
+var server = app.listen(8080);//这里监听的是请求的端口
 app.use(cors({
   origin:["http://localhost:8080","http://127.0.0.1:8080"]//这里的端口是指网页端口，并非请求端口
 }));//从此所有响应，自动带Access-Control-Allow-Origin:http://127.0.0.1:5500
@@ -13,6 +17,10 @@ app.use(cors({
 
 //使用body-parser中间件
 app.use(bodyParser.urlencoded({extended:false}));
+// parse application/json
+app.use(bodyParser.json())
+app.use(bodyParser.raw());
+app.use(bodyParser.text());
 
 //托管静态资源到public目录下
 //app.use(express.static('public'));
@@ -35,3 +43,4 @@ app.all('*', (req, res, next) => {
 
 /*使用路由器来管理路由*/
 app.use("/test",test);
+app.use("/user",user);
