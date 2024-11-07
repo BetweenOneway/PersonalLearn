@@ -35,7 +35,7 @@
                     <n-text v-if="!updateFormItem">{{ dayjs(formValue.birthday).format('YYYY-MM-DD') }}</n-text>
                     <n-date-picker v-else type="date" 
                     v-model:formatted-value="formValue.birthday"
-                    value-format="yyyy-MM-dd HH:mm:ss"></n-date-picker>
+                    value-format="yyyy-MM-dd"></n-date-picker>
                 </n-form-item>
                 <n-form-item label="注册时间：">
                     <n-text >{{time}}</n-text>
@@ -133,7 +133,7 @@
      * 编辑/取消编辑按钮操作
      * @param edit 
      */
-    const clickEditBtn = (edit = true)=>{
+    const clickEditBtn = (edit=true)=>{
         //取消编辑 恢复表单值
         if(!edit)
         {

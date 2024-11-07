@@ -407,6 +407,9 @@ router.get("/getUserInfo",async(req,res)=>{
             );
 
             await t.commit();
+
+            console.log("End of get user info")
+
             output.success = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.description
@@ -434,10 +437,10 @@ router.post("/updateUserInfo",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start update user info,req.body:",req);
+    console.log("start update user info,req.body:",req.body);
 
     //{nickname,sex,birthday}
-    let toUpdateInfo = req.body.files;
+    let toUpdateInfo = req.body;
     //目标状态
     let userInfo = req.userInfo;
 
@@ -462,7 +465,8 @@ router.post("/updateUserInfo",async (req,res)=>{
             }
         );
 
-        if(affectedNum !== 1)
+        console.log("updateResult:",affectedNum)
+        if(affectedNum[0] !== 1)
         {
             await t.rollback();
             throw "更新用户信息失败"
@@ -470,12 +474,12 @@ router.post("/updateUserInfo",async (req,res)=>{
         //记录日志
         {
             //记录事件
-            const userLog = await sqldb.UserLog.create(
+            const affectedNum = await sqldb.UserLog.create(
                 {
                     desc:statusCode.EVENT_LIST.UPDATE_USER_INFO.desc,
                     time:curDate,
                     event:statusCode.EVENT_LIST.UPDATE_USER_INFO.code,
-                    u_id:users.id
+                    u_id:userInfo.id
                 },
                 {
                     //指定新增哪些字段
@@ -483,10 +487,10 @@ router.post("/updateUserInfo",async (req,res)=>{
                     transaction: t
                 }
             );
-            console.log("userLog:",userLog);
+            console.log("affectedNum:",affectedNum);
         }
         await t.commit();
-
+        console.log("更新用户信息成功！")
         output.success = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_SUCCESS.success
         output.status = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_SUCCESS.description

@@ -6,7 +6,6 @@ let validate = require("./validate");
 */
 async function ValidateUserToken(req)
 {
-    console.log("req:",req);
     let userToken = req.get('userToken')
     if(!userToken)
     {
