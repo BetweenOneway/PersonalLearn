@@ -52,6 +52,9 @@
             </n-space>
         </n-card>
     </n-space>
+
+     <!--删除提醒框-->
+     <DeleteRemindDialog @deleteSuccess="$emit('deleteSuccess')"></DeleteRemindDialog>
     
 </template>
 
@@ -73,7 +76,7 @@
     const {DefaultDeleteRemind} = deleteRemindDialogStore;
 
     //自定义事件
-    const emits = defineEmits(['save']);
+    const emits = defineEmits(['save','deleteSuccess']);
     //消息对象
     const message = useMessage()
 
