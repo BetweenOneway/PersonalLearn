@@ -65,7 +65,7 @@
     const {reset} = deleteRemindDialogStore;
 
     //自定义事件 彻底删除 删除 取消
-    const emits = defineEmits(['delete','remove'])
+    const emits = defineEmits(['remove'])
 
     //提醒框描述拼接
     const description = computed(()=>{
