@@ -47,6 +47,10 @@
     import fileCard from '../../components/card/fileCard.vue';
     import noteServerRequest from "@/request"
     import fileApi from "@/request/api/fileApi"
+    import { useMessage } from "naive-ui";
+
+    //消息对象
+    const message = useMessage()
 
     //广告图
     const banners= ref([
