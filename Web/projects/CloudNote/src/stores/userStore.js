@@ -104,7 +104,7 @@ export const useUserStore = defineStore(
             }
         })
 
-        return {token,id,email,userNickName,headPic,userLevel,time,sex,birthday,
+        return {token,id,email,nickName,userNickName,headPic,userLevel,time,sex,birthday,
             setUserInfo,setUserBasicInfo,resetUserInfo,head_image}
     },
     {

@@ -16,7 +16,7 @@
                     <n-text >{{email}}</n-text>
                 </n-form-item>
                 <n-form-item label="昵称：" path="nickname">
-                    <n-text v-if="!updateFormItem">{{ formValue.nickname }}</n-text>
+                    <n-text v-if="!updateFormItem" v-bind="nickNameText.props">{{ nickNameText.text }}</n-text>
                     <n-input v-else v-model:value="formValue.nickname" maxlength="6" showcount></n-input>
                 </n-form-item>
                 <n-form-item label="性别：">
@@ -32,7 +32,7 @@
                     <n-tag :bordered="false" type="success">{{userLevel}}</n-tag>
                 </n-form-item>
                 <n-form-item label="出生日期：">
-                    <n-text v-if="!updateFormItem">{{ dayjs(formValue.birthday).format('YYYY-MM-DD') }}</n-text>
+                    <n-text v-if="!updateFormItem" v-bind="birthdayText.props">{{ birthdayText.text }}</n-text>
                     <n-date-picker v-else type="date" 
                     v-model:formatted-value="formValue.birthday"
                     value-format="yyyy-MM-dd"></n-date-picker>
@@ -61,7 +61,7 @@
     import userApi from '../../request/api/userApi'
 
     const userStore = useUserStore()
-    const {head_image,userNickName,userLevel,email,time,sex,birthday} = storeToRefs(userStore)
+    const {head_image,nickName,userNickName,userLevel,email,time,sex,birthday} = storeToRefs(userStore)
     const {setUserBasicInfo} = userStore;
 
     //表单组件实例对象
@@ -103,13 +103,39 @@
             },
             {
                 trigger:['input','blur'],
-                message:'昵称长度需在 2-6 个字符之间',
+                message:'昵称长度需在 2-20 个字符之间',
                 validator:(rule,value)=>{
-                    return !!value && value !=="" && value.length >= 2 && value.length <= 6;
+                    return !!value && value !=="" && value.length >= 2 && value.length <= 20;
                 }
             }
         ]
     }
+
+    //昵称显示的文本元素
+    const nickNameText = computed(()=>{
+        return formValue.value.nickname?
+        {
+            props:{depth:1},
+            text:formValue.value.nickname
+        }:
+        {
+            props:{depth:3},
+            text:"暂未设置昵称"
+        }
+    });
+
+    //生日显示的文本元素
+    const birthdayText = computed(()=>{
+        return formValue.value.birthday?
+        {
+            props:{depth:1},
+            text:formValue.value.birthday
+        }:
+        {
+            props:{depth:3},
+            text:"暂未设置出生日期"
+        }
+    });
 
     //获取用户基本信息
     const getUserBasicInfo = ()=>{
@@ -125,10 +151,11 @@
 
     //重置表单值
     const restoreFormValue = ()=>{
-        formValue.value.nickname = userNickName.value;
+        formValue.value.nickname = nickName.value;
         formValue.value.sex = sex.value;
         formValue.value.birthday = birthday.value
     }
+
     /**
      * 编辑/取消编辑按钮操作
      * @param edit 
@@ -156,6 +183,7 @@
             if(!responseData) return;
             //关闭编辑状态
             updateFormItem.value = false;
+            console.log("update user info response:",responseData.data);
             //重置用户信息
             setUserBasicInfo(responseData.data);
             //重置用户表单值
@@ -167,7 +195,7 @@
     const showUpdateBtn = computed(()=>{
         const {nickname:nn,sex:s,birthday:b} = formValue.value;
 
-        return (nn !== userNickName.value || s !== sex.value|| b !== birthday.value)
+        return (nn !== nickName.value || s !== sex.value|| b !== birthday.value)
          
     });
 
@@ -187,6 +215,7 @@
             }
         };
     });
+
     defineExpose({changeActive})
 </script>
 
