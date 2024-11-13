@@ -13,6 +13,7 @@
     "@tsparticles/vue3": "^3.0.1",
     "axios": "^1.7.5",
     "ckeditor5": "^43.0.0",
+    "cropperjs": "^1.6.2",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "gsap": "^3.12.5",

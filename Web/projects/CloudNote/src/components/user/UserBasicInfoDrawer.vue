@@ -1,4 +1,5 @@
 <template>
+    <!--用户基本信息抽屉-->
     <n-drawer v-model:show="active" :width="400" @after-leave="updateFormItem = false">
         <n-drawer-content closable title="用户基本信息">
             <!--用户头像-->
@@ -50,15 +51,53 @@
             </template>
         </n-drawer-content>
     </n-drawer>
+
+    <!--头像上传窗口-->
+    <n-modal :show="true" preset="card" closable segmented title="头像上传" 
+    width="800px" height="560px" content-style="height:0">
+        <template #default>
+            <n-space justify="space-between" :wrap-item="false" style="height: 100%">
+                <!--裁剪框元素-->
+                <div style="height:100%;width:calc(100%-200px)">
+                    <img id="image" src="picture.jpg" style="max-height: 100%;max-width: 100%;">
+                </div>
+                
+                <!--裁剪预览区域-->
+                <n-space vertical justify="center" :size="24" :wrap-item="false" style="width:170px">
+                    <n-sapce vertical align="center">
+                        <div class="img-preview img-preview-120"></div>
+                        <n-text>120*120</n-text>
+                    </n-sapce>
+                    <n-sapce vertical align="center">
+                        <div class="img-preview img-preview-40"></div>
+                        <n-text>40*40</n-text>
+                    </n-sapce>
+                    <n-sapce vertical align="center">
+                        <div class="img-preview img-preview-36"></div>
+                        <n-text>36*36</n-text>
+                    </n-sapce>
+                </n-space>
+            </n-space>
+        </template>
+        
+        
+        <template #action>
+            <n-space>
+                <n-button>取消</n-button>
+                <n-button>确定</n-button>
+            </n-space>
+        </template>
+    </n-modal>
 </template>
 
 <script setup>
     import {computed, ref,watch} from 'vue'
     import { useUserStore } from "../../stores/userStore"
     import {storeToRefs} from 'pinia'
-    import dayjs from 'dayjs'
     import noteServerRequest from "../../request"
     import userApi from '../../request/api/userApi'
+    import "cropperjs/dist/cropper.css"
+    import Cropper from 'cropperjs'
 
     const userStore = useUserStore()
     const {head_image,nickName,userNickName,userLevel,email,time,sex,birthday} = storeToRefs(userStore)
@@ -221,11 +260,49 @@
         return ts > Date.now();
     };
 
+    const initCropper = ()=>{
+        const image = document.getElementById('image');
+        const cropper = new Cropper(image, {
+            dragMode:'move',//拖拽模式
+            viewMode:1,//视图模式
+            aspectRatio:1,//长宽比
+            autoCropArea:0.5,//裁剪框大小
+            cropBoxResizable:false,//不允许更改裁剪框尺寸
+            toggleDragModeOnDblclick:false,//禁用双击模式切换
+            preview:'.img-preview',//裁剪框的预览
+        })
+    }
+
     defineExpose({changeActive})
 </script>
 
 <style scoped>
     .n-avatar{
         box-shadow: 0 0 15px 5px darkgray;
+    }
+
+    .cropper-view-box, .cropper-face {
+        border-radius: 50%;
+    }
+
+    .img-preview{
+        border:1px solid darkgray;
+        border-radius: 50%;
+        overflow:hidden;
+    }
+
+    .img-preview-120 {
+        width:120px;
+        height:120px;
+    }
+
+    .img-preview-40 {
+        width:40px;
+        height:40px;
+    }
+
+    .img-preview-36 {
+        width:36px;
+        height:36px;
     }
 </style>
