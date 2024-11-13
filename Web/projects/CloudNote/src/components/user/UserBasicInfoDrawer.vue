@@ -29,13 +29,13 @@
                     </n-radio-group>
                 </n-form-item>
                 <n-form-item label="等级：">
-                    <n-tag :bordered="false" type="success">{{userLevel}}</n-tag>
+                    <n-tag :bordered="false" :type="userLevel.theme">{{userLevel.text}}</n-tag>
                 </n-form-item>
                 <n-form-item label="出生日期：">
                     <n-text v-if="!updateFormItem" v-bind="birthdayText.props">{{ birthdayText.text }}</n-text>
                     <n-date-picker v-else type="date" 
                     v-model:formatted-value="formValue.birthday"
-                    value-format="yyyy-MM-dd"></n-date-picker>
+                    value-format="yyyy-MM-dd" :is-date-disabled="disablePreviousDate"></n-date-picker>
                 </n-form-item>
                 <n-form-item label="注册时间：">
                     <n-text >{{time}}</n-text>
@@ -215,6 +215,11 @@
             }
         };
     });
+
+    //禁用将来日期
+    const disablePreviousDate=(ts)=>{
+        return ts > Date.now();
+    };
 
     defineExpose({changeActive})
 </script>

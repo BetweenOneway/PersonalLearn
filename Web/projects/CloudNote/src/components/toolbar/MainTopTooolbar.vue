@@ -17,7 +17,7 @@
                     <!--简介-->
                     <template #description>
                         <n-space align="center">
-                            <n-tag :bordered="false" type="success" size="small">{{ userLevel }}</n-tag>
+                            <n-tag :bordered="false" :type="userLevel.theme" size="small">{{ userLevel.text }}</n-tag>
                             <n-text depth="3">2099-12-31 到期</n-text>
                         </n-space>
                     </template>

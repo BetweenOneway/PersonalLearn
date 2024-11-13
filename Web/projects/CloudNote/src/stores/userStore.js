@@ -46,14 +46,15 @@ export const useUserStore = defineStore(
         })
 
         const userLevel = computed(()=>{
-            console.log("get user level:",level.value);
-            if(level.value == 0)
-            {
-                return "会员"
-            }
-            else{
-                return "超级会员"
-            }
+            return !!level.value ? 
+                {
+                    theme:"warning",
+                    text:"超级会员"
+                }:
+                {
+                    theme:"default",
+                    text:"会员"
+                };
         })
 
         /**

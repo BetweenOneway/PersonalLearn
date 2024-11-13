@@ -491,10 +491,20 @@ router.post("/updateUserInfo",async (req,res)=>{
         }
         await t.commit();
         console.log("更新用户信息成功！")
+        //再次查询用户信息
+        const userBasicInfo = await sqldb.User.findOne(
+            {
+                attributes: ['id','email',['nickname','nickName'],['head_pic','headPic'],'level','time','sex','birthday'],
+                where: {
+                    id:userInfo.id,
+                    status:1
+                }
+            }
+        );
         output.success = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_SUCCESS.success
         output.status = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_SUCCESS.description
-        output.data = toUpdateInfo;
+        output.data = userBasicInfo;
         res.send(output);
         return;
     } catch (error) {
