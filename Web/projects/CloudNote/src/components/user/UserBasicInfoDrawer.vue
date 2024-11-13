@@ -226,10 +226,6 @@
 
 <style scoped>
     .n-avatar{
-        box-shadow: 0 0 5px darkgray;
-    }
-
-    .ml-3 {
-        margin-left:12px;
+        box-shadow: 0 0 15px 5px darkgray;
     }
 </style>
