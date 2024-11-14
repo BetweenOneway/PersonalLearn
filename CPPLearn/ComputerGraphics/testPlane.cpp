@@ -1,7 +1,7 @@
 ﻿#include "iostream"
 using namespace std;
 
-#include "Plane.h"
+
 #include "testPlane.h"
 
 namespace TEST_PLANE {
@@ -11,5 +11,10 @@ namespace TEST_PLANE {
         float dist1 = plane.getDistance(Vector3(1.0f, 1.0f, 1.0f));
         float dist2 = plane.getDistance(Vector3(-1.0f, -1.0f, -1.0f));
         cout << dist1 << " " << dist2 << endl;
+    }
+
+    void testPrintPlane(const Plane& plane)
+    {
+
     }
 }
