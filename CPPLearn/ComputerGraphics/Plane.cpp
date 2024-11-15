@@ -184,7 +184,7 @@ void Plane::redefine(const Vector3& rkNormal, const Vector3& rkPoint)
 {
     normal = rkNormal;
     normal.normalize();
-    d = -rkNormal*(rkPoint);
+    d = -normal *(rkPoint);
     pos = rkPoint;
 }
 
