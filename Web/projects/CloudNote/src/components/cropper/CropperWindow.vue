@@ -28,9 +28,97 @@
         </template>
         
         <template #action>
-            <n-space>
-                <n-button @click="show=false">取消</n-button>
-                <n-button @click="getCropperCanvas">确定</n-button>
+            <n-space justify="center" :size="60">
+                <!--功能按钮-->
+                <n-button-group>
+                    <!--放大-->
+                    <n-tooltip>
+                        <template #trigger>
+                            <n-button circle @click="cropper.zoom(0.1)">
+                                <template #icon>
+                                    <n-icon :component="ZoomInRound"></n-icon>
+                                </template>
+                            </n-button>
+                        </template>
+                        放大
+                    </n-tooltip>
+                    <!--缩小-->
+                    <n-tooltip>
+                        <template #trigger>
+                            <n-button circle @click="cropper.zoom(-0.1)">
+                                <template #icon>
+                                    <n-icon :component="ZoomOutRound"></n-icon>
+                                </template>
+                            </n-button>
+                        </template>
+                        缩小
+                    </n-tooltip>
+                    <!--顺时针旋转-->
+                    <n-tooltip>
+                        <template #trigger>
+                            <n-button circle @click="cropper.rotate(45)">
+                                <template #icon>
+                                    <n-icon :component="RotateRightRound"></n-icon>
+                                </template>
+                            </n-button>
+                        </template>
+                        顺时针旋转
+                    </n-tooltip>
+                    <!--逆时针旋转-->
+                    <n-tooltip>
+                        <template #trigger>
+                            <n-button circle @click="cropper.rotate(-45)">
+                                <template #icon>
+                                    <n-icon :component="RotateLeftRound"></n-icon>
+                                </template>
+                            </n-button>
+                        </template>
+                        逆时针旋转
+                    </n-tooltip>
+                    <!--上下翻转-->
+                    <n-tooltip>
+                        <template #trigger>
+                            <n-button circle @click="cropper.scaleY(sacleYFactor=-sacleYFactor)">
+                                <template #icon>
+                                    <n-icon :component="SwapVertRound"></n-icon>
+                                </template>
+                            </n-button>
+                        </template>
+                        上下翻转
+                    </n-tooltip>
+                    <!--左右翻转-->
+                    <n-tooltip>
+                        <template #trigger>
+                            <n-button circle @click="cropper.scaleX(sacleXFactor = -sacleXFactor)">
+                                <template #icon>
+                                    <n-icon :component="SwapHorizRound"></n-icon>
+                                </template>
+                            </n-button>
+                        </template>
+                        左右翻转
+                    </n-tooltip>
+                    <!--重置-->
+                    <n-tooltip>
+                        <template #trigger>
+                            <n-button circle @click="cropper.reset()">
+                                <template #icon>
+                                    <n-icon :component="AutorenewRound"></n-icon>
+                                </template>
+                            </n-button>
+                        </template>
+                        重置
+                    </n-tooltip>
+                </n-button-group>
+                <!--确定，取消-->
+                <n-button-group>
+                    <n-button @click="show=false">取消</n-button>
+                    <n-button @click="getCropperCanvas">
+                        <template #icon>
+                            <n-icon :component="ContentCutRound"></n-icon>
+                        </template>
+                        确定
+                    </n-button>
+                </n-button-group>
             </n-space>
         </template>
     </n-modal>    
@@ -38,6 +126,10 @@
 
 <script setup>
     import {ref,nextTick} from 'vue'
+    import {ZoomInRound,ZoomOutRound,RotateRightRound,RotateLeftRound
+        ,SwapVertRound,SwapHorizRound,AutorenewRound,
+        ContentCutRound
+    } from'@vicons/material'
     import "cropperjs/dist/cropper.css"
     import Cropper from 'cropperjs'
 
@@ -110,6 +202,9 @@
     const getResultData = ()=>{
         return resultData;
     }
+
+    //翻转因子
+    let sacleXFactor = 1,sacleYFactor=1;
     defineExpose({showCropperWindow,getResultData});
 </script>
 
