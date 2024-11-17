@@ -53,7 +53,7 @@
     </n-drawer>
 
     <!--裁剪图像窗口-->
-    <CropperWindow ref="cropperRef" />
+    <CropperWindow ref="cropperRef"  title="头像上传"/>
 </template>
 
 <script setup>
@@ -225,6 +225,29 @@
     };
 
     const cropperRef = ref(null)
+
+    //文件选择控件
+    const fileInputRef = ref(null);
+
+    const selectImageFile = (e)=>{
+        //选中图像的重置
+        picSrc.value = null;
+        const {files} = e.target;
+        if(!!files || !files.length) return;
+        const file = files[0];
+        const reader = new FileReader();
+        //读取文件 base64
+        reader.readAsDataURL(file);
+        reader.onload = ()=>{
+            //显示图像文件
+            const imgURL = String(reader.result)
+
+            //清除文件选择控件的值
+            if(fileInputRef.value) fileInputRef.value.value = ''
+            //显示图像裁剪框
+            cropperRef.value.showCropperWindow(imgURL);
+        }
+    }
 
     defineExpose({changeActive})
 </script>

@@ -1,6 +1,6 @@
 <template>
     <!--头像上传窗口-->
-    <n-modal v-model:show="showCropper" preset="card" closable segmented title="头像上传" 
+    <n-modal v-model:show="showCropper" preset="card" closable segmented  
     width="800px" height="560px" content-style="height:0" :mask-closable="false" :close-on-sec="false">
         <template #default>
             <n-space justify="space-between" :wrap-item="false" style="height: 100%">
@@ -27,11 +27,10 @@
             </n-space>
         </template>
         
-        
         <template #action>
             <n-space>
                 <n-button @click="show=false">取消</n-button>
-                <n-button>确定</n-button>
+                <n-button @click="getCropperCanvas">确定</n-button>
             </n-space>
         </template>
     </n-modal>    
@@ -42,7 +41,12 @@
     import "cropperjs/dist/cropper.css"
     import Cropper from 'cropperjs'
 
-    let cropper = null
+    let cropper = null;
+
+    let resultData = {
+        blobData:null,
+        dataURL:null,
+    }
 
     const initCropper = ()=>{
         const image = document.getElementById('image');
@@ -68,33 +72,45 @@
     //头像图片
     const picSrc = ref(null);
 
-    //文件选择控件
-    const fileInputRef = ref(null);
+    /**
+     * 显示裁剪窗口
+     * @param imgURL 图像base64地址
+     */
+    const showCropperWindow = (imgURL)=>{
+        resultData.blobData = null;
+        resultData.dataURL = null;
 
-    const selectImageFile = (e)=>{
         //选中图像的重置
-        picSrc.value = null;
-        const {files} = e.target;
-        if(!!files || !files.length) return;
-        const file = files[0];
-        const reader = new FileReader();
-        //读取文件 base64
-        reader.readAsDataURL(file);
-        reader.onload = ()=>{
-            //显示图像文件
-            picSrc.value = String(reader.result)
-            //显示头像上传窗口
-            showCropper.value = true;
-            //清除文件选择控件的值
-            if(fileInputRef.value) fileInputRef.value.value = ''
-            //视图更新完成后 初始化裁剪框
-            nextTick(()=>{
-                initCropper()
-            })
-        }
+        picSrc.value = imgURL;
+        //显示头像上传窗口
+        showCropper.value = true;
+
+        nextTick(()=>{
+            initCropper()
+        })
+    }
+    /**
+     * 获取裁剪区域画布数据
+     */
+    const getCropperCanvas=()=>{
+        let cropperCanvas = cropper.getCropperCanvas({
+            width:120,
+            height:120,
+        });
+        cropperCanvas.toBlob(blob=>{
+            resultData.blobData = blob;
+        })
+        //转成Base64图像
+        resultData.dataURL = cropperCanvas.toDataURL('img/png');
     }
 
-    defineExpose({selectImageFile});
+    /**
+     * 获取裁剪结果
+     */
+    const getResultData = ()=>{
+        return resultData;
+    }
+    defineExpose({showCropperWindow,getResultData});
 </script>
 
 <style scoped>
