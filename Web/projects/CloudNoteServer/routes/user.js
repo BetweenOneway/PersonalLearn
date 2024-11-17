@@ -524,4 +524,100 @@ router.post("/updateUserInfo",async (req,res)=>{
     return
 })
 
+/**
+ * 更新用户头像
+ */
+router.post("/upload/headPic",async (req,res)=>{
+    let output={
+        success:true,
+        status:'',
+        description:'',
+        data:[]
+    }
+    console.log("start update user info,req.body:",req.body);
+
+    //{nickname,sex,birthday}
+    let toUpdateInfo = req.body;
+    //目标状态
+    let userInfo = req.userInfo;
+
+    const t = await sqldb.sequelize.transaction();
+
+    try {
+        
+        let curDate = new Date().toLocaleString()
+
+        const affectedNum = await sqldb.User.update(
+            {
+                nickname:toUpdateInfo.nickname,
+                sex:toUpdateInfo.sex,
+                birthday:toUpdateInfo.birthday
+            },
+            {
+                where:{
+                    id:userInfo.id,
+                    status:1
+                },
+                transaction: t
+            }
+        );
+
+        console.log("updateResult:",affectedNum)
+        if(affectedNum[0] !== 1)
+        {
+            await t.rollback();
+            throw "更新用户信息失败"
+        }
+        //记录日志
+        {
+            //记录事件
+            const affectedNum = await sqldb.UserLog.create(
+                {
+                    desc:statusCode.EVENT_LIST.UPDATE_USER_INFO.desc,
+                    time:curDate,
+                    event:statusCode.EVENT_LIST.UPDATE_USER_INFO.code,
+                    u_id:userInfo.id
+                },
+                {
+                    //指定新增哪些字段
+                    fields:['desc','time','event','u_id'],
+                    transaction: t
+                }
+            );
+            console.log("affectedNum:",affectedNum);
+        }
+        await t.commit();
+        console.log("更新用户信息成功！")
+        //再次查询用户信息
+        const userBasicInfo = await sqldb.User.findOne(
+            {
+                attributes: ['id','email',['nickname','nickName'],['head_pic','headPic'],'level','time','sex','birthday'],
+                where: {
+                    id:userInfo.id,
+                    status:1
+                }
+            }
+        );
+        output.success = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_SUCCESS.description
+        output.data = userBasicInfo;
+        res.send(output);
+        return;
+    } catch (error) {
+        //出错处理
+        console.log(error)
+
+        t.rollback();
+
+        output.success = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_FAIL.description
+
+        res.send(output);
+    }
+
+    console.log("End of update user info")
+    return
+})
 module.exports=router;

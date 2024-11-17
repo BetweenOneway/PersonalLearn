@@ -249,6 +249,26 @@
         }
     }
 
+    /**
+     * 
+     * @param {Blob} 裁剪对象数据
+     * @param {String} 
+     */
+    const uploadHeadPic = ({blobData,dataURL})=>{
+        let API = {...userApi.updateHeadPic}
+        let formData = new FormData();
+        formData.append("file",blobData,"upload.png");
+
+        API.data = formData;
+        noteServerRequest(API).then(responseData=>{
+            if(!responseData) return;
+            //重置用户基本信息
+            setUserBasicInfo(responseData.data);
+            //
+            cropperRef.value.showCropperWindow();
+        })
+    }
+
     defineExpose({changeActive})
 </script>
 

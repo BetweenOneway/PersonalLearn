@@ -38,6 +38,14 @@ const userApi = {
         userPower:true,
         dataParam:false,
         successMessage:true
+    },
+    updateHeadPic:{
+        name:'更新用户头像',
+        url:'/user/upload/headPic',
+        method:'POST',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
     }
 }
 

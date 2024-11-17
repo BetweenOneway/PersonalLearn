@@ -133,6 +133,9 @@
     import "cropperjs/dist/cropper.css"
     import Cropper from 'cropperjs'
 
+    //自定义事件
+    const emits = defineEmits(['cut'])
+
     let cropper = null;
 
     let resultData = {
@@ -169,6 +172,12 @@
      * @param imgURL 图像base64地址
      */
     const showCropperWindow = (imgURL)=>{
+        if(!imgURL) 
+        {
+            //关闭窗口
+            showCropper.value = false;
+            return;
+        }
         resultData.blobData = null;
         resultData.dataURL = null;
 
@@ -189,11 +198,15 @@
             width:120,
             height:120,
         });
-        cropperCanvas.toBlob(blob=>{
-            resultData.blobData = blob;
-        })
+
         //转成Base64图像
         resultData.dataURL = cropperCanvas.toDataURL('img/png');
+
+        cropperCanvas.toBlob(blob=>{
+            resultData.blobData = blob;
+            //通知父组件 裁剪成功
+            emits('cut',resultData);
+        })
     }
 
     /**

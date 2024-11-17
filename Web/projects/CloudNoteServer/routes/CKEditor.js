@@ -35,20 +35,6 @@ router.post("/upload/pic",async(req,res)=>{
     }
 
     try{
-        // //验证用户是否登陆
-        // let userToken = req.body.userToken
-        // let validateInfo = await validate.IsUserValidate(userToken);
-        
-        // if(!validateInfo.isValidated)
-        // {
-        //     output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-        //     output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-        //     output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
-        //     res.send(output)
-        //     return
-        // }
-        // let userInfo = validateInfo.userInfo;
-
         //An array of files will be stored in req.files
         if(!req.files) {
             console.log("no files uploaded");
