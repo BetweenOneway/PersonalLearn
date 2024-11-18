@@ -11,18 +11,18 @@
                 
                 <!--裁剪预览区域-->
                 <n-space vertical justify="center" :size="24" :wrap-item="false" style="width:170px">
-                    <n-sapce vertical align="center">
+                    <n-space vertical align="center">
                         <div class="img-preview img-preview-120"></div>
                         <n-text>120*120</n-text>
-                    </n-sapce>
-                    <n-sapce vertical align="center">
+                    </n-space>
+                    <n-space vertical align="center">
                         <div class="img-preview img-preview-40"></div>
                         <n-text>40*40</n-text>
-                    </n-sapce>
-                    <n-sapce vertical align="center">
+                    </n-space>
+                    <n-space vertical align="center">
                         <div class="img-preview img-preview-36"></div>
                         <n-text>36*36</n-text>
-                    </n-sapce>
+                    </n-space>
                 </n-space>
             </n-space>
         </template>

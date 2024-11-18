@@ -535,7 +535,7 @@ router.post("/upload/headPic",async (req,res)=>{
         data:[]
     }
     console.log("start upload head pic,req.body:",req.body);
-
+    console.log("files:",req.files);
     //{nickname,sex,birthday}
     let toUpdateInfo = req.body;
     //目标状态
@@ -547,21 +547,27 @@ router.post("/upload/headPic",async (req,res)=>{
         
         let curDate = new Date().toLocaleString();
 
-        return;
+        output.success = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.description
+
+        console.log("Update user avatar success");
+
     } catch (error) {
         //出错处理
-        console.log(error)
+        console.log("Update user avatar fail:",error);
 
         t.rollback();
 
-        output.success = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_FAIL.success
-        output.status = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_FAIL.status
-        output.description = statusCode.SERVICE_STATUS.UPDATE_USER_INFO_FAIL.description
-
-        res.send(output);
+        output.success = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_FAIL.description
     }
 
     console.log("End of upload head pic")
+
+    res.send(output);
+
     return
 })
 module.exports=router;

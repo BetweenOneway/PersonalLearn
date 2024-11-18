@@ -287,6 +287,16 @@ SERVICE_STATUS={
         status:'SERVICE_025',
         description:'更新用户信息失败'
     },
+    UPDATE_USER_AVATAR_SUCCESS:{
+        success:true,
+        status:'SERVICE_025',
+        description:'更新用户头像成功'
+    },
+    UPDATE_USER_AVATAR_FAIL:{
+        success:false,
+        status:'SERVICE_025',
+        description:'更新用户头像失败'
+    },
 }
 
 EVENT_LIST = {
