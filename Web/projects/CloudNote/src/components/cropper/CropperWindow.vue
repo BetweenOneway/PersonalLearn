@@ -1,7 +1,7 @@
 <template>
     <!--头像上传窗口-->
     <n-modal v-model:show="showCropper" preset="card" closable segmented  
-    width="800px" height="560px" content-style="height:0" :mask-closable="false" :close-on-sec="false">
+    style="width:800px;height:560px" content-style="height:0" :mask-closable="false" :close-on-sec="false">
         <template #default>
             <n-space justify="space-between" :wrap-item="false" style="height: 100%">
                 <!--裁剪框元素-->
@@ -10,7 +10,7 @@
                 </div>
                 
                 <!--裁剪预览区域-->
-                <n-space vertical justify="center" :size="24" :wrap-item="false" style="width:170px">
+                <n-space vertical justify="center" :wrap-item="false" style="width:170px">
                     <n-space vertical align="center">
                         <div class="img-preview img-preview-120"></div>
                         <n-text>120*120</n-text>
@@ -111,7 +111,7 @@
                 </n-button-group>
                 <!--确定，取消-->
                 <n-button-group>
-                    <n-button @click="show=false">取消</n-button>
+                    <n-button @click="showCropper=false">取消</n-button>
                     <n-button @click="getCropperCanvas">
                         <template #icon>
                             <n-icon :component="ContentCutRound"></n-icon>
@@ -172,6 +172,7 @@
      * @param imgURL 图像base64地址
      */
     const showCropperWindow = (imgURL)=>{
+        console.log("Call show cropper window:",imgURL)
         if(!imgURL) 
         {
             //关闭窗口
@@ -194,6 +195,7 @@
      * 获取裁剪区域画布数据
      */
     const getCropperCanvas=()=>{
+        console.log("get cropper canvas");
         let cropperCanvas = cropper.getCropperCanvas({
             width:120,
             height:120,
@@ -222,10 +224,6 @@
 </script>
 
 <style scoped>
-    .cropper-view-box, .cropper-face {
-        border-radius: 50%;
-    }
-
     .img-preview{
         border:1px solid darkgray;
         border-radius: 50%;

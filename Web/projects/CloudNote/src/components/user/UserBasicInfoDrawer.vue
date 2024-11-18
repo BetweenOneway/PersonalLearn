@@ -6,7 +6,7 @@
             <n-space justify="center">
                 <label>
                     <n-avatar round :size="120" :src="head_image"></n-avatar>
-                    <input ref="fileInputRef" style="display:none" type="file" accept="image/jpeg,image/jpg,image/png,image/gif" @change="cropperRef.selectImageFile">
+                    <input ref="fileInputRef" style="display:none" type="file" accept="image/jpeg,image/jpg,image/png,image/gif" @change="selectImageFile">
                 </label>
             </n-space>
 
@@ -53,7 +53,7 @@
     </n-drawer>
 
     <!--裁剪图像窗口-->
-    <CropperWindow ref="cropperRef"  title="头像上传"/>
+    <CropperWindow ref="cropperRef"  title="头像上传" @cut="uploadHeadPic"/>
 </template>
 
 <script setup>
@@ -230,10 +230,17 @@
     const fileInputRef = ref(null);
 
     const selectImageFile = (e)=>{
+        console.log("Select Image file:",e.target);
         //选中图像的重置
-        picSrc.value = null;
         const {files} = e.target;
-        if(!!files || !files.length) return;
+        console.log("files:",files);
+        if(!files || !files.length) 
+        {
+            console.log(!!files);
+            console.log(!files.length);
+            console.log("no file selected");
+            return;
+        }
         const file = files[0];
         const reader = new FileReader();
         //读取文件 base64
