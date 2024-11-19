@@ -196,7 +196,7 @@
      */
     const getCropperCanvas=()=>{
         console.log("get cropper canvas");
-        let cropperCanvas = cropper.getCropperCanvas({
+        let cropperCanvas = cropper.getCroppedCanvas({
             width:120,
             height:120,
         });

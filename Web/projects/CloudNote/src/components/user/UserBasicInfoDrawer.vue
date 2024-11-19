@@ -266,6 +266,8 @@
         let formData = new FormData();
         formData.append("file",blobData,"upload.png");
 
+        console.log("get cropped data");
+        
         API.data = formData;
         noteServerRequest(API).then(responseData=>{
             if(!responseData) return;
