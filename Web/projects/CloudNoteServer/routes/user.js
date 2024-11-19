@@ -534,38 +534,114 @@ router.post("/upload/headPic",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start upload head pic,req.body:",req.body);
-    console.log("files:",req.files);
-    //{nickname,sex,birthday}
-    let toUpdateInfo = req.body;
-    //目标状态
+    console.log("start upload head pic");
+
+    let files = req.files;
     let userInfo = req.userInfo;
-
-    const t = await sqldb.sequelize.transaction();
-
-    try {
-        
-        let curDate = new Date().toLocaleString();
-
-        output.success = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.success
-        output.status = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.status
-        output.description = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.description
-
-        console.log("Update user avatar success");
-
-    } catch (error) {
-        //出错处理
-        console.log("Update user avatar fail:",error);
-
-        t.rollback();
-
-        output.success = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_FAIL.success
-        output.status = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_FAIL.status
-        output.description = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_FAIL.description
+    if(!files.length)
+    {
+        output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
+        output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status
+        output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description
     }
+    else{
+        const t = await sqldb.sequelize.transaction();
 
-    console.log("End of upload head pic")
+        try {
+            
+            let file = files[0];
+            console.log("file Info:",file);
+            let fileName = file.name;
+            let fileSuffixNameArr = fileName.split('.');
+            let fileSuffixName = fileSuffixNameArr[fileSuffixNameArr.length - 1];
+            
+            //上传到哪个文件夹下
+            let fileStorePath = path.join(path.dirname(__dirname),'public','imgs/avatar');
+            console.log("fileStorePath:",fileStorePath);
 
+            //存储在网络上的文件名 时间戳+后缀
+            let storageFileName = 'avatar' + '-' + userInfo.id + "."+ fileSuffixName;
+            console.log('storageFileName:',storageFileName);
+
+            //判断存储路径是否存在 如果不存在则创建文件夹
+            checkDirectory(fileStorePath);
+
+            //上传文件 将文件保存到指定目录下
+            file.mv(fileStorePath+'/'+storageFileName,err =>{
+                if(err)
+                {
+                    //上传失败错误处理
+                    console.log("upload fail:",err);
+                }
+                else
+                {
+                    console.log("file move success");
+                }
+            })
+            
+            //生成图片的虚拟地址 http://localhost:80/image/8081.jpg
+            let imageURL = req.protocol + '://' + req.get('host') + '/imgs/avatar/' +storageFileName;
+            console.log('imageURL',imageURL);
+
+            //更新用户信息
+            const affectedNum = await sqldb.User.update(
+                {
+                    head_pic:imageURL
+                },
+                {
+                    where:{
+                        id:userInfo.id,
+                        status:1
+                    },
+                    transaction: t
+                }
+            );
+    
+            console.log("updateResult:",affectedNum)
+            if(affectedNum[0] !== 1)
+            {
+                await t.rollback();
+                throw "更新用户头像信息失败"
+            }
+
+            //记录日志
+            //记录用户登录日志
+            const addLog = await sqldb.UserLog.create(
+                {
+                    desc:statusCode.EVENT_LIST.UPDATE_USER_AVATAR.desc,
+                    time:curDate,
+                    event:statusCode.EVENT_LIST.UPDATE_USER_AVATAR.code,
+                    u_id:userId
+                },
+                {
+                    //指定新增哪些字段
+                    fields:['desc','time','event','u_id'],
+                    transaction: t
+                }
+            );
+            
+            console.log("Add log:",addLog);
+            await t.commit();
+
+            output.success = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.description
+
+            console.log("Update user avatar success");
+
+        } catch (error) {
+            //出错处理
+            console.log("Update user avatar fail:",error);
+
+            t.rollback();
+
+            output.success = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_FAIL.success
+            output.status = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_FAIL.status
+            output.description = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_FAIL.description
+        }
+
+        console.log("End of upload head pic")
+    }
     res.send(output);
 
     return

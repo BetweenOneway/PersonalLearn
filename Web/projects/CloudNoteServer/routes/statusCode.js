@@ -372,6 +372,10 @@ EVENT_LIST = {
         code:'13',
         desc:'更新用户信息'
     },
+    UPDATE_USER_AVATAR:{
+        code:'13',
+        desc:'更新用户头像'
+    },
 }
 
 module.exports = {REDIS_STATUS,DB_STATUS,SERVICE_STATUS,EVENT_LIST}
