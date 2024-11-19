@@ -5,8 +5,8 @@
         <template #default>
             <n-space justify="space-between" :wrap-item="false" style="height: 100%">
                 <!--裁剪框元素-->
-                <div style="height:100%;width:calc(100%-200px)">
-                    <img id="image" :src="picSrc" style="max-height: 100%;max-width: 100%;">
+                <div style="height:100%;width:calc(100% - 200px)">
+                    <img id="image" :src="picSrc" style="max-height: 100%;max-width: 100%;" />
                 </div>
                 
                 <!--裁剪预览区域-->
