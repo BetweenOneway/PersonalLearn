@@ -46,23 +46,25 @@ void Learn()
 
 void CalcBoundary()
 {
-    //std::vector<Point3D> verts;
-    //std::vector<Point3D> resultVerts;
-    //ReadOBJFile(verts, "../ComputerGraphics/input/local_attMesh.obj");
-    ////Plane zPlane;
-    //Plane zPlane(Vector3(0.0f, 0.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f));
-    //zPlane.projectPoints(verts);
-    //WriteOBJFile(verts, "../ComputerGraphics/output/input.obj");
-    //CALC_BOUNDARY::CalcBoundaryMethod1(resultVerts,verts,30);
+    std::vector<Point3D> verts;
+    std::vector<Point3D> resultVerts;
+    ReadOBJFile(verts, "../ComputerGraphics/input/local_attMesh.obj");
+    //Plane zPlane;
+    Plane zPlane(Vector3(0.0f, 0.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f));
+    zPlane.projectPoints(verts);
+    WriteOBJFile(verts, "../ComputerGraphics/output/input.obj");
 
-    //resultVerts.clear();
-    //CALC_BOUNDARY::CalcBoundaryMethod2(resultVerts, verts, 10*10);
+    CALC_BOUNDARY::CalcBoundaryMethod1(resultVerts,verts,30);
 
-    //resultVerts.clear();
-    //CALC_BOUNDARY::ConvexHullMethod1(resultVerts, verts);
+    resultVerts.clear();
+    CALC_BOUNDARY::CalcBoundaryMethod2(resultVerts, verts, 10*10);
 
-    //CALC_BOUNDARY::ConvexHullMethod1();
-    CALC_BOUNDARY::BallConcaveMethod();
+    resultVerts.clear();
+    CALC_BOUNDARY::ConvexHullMethod1(resultVerts, verts);
+
+    CALC_BOUNDARY::ConvexHullMethod1();
+    // 有问题 生成不了
+    //CALC_BOUNDARY::BallConcaveMethod();
 }
 
 void CommonFunctions()
@@ -97,9 +99,9 @@ int main()
     //Bezier();
     //Plane();
     //Learn();
-    //CalcBoundary();
+    CalcBoundary();
     //CommonFunctions();
-    testAlgo();
+    //testAlgo();
     system("pause");
     return 0;
 }

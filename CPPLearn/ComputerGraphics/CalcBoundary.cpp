@@ -358,6 +358,7 @@ namespace CALC_BOUNDARY {
         }
         ofs.close();
     }
+
     void BallConcaveMethod()
     {
         std::vector<Point3D> verts;
@@ -371,23 +372,24 @@ namespace CALC_BOUNDARY {
 
         //WriteOBJFile(verts, "../ComputerGraphics/output/BallConcaveMethod_input.obj");
         //verts.push_back()
-        verts.push_back({ 168.0f,59.0f,0.0f });
-        verts.push_back({ 122.0f,111.0f,0.0f });
-        verts.push_back({ 117.0f,180.0f,0.0f });
-        verts.push_back({ 184.0f,228.0f,0.0f });
-        verts.push_back({ 111.0f,281.0f,0.0f });
+        //
+        //verts.push_back({ 168.0f,59.0f,0.0f });
+        //verts.push_back({ 122.0f,111.0f,0.0f });
+        //verts.push_back({ 117.0f,180.0f,0.0f });
+        //verts.push_back({ 184.0f,228.0f,0.0f });
+        //verts.push_back({ 111.0f,281.0f,0.0f });
 
-        verts.push_back({ 267.0f,292.0f,0.0f });
-        verts.push_back({ 366.0f,281.0f,0.0f });
-        verts.push_back({ 345.0f,231.0f,0.0f });
-        verts.push_back({ 363.0f,160.0f,0.0f });
-        verts.push_back({ 382.0f,114.0f,0.0f });
+        //verts.push_back({ 267.0f,292.0f,0.0f });
+        //verts.push_back({ 366.0f,281.0f,0.0f });
+        //verts.push_back({ 345.0f,231.0f,0.0f });
+        //verts.push_back({ 363.0f,160.0f,0.0f });
+        //verts.push_back({ 382.0f,114.0f,0.0f });
 
-        verts.push_back({ 303.0f,68.0f,0.0f });
-        verts.push_back({ 238.0f,156.0f,0.0f });
-        verts.push_back({ 274.0f,207.0f,0.0f });
-        verts.push_back({ 294.0f,145.0f,0.0f });
-        verts.push_back({ 247.0f,105.0f,0.0f });
+        //verts.push_back({ 303.0f,68.0f,0.0f });
+        //verts.push_back({ 238.0f,156.0f,0.0f });
+        //verts.push_back({ 274.0f,207.0f,0.0f });
+        //verts.push_back({ 294.0f,145.0f,0.0f });
+        //verts.push_back({ 247.0f,105.0f,0.0f });
 
 
         BallConcave ballConcave(verts);
