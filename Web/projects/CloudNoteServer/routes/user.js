@@ -579,7 +579,7 @@ router.post("/upload/headPic",async (req,res)=>{
                 }
             })
             
-            //生成图片的虚拟地址 http://localhost:80/image/8081.jpg
+            //生成图片的虚拟地址 http://localhost:80/image/avatar/avatar-[id].jpg
             let imageURL = req.protocol + '://' + req.get('host') + '/imgs/avatar/' +storageFileName;
             console.log('imageURL',imageURL);
 
