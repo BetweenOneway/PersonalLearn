@@ -257,7 +257,7 @@ export const getEditorConfigs =()=>({
         ]
     },
     simpleUpload: {
-        uploadUrl: '/note-server/ckeditor/upload/pic', // 上传图像服务器地址（可能需要解决跨域问题
+        uploadUrl: '/note-server/ckeditor/uploadPic', // 上传图像服务器地址（可能需要解决跨域问题
         // withCredentials: true, // 启用 XMLHttpRequest.withCredentials 属性
         // headers: {
         //     'Accept-Api-Key': 'ASK_D_FF', // 请求头设置来验证身份的（自己定义属性）

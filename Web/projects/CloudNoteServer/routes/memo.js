@@ -25,29 +25,17 @@ router.get("/getUserMemoList",async (req,res)=>{
         description:'',
         data:[]
     }
-
-    console.log("start getMemoList",req.query)
+    
+    console.log("start getMemoList")
     var userToken = req.get('userToken');
     const searchText = req.query.searchText;
     const filter = req.query.filter;
     let status = 1
-    let userInfo = {}
 
     try {
         //验证用户是否登录
-        let validateInfo = await validate.IsUserValidate(userToken);
-        if(!validateInfo.isValidated)
-        {
-            console.log("用户登录状态无效"+validateInfo.isValidated)
-            output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-            output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-            output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
-            res.send(output)
-            return
-        }
-        userInfo = validateInfo.userInfo
-        console.log("parsed userinfo")
-        console.log(userInfo)
+        let userInfo = req.userInfo;
+        console.log("parsed userinfo",userInfo)
         //组合查询条件
         let condition = {};
         condition['status'] = status;

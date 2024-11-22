@@ -57,12 +57,10 @@ class RedisOper {
                 this.redisClient.get(key).then((val,err)=>{
                     if(err)
                     {
-                        console.log("err:",err);
                         reject(err);
                     }
                     else
                     {
-                        console.log("val:",val);
                         resolve(val);
                     }
                 })

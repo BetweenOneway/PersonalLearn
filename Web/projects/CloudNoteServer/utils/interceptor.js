@@ -6,7 +6,7 @@ let validate = require("./validate");
 */
 async function ValidateUserToken(req)
 {
-    let userToken = req.get('userToken')
+    let userToken = req.get('userToken')??(req.query.userToken?? req.body.userToken)
     if(!userToken)
     {
         //没有传递userToken参数 跳过校验

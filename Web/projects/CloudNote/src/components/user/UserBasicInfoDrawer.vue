@@ -264,7 +264,7 @@
     const uploadHeadPic = ({blobData,dataURL})=>{
         let API = {...userApi.updateHeadPic}
         let formData = new FormData();
-        formData.append("file",blobData,"upload.png");
+        formData.append("avatar",blobData,"avatar.png");
 
         console.log("get cropped data");
         

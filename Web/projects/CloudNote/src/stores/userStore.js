@@ -64,6 +64,7 @@ export const useUserStore = defineStore(
          */
         const setUserInfo = (userToken,user)=>{
             //
+            console.log("set user info")
             token.value = userToken;
             setUserBasicInfo(user);
         }

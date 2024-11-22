@@ -12,10 +12,23 @@ var mailOper =require("../utils/mail")
 var statusCode = require("./statusCode")
 var router=express.Router();
 
+const path = require('path')
+const fs = require('fs');
+
 //MD5加密
 function cryptPwd(password) {
     var md5 = crypto.createHash('md5');
     return md5.update(password).digest('hex');
+}
+
+//判断目录是否存在，不存在则创建
+function checkDirectory(dirPath) {
+    fs.access(dirPath,async(err)=>{
+        if(err)
+        {
+            await fs.mkdir(dirPath, { recursive: true });
+        }
+    })
 }
 
 //用户登录
@@ -93,7 +106,7 @@ router.post("/login",async(req,res)=>{
                 try {
                     console.log("user login:set redis")
                     const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
-                    await redisOper.RedisSet(userTokenKey,JSON.stringify(userInfo),14*24*60*60)
+                    await redisOper.RedisSet(userTokenKey,JSON.stringify(userInfo),24*60*60)
 
                     console.log("user login:set redis success")
                    
@@ -527,7 +540,7 @@ router.post("/updateUserInfo",async (req,res)=>{
 /**
  * 更新用户头像
  */
-router.post("/upload/headPic",async (req,res)=>{
+router.post("/uploadHeadPic",async (req,res)=>{
     let output={
         success:true,
         status:'',
@@ -538,18 +551,18 @@ router.post("/upload/headPic",async (req,res)=>{
 
     let files = req.files;
     let userInfo = req.userInfo;
-    if(!files.length)
+    if(!files)
     {
         output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
         output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status
         output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description
+        console.log("upload head pic,no files upload:",files);
     }
     else{
         const t = await sqldb.sequelize.transaction();
 
         try {
-            
-            let file = files[0];
+            let file = files.avatar;
             console.log("file Info:",file);
             let fileName = file.name;
             let fileSuffixNameArr = fileName.split('.');
@@ -646,4 +659,5 @@ router.post("/upload/headPic",async (req,res)=>{
 
     return
 })
+
 module.exports=router;

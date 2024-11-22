@@ -27,7 +27,7 @@ function checkDirectory(dirPath) {
 }
 
 //图片上传
-router.post("/upload/pic",async(req,res)=>{
+router.post("/uploadPic",async(req,res)=>{
     console.log("uploadPic start,req.body:",req.body);
 
     //定义返回结构
@@ -35,7 +35,7 @@ router.post("/upload/pic",async(req,res)=>{
     }
 
     try{
-        //An array of files will be stored in req.files
+        //req.files是一个对象，每一个文件的名称就是这个对象中的一个属性
         if(!req.files) {
             console.log("no files uploaded");
             output['error']="No files upload";
