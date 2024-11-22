@@ -26,7 +26,12 @@ function checkDirectory(dirPath) {
     fs.access(dirPath,async(err)=>{
         if(err)
         {
-            await fs.mkdir(dirPath, { recursive: true });
+            await fs.mkdir(dirPath, 
+                { recursive: true },
+                (err) => {
+                    if (err) throw err;
+                }
+            );
         }
     })
 }
@@ -551,6 +556,8 @@ router.post("/uploadHeadPic",async (req,res)=>{
 
     let files = req.files;
     let userInfo = req.userInfo;
+    let curDate = new Date().toLocaleString();
+
     if(!files)
     {
         output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
@@ -560,7 +567,7 @@ router.post("/uploadHeadPic",async (req,res)=>{
     }
     else{
         const t = await sqldb.sequelize.transaction();
-
+        
         try {
             let file = files.avatar;
             console.log("file Info:",file);
@@ -624,7 +631,7 @@ router.post("/uploadHeadPic",async (req,res)=>{
                     desc:statusCode.EVENT_LIST.UPDATE_USER_AVATAR.desc,
                     time:curDate,
                     event:statusCode.EVENT_LIST.UPDATE_USER_AVATAR.code,
-                    u_id:userId
+                    u_id:userInfo.id
                 },
                 {
                     //指定新增哪些字段
