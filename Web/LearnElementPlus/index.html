@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <script src="https://unpkg.com/vue@3"></script>
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-plus"></script>
+    <title>Element Plus demo</title>
+    <style>
+        .el-container{
+            height: 100vh;
+        }
+        .el-header{
+            background-color: aqua;
+        }
+        .el-main{
+            background-color: burlywood;
+        }
+        .el-aside{
+            background-color: cornflowerblue;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <el-button>{{ message }}</el-button>
+      <el-container>
+        <el-header>Header</el-header>
+        <el-main>Main</el-main>
+      </el-container>
+      <p>el-col el-row </p>
+      <el-row>
+        <el-col :span="6">1111</el-col>
+        <el-col :span="6">2222</el-col>
+        <el-col :span="6">3333</el-col>
+        <el-col :span="6">4444</el-col>
+      </el-row>
+
+      <p>Aside container</p>
+      <div>
+        <el-container>
+          <el-aside width="200px">Aside</el-aside>
+          <el-container>
+            <el-header>Header</el-header>
+            <el-main>Main</el-main>
+          </el-container>
+        </el-container>
+      </div>
+    </div>
+    <script>
+      const App = {
+        data() {
+          return {
+            message: "Hello Element Plus",
+          };
+        },
+      };
+      const app = Vue.createApp(App);
+      app.use(ElementPlus);
+      app.mount("#app");
+    </script>
+  </body>
+</html>
