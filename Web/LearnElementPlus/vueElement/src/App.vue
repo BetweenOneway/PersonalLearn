@@ -1,27 +1,22 @@
 <script setup>
+
+import { RouterView } from 'vue-router';
+import MainTopToolBar from './components/MainTopToolBar.vue';
 </script>
 
 <template>
-    <div>
-      <el-container>
-        <el-header>Header</el-header>
-        <el-main>Main</el-main>
-        <el-footer>Footer</el-footer>
-      </el-container>
-    </div>
+    <el-container>
+        <el-header>
+            <MainTopToolBar></MainTopToolBar>
+        </el-header>
+        <el-main>
+            <RouterView />
+        </el-main>
+    </el-container>
 </template>
 
 <style scoped>
 .el-container{
     height: 100vh;
-}
-.el-header{
-    background-color: aqua;
-}
-.el-main{
-    background-color: burlywood;
-}
-.el-aside{
-    background-color: cornflowerblue;
 }
 </style>
