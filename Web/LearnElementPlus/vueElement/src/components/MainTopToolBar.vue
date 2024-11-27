@@ -1,8 +1,8 @@
 <template>
-    <el-row justify="space-between">
+    <el-row justify="space-between" align="center" style="height: 100%;">
         <el-text>之间</el-text>
         <el-space>
-            <el-button v-if="userId === null" @click="toLogin">登录</el-button>
+            <el-button type="primary" v-if="userId === null" @click="toLogin">登录</el-button>
             <el-avatar v-else :icon="UserFilled" @click="showUserMenu"/>
         </el-space>
     </el-row>
@@ -21,3 +21,6 @@
         userId.value = null;
     }
 </script>
+
+<style>
+</style>
