@@ -36,9 +36,7 @@ const banners= ref([
 <template>
     <el-carousel >
         <el-carousel-item v-for="banner in banners" :key="banner.id" @click="void(0)">
-            <div style="height: 100%;width: 100%;background-color: aqua;">
-                <el-image :src="banner.src" @click="" fit="cover"></el-image>
-            </div>
+            <el-image :src="banner.src" @click="" style="width:100%;height: 100%;" fit="cover"></el-image>
         </el-carousel-item>
     </el-carousel>
 </template>
