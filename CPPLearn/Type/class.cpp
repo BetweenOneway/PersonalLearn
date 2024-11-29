@@ -184,6 +184,7 @@ namespace CLASS_TEST {
     {
         m_ptr->func();
     }
+
     void testClassPassPointer()
     {
         //Class1 c1(1);
@@ -303,4 +304,11 @@ namespace CLASS_TEST {
         cout << a << endl;
     }
 
+    void testAccess()
+    {
+        Class1 obj(10);
+
+        //int* pSecret = reinterpret_cast<int*>(static_cast<char*>(static_cast<void*>(&obj)) + offsetof(Class1, m_num));
+
+    }
 }
