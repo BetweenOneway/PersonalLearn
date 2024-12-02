@@ -1,53 +1,33 @@
-<script setup>
-import { ref } from 'vue';
-//广告图
-const banners= ref([
-    {
-        id:1,
-        src:"https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg",
-        to:"",
-        offsite:true,//是否站外地址
-        newTab:true//是否新标签页方式打开
-    },
-    {
-        id:2,
-        src:"https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg",
-        to:"",
-        offsite:true,//是否站外地址
-        newTab:true//是否新标签页方式打开
-    },
-    {
-        id:3,
-        src:"https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg",
-        to:"",
-        offsite:true,//是否站外地址
-        newTab:true//是否新标签页方式打开
-    },
-    {
-        id:4,
-        src:"https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg",
-        to:"",
-        offsite:true,//是否站外地址
-        newTab:true//是否新标签页方式打开
-    },
-]);
-</script>
-
 <template>
-    <el-carousel >
-        <el-carousel-item v-for="banner in banners" :key="banner.id" @click="void(0)">
-            <el-image :src="banner.src" @click="" style="width:100%;height: 100%;" fit="cover"></el-image>
-        </el-carousel-item>
-    </el-carousel>
+    <div class="container pt-6 pb-6">
+        <el-row align="middle">
+            <el-col :span="12">
+                <h1 class="caption">云笔记</h1>
+                <p>任何时间 任何地点 任何设备 一触即达</p>
+                <el-button type="primary" size="large">开始使用</el-button>
+            </el-col>
+            <el-col :span="12">
+                <el-image :src="illustration3"></el-image>
+            </el-col>
+        </el-row>
+    </div>
 </template>
 
-<style>
-.el-carousel{
-    height:100%;
-}
+<script setup>
+    import illustration3 from '@/assets/img/illustrations/illustration-3.svg'
+</script>
 
-.el-carousel__container
-{
-    height: 100% !important;
+<style scoped>
+@import url('@/assets/main.css');
+.pt-6 {
+    padding-top:6rem;
+}
+.pb-6 {
+    padding-bottom:6rem;
+}
+.caption{
+    font-size:80px;
+    font-weight: 900;
+    line-height: 1;
 }
 </style>

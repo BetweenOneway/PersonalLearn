@@ -6,7 +6,7 @@ import MainTopToolBar from './components/MainTopToolBar.vue';
 
 <template>
     <el-container>
-        <el-header style="height: 64px;padding:0 20px;">
+        <el-header>
             <MainTopToolBar></MainTopToolBar>
         </el-header>
         <el-main>
@@ -16,7 +16,9 @@ import MainTopToolBar from './components/MainTopToolBar.vue';
 </template>
 
 <style scoped>
+    @import url('@/assets/main.css');
     .el-container{
         height: 100vh;
     }
+    
 </style>
