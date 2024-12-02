@@ -1,4 +1,6 @@
 <template>
+    <MainTopToolBar></MainTopToolBar>
+
     <div class="container pt-6 pb-6">
         <el-row align="middle">
             <el-col :span="12">
@@ -12,8 +14,10 @@
         </el-row>
     </div>
 </template>
+    
 
 <script setup>
+    import MainTopToolBar from '@/components/MainTopToolBar.vue';
     import illustration3 from '@/assets/img/illustrations/illustration-3.svg'
 </script>
 

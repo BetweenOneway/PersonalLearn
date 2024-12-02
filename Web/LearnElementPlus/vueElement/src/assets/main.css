@@ -7,6 +7,10 @@
     padding-left: 15px;
 }
 
+.el-container{
+    height: 100vh;
+}
+
 .el-header,
 .el-footer,
 .el-main,
