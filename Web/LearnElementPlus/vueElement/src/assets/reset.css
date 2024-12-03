@@ -11,3 +11,8 @@ html,body {
     user-select: none;
     cursor: default
 }
+
+html,body {
+    background: var(--fill-9);
+    color: var(--text-4)
+}
