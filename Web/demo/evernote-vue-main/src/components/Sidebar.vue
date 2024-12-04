@@ -11,7 +11,8 @@
       <el-sub-menu index="2">  <!--笔记本列表-->
         <template #title>
           <Folder class="styleIcon"/>
-          <span>我的笔记本</span></template>
+          <span>我的笔记本</span>
+        </template>
         <el-scrollbar max-height="200px">
           <el-menu-item v-for="notebook in store.notebookList" :index="notebook.id.toString()" :key="notebook.id"
                         :class="{active:notebook.id === store.curNotebook.id}"

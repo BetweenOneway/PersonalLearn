@@ -1,18 +1,21 @@
 <template>
-    <MainTopToolBar></MainTopToolBar>
-
-    <div class="container pt-6 pb-6">
-        <el-row align="middle">
-            <el-col :span="12">
-                <h1 class="caption">云笔记</h1>
-                <p class="desc mb-1">任何时间 任何地点 任何设备 一触即达</p>
-                <el-button type="primary" size="large" class="mt-3">开始使用</el-button>
-            </el-col>
-            <el-col :span="12">
-                <el-image :src="illustration3"></el-image>
-            </el-col>
-        </el-row>
-    </div>
+    <el-container>
+        <el-header>
+            <MainTopToolBar></MainTopToolBar>
+        </el-header>
+        <div class="container pt-6 pb-6">
+            <el-row align="middle">
+                <el-col :span="12">
+                    <h1 class="caption">云笔记</h1>
+                    <p class="desc mb-1">任何时间 任何地点 任何设备 一触即达</p>
+                    <el-button type="primary" size="large" class="mt-3">开始使用</el-button>
+                </el-col>
+                <el-col :span="12">
+                    <el-image :src="illustration3"></el-image>
+                </el-col>
+            </el-row>
+        </div>
+    </el-container>
 </template>
     
 
