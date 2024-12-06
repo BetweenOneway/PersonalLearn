@@ -1,47 +1,53 @@
 <template>
+    <div>
+        <el-space direction="vertical" style="width:200px" wrap="false">
+            <div style="border:1px solid red;width: 100px;height: 100px;">1</div>
+            <div style="border:1px solid red;width: 100px;height: 100px;">2</div>
+        </el-space>
+    </div>
     <el-container class="home_container">
-    <!-- 页面主体区域 -->
-    <el-container>
-      <!-- 侧边栏 -->
-      <el-aside :width="isCollapse ? '64px':'200px'">
-        <div class="toggle-button" @click="toggleCollapse">|||</div>
-        <!-- 侧边栏菜单区域 -->
-        <el-menu active-text-color="#409Eff"
-            background-color="#545c64"
-            text-color="#fff" unique-opened :collapse="isCollapse" :collapse-transition="false">
-            <!-- 一级菜单 -->
-            <el-sub-menu index="1">
-                <template #title>
-                    <el-icon><location /></el-icon>
-                    <span>Navigator One</span>
-                </template>
-                <el-menu-item index="1-1">item one</el-menu-item>
-                <el-menu-item index="1-2">item two</el-menu-item>
-                <el-menu-item index="1-3">item three</el-menu-item>
-                <el-sub-menu index="1-4">
-                    <template #title>item four</template>
-                    <el-menu-item index="1-4-1">item one</el-menu-item>
-                </el-sub-menu>
-            </el-sub-menu>
-            <el-sub-menu :index="item.id+''" v-for="item in menulist" :key="item.id">
-                <!-- 一级菜单模板区域 -->
-                <template #title>
-                    <el-icon><location /></el-icon>
-                    <span>{{item.authName}}</span>
-                </template>
-                <!-- 二级菜单 -->
-                <el-menu-item :index="subItem.id" v-for="subItem in item.children" :key="subItem.id">
-                    <template #title>
-                        <span>{{subItem.authName}}</span>
-                    </template>
-                </el-menu-item>
-            </el-sub-menu>
-        </el-menu>
-      </el-aside>
-      <!-- 右侧内容主体区域 -->
-      <el-main>Main</el-main>
+        <!-- 页面主体区域 -->
+        <el-container>
+            <!-- 侧边栏 -->
+            <el-aside :width="isCollapse ? '64px':'200px'">
+                <div class="toggle-button" @click="toggleCollapse">|||</div>
+                <!-- 侧边栏菜单区域 -->
+                <el-menu active-text-color="#409Eff"
+                    background-color="#545c64"
+                    text-color="#fff" unique-opened :collapse="isCollapse" :collapse-transition="false">
+                    <!-- 一级菜单 -->
+                    <el-sub-menu index="1">
+                        <template #title>
+                            <el-icon><location /></el-icon>
+                            <span>Navigator One</span>
+                        </template>
+                        <el-menu-item index="1-1">item one</el-menu-item>
+                        <el-menu-item index="1-2">item two</el-menu-item>
+                        <el-menu-item index="1-3">item three</el-menu-item>
+                        <el-sub-menu index="1-4">
+                            <template #title>item four</template>
+                            <el-menu-item index="1-4-1">item one</el-menu-item>
+                        </el-sub-menu>
+                    </el-sub-menu>
+                    <el-sub-menu :index="item.id+''" v-for="item in menulist" :key="item.id">
+                        <!-- 一级菜单模板区域 -->
+                        <template #title>
+                            <el-icon><location /></el-icon>
+                            <span>{{item.authName}}</span>
+                        </template>
+                        <!-- 二级菜单 -->
+                        <el-menu-item :index="subItem.id" v-for="subItem in item.children" :key="subItem.id">
+                            <template #title>
+                                <span>{{subItem.authName}}</span>
+                            </template>
+                        </el-menu-item>
+                    </el-sub-menu>
+                </el-menu>
+            </el-aside>
+            <!-- 右侧内容主体区域 -->
+            <el-main>Main</el-main>
+        </el-container>
     </el-container>
-  </el-container>
 </template>
 
 <script setup>
