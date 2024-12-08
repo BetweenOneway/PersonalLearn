@@ -1,21 +1,19 @@
 <template>
-    <div style="background-color:#E4E9F7">
-        <el-container style="position:relative">
-            <div class="function-menu">function menu
-                <el-icon class="toggle" @click="toggleNav"><ArrowRight /></el-icon>
-            </div>
-            <el-container>
-                <el-aside class="show-box" width="312px">笔记本内容区域</el-aside>
-                <el-container class="show-box">
-                    <el-header class="show-box">标题栏</el-header>
-                    <el-main class="show-box">编辑器区域</el-main>
-                </el-container>
-            </el-container>
-        </el-container>
-    </div>
+    <el-container>
+        <el-header>
+            <MainTopToolBar2 />
+        </el-header>
+        <el-aside width="200px" height="100%">
+            <NoteBook />
+        </el-aside>
+        <el-main>
+            main area
+        </el-main>
+    </el-container>
 </template>
 
 <script setup>
+    import MainTopToolBar2 from '@/components/MainTopToolBar2.vue';
     import NoteBook from '@/components/Note/NoteBook.vue';
 </script>
 
