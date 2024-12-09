@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <!-- <div>
         <el-space direction="vertical" style="width:200px" wrap="false">
             <div style="border:1px solid red;width: 100px;height: 100px;">1</div>
             <div style="border:1px solid red;width: 100px;height: 100px;">2</div>
         </el-space>
-    </div>
+    </div> -->
     <el-container class="home_container">
         <!-- 页面主体区域 -->
         <el-container>
@@ -97,8 +97,8 @@ menulist.value.push({
 
 let isCollapse = ref(false);
 function toggleCollapse () {
-      isCollapse.value = !isCollapse.value
-    }
+    isCollapse.value = !isCollapse.value
+}
 
 </script>
 
