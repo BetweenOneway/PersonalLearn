@@ -1,6 +1,12 @@
 <template>
     <el-space direction="vertical" class="nav">
-        <el-space direction="horizontal" alignment="center">
+        <el-space>
+            <el-link href="/" :underline="false">
+                <el-image :src="logoDarkImage"></el-image>
+            </el-link>
+        </el-space>
+        <!--用户信息区域-->
+        <el-space direction="horizontal" alignment="center" class="user">
             <span class="image">
                 <el-avatar :icon="UserFilled"/>
             </span>
@@ -9,9 +15,11 @@
                 <span class="software">Admin</span>
             </el-space>
         </el-space>
+        <!--功能按钮区域-->
         <div>
             <el-button type="primary" :icon="Plus">新建笔记</el-button>
         </div>
+        <!--笔记列表区域-->
         <el-space>
             <el-menu :collapse="isCollapsed">
                 <el-sub-menu index="1">
@@ -38,6 +46,7 @@
 <script setup>
 import { Plus, Delete, UserFilled } from '@element-plus/icons-vue'
 import { ref } from 'vue';
+import logoDarkImage from '@/assets/img/brand/dark.svg'
 
 //笔记本列表
 const noteBookList =[];
@@ -45,6 +54,12 @@ const noteBookList =[];
 let isCollapsed = ref(false);
 
 let menulist=ref([]);
+
+function loadNoteList()
+{
+
+}
+
 </script>
 
 <style scoped>
@@ -80,5 +95,9 @@ let menulist=ref([]);
     font-size: 20px;
     margin-top: -2px;
     display: block;
+}
+
+.user{
+    margin-top: 20px;
 }
 </style>

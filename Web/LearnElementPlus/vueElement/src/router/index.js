@@ -4,6 +4,8 @@ import Note from '@/views/Note.vue'
 import Test from '@/views/test/test.vue'
 import menu from '@/components/test/menu.vue'
 import layout from '@/components/test/layout.vue'
+import element from '@/components/test/element.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -31,6 +33,11 @@ const router = createRouter({
               path: 'layout',
               component: layout
             },
+            {
+                // 当 /test/layout 匹配成功，
+                path: 'element',
+                component: element
+              },
         ]
     },
   ],

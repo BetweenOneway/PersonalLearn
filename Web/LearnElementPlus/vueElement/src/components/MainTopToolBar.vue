@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <el-row justify="space-between" style="height: 100%;">
-            <el-link href="https://element-plus.org" :underline="false">
+            <el-link href="/" :underline="false">
                 <el-image :src="logoDarkImage"></el-image>
             </el-link>
             <el-space>
