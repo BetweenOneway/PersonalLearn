@@ -21,7 +21,7 @@
         </div>
         <!--笔记列表区域-->
         <el-space>
-            <el-menu :collapse="isCollapsed">
+            <el-menu :collapse="isCollapsed" style="--el-menu-bg-color:transparent;">
                 <el-sub-menu index="1">
                     <template #title>
                         <el-icon><location /></el-icon>
@@ -72,13 +72,14 @@ function loadNoteList()
 
 .nav{
     padding:10px 14px;
+    background: #F9FAFB;
 }
 .image img {
     width: 45px;
     border-radius: 6px;
 }
 .el-menu{
-    border:none
+    border:none;
 }
 .text{
     font: 500 17px "";
