@@ -5,7 +5,7 @@
                 <el-image :src="logoDarkImage"></el-image>
             </el-link>
             <el-space>
-                <el-button type="primary" v-if="userId === null" @click="toLogin">登录</el-button>
+                <el-button type="primary" v-if="userId === null" @click="toHerf('/login')">登录</el-button>
                 <el-avatar v-else :icon="UserFilled" @click="showUserMenu"/>
             </el-space>
         </el-row>
@@ -16,6 +16,7 @@
     import { ref } from 'vue';
     import { UserFilled } from '@element-plus/icons-vue'
     import logoDarkImage from '@/assets/img/brand/dark.svg'
+    import { toHerf } from '@/router/go';
 
     let userId = ref(null);
 
