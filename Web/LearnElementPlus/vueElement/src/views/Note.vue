@@ -1,6 +1,6 @@
 <template>
     <el-container>
-        <el-aside width="200px" class="nav-bar">
+        <el-aside width="220px" class="nav-bar">
             <NoteNav />
         </el-aside>
         <el-container>
@@ -24,6 +24,7 @@
 
 .nav-bar{
     background-color: var(--shell-color);
+    overflow: hidden;
 }
 
 .note-container{

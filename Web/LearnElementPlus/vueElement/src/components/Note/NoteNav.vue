@@ -6,13 +6,13 @@
             </el-link>
         </el-space>
         <!--用户信息区域-->
-        <el-space direction="horizontal" alignment="center" class="user">
+        <el-space alignment="center" direction="vertical" class="user">
             <span class="image">
-                <el-avatar :icon="UserFilled"/>
+                <el-avatar :size="52" :src="localAvatar"></el-avatar>
             </span>
-            <el-space direction="vertical" alignment="center" class="text">
+            <el-space class="user-info" spacer="|">
                 <span class="name">王者伟业</span>
-                <span class="software">Admin</span>
+                <el-tag type="primary">VIP 1</el-tag>
             </el-space>
         </el-space>
         <!--功能按钮区域-->
@@ -47,6 +47,7 @@
 import { Plus, Delete, UserFilled } from '@element-plus/icons-vue'
 import { ref } from 'vue';
 import logoDarkImage from '@/assets/img/brand/dark.svg'
+import localAvatar from '@/assets/img/avatar/rumi.jpeg'
 
 //笔记本列表
 const noteBookList =[];
@@ -74,10 +75,7 @@ function loadNoteList()
     padding:10px 14px;
     background: #F9FAFB;
 }
-.image img {
-    width: 45px;
-    border-radius: 6px;
-}
+
 .el-menu{
     border:none;
 }
@@ -87,6 +85,10 @@ function loadNoteList()
     opacity: 1;
 }
 
+.user-info{
+    margin:0 auto 0;
+    font-size: 12px;
+}
 .name {
     margin-top: 2px;
     font:600 18px;
