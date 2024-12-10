@@ -7,16 +7,14 @@
             <ul>
                 <li v-for="note in noteList" :key="note.id" class="file-item">
                     <div class="file-title">
-
-                            <el-icon :size="20" class="file-icon">
-                                <Edit />
-                            </el-icon>
-
+                        <el-icon :size="20" class="file-icon">
+                            <Edit />
+                        </el-icon>
                         <el-space style="flex:1">
                             <el-text class="title">{{note.title}}</el-text>
                         </el-space>
-                        <el-icon :size="20">
-                            <More color="#FFFFFF"/>
+                        <el-icon>
+                            <More/>
                         </el-icon>
                     </div>
                     <el-space class="file-info">
@@ -41,6 +39,18 @@
         {
             id:2,
             title:'note 2',
+            updatedAt:'2024-12-09',
+            fileSize:'4KB'
+        },
+        {
+            id:3,
+            title:'note 3',
+            updatedAt:'2024-12-09',
+            fileSize:'4KB'
+        },
+        {
+            id:4,
+            title:'note 4',
             updatedAt:'2024-12-09',
             fileSize:'4KB'
         },

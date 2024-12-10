@@ -7,10 +7,7 @@
             <el-aside width="200px">
                 <NoteList />
             </el-aside>
-            <el-container class="note-container">
-                <el-header>标题区域</el-header>
-                <el-main>笔记内容区域</el-main>
-            </el-container>
+            <NoteEdit />
         </el-container>
     </el-container>
 </template>
@@ -18,6 +15,7 @@
 <script setup>
     import NoteNav from '@/components/Note/NoteNav.vue';
     import NoteList from '@/components/Note/NoteList.vue';
+    import NoteEdit from '@/components/Note/NoteEdit.vue';
 </script>
 
 <style scoped>

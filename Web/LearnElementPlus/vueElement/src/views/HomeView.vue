@@ -8,7 +8,7 @@
                 <el-col :span="12">
                     <h1 class="caption">云笔记</h1>
                     <p class="desc mb-1">任何时间 任何地点 任何设备 一触即达</p>
-                    <el-button type="primary" size="large" class="mt-3">开始使用</el-button>
+                    <el-button type="primary" size="large" class="mt-3" @click="toHerf('/note')">开始使用</el-button>
                 </el-col>
                 <el-col :span="12">
                     <el-image :src="illustration3"></el-image>
@@ -22,6 +22,7 @@
 <script setup>
     import MainTopToolBar from '@/components/MainTopToolBar.vue';
     import illustration3 from '@/assets/img/illustrations/illustration-3.svg'
+    import { toHerf } from '@/router/go';
 </script>
 
 <style scoped>
