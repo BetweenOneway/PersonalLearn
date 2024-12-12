@@ -5,7 +5,7 @@
                 <el-image :src="logoDarkImage"></el-image>
             </el-link>
             <el-space>
-                <el-button type="primary" v-if="userId === null" @click="toHerf('/login')">登录</el-button>
+                <el-button type="primary" v-if="userId === null" @click="toHerf('/user/login')">登录</el-button>
                 <el-avatar v-else :icon="UserFilled" @click="showUserMenu"/>
             </el-space>
         </el-row>

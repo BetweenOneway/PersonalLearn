@@ -9,6 +9,7 @@
             <!--功能按钮区域-->
             <el-space>
                 <el-button>保存</el-button>
+                <el-button @click="EditOrPreviewNote">{{editOrPreviewButtonCaption}}</el-button>
                 <el-icon>
                     <More/>
                 </el-icon>
@@ -21,6 +22,21 @@
 
 <script setup>
     import { More } from '@element-plus/icons-vue'
+    import { ref } from 'vue';
+    let isEditStatus = ref(false);
+    let editOrPreviewButtonCaption = ref('编辑');
+
+    function EditOrPreviewNote()
+    {
+        isEditStatus.value = !isEditStatus.value;
+        if(isEditStatus.value)
+        {
+            editOrPreviewButtonCaption.value='预览'
+        }
+        else{
+            editOrPreviewButtonCaption.value='编辑'
+        }
+    }
 </script>
 
 <style scoped>

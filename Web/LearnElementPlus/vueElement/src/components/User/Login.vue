@@ -20,8 +20,8 @@
                         </el-form-item>
                     </el-form>
                     <el-row justify="space-between">
-                        <el-link href="/" :underline="false">
-                            <span>注册</span>
+                        <el-link href="/user/register" :underline="false">
+                            <span>没有账号？去注册</span>
                         </el-link>
                         <el-link href="/" :underline="false">
                             <span>忘记密码?</span>
