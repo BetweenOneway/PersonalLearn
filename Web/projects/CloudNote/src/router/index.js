@@ -36,6 +36,11 @@ const routes = [
         meta:{title:'回收站'}
     },
     {
+        path:'/getbackpassword',
+        component:()=>import('../views/getback/PasswordGetBackView.vue'),
+        meta:{title:'忘记密码'}
+    },
+    {
         path:'/404',
         component:()=>import('../views/result/NoteFoundView.vue'),
         meta:{title:'404'}
