@@ -293,8 +293,54 @@ void testVectorAddress()
     cout << p << endl;
 }
 
+
+class testDemo
+{
+public:
+    testDemo(int num) :num(num) {
+        std::cout << "调用构造函数" << endl;
+    }
+    testDemo(const testDemo& other) :num(other.num) {
+        std::cout << "调用拷贝构造函数" << endl;
+    }
+    testDemo(testDemo&& other) :num(other.num) {
+        std::cout << "调用移动构造函数" << endl;
+    }
+
+    testDemo& operator=(const testDemo& other);
+private:
+    int num;
+};
+testDemo& testDemo::operator=(const testDemo& other) {
+    this->num = other.num;
+    return *this;
+}
+
+void testVectorEfficent()
+{
+    vector<testDemo> v1,v2;
+    v1.clear();
+    v2.clear();
+
+    vector<testDemo> src{ 1,2,3,4 };
+    cout << "=======case 1========" << endl;
+    v1.insert(v1.end(), src.begin(), src.end());
+    cout << "=====case 2======" << endl;
+    for (auto& el : src)
+    {
+        v2.emplace_back(el);
+    }
+}
+
 void testVectorInsert()
 {
+    auto printVector = [&](const std::vector<int>& vec) {
+        for (auto& el : vec)
+        {
+            cout << el << " ";
+        }
+        cout << endl;
+    };
     //insert表示的意思是在指定位置之前插入 insertBefore
     //是否可以在空的vector前插入 可以
     vector<int> ve;
@@ -307,6 +353,18 @@ void testVectorInsert()
         cout << val << " ";
     }
     cout << endl;
+
+    {
+        //测试是否可以在空容器后插入 => 可以
+        vector<int> ve;
+        ve.clear();
+
+        vector<int> v1{ 1,2,3,4 };
+
+        ve.insert(ve.end(), v1.begin(), v1.end());
+
+        printVector(ve);
+    }
 
     vector<int> v(5, 5);
     vector<int> v1{ 1,2,3,4 };

@@ -10,5 +10,6 @@ namespace CONTAINER_TEST {
     void testPair();
     void compareVectorArray();
     void testVectorConstruct();
+    void testVectorEfficent();
 }
 

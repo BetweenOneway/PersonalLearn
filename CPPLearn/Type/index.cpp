@@ -276,7 +276,8 @@ void testContainer()
     //CONTAINER_TEST::testPair();
     //CONTAINER_TEST::testVectorErase();
     //CONTAINER_TEST::compareVectorArray();
-    CONTAINER_TEST::testVectorConstruct();
+    //CONTAINER_TEST::testVectorConstruct();
+    CONTAINER_TEST::testVectorEfficent();
 }
 
 void testWired()
