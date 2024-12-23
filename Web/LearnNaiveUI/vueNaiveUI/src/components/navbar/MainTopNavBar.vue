@@ -1,6 +1,8 @@
 <template>
     <n-space justify="space-between" align="center" style="height: 100%;">
-        <n-text>之间笔记</n-text>
+            <a href="/">
+                <n-image :src="logoDarkImage"></n-image>
+            </a>
         <n-space align="center" :wrap-item="false">
             <!--头像-->
             <n-popover v-model:show = "userMenuShow" trigger="click" width="260px" content-style="padding:10px">
@@ -54,6 +56,8 @@
 
     import { ref } from "vue";
     import {storeToRefs} from 'pinia'
+
+    import logoDarkImage from '@/assets/img/brand/dark.svg'
 
     //主题信息
     const themeStore = useThemeStore()
