@@ -1,11 +1,12 @@
 <template>
-    <div class="container">
-        <img class="item" src="../../assets/img/avatar/rumi.jpeg" alt="">
-        <img class="item" src="../../assets/img/avatar/rumi.jpeg" alt="">
+    <!--再套一个div，原来的flex布局会失效-->
+    <div style="width: 100%;height: 100%;">
+        <div class="container">
+            <img class="item" src="../../assets/img/avatar/rumi.jpeg" alt="">
+            <img class="item" src="../../assets/img/avatar/rumi.jpeg" alt="">
+        </div>
     </div>
-    <n-flex justify="space-between" align="center" style="width:100%;margin:0 auto" :wrap="false">
-        <n-button>Oops 2</n-button>
-    </n-flex>
+
 </template>
 
 <script setup>
@@ -22,13 +23,8 @@ import illustration3 from '@/assets/img/illustrations/illustration-3.svg'
 }
 
 .item{
-    border: 1px solid red;
-    width: 300px;
-    height: 100px;
-    object-fit: fill;
-}
-
-.block{
-    border: 1px solid red;
+    flex:1;
+    width: 100%;
+    object-fit: contain;
 }
 </style>
