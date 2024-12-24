@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .container {
+                width: 100%;
+                height: 100vh;
+                display: flex;
+                overflow: hidden;
+                background: orchid;
+            }
+            .left {
+                flex: 1;
+                height: 100%;
+                background: palegoldenrod;
+            }
+            .right {
+                flex: 1;
+                height: 100%;
+                background: purple;
+            }
+            img{
+                width: 100%;/*实现图片填满父元素的重要属性，否则会溢出*/
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="left">
+                <img src="./img/illustration-3.svg" alt="">
+            </div>
+            <div class="right">
+                <img src="./img/illustration-3.svg" alt="">
+            </div>
+        </div>
+    </body>
+</html>

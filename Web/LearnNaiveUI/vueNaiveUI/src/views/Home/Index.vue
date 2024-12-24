@@ -1,15 +1,15 @@
 <template>
     <div class="container pt-6 pb-6">
-        <n-grid>
-            <n-grid-item :span="12">
+        <n-flex justify="space-between" align="center" style="margin:0 auto" :wrap="false">
+            <div style="flex: 1;">
                 <h1 class="caption">云笔记</h1>
                 <p class="desc mb-1">任何时间 任何地点 任何设备 一触即达</p>
                 <n-button type="primary" size="large" class="mt-3" @click="toHerf('/note')">开始使用</n-button>
-            </n-grid-item>
-            <n-grid-item :span="12">
+            </div>
+            <div style="flex: 1;">
                 <n-image width="100%" :src="illustration3"></n-image>
-            </n-grid-item>
-        </n-grid>
+            </div>
+        </n-flex>
     </div>
 </template>
 
