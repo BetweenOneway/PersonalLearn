@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .flex-container{
+                width: 100%;
+                height: 100px;
+                border: 1px solid red;
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: nowrap;
+            }
+            .item{
+                width: 100px;
+                height: 100%;
+                background-color: aqua;
+                flex:1;
+                border: 1px solid blue;
+            }
+
+            .container{
+                display: flex;
+                width: 100%;
+                margin:0 auto;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+            }
+
+            .item1{
+                flex:1;
+            }
+
+            img{
+                width: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div style="width: 100%;height: 100%;">
+            <div class="container">
+                <img class="item1" src="./img/test.JPG" alt="">
+                <img class="item1" src="./img/test.JPG" alt="">
+            </div>
+        </div>
+        
+        <br/><hr/>
+
+        <div style="width: 100%;height: 100%;">
+            <div class="container">
+                <img class="item1" src="./img/rumi.jpeg" alt="">
+                <img class="item1" src="./img/rumi.jpeg" alt="">
+            </div>
+        </div>
+        
+        <br/><hr/>
+
+        <div style="width: 100%;height: 100%;">
+            <div class="container">
+                <!--rumi.jpeg-->
+                <div class="item1">
+                    <img src="./img/rumi.jpeg" alt="">
+                </div>
+                <div class="item1">
+                    <img src="./img/rumi.jpeg" alt="">
+                </div>
+            </div>
+        </div>
+        <br/><hr/>
+        <div>
+            <div class="flex-container">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+        </div>
+    </body>
+</html>
