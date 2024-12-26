@@ -2,8 +2,12 @@
     <!--再套一个div，原来的flex布局会失效-->
     <div style="width: 100%;height: 100%;">
         <div class="container">
-            <img class="item" src="../../assets/img/avatar/rumi.jpeg" alt="">
-            <img class="item" src="../../assets/img/avatar/rumi.jpeg" alt="">
+            <div class="item">
+                <img src="../../assets/img/avatar/rumi.jpeg" alt="">
+            </div>
+            <div class="item">
+                <img src="../../assets/img/avatar/rumi.jpeg" alt="">
+            </div>
         </div>
     </div>
 
@@ -24,6 +28,9 @@ import illustration3 from '@/assets/img/illustrations/illustration-3.svg'
 
 .item{
     flex:1;
+}
+
+.item img{
     width: 100%;
     object-fit: contain;
 }
