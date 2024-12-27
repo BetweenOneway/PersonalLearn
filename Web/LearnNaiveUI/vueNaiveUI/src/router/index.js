@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import EditNote from '@/components/note/EditNote.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -10,6 +12,15 @@ const router = createRouter({
     {
         path: '/note',
         component: ()=>import("@/views/Note/Index.vue"),
+        meta:{title:'笔记页'},
+        children:[
+            {
+                path:'edit/:id',
+                props:true,
+                component:EditNote,
+                meta:{title:'笔记编辑页'}
+            }
+        ]
     },
     {
         path: '/test',
