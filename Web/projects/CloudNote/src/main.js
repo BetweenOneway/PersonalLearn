@@ -11,6 +11,9 @@ import 'vfonts/Lato.css'
 // 等宽字体
 import 'vfonts/FiraCode.css'
 
+//基本样式（包含Tailwind.css）
+import "./style.css"
+
 import VueParticles from "@tsparticles/vue3"
 import { loadFull } from "tsparticles"
 
