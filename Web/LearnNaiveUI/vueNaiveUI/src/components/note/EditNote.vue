@@ -34,6 +34,11 @@
         <!--富文本编辑器-->
         <n-card :bordered="false" size="small">
             <!--编辑器-->
+            <Ckeditor
+            :editor="EditorType" 
+            @ready="editorReady" 
+            v-model="note.content"
+            :config="getEditorConfigs()"/>
         </n-card>
 
         <!--底部状态栏-->
@@ -51,10 +56,14 @@
 </template>
 
 <script setup>
+    import { Ckeditor } from '@ckeditor/ckeditor5-vue';
+    import {EditorType,getEditorConfigs} from "@/ckEditor"
+
     import {FiberManualRecordRound,
         MoreHorizRound
     } from'@vicons/material'
-
+    import 'ckeditor5/ckeditor5.css';
+    
     //笔记信息
     const note = ref({})
 </script>

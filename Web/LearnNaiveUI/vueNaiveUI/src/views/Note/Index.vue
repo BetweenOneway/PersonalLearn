@@ -1,33 +1,33 @@
 <template>
     <div>
-        <n-layout has-sider>
-            <div>
-                <n-flex vertical>
-                    <n-button type="primary" text size="large" style="margin-top: 20px;">
-                        <template #icon>
-                            <n-icon>
-                                <AddBoxRound />
-                            </n-icon>
-                        </template>
-                        新建笔记
-                    </n-button>
-                    <n-divider style="margin:15px auto"></n-divider>
-                    <n-layout-sider
-                    bordered
-                    show-trigger
-                    collapse-mode="width"
-                    :collapsed-width="64"
-                    :width="240"
-                    :native-scrollbar="false"
-                    >
+        <n-layout has-sider style="height: 100%;">
+            <n-flex vertical>
+                <!--新增按钮-->
+                <n-button type="primary" text size="large" style="margin-top: 20px;">
+                    <template #icon>
+                        <n-icon>
+                            <AddBoxRound />
+                        </n-icon>
+                    </template>
+                    新建笔记
+                </n-button>
+                <n-divider style="margin:15px auto"></n-divider>
+                <!--菜单列-->
+                <n-layout-sider
+                bordered
+                show-trigger
+                collapse-mode="width"
+                :collapsed-width="64"
+                :width="240"
+                :native-scrollbar="false"
+                >
                     <n-menu
                         :collapsed-width="64"
                         :collapsed-icon-size="22"
                         :options="menuOptions"
                     />
-                    </n-layout-sider>
-                </n-flex>
-            </div>
+                </n-layout-sider>
+            </n-flex>
             <!--笔记列表及编辑器容器-->
             <n-layout has-sider>
                 <!--笔记列表容器-->
@@ -71,12 +71,9 @@
                         </n-list>
 
                         <!--暂无笔记-->
-                        <n-empty v-if="!loading && noteList.length == 0"  style="width:max-content;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)" size="huge" description="暂无笔记列表">
+                        <n-empty v-if="!loading && noteList.length == 0"  style="width:max-content;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)" size="huge" description="笔记列表空无一物">
                             <template #icon>
                                 <n-icon :component="SubtitlesOffOutlined"></n-icon>
-                            </template>
-                            <template #extra>
-                                <n-button dashed @click="createNote">创建笔记</n-button>
                             </template>
                         </n-empty>
 
