@@ -1,0 +1,52 @@
+const userApi = {
+    loginByMailPassword:{
+        name:'邮箱密码登陆',
+        url:'/user/login',
+        method:'POST',
+        userPower:false,
+        dataParam:true,
+        successMessage:true
+    },
+    emailRegister:{
+        name:'邮箱注册',
+        url:'/user/register',
+        method:'POST',
+        userPower:false,
+        dataParam:true,
+        successMessage:false
+    },
+    logout:{
+        name:'退出登陆',
+        url:'/user/logout',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:false
+    },
+    getBasicInfo:{
+        name:'获取用户基本信息',
+        url:'/user/getUserInfo',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:false
+    },
+    updateUserInfo:{
+        name:'更新用户基本信息',
+        url:'/user/updateUserInfo',
+        method:'POST',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
+    updateHeadPic:{
+        name:'更新用户头像',
+        url:'/user/uploadHeadPic',
+        method:'POST',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    }
+}
+
+export default userApi

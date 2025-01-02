@@ -53,6 +53,7 @@
     import {NotificationsNoneOutlined, AccountBoxFilled,ManageAccountsFilled,LogOutRound} from "@vicons/material"
     import { useThemeStore } from "@/stores/themeStore";
     import { useUserStore } from "@/stores/userStore";
+    import { useLoginModalStore } from "@/stores/loginModalStore";
 
     import { ref } from "vue";
     import {storeToRefs} from 'pinia'
@@ -63,6 +64,11 @@
     const themeStore = useThemeStore()
     const {theme,isDarkTheme} = storeToRefs(themeStore)
     const {changeTheme} = themeStore
+
+    //改变登录模态框显示状态
+    const loginModalStore = useLoginModalStore()
+    const {changeLoginModalShow} = loginModalStore
+    const {loginModalStep} = storeToRefs(loginModalStore)
 
     //用户信息
     const userStore = useUserStore()
@@ -93,4 +99,10 @@
             label:'退出登录'
         }
     ]
+
+    const showLoginModal = (e)=>{
+        console.log("show Login Modal")
+        loginModalStep.value = 1
+        changeLoginModalShow(true)
+    }
 </script>

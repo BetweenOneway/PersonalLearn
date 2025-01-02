@@ -1,0 +1,52 @@
+const noteApi = {
+    getNoteList:{
+        name:'获取笔记列表',
+        url:'/note/getUserNoteList',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:false
+    },
+    topNote:{
+        name:['置顶笔记','取消置顶笔记'],
+        url:'/note/setNoteTop',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
+    deleteNote:{
+        name:['删除笔记','彻底删除笔记'],
+        url:'/note/deleteNote',
+        method:'DELETE',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
+    createNote:{
+        name:'创建笔记',
+        url:'/note/createNote',
+        method:'PUT',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
+    saveNote:{
+        name:'保存笔记',
+        url:'/note/saveNote',
+        method:'POST',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
+    getNoteInfo:{
+        name:'获取笔记信息',
+        url:'/note/getNoteInfo',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:false
+    }
+}
+
+export default noteApi
