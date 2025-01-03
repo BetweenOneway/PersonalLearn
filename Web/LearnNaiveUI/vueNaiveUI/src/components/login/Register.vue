@@ -40,12 +40,13 @@
 </template>
 
 <script setup>
+     import {useDialog, useLoadingBar, useMessage} from 'naive-ui'
     import {EmailOutlined} from "@vicons/material"
     import {ref} from 'vue'
-    import noteServerRequest  from "../../request"
-    import mailApi from "../../request/api/mailApi"
-    import userApi from "../../request/api/userApi"
-    import {disabledBtn} from '../../utils/disabledBtn'
+    import noteServerRequest  from "@/request"
+    import mailApi from "@/request/api/mailApi"
+    import userApi from "@/request/api/userApi"
+    import {disabledBtn} from '@/Utils/disabledBtn'
 
     //消息对象
     const message = useMessage()

@@ -50,7 +50,7 @@
     import userApi from "@/request/api/userApi"
     import {useLoginModalStore} from "@/stores/loginModalStore"
     import {useUserStore} from "@/stores/userStore"
-    import {disabledBtn} from '@/Utils'
+    import {disabledBtn} from '@/Utils/disabledBtn'
 
     //自定义事件
     const emits = defineEmits(['changeStep']);

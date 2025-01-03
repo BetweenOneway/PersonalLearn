@@ -10,8 +10,18 @@
             <router-view/>
         </n-layout>
     </n-layout>
+    <login-modal/>
 </template>
 
 <script setup>
-import MainTopNavBar from '@/components/navbar/MainTopNavBar.vue';
+    import MainTopNavBar from '@/components/navbar/MainTopNavBar.vue';
+    import LoginModal from '@/components/login/LoginModal.vue';
+
+    import {useDialog, useLoadingBar, useMessage} from 'naive-ui'
+
+    //将消息对象挂在到window
+    window.$message = useMessage();
+    //将加载条对象挂载到window
+    window.$loadingBar = useLoadingBar();
+
 </script>

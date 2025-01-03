@@ -93,15 +93,19 @@
   
 <script setup>
     import {
+        SubtitlesOffOutlined,
         MenuBookOutlined as BookIcon,
         AddBoxRound
     } from "@vicons/material";
     import { NIcon } from "naive-ui";
-    import { h,ref,onBeforeUnmount } from "vue";
+    import { h,ref,onBeforeUnmount,watch } from "vue";
     import bus from 'vue3-eventbus'
+    import { storeToRefs } from 'pinia'
 
     import { useUserStore } from "@/stores/userStore";
-
+    import { loginInvalid,getUserToken } from "@/Utils/userLogin";
+    import noteServerRequest  from "@/request"
+    import noteApi from '@/request/api/noteApi';
     import NoteCard from "@/components/note/NoteCard.vue";
     
     function renderIcon(icon) {
@@ -109,6 +113,33 @@
     }
   
     const userStore = useUserStore();
+    const {token,id:user_id} = storeToRefs(userStore);
+
+    watch(
+        ()=>token.value,
+        newData=>{
+            //是否重新进行登录
+            if(newData !== null)
+            {
+                //处于加载状态
+                loading.value = true;
+                //重新获取用户笔记列表
+                getNoteList(true,false);
+                //判断编辑笔记用户编号是否和登录用户编号一致 不一致则关闭笔记页面
+                if(editNoteUID.value && user_id.value !== editNoteUID)
+                {
+                    toHerf('/note');
+                }
+            }
+            else{
+                console.log("note login invalid")
+                loginInvalid(true);
+            }
+        }
+    );
+
+    //是否处于加载状态
+    const loading = ref(true)
 
     const menuOptions = [
     {
@@ -174,6 +205,26 @@
         defaultContent:'暂未设置内容'
     }
 
+        //获取用户笔记列表
+    /**
+     * @param ed {Boolean} 显示是否需要延迟动画
+     * @param ha {Boolean} 隐藏是否需要延迟动画
+     */
+     const getNoteList =async (ed,ha)=>{
+
+        noteServerRequest(noteApi.getNoteList).then(responseData=>{
+            if(responseData)
+            {
+                //封装笔记列表
+                noteList.value = responseData.data;
+                //停止显示骨架屏
+                loading.value = false;
+            }
+        })
+    }
+
+    getNoteList(true,false);
+
     /**
      * 前往编辑笔记的视图
      * @param {Number} id 笔记编号
@@ -223,6 +274,17 @@
         setTimeout(() => {
             isChangeEditNote.value = 0;
         }, 1000);
+    }
+
+    /**
+     * 删除笔记成功操作
+     * @param {Boolean} complete true彻底删除 false非彻底删除
+     */
+     const deleteNoteSuccess = ()=>{
+
+        getNoteList(false,true)
+        //
+        changeEditNoteState(2)
     }
 
 </script>

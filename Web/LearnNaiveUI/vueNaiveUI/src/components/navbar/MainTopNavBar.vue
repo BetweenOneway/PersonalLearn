@@ -101,7 +101,6 @@
     ]
 
     const showLoginModal = (e)=>{
-        console.log("show Login Modal")
         loginModalStep.value = 1
         changeLoginModalShow(true)
     }

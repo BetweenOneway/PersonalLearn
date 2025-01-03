@@ -11,10 +11,12 @@
   "dependencies": {
     "@ckeditor/ckeditor5-vue": "^7.3.0",
     "@vicons/utils": "^0.1.4",
+    "axios": "^1.7.9",
     "html-to-text": "^9.0.5",
     "js-md5": "^0.8.3",
     "naive-ui": "^2.40.3",
     "pinia": "^2.2.6",
+    "qs": "^6.13.1",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5",
     "vue3-eventbus": "^2.0.0"
