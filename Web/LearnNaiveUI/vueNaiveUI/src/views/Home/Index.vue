@@ -4,7 +4,7 @@
             <div style="flex: 1;">
                 <h1 class="caption">云笔记</h1>
                 <p class="desc mb-1">任何时间 任何地点 任何设备 一触即达</p>
-                <n-button type="primary" size="large" class="mt-3" @click="toHerf('/note')">开始使用</n-button>
+                <n-button type="primary" size="large" class="mt-3" @click="toSpecifiedRoute('/note')">开始使用</n-button>
             </div>
             <div style="flex: 1;">
                 <n-image width="100%" :src="illustration3"></n-image>
@@ -16,6 +16,23 @@
 <script setup>
     import illustration3 from '@/assets/img/illustrations/illustration-3.svg'
     import { toHerf } from '@/router/go';
+    import { loginInvalid,getUserToken } from "@/Utils/userLogin";
+
+    async function toSpecifiedRoute(inputRoute,requiredLogin=true){
+        if(requiredLogin)
+        {
+            let ret = await getUserToken()
+            if(ret)
+            {
+                toHerf(inputRoute)
+            }
+        }
+        else
+        {
+            toHerf(inputRoute)
+        }
+    }
+
 </script>
 
 <style scoped>
