@@ -26,10 +26,8 @@
     // //1 登录 2 注册 3 注册成功
 
     const showLoginModalCard = computed(()=>{
-        console.log("loginModalStep.value=",loginModalStep.value);
         switch(loginModalStep.value){
             case 1:
-                console.log("show login")
                 return Login;
                 break;
             case 2:
@@ -43,14 +41,9 @@
 
     //
     const changeLoginModalStep = step=>{
-        console.log("c loginModalStep.value=",step);
         loginModalStep.value = step
     }
-    const testFunction = ()=>{
-        console.log("login modal showLoginModal=",showLoginModal.value);
-    }
 
-    testFunction();
 </script>
 
 <style>

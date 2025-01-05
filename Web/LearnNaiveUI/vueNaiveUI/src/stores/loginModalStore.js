@@ -11,7 +11,6 @@ export const useLoginModalStore = defineStore(
         const loginModalStep = ref(1)
 
         const changeLoginModalShow = (show)=>{
-            console.log("change login modal show=>",show);
             showLoginModal.value = show
         }
 
