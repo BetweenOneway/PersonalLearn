@@ -55,7 +55,7 @@
     import { useUserStore } from "@/stores/userStore";
     import { useLoginModalStore } from "@/stores/loginModalStore";
 
-    import { ref } from "vue";
+    import { h,ref } from "vue";
     import {storeToRefs} from 'pinia'
 
     import logoDarkImage from '@/assets/img/brand/dark.svg'
@@ -104,4 +104,8 @@
         loginModalStep.value = 1
         changeLoginModalShow(true)
     }
+    function testFunction(){
+        console.log("top bar,user id=>",user_id.value);
+    }
+    testFunction();
 </script>

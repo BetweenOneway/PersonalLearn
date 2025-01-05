@@ -103,7 +103,9 @@
     import { storeToRefs } from 'pinia'
 
     import { useUserStore } from "@/stores/userStore";
-    import { loginInvalid,getUserToken } from "@/Utils/userLogin";
+    import { loginInvalid } from "@/Utils/userLogin";
+    import { toHerf } from "@/router/go";
+    
     import noteServerRequest  from "@/request"
     import noteApi from '@/request/api/noteApi';
     import NoteCard from "@/components/note/NoteCard.vue";

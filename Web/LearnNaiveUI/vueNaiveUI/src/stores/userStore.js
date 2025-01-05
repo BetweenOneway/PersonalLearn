@@ -63,7 +63,6 @@ export const useUserStore = defineStore(
          * @param {Object} user 
          */
         const setUserInfo = (userToken,user)=>{
-            //
             console.log("set user info")
             token.value = userToken;
             setUserBasicInfo(user);
@@ -74,6 +73,7 @@ export const useUserStore = defineStore(
          * @param {Object} user 
          */
         const setUserBasicInfo = (user)=>{
+            console.log("set user basic info,id=>",user.id)
             id.value=user.id
             nickName.value = user.nickName
             headPic.value = user.headPic
@@ -86,6 +86,7 @@ export const useUserStore = defineStore(
 
         //重置用户信息
         const resetUserInfo = ()=>{
+            console.log("reset user info")
             token.value = null;
             const userToken = localStorage.getItem("userToken")
             //userToken本地存储删除
@@ -95,6 +96,7 @@ export const useUserStore = defineStore(
         watch(()=>token.value,newData=>{
             if(newData === null)
             {
+                console.log("clear user info");
                 id.value=null
                 nickName.value = null
                 headPic.value = null

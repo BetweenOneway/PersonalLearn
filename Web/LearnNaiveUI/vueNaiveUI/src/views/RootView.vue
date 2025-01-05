@@ -17,7 +17,7 @@
     import MainTopNavBar from '@/components/navbar/MainTopNavBar.vue';
     import LoginModal from '@/components/login/LoginModal.vue';
 
-    import {useDialog, useLoadingBar, useMessage} from 'naive-ui'
+    import {useLoadingBar, useMessage} from 'naive-ui'
 
     //将消息对象挂在到window
     window.$message = useMessage();

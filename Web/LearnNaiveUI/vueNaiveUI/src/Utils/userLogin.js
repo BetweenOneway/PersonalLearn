@@ -1,5 +1,5 @@
-import {useLoginModalStore} from '../stores/loginModalStore'
-import { useUserStore } from "../stores/userStore"
+import {useLoginModalStore} from '@/stores/loginModalStore'
+import { useUserStore } from "@/stores/userStore"
 
 //获取本地存储userToken的值 如果没有则显示登录窗口
 export const getUserToken =async ()=>{
