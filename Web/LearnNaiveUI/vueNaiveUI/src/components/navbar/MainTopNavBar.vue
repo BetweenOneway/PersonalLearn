@@ -57,8 +57,13 @@
 
     import { h,ref } from "vue";
     import {storeToRefs} from 'pinia'
+    import { NIcon } from 'naive-ui'
 
     import logoDarkImage from '@/assets/img/brand/dark.svg'
+
+    import noteServerRequest  from "@/request";
+    import userApi from '@/request/api/userApi';
+    import { loginInvalid } from "@/Utils/userLogin";
 
     //主题信息
     const themeStore = useThemeStore()
@@ -99,6 +104,32 @@
             label:'退出登录'
         }
     ]
+
+    //用户菜单选项回调
+    const clickUserMenu = (key,value)=>{
+
+        //关闭用户菜单弹出信息
+        userMenuShow.value = false
+
+        switch(key){
+            case "sign-out":
+                signOutLogin();
+                break;
+            case "user-center":
+                //userBasicInfoRef.value.changeActive();
+                break;
+            case "account-setting":
+                break;
+        }
+    }
+
+    const signOutLogin = async ()=>{
+        noteServerRequest(userApi.logout).then(responseData=>{
+            if(!responseData) return;
+            //登录失效处理
+            loginInvalid(false)
+        })
+    }
 
     const showLoginModal = (e)=>{
         loginModalStep.value = 1

@@ -64,8 +64,8 @@
             else if(event.key === 'user')
             {
                 //仅当token发生变化才重新加载页面
-                const newToken = JSON.parse(event.newValue).token;
-                const oldToken = JSON.parse(event.oldValue).token;
+                const newToken = JSON.parse(event.newValue)?.token;
+                const oldToken = JSON.parse(event.oldValue)?.token;
                 if(newToken === oldToken)
                 {
                     //将本地存储的用户数据恢复到store中

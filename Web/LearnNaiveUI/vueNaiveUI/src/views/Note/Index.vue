@@ -98,7 +98,7 @@
         AddBoxRound
     } from "@vicons/material";
     import { NIcon } from "naive-ui";
-    import { h,ref,onBeforeUnmount,watch } from "vue";
+    import { h,ref,onBeforeUnmount,watch,provide } from "vue";
     import bus from 'vue3-eventbus'
     import { storeToRefs } from 'pinia'
 
@@ -116,6 +116,10 @@
   
     const userStore = useUserStore();
     const {token,id:user_id} = storeToRefs(userStore);
+
+    const editNoteUID = ref(null)
+
+    provide('editNoteUID',editNoteUID);
 
     watch(
         ()=>token.value,
