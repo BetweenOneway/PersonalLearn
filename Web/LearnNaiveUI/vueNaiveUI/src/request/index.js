@@ -27,8 +27,10 @@ const request = async config =>{
 请求出错时处理
 */
 const requestError = error =>{
+    console.log("request error=>",error);
     //加载条异常结束
     window.$loadingBar.error();
+    
     if(error.config)
     {
         //采用消息显示失败的原因
@@ -45,6 +47,7 @@ const requestError = error =>{
 响应处理
 */
 const requestResponse = response =>{
+    console.log("request response=>",response);
     //
     const responseData = response.data;
     //
@@ -53,10 +56,9 @@ const requestResponse = response =>{
         window.$loadingBar.error();
         window.$message.error(responseData.description)
         //判断是否登陆失败
-        if(responseData.status ==='SERVICE_008')
+        if(responseData.status ==='SERVICE_008' || responseData.status ==='SERVICE_012')
         {
             loginInvalid(true)
-            console.log("login Invalid");
         }
         //判断是否资源未找到
         if(responseData.status ==='RESOURCE_NOT_FOUND')

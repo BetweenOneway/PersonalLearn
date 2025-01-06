@@ -12,6 +12,7 @@
     "@ckeditor/ckeditor5-vue": "^7.3.0",
     "@vicons/utils": "^0.1.4",
     "axios": "^1.7.9",
+    "ckeditor5": "^44.1.0",
     "html-to-text": "^9.0.5",
     "js-md5": "^0.8.3",
     "naive-ui": "^2.40.3",
