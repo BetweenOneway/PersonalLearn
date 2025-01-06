@@ -81,5 +81,19 @@ void testBezier()
     vector<Point3D> result;
     //Bezier2(p1, p2, p3, 100, result);
     Bezier3(p1, p2, p3, p4, 100, result);
-    WriteOBJFile(result, "./test/Bezier.obj");
+    WriteOBJFile(result, "./output/Bezier.obj");
+}
+
+#include "Curve.h"
+
+void testCurve()
+{
+    Point3D p1(-10, 10, 0);
+    Point3D p2(-1, 1, 0);
+    Point3D p3(1, 1, 0);
+    Point3D p4(10, 10, 0);
+    std::vector<Point3D> originVerts{p1,p2,p3,p4};
+    vector<Point3D> result;
+    createCurve(originVerts, result);
+    WriteOBJFile(result, "./output/curve.obj");
 }

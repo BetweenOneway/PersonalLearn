@@ -32,8 +32,11 @@ public:
 
     bool IsParallel(const Vector3& v) const;
 	float getX() const { return x; }
+    void setX(float _x) { x = _x; }
 	float getY() const { return y; }
+    void setY(float _y) { y = _y; }
 	float getZ() const { return z; }
+    void setZ(float _z) { z = _z; }
 public:
     //static const Vector3 ZERO;
 private:

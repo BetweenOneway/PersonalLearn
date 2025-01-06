@@ -99,6 +99,9 @@
     <ClCompile Include="testAlgo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Curve.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MathUtil.h">
@@ -186,6 +189,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="testAlgo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Curve.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

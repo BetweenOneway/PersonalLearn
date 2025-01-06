@@ -12,10 +12,11 @@ using namespace std;
 #include "testCommonFunctions.h"
 #include "testAlgo.h"
 
-void Bezier()
+void testLine()
 {
     //testBezier();
-    testSpline();
+    //testSpline();
+    testCurve();
 }
 
 void Ray()
@@ -96,10 +97,10 @@ int main()
     //Vector();
     //Quaternion();
     //Ray();
-    //Bezier();
+    testLine();
     //Plane();
     //Learn();
-    CalcBoundary();
+    //CalcBoundary();
     //CommonFunctions();
     //testAlgo();
     system("pause");
