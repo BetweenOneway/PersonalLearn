@@ -36,7 +36,7 @@
                     :width="340"
                     class="note-list"
                 >
-                    <n-scrollbar @scroll="contextMenu.show=false">
+                    <n-scrollbar >
                         <!--标题区 新增笔记按钮-->
                         <n-card :bordered="false" style="position:sticky;top:0;z-index:1;width:calc(100%-1px)">
                             <template #action>

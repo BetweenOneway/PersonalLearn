@@ -36,6 +36,7 @@ export const EditorType = DecoupledEditor
 
 //获取富文本编辑器配置
 export const getEditorConfigs =()=>({
+    licenseKey: 'GPL', // 44.0版本后必须有
     plugins:[
         Paragraph,//段落插件
         Essentials,//基础插件

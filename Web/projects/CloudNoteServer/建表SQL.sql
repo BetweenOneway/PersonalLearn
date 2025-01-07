@@ -48,6 +48,23 @@ CREATE TABLE `z_note`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文章表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
+-- Table structure for notebook
+-- ----------------------------
+DROP TABLE IF EXISTS `notebook`;
+CREATE TABLE `notebook`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '笔记本编号',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '笔记本名称',
+  `time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '最后修改时间',
+  `u_id` int(11) NOT NULL COMMENT '用户编号',
+  `parentId` int(11) NOT NULL DEFAULT 0 COMMENT '上一级笔记本编号',
+  `status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态【0：被删除，1：正常/私有 2:公开】',
+  UNIQUE INDEX `z_note_pk`(`id`) USING BTREE,
+  INDEX `notebook_user_id_fk`(`u_id`) USING BTREE,
+  CONSTRAINT `notebook_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `z_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '笔记本表' ROW_FORMAT = COMPACT;
+
+-- ----------------------------
 -- Records of z_note
 -- ----------------------------
 INSERT INTO `z_note` VALUES (22, 'Vue3 知识点整理', '<p>我是第一次学习这个课程的！</p><figure class=\"image image_resized image-style-align-left\" style=\"width:28.14%;\"><img src=\"http://127.0.0.1:18081/zhike-notes/image/1685852281107.png\"><figcaption>随便插入的图像</figcaption></figure><p>&nbsp;</p><figure class=\"table\" style=\"height:56px;width:123px;\"><table><tbody><tr><td>你好</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure><p>&nbsp;</p>', '<h1>Vue3 知识点整理</h1><p>我是第一次学习这个课程的！</p><figure class=\"image image_resized image-style-align-left\" style=\"width:28.14%;\"><img src=\"http://127.0.0.1:18081/zhike-notes/image/1685852281107.png\"><figcaption>随便插入的图像</figcaption></figure><p>&nbsp;</p><figure class=\"table\" style=\"height:56px;width:123px;\"><table><tbody><tr><td>你好</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure><p>&nbsp;</p>', '2023-06-04 12:17:28', '2023-06-05 16:38:07', 8, 0, '1', 1);
