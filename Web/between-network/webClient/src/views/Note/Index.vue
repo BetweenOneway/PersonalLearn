@@ -148,59 +148,64 @@
     const loading = ref(true)
 
     const menuOptions = [
-    {
-        label: "我的文件夹",
-        key: "my-folder",
-        icon: renderIcon(BookIcon),
-        children: [
-            {
-                label: "人物",
-                key: "people",
-                children: [
+        {
+            label: "最新文件",
+            key: "latest-files",
+            icon: renderIcon(BookIcon)
+        },
+        {
+            label: "我的文件夹",
+            key: "my-folder",
+            icon: renderIcon(BookIcon),
+            children: [
                 {
-                    label: "叙事者",
-                    key: "narrator",
-                    icon: renderIcon(BookIcon)
+                    label: "人物",
+                    key: "people",
+                    children: [
+                        {
+                            label: "叙事者",
+                            key: "narrator",
+                            icon: renderIcon(BookIcon)
+                        },
+                        {
+                            label: "羊男",
+                            key: "sheep-man",
+                            icon: renderIcon(BookIcon)
+                        }
+                    ]
                 },
                 {
-                    label: "羊男",
-                    key: "sheep-man",
-                    icon: renderIcon(BookIcon)
+                    label: "饮品",
+                    key: "beverage",
+                    icon: renderIcon(BookIcon),
+                    children: [
+                        {
+                            label: "威士忌",
+                            key: "whisky"
+                        }
+                    ]
+                },
+                {
+                    label: "食物",
+                    key: "food",
+                    children: [
+                        {
+                            label: "三明治",
+                            key: "sandwich"
+                        }
+                    ]
+                },
+                {
+                    label: "过去增多，未来减少",
+                    key: "the-past-increases-the-future-recedes"
                 }
             ]
-            },
-            {
-                label: "饮品",
-                key: "beverage",
-                icon: renderIcon(BookIcon),
-                children: [
-                    {
-                        label: "威士忌",
-                        key: "whisky"
-                    }
-                ]
-            },
-            {
-                label: "食物",
-                key: "food",
-                children: [
-                    {
-                        label: "三明治",
-                        key: "sandwich"
-                    }
-                ]
-            },
-            {
-                label: "过去增多，未来减少",
-                key: "the-past-increases-the-future-recedes"
-            }
-        ]
-    },
-    {
-        label: "回收站",
-        key: "recycle-bin",
-        icon: renderIcon(BookIcon)
-    }
+        },
+        {
+            label: "回收站",
+            key: "recycle-bin",
+            icon: renderIcon(BookIcon)
+        }
     ];
 
     //笔记列表
@@ -211,7 +216,10 @@
         defaultContent:'暂未设置内容'
     }
 
-        //获取用户笔记列表
+    /**
+     * 获取用户笔记本列表
+    */
+    //获取用户笔记列表
     /**
      * @param ed {Boolean} 显示是否需要延迟动画
      * @param ha {Boolean} 隐藏是否需要延迟动画

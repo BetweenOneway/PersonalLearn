@@ -187,6 +187,16 @@ SERVICE_STATUS={
         status:'SERVICE_021',
         description:'获取用户笔记失败'
     },
+    GET_NOTEBOOK_SUCCESS:{
+        success:true,
+        status:'SERVICE_020',
+        description:'获取用户笔记本成功'
+    },
+    GET_NOTEBOOK_FAIL:{
+        success:false,
+        status:'SERVICE_021',
+        description:'获取用户笔记本失败'
+    },
     NOTE_SET_TOP_SUCCESS:{
         success:true,
         status:'SERVICE_022',

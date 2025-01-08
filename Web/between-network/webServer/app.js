@@ -7,7 +7,6 @@ const fileUpload = require('express-fileupload');
 const interceptor = require('./utils/interceptor');
 
 /*引入路由模块*/
-
 const user=require("./routes/user");
 const memo=require("./routes/memo");
 const note=require("./routes/note");
@@ -15,6 +14,7 @@ const dumpster=require("./routes/dumpster");
 const recent=require("./routes/recent")
 const fileOper=require("./routes/fileOper")
 const CKEditor=require("./routes/CKEditor");
+const notebook = require('./routes/notebook');
 
 const sequelizeTest = require("./routes/sequelizeTest")
 
@@ -87,6 +87,8 @@ app.use("/user",user);
 app.use("/memo",memo);
 //笔记
 app.use("/note",note);
+//笔记本
+app.use('/notebook',notebook);
 //CKEditor编辑器
 app.use("/ckeditor",CKEditor)
 //回收站操作
