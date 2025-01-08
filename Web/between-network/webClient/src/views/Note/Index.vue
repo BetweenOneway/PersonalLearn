@@ -24,7 +24,17 @@
                     <n-menu
                         :collapsed-width="64"
                         :collapsed-icon-size="22"
-                        :options="menuOptions"
+                        :options="topMenu"
+                    />
+                    <n-menu
+                        :collapsed-width="64"
+                        :collapsed-icon-size="22"
+                        :options="notebookTreeMenu"
+                    />
+                    <n-menu
+                        :collapsed-width="64"
+                        :collapsed-icon-size="22"
+                        :options="bottomMenu"
                     />
                 </n-layout-sider>
             </n-flex>
@@ -83,7 +93,7 @@
                 <!--笔记编辑容器-->
                 <n-layout-content embeded content-style="padding:20px">
                     <!--子路由-->
-                    <router-view @save="getNoteList(false,false)" @deleteSuccess="deleteNoteSuccess" :change-state="isChangeEditNote"/>
+                    <router-view @save="getNoteListInNotebook()" @deleteSuccess="deleteNoteSuccess" :change-state="isChangeEditNote"/>
                 </n-layout-content>
 
             </n-layout>
@@ -130,7 +140,7 @@
                 //处于加载状态
                 loading.value = true;
                 //重新获取用户笔记列表
-                getNoteList(true,false);
+                getNoteListInNotebook()
                 //判断编辑笔记用户编号是否和登录用户编号一致 不一致则关闭笔记页面
                 if(editNoteUID.value && user_id.value !== editNoteUID)
                 {
@@ -147,66 +157,31 @@
     //是否处于加载状态
     const loading = ref(true)
 
-    const menuOptions = [
+    const topMenu =[
         {
             label: "最新文件",
             key: "latest-files",
             icon: renderIcon(BookIcon)
-        },
+        }
+    ]
+
+    const notebookTreeMenu = [
         {
             label: "我的文件夹",
             key: "my-folder",
             icon: renderIcon(BookIcon),
             children: [
-                {
-                    label: "人物",
-                    key: "people",
-                    children: [
-                        {
-                            label: "叙事者",
-                            key: "narrator",
-                            icon: renderIcon(BookIcon)
-                        },
-                        {
-                            label: "羊男",
-                            key: "sheep-man",
-                            icon: renderIcon(BookIcon)
-                        }
-                    ]
-                },
-                {
-                    label: "饮品",
-                    key: "beverage",
-                    icon: renderIcon(BookIcon),
-                    children: [
-                        {
-                            label: "威士忌",
-                            key: "whisky"
-                        }
-                    ]
-                },
-                {
-                    label: "食物",
-                    key: "food",
-                    children: [
-                        {
-                            label: "三明治",
-                            key: "sandwich"
-                        }
-                    ]
-                },
-                {
-                    label: "过去增多，未来减少",
-                    key: "the-past-increases-the-future-recedes"
-                }
             ]
         },
+    ];
+
+    const bottomMenu = [
         {
             label: "回收站",
             key: "recycle-bin",
             icon: renderIcon(BookIcon)
         }
-    ];
+    ]
 
     //笔记列表
     const noteList = ref([]);
@@ -219,14 +194,52 @@
     /**
      * 获取用户笔记本列表
     */
-    //获取用户笔记列表
-    /**
-     * @param ed {Boolean} 显示是否需要延迟动画
-     * @param ha {Boolean} 隐藏是否需要延迟动画
-     */
-     const getNoteList =async (ed,ha)=>{
+    function getNotebookList()
+    {
+        noteServerRequest(noteApi.getNotebookList).then(responseData=>{
+            if(responseData)
+            {
+                var notebookMap = new Map();
+                //依次创建所有菜单对象
+                for(let notebook of responseData.data)
+                {
+                    notebookMap.set(notebook.id,{
+                        label: notebook.name,
+                        key: ''+notebook.id,
+                        children:[]
+                    })
+                }
 
-        noteServerRequest(noteApi.getNoteList).then(responseData=>{
+                //将低级菜单对象并入高级菜单对象
+                for(let notebook of responseData.data)
+                {
+                    //获取当前菜单对象
+                    let curNotebook = notebookMap.get(notebook.id);
+                    //获取父级菜单对象
+                    let parentNotebook = notebookMap.get(notebook.parent_id);
+                    parentNotebook.children.push(curNotebook);
+
+                    //移除当菜单对象
+                    notebookMap.delete(notebook.id);
+                    notebookMap.set(notebook.parent_id,parentNotebook)
+                }
+
+                //此时nootebookMap中应该只有一级菜单对象
+                for(let level1Notebook of notebookMap)
+                {
+                    notebookTreeMenu[0].children.push(level1Notebook[1]);
+                }
+            }
+        })
+    }
+    getNotebookList()
+
+    /**
+     * 获取最近访问的笔记列表
+    */
+    function getRecentNoteList()
+    {
+        noteServerRequest(noteApi.getRecentNoteList).then(responseData=>{
             if(responseData)
             {
                 //封装笔记列表
@@ -236,8 +249,29 @@
             }
         })
     }
+    getRecentNoteList()
 
-    getNoteList(true,false);
+    /**
+     * 获取指定笔记本内的笔记列表
+    */
+    function getNoteListInNotebook(){
+        let API = {...noteApi.getNoteListInNotebook};
+        //请求URL的参数
+        API.params= {
+            notebookId:contextMenu.value.id
+        };
+
+        //发送请求
+        noteServerRequest(API).then(responseData=>{
+            if(responseData)
+            {
+                //封装笔记列表
+                noteList.value = responseData.data;
+                //停止显示骨架屏
+                loading.value = false;
+            }
+        })
+    }
 
     /**
      * 前往编辑笔记的视图
@@ -265,7 +299,7 @@
                 //跳转编辑笔记路由
                 goEditNoteView(responseData.data.noteId);
                 //重新获取便签列表 新增笔记不需要显示的延迟动画
-                getNoteList(false,false);
+                getNoteListInNotebook()
             }
         })
     }
@@ -296,7 +330,7 @@
      */
      const deleteNoteSuccess = ()=>{
 
-        getNoteList(false,true)
+        getNoteListInNotebook()
         //
         changeEditNoteState(2)
     }
