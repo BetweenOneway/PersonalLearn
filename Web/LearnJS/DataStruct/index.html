@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <button onclick="testSet()">testSet</button>
+        <button onclick="testMap()">testMap</button>
+        <button onclick="testNumMap()">testNumMap</button>
+        <button onclick="testQueue()">testQueue</button>
+        <button onclick="testStack()">testStack</button>
+
+        <script>
+            function testStack()
+            {
+                //先进后出
+                var stack = [];
+                stack.push('a');
+                stack.push('b');
+                stack.push('c');
+                console.log(stack); // 输出：['a', 'b', 'c']
+
+                stack.pop();
+                console.log(stack); // 输出：['a', 'b']
+            }
+
+            function testQueue()
+            {
+                var queue = [];
+                queue.push('a');
+                queue.push('b');
+                queue.push('c');
+                console.log(queue); // 输出：['a', 'b', 'c']
+
+                queue.shift();
+                console.log(queue); // 输出：['b', 'c']
+            }
+            /*
+            集合（Set）：集合是一种无序且不重复的数据结构，用来存储不重复的值。集合可以进行交集、并集和差集等操作。
+            */
+            function testSet()
+            {
+                var set = new Set();
+                set.add(1);
+                set.add(2);
+                set.add(3);
+                console.log(set); // 输出：Set(3) {1, 2, 3}
+
+                set.delete(2);
+                console.log(set); // 输出：Set(2) {1, 3}
+            }
+
+            /*
+            字典（Map）：字典是一种键值对的集合，可以用来存储唯一的键和对应的值。字典也被称为映射、散列表或哈希表
+            */
+            function testMap()
+            {
+                var map = new Map();
+                map.set('name', 'John');
+                map.set('age', 30);
+                console.log(map.get('name')); // 输出：John
+                map.set('name','peter')
+                map.delete('age');
+                console.log(map); // 输出：Map(1) {'name' => 'John'}
+            }
+
+            function testNumMap()
+            {
+                var map = new Map();
+                map.set(1,10);
+                map.set(2, 20);
+                console.log(map.get(1)); // 输出：John
+            }
+
+        </script>
+    </body>
+</html>
