@@ -13,10 +13,81 @@ const note = require("../models/note");
 var router=express.Router();
 
 /**
- * 获取用户笔记列表
+ * 获取指定笔记本内所有笔记列表
  * userToken 用户编号
  */
-router.get("/getUserNoteList",async (req,res)=>{
+router.get("/getRecentNoteList",async (req,res)=>{
+    var output={
+        success:true,
+        status:'',
+        description:'',
+        data:[]
+    }
+
+    console.log("start getRecentNoteList")
+    
+    var userToken = req.get('userToken')
+    let status = 1
+    let userInfo = {}
+
+    try {
+        //验证用户是否登录
+        let validateInfo = await validate.IsUserValidate(userToken);
+        if(!validateInfo.isValidated)
+        {
+            console.log("用户登录状态无效"+validateInfo.isValidated)
+            output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
+            output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
+            output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
+            res.send(output)
+            return
+        }
+        userInfo = validateInfo.userInfo
+        console.log("parsed userinfo=>",userInfo)
+
+        //查询当前日期前30天的笔记
+        let endTime = (new Date()).getTime() - 30*24*60*60*1000;
+        let endDate = new Date(endTime);
+
+        const notes = await sqldb.Note.findAll(
+            {
+                attributes: ['id', 'title','content','top','update_time'],
+                where:{
+                    status: status,
+                    u_id:userInfo.id,
+                    update_time:{
+                        [Op.gt]:endDate
+                    }
+                },
+                order:[
+                    ['top', 'DESC'],
+                    ['update_time','DESC']
+                ],
+                raw:true,
+            }
+        );
+        output.success = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
+
+        output.data = notes
+        res.send(output);
+    } catch (error) {
+        console.log(error)
+        output.success = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
+        res.send(output);
+    }
+    console.log("End of getRecentNoteList")
+    return;
+})
+
+/**
+ * 获取指定笔记本内所有笔记列表
+ * userToken 用户编号
+ */
+router.get("/getNotebookNoteList",async (req,res)=>{
     var output={
         success:true,
         status:'',
@@ -43,8 +114,7 @@ router.get("/getUserNoteList",async (req,res)=>{
             return
         }
         userInfo = validateInfo.userInfo
-        console.log("parsed userinfo")
-        console.log(userInfo)
+        console.log("parsed userinfo=>",userInfo)
 
         const notes = await sqldb.Note.findAll(
             {

@@ -118,6 +118,7 @@
     
     import noteServerRequest  from "@/request"
     import noteApi from '@/request/api/noteApi';
+    import notebookApi from '@/request/api/notebookApi';
     import NoteCard from "@/components/note/NoteCard.vue";
     
     function renderIcon(icon) {
@@ -196,12 +197,18 @@
     */
     function getNotebookList()
     {
-        noteServerRequest(noteApi.getNotebookList).then(responseData=>{
+        noteServerRequest(notebookApi.getNotebookList).then(responseData=>{
             if(responseData)
             {
+                let allNotebook = responseData.data;
+                console.log("all notebook=>",allNotebook);
+                if(allNotebook.length <=0)
+                {
+                    return;
+                }
                 var notebookMap = new Map();
                 //依次创建所有菜单对象
-                for(let notebook of responseData.data)
+                for(let notebook of allNotebook)
                 {
                     notebookMap.set(notebook.id,{
                         label: notebook.name,
@@ -211,7 +218,7 @@
                 }
 
                 //将低级菜单对象并入高级菜单对象
-                for(let notebook of responseData.data)
+                for(let notebook of allNotebook)
                 {
                     //获取当前菜单对象
                     let curNotebook = notebookMap.get(notebook.id);
@@ -232,6 +239,7 @@
             }
         })
     }
+    
     getNotebookList()
 
     /**

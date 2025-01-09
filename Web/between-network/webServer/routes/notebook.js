@@ -27,7 +27,7 @@ router.get("/getUserNotebookList",async (req,res)=>{
     console.log("start get user notebook list")
     
     var userToken = req.get('userToken')
-    let userInfo = {}
+    
 
     try {
         //验证用户是否登录
@@ -41,9 +41,8 @@ router.get("/getUserNotebookList",async (req,res)=>{
             res.send(output)
             return
         }
-        userInfo = validateInfo.userInfo
-        console.log("parsed userinfo")
-        console.log(userInfo)
+        let userInfo = validateInfo.userInfo
+        console.log("parsed userinfo=>",userInfo)
 
         const notes = await sqldb.Notebook.findAll(
             {

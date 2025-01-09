@@ -1,7 +1,15 @@
 const noteApi = {
-    getNoteList:{
-        name:'获取笔记列表',
-        url:'/note/getUserNoteList',
+    getRecentNoteList:{
+        name:'获取最近访问笔记列表',
+        url:'/note/getRecentNoteList',
+        method:'GET',
+        userPower:true,
+        dataParam:false,
+        successMessage:false
+    },
+    getNotebookNoteList:{
+        name:'获取笔记本内的笔记列表',
+        url:'/note/getNotebookNoteList',
         method:'GET',
         userPower:true,
         dataParam:false,
