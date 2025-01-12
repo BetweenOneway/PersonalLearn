@@ -11,6 +11,7 @@
                     </template>
                     新建笔记
                 </n-button>
+
                 <n-divider style="margin:15px auto"></n-divider>
                 <!--菜单列-->
                 <n-layout-sider
@@ -26,11 +27,7 @@
                         :collapsed-icon-size="22"
                         :options="topMenu"
                     />
-                    <n-menu
-                        :collapsed-width="64"
-                        :collapsed-icon-size="22"
-                        :options="notebookTreeMenu"
-                    />
+                    <NotebookTree />
                     <n-menu
                         :collapsed-width="64"
                         :collapsed-icon-size="22"
@@ -118,8 +115,9 @@
     
     import noteServerRequest  from "@/request"
     import noteApi from '@/request/api/noteApi';
-    import notebookApi from '@/request/api/notebookApi';
+    
     import NoteCard from "@/components/note/NoteCard.vue";
+    import NotebookTree from "@/components/note/NotebookTree.vue";
     
     function renderIcon(icon) {
         return () => h(NIcon, null, { default: () => h(icon) });
@@ -191,56 +189,6 @@
         defaultTitle:'暂未设置标题',
         defaultContent:'暂未设置内容'
     }
-
-    /**
-     * 获取用户笔记本列表
-    */
-    function getNotebookList()
-    {
-        noteServerRequest(notebookApi.getNotebookList).then(responseData=>{
-            if(responseData)
-            {
-                let allNotebook = responseData.data;
-                console.log("all notebook=>",allNotebook);
-                if(allNotebook.length <=0)
-                {
-                    return;
-                }
-                var notebookMap = new Map();
-                //依次创建所有菜单对象
-                for(let notebook of allNotebook)
-                {
-                    notebookMap.set(notebook.id,{
-                        label: notebook.name,
-                        key: ''+notebook.id,
-                        children:[]
-                    })
-                }
-
-                //将低级菜单对象并入高级菜单对象
-                for(let notebook of allNotebook)
-                {
-                    //获取当前菜单对象
-                    let curNotebook = notebookMap.get(notebook.id);
-                    //获取父级菜单对象
-                    let parentNotebook = notebookMap.get(notebook.parent_id);
-                    parentNotebook.children.push(curNotebook);
-
-                    //移除当菜单对象
-                    notebookMap.delete(notebook.id);
-                    notebookMap.set(notebook.parent_id,parentNotebook)
-                }
-
-                //此时nootebookMap中应该只有一级菜单对象
-                for(let level1Notebook of notebookMap)
-                {
-                    notebookTreeMenu[0].children.push(level1Notebook[1]);
-                }
-            }
-        })
-    }
-    
-    getNotebookList()
 
     /**
      * 获取最近访问的笔记列表

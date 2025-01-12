@@ -75,6 +75,7 @@
                 console.log(`[Click] ${option.key} - ${option.label}`);
             },
             onContextmenu(e) {
+                console.log('option=>',option);
                 optionsRef.value = [option];
                 showDropdownRef.value = true;
                 xRef.value = e.clientX;
