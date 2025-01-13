@@ -72,3 +72,99 @@ router.get("/getUserNotebookList",async (req,res)=>{
     console.log("End of get user notebook list")
     return;
 })
+
+/**
+ * 保存（更新）笔记
+ * userToken 用户编号
+ * parentId 父级菜单ID
+ * notebookName 笔记本名称
+ */
+router.post("/addNewNotebook",async (req,res)=>{
+    console.log("start add new notebook :",req.body);
+
+    let output={
+        success:false,
+        status:"",
+        description:"",
+        data:{
+            update_time:''
+        }
+    }
+
+    let inputInfo = {}
+    inputInfo.noteId = req.body.noteId
+    inputInfo.title = req.body.title
+    inputInfo.content = req.body.content
+
+    const t = await sqldb.sequelize.transaction();
+
+    try {
+        console.log("userInfo:",req.userInfo);
+        let userInfo = req.userInfo;
+        let curTime = new Date().toLocaleString()
+
+        const targetNote = sqldb.Note.findOne(
+            {
+                where: {
+                    id: inputInfo.noteId,
+                    u_id:userInfo.id,
+                    status:1
+                }
+            }
+        )
+        if(targetNote !== undefined)
+        {
+            //更新便签
+            const updateNum = await sqldb.Note.update(
+                {
+                    title:inputInfo.title,
+                    content:inputInfo.content,
+                    update_time:curTime,
+                },
+                {
+                    where:{
+                        id: inputInfo.noteId,
+                        u_id:userInfo.id,
+                        status:1
+                    },
+                    transaction:t
+                }
+            );
+            //记录日志
+            let event = statusCode.EVENT_LIST.UPDATE_NOTE;
+            const addLog = await sqldb.operLog.create(
+                {
+                    time:curTime,
+                    event:event.code,
+                    desc:event.desc,
+                    u_id:userInfo.id,
+                    o_id:inputInfo.noteId,
+                    type:1
+                },
+                {
+                    transaction:t
+                }
+            );
+
+            t.commit();
+            console.log("update note success,commit database success")
+            output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.description;
+            output.data.update_time = curTime;
+            res.send(output);
+        }
+
+        
+    } catch (error) {
+        console.log("update note error:",error);
+        t.rollback();
+        output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.description
+        res.send(output);
+    }
+    console.log("End of Update note");
+    return
+})
+module.exports=router;

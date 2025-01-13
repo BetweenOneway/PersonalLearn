@@ -1,7 +1,7 @@
 <template>
     <n-layout>
         <n-layout-header>
-            <RouterLink to="/">测试树状组件</RouterLink>
+            <RouterLink to="/tree">测试树状组件</RouterLink>
         </n-layout-header>
         <n-divider />
         <n-layout-content content-style="padding: 24px;">

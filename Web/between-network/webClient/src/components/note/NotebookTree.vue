@@ -20,6 +20,7 @@
 <script setup>
     import { repeat } from "seemly";
     import { ref } from "vue";
+    import noteServerRequest  from "@/request"
     import notebookApi from '@/request/api/notebookApi';
   
     function createData(level = 4, baseKey = "") {
@@ -40,14 +41,14 @@
         );
     }
 
-    const notebookTreeMenu = [
+    const notebookTreeMenu = ref([
         {
             label: "我的文件夹",
             key: "my-folder",
             children: [
             ]
         },
-    ];
+    ]);
     /**
      * 获取用户笔记本列表
     */
@@ -72,7 +73,7 @@
                         children:[]
                     })
                 }
-
+                console.log('notebookmap=>',notebookMap);
                 //将低级菜单对象并入高级菜单对象
                 for(let notebook of allNotebook)
                 {
@@ -80,24 +81,27 @@
                     let curNotebook = notebookMap.get(notebook.id);
                     //获取父级菜单对象
                     let parentNotebook = notebookMap.get(notebook.parent_id);
-                    parentNotebook.children.push(curNotebook);
+                    if(!!parentNotebook)
+                    {
+                        parentNotebook.children.push(curNotebook);
 
-                    //移除当菜单对象
-                    notebookMap.delete(notebook.id);
-                    notebookMap.set(notebook.parent_id,parentNotebook)
+                        //移除当菜单对象
+                        notebookMap.delete(notebook.id);
+                        notebookMap.set(notebook.parent_id,parentNotebook)
+                    }
                 }
 
                 //此时nootebookMap中应该只有一级菜单对象
                 for(let level1Notebook of notebookMap)
                 {
-                    notebookTreeMenu[0].children.push(level1Notebook[1]);
+                    notebookTreeMenu.value[0].children.push(level1Notebook[1]);
                 }
+
+                console.log('notebookTreeMenu=>',notebookTreeMenu.value);
             }
         })
     }
 
-    
-  
     function createLabel(level) {
         if (level === 4)
             return "道生一";
@@ -122,7 +126,7 @@
         }
     ]);
 
-    let defaultExpandedKeys= ref(["40", "41"]);
+    let defaultExpandedKeys= ref(['my-folder']);
     let showDropdown = showDropdownRef;
 
     let handleSelect = () => {
@@ -130,6 +134,11 @@
     };
     let handleClickoutside = () => {
         showDropdownRef.value = false;
+    }
+
+    function addNewNoteBook(parent_id)
+    {
+
     }
 
     const xRef = ref(0);
@@ -155,7 +164,7 @@
     /**
      * 初始化函数
     */
-    Init()
+    function Init()
     {
         getNotebookList();
     }
