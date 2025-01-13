@@ -2,17 +2,21 @@
     <n-thing class="note-card">
         <!--标题-->
         <template #header>
-            <n-ellipsis line-clamp="1">
+            <n-ellipsis line-clamp="1" v-if="!rename">
                 {{title}}
             </n-ellipsis>
         </template>
         <!--笔记内容-->
         <template #description>
-            <n-ellipsis line-clamp="2" :tooltip="false">
-                <n-text depth="3">
-                    {{htmlToText(desc)}}
-                </n-text>
-            </n-ellipsis>
+            <n-space vertical>
+                <n-innput autofocus :value="title" @click.stop v-if="!rename" style="width:100%"></n-innput>
+                <n-ellipsis line-clamp="2" :tooltip="false">
+                    <n-text depth="3">
+                        {{htmlToText(desc)}}
+                    </n-text>
+                </n-ellipsis>
+            </n-space>
+            
         </template>
         <!--底部状态栏-->
         <template #default>
@@ -34,7 +38,8 @@ defineProps(
         title:{type:String,required:true},//标题
         desc:{type:String,default:()=>'暂无内容'},//简介
         top:{type:Boolean,required:false},//是否置顶
-        time:{type:String,required:true}//修改时间
+        time:{type:String,required:true},//修改时间
+        rename:{type:Boolean,default:false}
     }
 )
 </script>
