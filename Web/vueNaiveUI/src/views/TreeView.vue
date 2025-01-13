@@ -27,109 +27,123 @@
 </template>
 
 <script setup>
-
-    import { repeat } from "seemly";
     import { ref,h,nextTick } from "vue";
-  
-    function createData(level = 2, baseKey = "") {
-        if (!level)
-            return void 0;
-        //重复创建一个数组，数组长度为6-4,值为undefined
-        let data = repeat(6 - level, void 0);
-        console.log("data=>",data);
-        return data.map(
-            (_, index) => {
-                const key = `${baseKey}${level}${index}`;
-                return {
-                    label: createLabel(level),
-                    key,
-                    children: createData(level - 1, key)
-                };
-            }
-        );
-    }
-  
-    function createLabel(level) {
-        if (level === 4)
-            return "道生一";
-        if (level === 3)
-            return "一生二";
-        if (level === 2)
-            return "二生三";
-        if (level === 1)
-            return "三生万物";
-        return "";
-    }
+    import { NButton,NInput } from 'naive-ui'
 
-    let datatree = createData();
+    let datatree = ref([
+        {
+            label:'level',
+            key:'01',
+            isedit:false,
+            children:[
+                {
+                    label:'level 0-1-1-1',
+                    key:'0111',
+                    isedit:false,
+                },
+                {
+                    label:'level 0-1-1-2',
+                    key:'0112',
+                    isedit:false,
+                }
+            ]
+        },
+        {
+            label:'level2',
+            key:'02',
+            isedit:false,
+            children:[
+                {
+                    label:'level 0-2-1-1',
+                    key:'0211',
+                    isedit:false,
+                },
+                {
+                    label:'level 0-2-1-2',
+                    key:'0212',
+                    isedit:false,
+                }
+            ]
+        }
+    ]);
 
     let props={
-        isedit:false,
-        isdelect:false,
-        isadd:false,
+        isedit:true,
+        isdelect:true,
+        isadd:true,
     }
     //节点内容渲染函数
     const inputRef = ref(null)
+
     const nodelabel = ({ option }) => {
-    //  console.log(option.key)
-    return h(
-        'div',
-        { class: 'node', style: { height: '0.25rem', width: '1.8rem' } },
-        option.isedit == true && props.isedit
-        ? h(NInput, {
-            autofocus: true,
-            ref: inputRef.value,
-            size: 'small',
-            value: option.label,
-            onUpdateValue: v => {
-                option.label = v
+        //  console.log(option.key)
+        return h(
+            'div',
+            { 
+                class: 'node', 
+                style: { height: '0.25rem', width: '10rem' } 
             },
-            onChange: () => {
-                option.isedit = false
-            },
-            onBlur: () => {
-                option.isedit = false
-            }
-            })
-        : option.label
-    )
+            (option.isedit == true && props.isedit)
+            ? h(NInput, 
+                {
+                    autofocus: true,
+                    ref: inputRef,
+                    size: 'small',
+                    value: option.label,
+                    onUpdateValue: v => {
+                        option.label = v
+                    },
+                    onChange: () => {
+                        option.isedit = false
+                    },
+                    onBlur: () => {
+                        option.isedit = false
+                    }
+                }
+            )
+            : option.label
+        )
     }
 
     //节点后缀渲染
     const nodesuffix = ({ option }) => {
-    if (
-        !option.children &&
-        option.key == key.value &&
-        props.isdelect
-    ) {
-        return h(
-        NButton,
+        if (!option.children && option.key == key.value && props.isdelect) 
         {
-            text: true,
-            type: 'info',
-            color: '#00EAFF',
-            size: 'tiny',
-            onClick: e => {
-            deltree(option.key), e.stopPropagation()//自定义节点删除函数
-            }
-        },
-        { default: () => '删除' }
-        )
-    } else if ((option.children) && props.isadd) {
-        return h(
-        NButton,
+            return h(
+                NButton,
+                {
+                    text: true,
+                    type: 'info',
+                    color: '#00EAFF',
+                    size: 'tiny',
+                    onClick: e => {
+                        //自定义节点删除函数
+                        //deltree(option.key)
+                        e.stopPropagation()
+                    }
+                },
+                { default: () => '删除' }
+            )
+        } 
+        else if ((option.children) && props.isadd) 
         {
-            type: 'info',
-            color: '#007293',
-            bordered: true,
-            round: true,
-            size: 'tiny',
-            textcolor: '#CFFBFF',
-            onClick: e => addnode(e, option.key)//自定义新增节点函数
-        },
-        { default: () => '+新增' }
-        )
-    }
+            return h(
+                NButton,
+                {
+                    type: 'info',
+                    color: '#007293',
+                    bordered: true,
+                    round: true,
+                    size: 'tiny',
+                    textcolor: '#CFFBFF',
+                    onClick: e => {
+                        //自定义新增节点函数
+                        //addnode(e, option.key)
+                    }
+                },
+                { default: () => '+新增' }
+            )
+        }
     }
 
     const key = ref()
@@ -137,15 +151,16 @@
     const checkCamera = ({ option }) => {
         return {
             onClick() {
-            //emits('optionlabel', option.label)
-            //console.log(option.label)
-            key.value = option.key
+                //emits('optionlabel', option.label)
+                //console.log(option.label)
+                key.value = option.key
             },
             ondblclick() {
                 //双击事件
                 option.isedit = true
                 nextTick(() => {
-                    inputRef.value?.focus()
+                    console.log('ondblclick');
+                    inputRef.focus()
                 })
             }
         }
