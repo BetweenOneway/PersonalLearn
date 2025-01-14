@@ -1,45 +1,41 @@
 <template>
-    <n-tree
-      block-line
-      :data="notebookTreeMenu"
-      :default-expanded-keys="defaultExpandedKeys"
-      :node-props="nodeProps"
-    />
+    <div class="input-div">
+        <n-space justify="center">
+            <n-button type="primary">新建</n-button>
+        </n-space>
+    </div>
+    <div class="div-tree" >
+        <n-tree
+            class="tree"
+            selectable
+            :data="notebookTreeMenu"
+            :node-props="nodeProps"
+            :render-switcher-icon="renderSwitcherIcon"
+            :default-expand-keys="defaultExpandedKeys"
+            block-line
+            show-irrelevant-nodes
+            :render-label="nodelabel"
+            :render-suffix="nodesuffix"
+        />
+    </div>
+
     <n-dropdown
       trigger="manual"
       placement="bottom-start"
-      :show="showDropdown"
-      :options="optionsRef"
-      :x="x"
-      :y="y"
+      :show="contextMenu.show"
+      :options="contextMenu.options"
+      :x="contextMenu.x"
+      :y="contextMenu.y"
       @select="handleSelect"
       @clickoutside="handleClickoutside"
     />
 </template>
   
 <script setup>
-    import { repeat } from "seemly";
-    import { ref } from "vue";
+    import { ref,h,nextTick } from "vue";
+    import { NButton,NInput } from 'naive-ui'
     import noteServerRequest  from "@/request"
     import notebookApi from '@/request/api/notebookApi';
-  
-    function createData(level = 4, baseKey = "") {
-        if (!level)
-            return void 0;
-        //重复创建一个数组，数组长度为6-4,值为undefined
-        let data = repeat(6 - level, void 0);
-        console.log("data=>",data);
-        return data.map(
-            (_, index) => {
-                const key = `${baseKey}${level}${index}`;
-                return {
-                    label: createLabel(level),
-                    key,
-                    children: createData(level - 1, key)
-                };
-            }
-        );
-    }
 
     const notebookTreeMenu = ref([
         {
@@ -70,7 +66,7 @@
                     notebookMap.set(notebook.id,{
                         label: notebook.name,
                         key: ''+notebook.id,
-                        children:[]
+                        isedit:false,
                     })
                 }
                 console.log('notebookmap=>',notebookMap);
@@ -83,7 +79,13 @@
                     let parentNotebook = notebookMap.get(notebook.parent_id);
                     if(!!parentNotebook)
                     {
-                        parentNotebook.children.push(curNotebook);
+                        if(!!parentNotebook.children)
+                        {
+                            parentNotebook.children.push(curNotebook);
+                        }
+                        else{
+                            parentNotebook.children = [curNotebook]
+                        }
 
                         //移除当菜单对象
                         notebookMap.delete(notebook.id);
@@ -102,38 +104,98 @@
         })
     }
 
-    function createLabel(level) {
-        if (level === 4)
-            return "道生一";
-        if (level === 3)
-            return "一生二";
-        if (level === 2)
-            return "二生三";
-        if (level === 1)
-            return "三生万物";
-        return "";
+    //节点内容渲染函数
+    const inputRef = ref(null)
+
+    const nodelabel = ({ option }) => {
+        //  console.log(option.key)
+        return h(
+            'div',
+            { 
+                class: 'node', 
+                style: { width: '5rem' }
+            },
+            (option.isedit == true)
+            ? h(NInput, 
+                {
+                    autofocus: true,
+                    ref: inputRef,
+                    size: 'small',
+                    value: option.label,
+                    onUpdateValue: v => {
+                        option.label = v
+                    },
+                    onChange: () => {
+                        console.log("option change=>",option.key);
+                        option.isedit = false
+                        //更新笔记本名称
+                    },
+                    onBlur: () => {
+                        console.log("option blur=>",option.key);
+                        option.isedit = false
+                    }
+                }
+            )
+            : option.label
+        )
     }
 
-    const showDropdownRef = ref(false);
-    const optionsRef = ref([
+    //节点后缀渲染
+    const nodesuffix = ({ option }) => {
+        if (!option.children && option.key == key.value) 
         {
-            label:'新建文件夹',
-            key:'createNotebook'
-        },
+            return h(
+                NButton,
+                {
+                    text: true,
+                    type: 'info',
+                    color: '#00EAFF',
+                    size: 'tiny',
+                    onClick: e => {
+                        //自定义节点删除函数
+                        //deltree(option.key)
+                        e.stopPropagation()
+                    }
+                },
+                { default: () => '删除' }
+            )
+        } 
+        else if ((option.children)) 
         {
-            label:'新建笔记',
-            key:'createNote'
+            return h(
+                NButton,
+                {
+                    type: 'info',
+                    color: '#007293',
+                    bordered: true,
+                    round: true,
+                    size: 'tiny',
+                    textcolor: '#CFFBFF',
+                    onClick: e => {
+                        //自定义新增节点函数
+                        //addnode(e, option.key)
+                    }
+                },
+                { default: () => '+新增' }
+            )
         }
-    ]);
+    }
 
     let defaultExpandedKeys= ref(['my-folder']);
-    let showDropdown = showDropdownRef;
 
-    let handleSelect = () => {
-        //showDropdownRef.value = false;
+    //右键菜单处理
+    let handleSelect = (key) => {
+        contextMenu.value.show = false;
+        if(key =='createNotebook')
+        {
+            addNewNoteBook(contextMenu.value.notebookKey);
+        }
+        else if(key =='createNote')
+        {}
     };
+
     let handleClickoutside = () => {
-        showDropdownRef.value = false;
+        contextMenu.value.show = false;
     }
 
     function addNewNoteBook(parent_id)
@@ -141,22 +203,49 @@
 
     }
 
-    const xRef = ref(0);
-    const yRef = ref(0);
-    let x = xRef;
-    let y = yRef;
+    //右键菜单对象
+    const contextMenu = ref({
+        show:false,
+        x:0,//X轴坐标
+        y:0,//Y轴坐标
+        notebookKey:'',
+        options:()=>{
+            return [
+                {
+                    label:'新建笔记本',
+                    key:'createNotebook',
+                },
+                {
+                    label:'新建笔记',
+                    key:'createNote',
+                }
+            ]
+        }
+    })
+
     let nodeProps = ({ option }) => {
         return {
             onClick() {
                 //单击笔记本
             },
+            ondblclick() {
+                //双击事件
+                option.isedit = true
+                nextTick(() => {
+                    console.log('ondblclick=>',inputRef);
+                    inputRef.value.focus()
+                })
+            },
             onContextmenu(e) {
-                xRef.value = e.clientX;
-                yRef.value = e.clientY;
-
-                console.log(`[Notebook Right Click] ${option.key} - ${option.label}`);
-                showDropdownRef.value = true;
                 e.preventDefault();
+                contextMenu.value.show = false;
+                nextTick().then(() => {
+                    contextMenu.value.show = true;
+                    contextMenu.value.x = e.clientX;
+                    contextMenu.value.y = e.clientY;
+                    contextMenu.value.notebookKey = option.key;
+                    contextMenu.value.notebookLabel = option.label;
+                });
             }
         };
     }

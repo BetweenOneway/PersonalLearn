@@ -86,9 +86,13 @@
                     size: 'small',
                     value: option.label,
                     onUpdateValue: v => {
+                        //每一次输入都会出发
+                        console.log("option update=>",option.key);
                         option.label = v
                     },
+                    //两个是一样的 这两个只有回车或者输入交点离开时才会触发
                     onChange: () => {
+                        //只有值改变时才会触发
                         console.log("option change=>",option.key);
                         option.isedit = false
                     },
