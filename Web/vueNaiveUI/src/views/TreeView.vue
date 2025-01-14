@@ -32,34 +32,34 @@
 
     let datatree = ref([
         {
-            label:'level',
+            label:'语文',
             key:'01',
             isedit:false,
             children:[
                 {
-                    label:'level 0-1-1-1',
+                    label:'一年级',
                     key:'0111',
                     isedit:false,
                 },
                 {
-                    label:'level 0-1-1-2',
+                    label:'二年级',
                     key:'0112',
                     isedit:false,
                 }
             ]
         },
         {
-            label:'level2',
+            label:'数学',
             key:'02',
             isedit:false,
             children:[
                 {
-                    label:'level 0-2-1-1',
+                    label:'三年级',
                     key:'0211',
                     isedit:false,
                 },
                 {
-                    label:'level 0-2-1-2',
+                    label:'四年级',
                     key:'0212',
                     isedit:false,
                 }
@@ -81,7 +81,7 @@
             'div',
             { 
                 class: 'node', 
-                style: { height: '0.25rem', width: '10rem' } 
+                
             },
             (option.isedit == true && props.isedit)
             ? h(NInput, 
@@ -94,9 +94,11 @@
                         option.label = v
                     },
                     onChange: () => {
+                        console.log("option change=>",option.key);
                         option.isedit = false
                     },
                     onBlur: () => {
+                        console.log("option blur=>",option.key);
                         option.isedit = false
                     }
                 }
@@ -159,8 +161,8 @@
                 //双击事件
                 option.isedit = true
                 nextTick(() => {
-                    console.log('ondblclick');
-                    inputRef.focus()
+                    console.log('ondblclick=>',inputRef);
+                    inputRef.value.focus()
                 })
             }
         }
