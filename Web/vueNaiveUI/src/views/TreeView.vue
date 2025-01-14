@@ -67,11 +67,6 @@
         }
     ]);
 
-    let props={
-        isedit:true,
-        isdelect:true,
-        isadd:true,
-    }
     //节点内容渲染函数
     const inputRef = ref(null)
 
@@ -81,9 +76,9 @@
             'div',
             { 
                 class: 'node', 
-                
+                style: { width: '5rem' }
             },
-            (option.isedit == true && props.isedit)
+            (option.isedit == true)
             ? h(NInput, 
                 {
                     autofocus: true,
@@ -109,7 +104,7 @@
 
     //节点后缀渲染
     const nodesuffix = ({ option }) => {
-        if (!option.children && option.key == key.value && props.isdelect) 
+        if (!option.children && option.key == key.value) 
         {
             return h(
                 NButton,
@@ -127,7 +122,7 @@
                 { default: () => '删除' }
             )
         } 
-        else if ((option.children) && props.isadd) 
+        else if ((option.children)) 
         {
             return h(
                 NButton,
