@@ -23,6 +23,8 @@ using namespace std;
 #include "stream.h"
 #include "function.h"
 
+#include "fileOper.h"
+
 
 enum class Color:int {
     Red,
@@ -372,12 +374,18 @@ void testFunction()
     FUNCTION::testFunction();
 }
 
+void testFileOper()
+{
+    FILE_OPER::testWriteContainerToFile();
+}
+
 int main()
 {
+    testFileOper();
     //testStream();
     //testDist();
     //testBit();
-    testContainer();
+    //testContainer();
    //testWString();
     //testWired();
     //testScope();
