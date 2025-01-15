@@ -7,12 +7,20 @@ const notebookApi = {
         dataParam:false,
         successMessage:false
     },
-    createNote:{
-        name:'创建笔记',
-        url:'/notebook/addNewNotebook',
+    addNotebook:{
+        name:'新增笔记本',
+        url:'/notebook/addNotebook',
         method:'POST',
         userPower:true,
-        dataParam:false,
+        dataParam:true,
+        successMessage:true
+    },
+    renameNotebook:{
+        name:'笔记本重命名',
+        url:'/notebook/renameNotebook',
+        method:'POST',
+        userPower:true,
+        dataParam:true,
         successMessage:true
     },
 }

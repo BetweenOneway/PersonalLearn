@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '@/views/HomeView.vue'
+import TreeView1 from '@/views/TreeView1.vue'
 import TreeView from '@/views/TreeView.vue'
 
 const router = createRouter({
@@ -14,7 +15,17 @@ const router = createRouter({
         path: '/tree',
         name: 'tree',
         component: TreeView,
-      },
+    },
+    {
+        path: '/tree1',
+        name: 'tree1',
+        component: TreeView1,
+    },
+    {
+        path: '/for',
+        name: 'for',
+        component: () => import('@/views/forView.vue'),
+    },
     {
       //path: '/about',
       //name: 'about',

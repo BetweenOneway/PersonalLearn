@@ -14,7 +14,7 @@
             :default-expand-keys="defaultExpandedKeys"
             block-line
             show-irrelevant-nodes
-            :render-label="nodelabel"
+            :render-label="notebookNode"
             :render-suffix="nodesuffix"
         />
     </div>
@@ -45,6 +45,7 @@
             ]
         },
     ]);
+
     /**
      * 获取用户笔记本列表
     */
@@ -107,7 +108,7 @@
     //节点内容渲染函数
     const inputRef = ref(null)
 
-    const nodelabel = ({ option }) => {
+    const notebookNode = ({ option }) => {
         //  console.log(option.key)
         return h(
             'div',
@@ -129,6 +130,7 @@
                         console.log("option change=>",option.key);
                         option.isedit = false
                         //更新笔记本名称
+                        renameNotebook(option.label,option.key)
                     },
                     onBlur: () => {
                         console.log("option blur=>",option.key);
@@ -181,26 +183,27 @@
         }
     }
 
+    //默认打开的菜单KEY
     let defaultExpandedKeys= ref(['my-folder']);
 
     //右键菜单处理
-    let handleSelect = (key) => {
+    let handleSelect = async (key) => {
         contextMenu.value.show = false;
         if(key =='createNotebook')
         {
-            addNewNoteBook(contextMenu.value.notebookKey);
+            //新增笔记本
+            await addNewNoteBook(contextMenu.value.notebookKey);
+            //重新获取笔记本列表
+            await getNotebookList();
         }
         else if(key =='createNote')
-        {}
+        {
+            //新增笔记
+        }
     };
 
     let handleClickoutside = () => {
         contextMenu.value.show = false;
-    }
-
-    function addNewNoteBook(parent_id)
-    {
-
     }
 
     //右键菜单对象
@@ -248,6 +251,45 @@
                 });
             }
         };
+    }
+
+    /**
+     * 新增笔记本
+    */
+    async function addNewNoteBook(parentId,newName="新增笔记本")
+    {
+        //获取请求API
+        let API = {...notebookApi.addNotebook}
+        //封装请求体中的参数
+        API.data = {
+            notebookName:newName,
+            parentId:parentId,
+        }
+        //发送请求
+        await noteServerRequest(API).then(responseData =>{
+            if(!responseData)
+            {
+                return;
+            }
+        })
+    }
+
+    async function renameNotebook(newName,key)
+    {
+        //获取请求API
+        let API = {...notebookApi.renameNotebook}
+        //封装请求体中的参数
+        API.data = {
+            id:key,
+            newName:newName
+        }
+        //发送请求
+        await noteServerRequest(API).then(responseData =>{
+            if(!responseData)
+            {
+                return;
+            }
+        })
     }
 
     /**

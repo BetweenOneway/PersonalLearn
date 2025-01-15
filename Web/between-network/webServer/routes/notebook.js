@@ -28,7 +28,6 @@ router.get("/getUserNotebookList",async (req,res)=>{
     
     var userToken = req.get('userToken')
     
-
     try {
         //验证用户是否登录
         let validateInfo = await validate.IsUserValidate(userToken);
@@ -74,13 +73,13 @@ router.get("/getUserNotebookList",async (req,res)=>{
 })
 
 /**
- * 保存（更新）笔记
+ * 新增笔记本
  * userToken 用户编号
  * parentId 父级菜单ID
  * notebookName 笔记本名称
  */
-router.post("/addNewNotebook",async (req,res)=>{
-    console.log("start add new notebook :",req.body);
+router.post("/addNotebook",async (req,res)=>{
+    console.log("start add notebook:",req.body);
 
     let output={
         success:false,
@@ -92,9 +91,8 @@ router.post("/addNewNotebook",async (req,res)=>{
     }
 
     let inputInfo = {}
-    inputInfo.noteId = req.body.noteId
-    inputInfo.title = req.body.title
-    inputInfo.content = req.body.content
+    inputInfo.notebookName = req.body.notebookName
+    inputInfo.parentId = req.body.parentId
 
     const t = await sqldb.sequelize.transaction();
 
@@ -103,10 +101,87 @@ router.post("/addNewNotebook",async (req,res)=>{
         let userInfo = req.userInfo;
         let curTime = new Date().toLocaleString()
 
-        const targetNote = sqldb.Note.findOne(
+        const newAddNotebook = await sqldb.Notebook.create(
+            {
+                name:inputInfo.notebookName,
+                parentId:inputInfo.parentId,
+                u_id:userInfo.id,
+                time:curTime,
+                update_time:curTime,
+                status:1,
+            },
+            {
+                transaction:t
+            }
+        );
+        console.log("new added notebook info:",newAddNotebook);
+        let event = statusCode.EVENT_LIST.ADD_NOTE;
+        const addLog = await sqldb.operLog.create(
+            {
+                time:curTime,
+                event:event.code,
+                desc:event.desc,
+                u_id:userInfo.id,
+                o_id:newAddNotebook.id,
+                type:1
+            },
+            {
+                transaction:t
+            }
+        );
+
+        t.commit();
+        console.log("add notebook success,commit database success")
+        output.success = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.description
+        output.data.noteId = newAddNote.id
+        res.send(output);
+    } catch (error) {
+        console.log("add notebook error:",error);
+        t.rollback();
+        output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.description
+        res.send(output);
+    }
+    console.log("End of add notebook");
+    return
+})
+
+/**
+ * 笔记本重命名
+ * userToken 用户编号
+ * id 目标笔记本ID
+ * newName 笔记本新名称
+ */
+router.post("/renameNotebook",async (req,res)=>{
+    console.log("start rename notebook :",req.body);
+
+    let output={
+        success:false,
+        status:"",
+        description:"",
+        data:{
+            update_time:''
+        }
+    }
+
+    let inputInfo = {}
+    inputInfo.id = req.body.id
+    inputInfo.newName = req.body.title
+
+    const t = await sqldb.sequelize.transaction();
+
+    try {
+        console.log("userInfo:",req.userInfo);
+        let userInfo = req.userInfo;
+        let curTime = new Date().toLocaleString()
+
+        const targetNote = sqldb.Notebook.findOne(
             {
                 where: {
-                    id: inputInfo.noteId,
+                    id: inputInfo.id,
                     u_id:userInfo.id,
                     status:1
                 }
@@ -114,16 +189,15 @@ router.post("/addNewNotebook",async (req,res)=>{
         )
         if(targetNote !== undefined)
         {
-            //更新便签
-            const updateNum = await sqldb.Note.update(
+            //更新
+            const updateNum = await sqldb.Notebook.update(
                 {
-                    title:inputInfo.title,
-                    content:inputInfo.content,
+                    name:inputInfo.newName,
                     update_time:curTime,
                 },
                 {
                     where:{
-                        id: inputInfo.noteId,
+                        id: inputInfo.id,
                         u_id:userInfo.id,
                         status:1
                     },
@@ -138,7 +212,7 @@ router.post("/addNewNotebook",async (req,res)=>{
                     event:event.code,
                     desc:event.desc,
                     u_id:userInfo.id,
-                    o_id:inputInfo.noteId,
+                    o_id:inputInfo.id,
                     type:1
                 },
                 {
@@ -147,24 +221,22 @@ router.post("/addNewNotebook",async (req,res)=>{
             );
 
             t.commit();
-            console.log("update note success,commit database success")
+            console.log("rename notebook success,commit database success")
             output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.description;
             output.data.update_time = curTime;
             res.send(output);
         }
-
-        
     } catch (error) {
-        console.log("update note error:",error);
+        console.log("rename notebook error:",error);
         t.rollback();
         output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.success
         output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.status
         output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.description
         res.send(output);
     }
-    console.log("End of Update note");
+    console.log("End of rename notebook");
     return
 })
 module.exports=router;

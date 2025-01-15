@@ -139,7 +139,7 @@
                     textcolor: '#CFFBFF',
                     onClick: e => {
                         //自定义新增节点函数
-                        //addnode(e, option.key)
+                        addNode(e, option.key)
                     }
                 },
                 { default: () => '+新增' }
@@ -165,5 +165,54 @@
                 })
             }
         }
+    }
+
+    function addNode(e,key)
+    {
+        console.log("add node=>",key);
+        const getNode = (key,rootNode)=>{
+            for(var node of rootNode)
+            {
+                if(node.key == key)
+                {
+                    return node;
+                }
+                else if(!node.children?.length)
+                {
+                    var result =getNode(key,node.children);
+                    if(!!result)
+                    {
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
+        let targetNode = getNode(key,datatree.value);
+        console.log("foud node",targetNode);
+        if(!!targetNode?.children.length)
+        {
+            let notebookId = targetNode.children.length;
+            targetNode.children.push({
+                label:'新笔记本',
+                key:targetNode.key+notebookId,
+                isedit:true,
+            })
+        }
+        else{
+            targetNode.children=[{
+                label:'新笔记本',
+                key:targetNode.key+'0',
+                isedit:true,
+            }]
+        }
+        console.log("added node",targetNode);
+
+
+        let obj ={
+            name:'wang',
+            family:'wei'
+        }
+        console.log("obj=>",obj);
     }
 </script>
