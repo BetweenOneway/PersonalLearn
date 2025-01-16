@@ -1,21 +1,14 @@
 <template>
-    <div class="input-div">
-        <n-space justify="center">
-            <n-button type="primary">新建</n-button>
-        </n-space>
-    </div>
     <div class="div-tree" >
         <n-tree
             class="tree"
             selectable
             :data="notebookTreeMenu"
             :node-props="nodeProps"
-            :render-switcher-icon="renderSwitcherIcon"
             :default-expand-keys="defaultExpandedKeys"
             block-line
             show-irrelevant-nodes
             :render-label="notebookNode"
-            :render-suffix="nodesuffix"
         />
     </div>
 
@@ -32,7 +25,7 @@
 </template>
   
 <script setup>
-    import { ref,h,nextTick } from "vue";
+    import { ref,h,nextTick,computed } from "vue";
     import { NButton,NInput } from 'naive-ui'
     import noteServerRequest  from "@/request"
     import notebookApi from '@/request/api/notebookApi';
@@ -143,45 +136,45 @@
     }
 
     //节点后缀渲染
-    const nodesuffix = ({ option }) => {
-        if (!option.children && option.key == key.value) 
-        {
-            return h(
-                NButton,
-                {
-                    text: true,
-                    type: 'info',
-                    color: '#00EAFF',
-                    size: 'tiny',
-                    onClick: e => {
-                        //自定义节点删除函数
-                        //deltree(option.key)
-                        e.stopPropagation()
-                    }
-                },
-                { default: () => '删除' }
-            )
-        } 
-        else if ((option.children)) 
-        {
-            return h(
-                NButton,
-                {
-                    type: 'info',
-                    color: '#007293',
-                    bordered: true,
-                    round: true,
-                    size: 'tiny',
-                    textcolor: '#CFFBFF',
-                    onClick: e => {
-                        //自定义新增节点函数
-                        //addnode(e, option.key)
-                    }
-                },
-                { default: () => '+新增' }
-            )
-        }
-    }
+    // const nodesuffix = ({ option }) => {
+    //     if (!option.children && option.key == key.value) 
+    //     {
+    //         return h(
+    //             NButton,
+    //             {
+    //                 text: true,
+    //                 type: 'info',
+    //                 color: '#00EAFF',
+    //                 size: 'tiny',
+    //                 onClick: e => {
+    //                     //自定义节点删除函数
+    //                     //deltree(option.key)
+    //                     e.stopPropagation()
+    //                 }
+    //             },
+    //             { default: () => '删除' }
+    //         )
+    //     } 
+    //     else if ((option.children)) 
+    //     {
+    //         return h(
+    //             NButton,
+    //             {
+    //                 type: 'info',
+    //                 color: '#007293',
+    //                 bordered: true,
+    //                 round: true,
+    //                 size: 'tiny',
+    //                 textcolor: '#CFFBFF',
+    //                 onClick: e => {
+    //                     //自定义新增节点函数
+    //                     //addnode(e, option.key)
+    //                 }
+    //             },
+    //             { default: () => '+新增' }
+    //         )
+    //     }
+    // }
 
     //默认打开的菜单KEY
     let defaultExpandedKeys= ref(['my-folder']);
@@ -212,7 +205,7 @@
         x:0,//X轴坐标
         y:0,//Y轴坐标
         notebookKey:'',
-        options:()=>{
+        options:computed(()=>{
             return [
                 {
                     label:'新建笔记本',
@@ -223,7 +216,7 @@
                     key:'createNote',
                 }
             ]
-        }
+        })
     })
 
     let nodeProps = ({ option }) => {
@@ -240,8 +233,9 @@
                 })
             },
             onContextmenu(e) {
+                console.log('on contextmenu=>',option)
                 e.preventDefault();
-                contextMenu.value.show = false;
+                //contextMenu.value.show = false;
                 nextTick().then(() => {
                     contextMenu.value.show = true;
                     contextMenu.value.x = e.clientX;
