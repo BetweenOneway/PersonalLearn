@@ -23,7 +23,7 @@
       @clickoutside="handleClickoutside"
     />
 </template>
-  
+
 <script setup>
     import { ref,h,nextTick,computed } from "vue";
     import { NInput } from 'naive-ui'
@@ -225,6 +225,11 @@
         return {
             onClick() {
                 //单击笔记本
+                //对于有子文件夹的文件夹，点击展开按钮并不会触发该事件
+                //只有点击文件夹名称才会触发
+                console.log("click=>",option.label);
+                //获取当前文件夹下所有笔记
+                getNotesList(option.key)
             },
             ondblclick() {
                 //双击事件
@@ -287,6 +292,9 @@
             }
         })
     }
+
+    function getNotesList(notebookId)
+    {}
 
     /**
      * 初始化函数

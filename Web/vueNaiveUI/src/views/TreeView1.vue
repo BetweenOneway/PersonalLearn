@@ -72,6 +72,8 @@
     let nodeProps = ({ option }) => {
         return {
             onClick() {
+                //对于有子文件夹的文件夹，点击展开按钮并不会触发该事件
+                //只有点击文件夹名称才会触发
                 console.log(`[Click] ${option.key} - ${option.label}`);
             },
             onContextmenu(e) {
