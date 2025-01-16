@@ -13,6 +13,7 @@
                 </n-button>
 
                 <n-divider style="margin:15px auto"></n-divider>
+                
                 <!--菜单列-->
                 <n-layout-sider
                 bordered
@@ -22,11 +23,11 @@
                 :width="240"
                 :native-scrollbar="false"
                 >
-                    <n-menu
-                        :collapsed-width="64"
-                        :collapsed-icon-size="22"
-                        :options="topMenu"
-                    />
+                    <div style="margin-left: 24px;">
+                        <n-button text size="large" >
+                            最近文件
+                        </n-button>
+                    </div>
                     <NotebookTree />
                     <n-menu
                         :collapsed-width="64"
@@ -155,24 +156,6 @@
 
     //是否处于加载状态
     const loading = ref(true)
-
-    const topMenu =[
-        {
-            label: "最新文件",
-            key: "latest-files",
-            icon: renderIcon(BookIcon)
-        }
-    ]
-
-    const notebookTreeMenu = [
-        {
-            label: "我的文件夹",
-            key: "my-folder",
-            icon: renderIcon(BookIcon),
-            children: [
-            ]
-        },
-    ];
 
     const bottomMenu = [
         {

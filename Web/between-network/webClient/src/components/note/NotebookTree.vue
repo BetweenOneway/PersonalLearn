@@ -5,7 +5,7 @@
             selectable
             :data="notebookTreeMenu"
             :node-props="nodeProps"
-            :default-expand-keys="defaultExpandedKeys"
+            :default-expanded-keys="defaultExpandedKeys"
             block-line
             show-irrelevant-nodes
             :render-label="notebookNode"
@@ -26,14 +26,14 @@
   
 <script setup>
     import { ref,h,nextTick,computed } from "vue";
-    import { NButton,NInput } from 'naive-ui'
+    import { NInput } from 'naive-ui'
     import noteServerRequest  from "@/request"
     import notebookApi from '@/request/api/notebookApi';
 
     const notebookTreeMenu = ref([
         {
             label: "我的文件夹",
-            key: "my-folder",
+            key: "0",
             children: [
             ]
         },
@@ -93,7 +93,9 @@
                     notebookTreeMenu.value[0].children.push(level1Notebook[1]);
                 }
 
+                defaultExpandedKeys.value[0] = notebookTreeMenu.value[0].key
                 console.log('notebookTreeMenu=>',notebookTreeMenu.value);
+                console.log("default expand keys=>",defaultExpandedKeys.value);
             }
         })
     }
@@ -177,7 +179,7 @@
     // }
 
     //默认打开的菜单KEY
-    let defaultExpandedKeys= ref(['my-folder']);
+    const defaultExpandedKeys= ref(['my-folder']);
 
     //右键菜单处理
     let handleSelect = async (key) => {
