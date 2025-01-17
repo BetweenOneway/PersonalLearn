@@ -18,7 +18,16 @@
 </template>
 
 <script setup>
-    
+    import bus from 'vue3-eventbus'
+
+    //当组件卸载完毕之前 移除监听
+    onBeforeUnmount(()=>{
+        //
+        bus.off('sendMsgToBrother',getMsgFromBrother)
+    })
+
+    bus.on('sendMsgToBrother',getMsgFromBrother)
+
     defineProps(
         {
             msg:{type:String,required:false},
@@ -31,6 +40,11 @@
     {
         console.log("子组件给父组件发送消息")
         emit("sendMsgToParent","来自ChildComponentA的问候");
+    }
+
+    function getMsgFromBrother(val)
+    {
+        
     }
 </script>
 
