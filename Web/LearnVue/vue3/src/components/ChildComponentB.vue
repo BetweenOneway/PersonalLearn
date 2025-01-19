@@ -4,7 +4,7 @@
             <legend>ChildComponentB</legend>
             <div>
                 <button>给父组件发送消息</button>
-                <button @click="sendMsgToBrother">给兄弟组件发送消息</button>
+                <button @click="sendMsgToBrother">通过EventBus给兄弟组件发送消息</button>
             </div>
         </fieldset>
     </div>
@@ -17,7 +17,8 @@
 
     function sendMsgToBrother()
     {
-        bus.emit('sendMsgToBrother',getCurrentTime());
+        //通过bus发送的消息可以被任意监听该消息的组件接收到
+        bus.emit('sendMsgToBrother','msg form Com B:'+getCurrentTime());
     }
 </script>
 

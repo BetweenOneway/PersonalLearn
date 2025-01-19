@@ -5,11 +5,15 @@
             <div>
                 <fieldset>
                     <legend>接收</legend>
-                    <input type="text" placeholder="来自父组件的消息" disabled :value="msg">
+                    <input style="width: 300px;" type="text" placeholder="来自父组件的消息" disabled :value="msg">
                 </fieldset>
                 <fieldset>
                     <legend>接收</legend>
-                    <input type="text" placeholder="来自兄弟组件的消息" disabled :value="info">
+                    <input style="width: 300px;" type="text" placeholder="来自组件的消息" disabled :value="info">
+                </fieldset>
+                <fieldset>
+                    <legend>子组件</legend>
+                    <SubChildComponent1></SubChildComponent1>
                 </fieldset>
                 <fieldset>
                     <legend>操作</legend>
@@ -22,8 +26,9 @@
 </template>
 
 <script setup>
-    import { ref,onBeforeUnmount } from 'vue';
+    import { ref,onBeforeUnmount,inject } from 'vue';
     import bus from 'vue3-eventbus'
+    import SubChildComponent1 from './SubChildComponent1.vue';
 
     let info =ref('');
 

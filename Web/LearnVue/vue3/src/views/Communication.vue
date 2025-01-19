@@ -10,6 +10,8 @@
             <fieldset>
                 <legend>操作</legend>
                 <button @click="sendMsgToA">通过props给子组件A发送消息</button>
+                <button @click="sendMsgByProvide">通过Provide给子组件发送消息</button>
+                
             </fieldset>
             
         </fieldset>
@@ -26,8 +28,9 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref,onBeforeUnmount,provide } from 'vue';
     import { getCurrentTime } from '@/utils/common';
+    import bus from 'vue3-eventbus'
 
     import ChildComponentA from '@/components/ChildComponentA.vue';
     import ChildComponentB from '@/components/ChildComponentB.vue';
@@ -36,7 +39,7 @@
 
     function sendMsgToA()
     {
-        msg.value= getCurrentTime();
+        msg.value= 'msg from parent=>'+getCurrentTime();
     }
 
     let receivedMsg = ref('接收到的值');
@@ -46,6 +49,26 @@
         console.log("父组件收到来自子组件的消息")
         receivedMsg.value = e;
     }
+
+    //当组件卸载完毕之前 移除监听
+    onBeforeUnmount(()=>{
+        //
+        bus.off('sendMsgToBrother',getMsgFromBrother)
+    })
+    bus.on('sendMsgToBrother',getMsgByBus)
+
+    function getMsgByBus(val)
+    {
+        receivedMsg.value = val;
+    }
+
+    //
+    const provideMsg = ref('');
+    function sendMsgByProvide()
+    {
+        provideMsg.value = 'msg from parent=>'+getCurrentTime();
+    }
+    provide(/* 注入名 */ 'message', /* 值 */ provideMsg)
 </script>
 
 <style scoped>
