@@ -11,7 +11,7 @@
                 <legend>操作</legend>
                 <button @click="sendMsgToA">通过props给子组件A发送消息</button>
                 <button @click="sendMsgByProvide">通过Provide给子组件发送消息</button>
-                
+                <button @click="updateChildComponentByRef">通过ref修改子组件的值</button>
             </fieldset>
             
         </fieldset>
@@ -24,6 +24,9 @@
         <div class="container-item">
             <ChildComponentB />
         </div>    
+        <div class="container-item">
+            <ChildComponentC ref="compC"/>
+        </div> 
     </div>
 </template>
 
@@ -34,6 +37,7 @@
 
     import ChildComponentA from '@/components/ChildComponentA.vue';
     import ChildComponentB from '@/components/ChildComponentB.vue';
+    import ChildComponentC from '@/components/ChildComponentC.vue';
     
     let msg=ref('msg from parent');
 
@@ -53,7 +57,7 @@
     //当组件卸载完毕之前 移除监听
     onBeforeUnmount(()=>{
         //
-        bus.off('sendMsgToBrother',getMsgFromBrother)
+        bus.off('sendMsgToBrother',getMsgByBus)
     })
     bus.on('sendMsgToBrother',getMsgByBus)
 
@@ -69,6 +73,17 @@
         provideMsg.value = 'msg from parent=>'+getCurrentTime();
     }
     provide(/* 注入名 */ 'message', /* 值 */ provideMsg)
+
+    //
+    const compC = ref(null);
+    function updateChildComponentByRef()
+    {
+        console.log("compC=>>",compC);
+        //compC.value.updateInfo();
+        compC.value.info='msg from parent=>'+getCurrentTime();
+
+    }
+    
 </script>
 
 <style scoped>
