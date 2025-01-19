@@ -5,7 +5,11 @@
             <div>
                 <fieldset>
                     <legend>接收</legend>
-                    <input type="text" placeholder="收到的消息" disabled :value="msg">
+                    <input type="text" placeholder="来自父组件的消息" disabled :value="msg">
+                </fieldset>
+                <fieldset>
+                    <legend>接收</legend>
+                    <input type="text" placeholder="来自兄弟组件的消息" disabled :value="info">
                 </fieldset>
                 <fieldset>
                     <legend>操作</legend>
@@ -18,7 +22,10 @@
 </template>
 
 <script setup>
+    import { ref,onBeforeUnmount } from 'vue';
     import bus from 'vue3-eventbus'
+
+    let info =ref('');
 
     //当组件卸载完毕之前 移除监听
     onBeforeUnmount(()=>{
@@ -44,7 +51,7 @@
 
     function getMsgFromBrother(val)
     {
-        
+        info.value = val;
     }
 </script>
 
