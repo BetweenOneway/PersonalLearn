@@ -7,12 +7,12 @@ const noteApi = {
         dataParam:false,
         successMessage:false
     },
-    getNotebookNoteList:{
+    getUserNoteList:{
         name:'获取笔记本内的笔记列表',
-        url:'/note/getNotebookNoteList',
+        url:'/note/getUserNoteList',
         method:'GET',
         userPower:true,
-        dataParam:false,
+        dataParam:true,
         successMessage:false
     },
     topNote:{

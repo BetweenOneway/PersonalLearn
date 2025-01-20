@@ -13,7 +13,7 @@ const note = require("../models/note");
 var router=express.Router();
 
 /**
- * 获取指定笔记本内所有笔记列表
+ * 获取最近访问笔记列表
  * userToken 用户编号
  */
 router.get("/getRecentNoteList",async (req,res)=>{
@@ -87,7 +87,7 @@ router.get("/getRecentNoteList",async (req,res)=>{
  * 获取指定笔记本内所有笔记列表
  * userToken 用户编号
  */
-router.get("/getNotebookNoteList",async (req,res)=>{
+router.get("/getUserNoteList",async (req,res)=>{
     var output={
         success:true,
         status:'',
@@ -96,24 +96,22 @@ router.get("/getNotebookNoteList",async (req,res)=>{
     }
 
     console.log("start getUserNoteList")
-    
-    var userToken = req.get('userToken')
-    let status = 1
-    let userInfo = {}
 
+    let status = 1
+    let userInfo = req.userInfo;
+    let notebookId = req.body.notebookId;
+
+    if(!notebookId)
+    {
+        //参数错误
+        console.log("param error notebookId undefined=>",notebookId)
+        output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
+        output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status
+        output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description
+        res.send(output);
+        return;
+    }
     try {
-        //验证用户是否登录
-        let validateInfo = await validate.IsUserValidate(userToken);
-        if(!validateInfo.isValidated)
-        {
-            console.log("用户登录状态无效"+validateInfo.isValidated)
-            output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-            output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-            output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
-            res.send(output)
-            return
-        }
-        userInfo = validateInfo.userInfo
         console.log("parsed userinfo=>",userInfo)
 
         const notes = await sqldb.Note.findAll(
@@ -121,7 +119,8 @@ router.get("/getNotebookNoteList",async (req,res)=>{
                 attributes: ['id', 'title','content','top','update_time'],
                 where:{
                     status: status,
-                    u_id:userInfo.id
+                    u_id:userInfo.id,
+                    notebook_id:notebookId
                 },
                 order:[
                     ['top', 'DESC'],

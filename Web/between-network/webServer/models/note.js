@@ -27,6 +27,9 @@ module.exports = function(sequelize,DataTypes){
         u_id:{
             type:DataTypes.INTEGER
         },
+        notebook_id:{
+            type:DataTypes.INTEGER
+        },
         top:{
             type:DataTypes.INTEGER,
             defaultValue:0

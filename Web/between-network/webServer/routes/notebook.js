@@ -25,22 +25,9 @@ router.get("/getUserNotebookList",async (req,res)=>{
     }
 
     console.log("start get user notebook list")
-    
-    var userToken = req.get('userToken')
-    
+
     try {
-        //验证用户是否登录
-        let validateInfo = await validate.IsUserValidate(userToken);
-        if(!validateInfo.isValidated)
-        {
-            console.log("用户登录状态无效"+validateInfo.isValidated)
-            output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-            output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-            output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
-            res.send(output)
-            return
-        }
-        let userInfo = validateInfo.userInfo
+        let userInfo = req.userInfo
         console.log("parsed userinfo=>",userInfo)
 
         const notes = await sqldb.Notebook.findAll(

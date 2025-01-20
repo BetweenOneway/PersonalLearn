@@ -39,6 +39,7 @@ CREATE TABLE `z_note`  (
   `time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '最后修改时间',
   `u_id` int(11) NOT NULL COMMENT '用户编号',
+  `noteboo_id` int(11) NOT NULL COMMENT '所属笔记本编号',
   `top` int(11) NULL DEFAULT 0 COMMENT '置顶（1：置顶，0：不置顶）',
   `status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态【0：被删除，1：正常/私有 2:公开】',
   `type` int(11) NULL DEFAULT 1 COMMENT '类型',
@@ -94,18 +95,6 @@ CREATE TABLE `z_memo`  (
   INDEX `z_thing_z_user_id_fk`(`u_id`) USING BTREE,
   CONSTRAINT `z_thing_z_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `z_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '小记' ROW_FORMAT = COMPACT;
-
--- ----------------------------
--- Records of z_memo
--- ----------------------------
-INSERT INTO `z_memo` VALUES (8, '六一儿童节给小朋友的礼物', '六一,礼物,儿童节', '[{\"checked\":true,\"thing\":\"气球\"},{\"checked\":true,\"thing\":\"棒棒糖\"},{\"checked\":true,\"thing\":\"奥特曼玩具\"},{\"checked\":true,\"thing\":\"芭比娃娃\"}]', 8, 1, '2023-06-02 14:28:35', '2023-06-05 13:19:40', 0, 1, 2);
-INSERT INTO `z_memo` VALUES (9, '明日发布会需要做的准备', '发布会,打工仔', '[{\"checked\":true,\"thing\":\"整理会场\"},{\"checked\":false,\"thing\":\"调音设备\"},{\"checked\":false,\"thing\":\"开启直播\"}]', 8, 0, '2023-06-02 14:31:02', '2023-06-05 16:37:01', 0, 1, 2);
-INSERT INTO `z_memo` VALUES (10, '2023-05-20 晚上加班', '加班,挣钱,打工仔', '[{\"checked\":true,\"thing\":\"整理会议纪要\"},{\"checked\":true,\"thing\":\"预约客户见面时间\"},{\"checked\":true,\"thing\":\"打卡下班\"}]', 8, 1, '2023-06-02 14:48:47', '2023-06-05 16:37:01', 0, 1, 2);
-INSERT INTO `z_memo` VALUES (11, '2023 春节送礼购物清单', '清单,送礼', '[{\"checked\":true,\"thing\":\"酒*6\"},{\"checked\":false,\"thing\":\"鸡蛋*120\"},{\"checked\":true,\"thing\":\"大豆油*7\"},{\"checked\":true,\"thing\":\"特仑苏*7\"}]', 8, 0, '2023-06-02 14:50:02', '2023-06-05 16:38:33', 1, 1, 2);
-INSERT INTO `z_memo` VALUES (12, '2023 春季开学准备', '开学,2023,大学生', '[{\"checked\":true,\"thing\":\"笔记本\"},{\"checked\":true,\"thing\":\"身份证\"},{\"checked\":true,\"thing\":\"行李箱\"},{\"checked\":false,\"thing\":\"寒假作业\"}]', 8, 0, '2023-06-04 21:54:38', '2023-06-05 16:36:31', 1, 1, 2);
-INSERT INTO `z_memo` VALUES (13, '五一假期计划', '五一,放假,旅游', '[{\"checked\":true,\"thing\":\"南京雨花台\"},{\"checked\":true,\"thing\":\"北京长城\"},{\"checked\":true,\"thing\":\"西安大雁塔\"}]', 8, 1, '2023-06-04 21:55:56', '2023-06-05 14:38:48', 0, 1, 2);
-INSERT INTO `z_memo` VALUES (14, '2023 春节第一周作业', '作业,大学生', '[{\"checked\":true,\"thing\":\"JavaWeb\"},{\"checked\":true,\"thing\":\"Hadoop\"},{\"checked\":false,\"thing\":\"高等数学\"}]', 8, 0, '2023-06-04 21:57:12', '2023-06-05 16:37:18', 0, 1, 2);
-INSERT INTO `z_memo` VALUES (15, '实训课', '大学生,实训', '[{\"checked\":true,\"thing\":\"云笔记\"},{\"checked\":true,\"thing\":\"电脑\"}]', 8, 1, '2023-06-05 08:24:38', '2023-06-05 08:24:38', 0, 1, 2);
 
 -- ----------------------------
 -- Table structure for z_oper_log
