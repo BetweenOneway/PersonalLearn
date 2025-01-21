@@ -93,11 +93,12 @@ void testAlgo()
 }
 int main()
 {
+    TestPlane();
     //testDot();
     //Vector();
     //Quaternion();
     //Ray();
-    testLine();
+    //testLine();
     //Plane();
     //Learn();
     //CalcBoundary();
