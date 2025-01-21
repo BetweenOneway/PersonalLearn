@@ -26,28 +26,15 @@ router.get("/getRecentNoteList",async (req,res)=>{
 
     console.log("start getRecentNoteList")
     
-    var userToken = req.get('userToken')
     let status = 1
-    let userInfo = {}
+    let userInfo = req.userInfo
 
     try {
-        //验证用户是否登录
-        let validateInfo = await validate.IsUserValidate(userToken);
-        if(!validateInfo.isValidated)
-        {
-            console.log("用户登录状态无效"+validateInfo.isValidated)
-            output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-            output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-            output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
-            res.send(output)
-            return
-        }
-        userInfo = validateInfo.userInfo
         console.log("parsed userinfo=>",userInfo)
 
         //查询当前日期前30天的笔记
-        let endTime = (new Date()).getTime() - 30*24*60*60*1000;
-        let endDate = new Date(endTime);
+        //let endTime = (new Date()).getTime() - 30*24*60*60*1000;
+        //let endDate = new Date(endTime);
 
         const notes = await sqldb.Note.findAll(
             {
@@ -55,14 +42,15 @@ router.get("/getRecentNoteList",async (req,res)=>{
                 where:{
                     status: status,
                     u_id:userInfo.id,
-                    update_time:{
-                        [Op.gt]:endDate
-                    }
+                    // update_time:{
+                    //     [Op.gt]:endDate
+                    // }
                 },
                 order:[
                     ['top', 'DESC'],
                     ['update_time','DESC']
                 ],
+                limit:10,
                 raw:true,
             }
         );
@@ -71,14 +59,13 @@ router.get("/getRecentNoteList",async (req,res)=>{
         output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
 
         output.data = notes
-        res.send(output);
     } catch (error) {
         console.log(error)
         output.success = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.success
         output.status = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.status
         output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
-        res.send(output);
     }
+    res.send(output);
     console.log("End of getRecentNoteList")
     return;
 })
@@ -108,47 +95,45 @@ router.get("/getUserNoteList",async (req,res)=>{
         output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
         output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status
         output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description
-        res.send(output);
-        return;
     }
-    try {
-        console.log("parsed userinfo=>",userInfo)
+    else
+    {
+        try {
+            console.log("parsed userinfo=>",userInfo)
 
-        const notes = await sqldb.Note.findAll(
-            {
-                attributes: ['id', 'title','content','top','update_time'],
-                where:{
-                    status: status,
-                    u_id:userInfo.id,
-                    notebook_id:notebookId
-                },
-                order:[
-                    ['top', 'DESC'],
-                    ['update_time','DESC']
-                ],
-                raw:true,
-            }
-        );
-        output.success = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.success
-        output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
-        output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
-
-        output.data = notes
-        res.send(output);
-    } catch (error) {
-        console.log(error)
-        output.success = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.success
-        output.status = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.status
-        output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
-        res.send(output);
+            const notes = await sqldb.Note.findAll(
+                {
+                    attributes: ['id', 'title','content','top','update_time'],
+                    where:{
+                        status: status,
+                        u_id:userInfo.id,
+                        notebook_id:notebookId
+                    },
+                    order:[
+                        ['top', 'DESC'],
+                        ['update_time','DESC']
+                    ],
+                    raw:true,
+                }
+            );
+            output.success = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
+            output.data = notes
+        } catch (error) {
+            console.log(error)
+            output.success = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.success
+            output.status = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.status
+            output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
+        }
     }
+    res.send(output);
     console.log("End of getUserNoteList")
     return;
 })
 
 /**
  * 置顶 取消置顶
- * 
  */
 router.get("/setNoteTop",async (req,res)=>{
     let output={
