@@ -28,7 +28,7 @@
                             最近文件
                         </n-button>
                     </div>
-                    <NotebookTree />
+                    <NotebookTree ref="notebookTree" @NotebookChanged="notebookChanged"/>
                     <n-menu
                         :collapsed-width="64"
                         :collapsed-icon-size="22"
@@ -131,29 +131,6 @@
 
     provide('editNoteUID',editNoteUID);
 
-    watch(
-        ()=>token.value,
-        newData=>{
-            //是否重新进行登录
-            if(newData !== null)
-            {
-                //处于加载状态
-                loading.value = true;
-                //重新获取用户笔记列表
-                getNoteListInNotebook()
-                //判断编辑笔记用户编号是否和登录用户编号一致 不一致则关闭笔记页面
-                if(editNoteUID.value && user_id.value !== editNoteUID)
-                {
-                    toHerf('/note');
-                }
-            }
-            else{
-                console.log("note login invalid")
-                loginInvalid(true);
-            }
-        }
-    );
-
     //是否处于加载状态
     const loading = ref(true)
 
@@ -173,43 +150,18 @@
         defaultContent:'暂未设置内容'
     }
 
-    /**
-     * 获取最近访问的笔记列表
-    */
-    function getRecentNoteList()
+    function notebookChanged(e)
     {
-        noteServerRequest(noteApi.getRecentNoteList).then(responseData=>{
-            if(responseData)
-            {
-                //封装笔记列表
-                noteList.value = responseData.data;
-                //停止显示骨架屏
-                loading.value = false;
-            }
-        })
+        noteList.value = e;
+        //停止显示骨架屏
+        loading.value = false;
     }
-    getRecentNoteList()
 
     /**
      * 获取指定笔记本内的笔记列表
     */
     function getNoteListInNotebook(){
-        let API = {...noteApi.getNoteListInNotebook};
-        //请求URL的参数
-        API.params= {
-            notebookId:contextMenu.value.id
-        };
-
-        //发送请求
-        noteServerRequest(API).then(responseData=>{
-            if(responseData)
-            {
-                //封装笔记列表
-                noteList.value = responseData.data;
-                //停止显示骨架屏
-                loading.value = false;
-            }
-        })
+        notebookTree.getNotesList();
     }
 
     /**
@@ -231,25 +183,13 @@
      * 创建笔记
      */
     const createNote = ()=>{
-        //发送请求
-        noteServerRequest(noteApi.createNote).then(responseData=>{
-            if(responseData) 
-            {
-                //跳转编辑笔记路由
-                goEditNoteView(responseData.data.noteId);
-                //重新获取便签列表 新增笔记不需要显示的延迟动画
-                getNoteListInNotebook()
-            }
-        })
+        notebookTree.addNewNote();
     }
 
-    bus.on('createNewNote',createNote)
-
-    //当组件卸载完毕之前 移除监听
-    onBeforeUnmount(()=>{
-        //
-        bus.off('createNewNote',createNote)
-    })
+    function createNotebook()
+    {
+        notebookTree.addNewNoteBook();
+    }
 
     //----------------删除笔记-------------------
 

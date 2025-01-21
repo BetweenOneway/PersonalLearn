@@ -29,6 +29,12 @@
     import { NInput } from 'naive-ui'
     import noteServerRequest  from "@/request"
     import notebookApi from '@/request/api/notebookApi';
+    import { storeToRefs } from 'pinia'
+
+    import { useUserStore } from "@/stores/userStore";
+
+    //当前选择笔记本ID
+    const currentSelectNotebookId = ref(0);
 
     const notebookTreeMenu = ref([
         {
@@ -38,6 +44,27 @@
             ]
         },
     ]);
+
+    const userStore = useUserStore();
+    const {token} = storeToRefs(userStore);
+
+    watch(
+        ()=>token.value,
+        newData=>{
+            //是否重新进行登录
+            if(newData !== null)
+            {
+                //处于加载状态
+                loading.value = true;
+                //重新获取用户笔记列表
+                getNotebookList()
+            }
+            else{
+                console.log("note login invalid")
+                loginInvalid(true);
+            }
+        }
+    );
 
     /**
      * 获取用户笔记本列表
@@ -186,8 +213,9 @@
         contextMenu.value.show = false;
         if(key =='createNotebook')
         {
+            currentSelectNotebookId.value = contextMenu.value.notebookKey;
             //新增笔记本
-            await addNewNoteBook(contextMenu.value.notebookKey);
+            await addNewNoteBook();
             //重新获取笔记本列表
             await getNotebookList();
         }
@@ -228,10 +256,12 @@
                 //对于有子文件夹的文件夹，点击展开按钮并不会触发该事件
                 //只有点击文件夹名称才会触发
                 console.log("click=>",option.label);
+                currentSelectNotebookId.value = option.key;
                 //获取当前文件夹下所有笔记
-                getNotesList(option.key)
+                getNotesList()
             },
             ondblclick() {
+                currentSelectNotebookId.value = option.key;
                 //双击事件
                 option.isedit = true
                 nextTick(() => {
@@ -241,6 +271,7 @@
             },
             onContextmenu(e) {
                 console.log('on contextmenu=>',option)
+                currentSelectNotebookId.value = option.key;
                 e.preventDefault();
                 //contextMenu.value.show = false;
                 nextTick().then(() => {
@@ -257,14 +288,14 @@
     /**
      * 新增笔记本
     */
-    async function addNewNoteBook(parentId,newName="新增笔记本")
+    async function addNewNoteBook(newName="新增笔记本")
     {
         //获取请求API
         let API = {...notebookApi.addNotebook}
         //封装请求体中的参数
         API.data = {
             notebookName:newName,
-            parentId:parentId,
+            parentId:currentSelectNotebookId.value,
         }
         //发送请求
         await noteServerRequest(API).then(responseData =>{
@@ -274,7 +305,17 @@
             }
         })
     }
+    
+    function addNewNote()
+    {
 
+    }
+
+    /**
+     * 笔记本重命名
+     * @param newName 
+     * @param key 
+     */
     async function renameNotebook(newName,key)
     {
         //获取请求API
@@ -293,8 +334,28 @@
         })
     }
 
-    function getNotesList(notebookId)
-    {}
+    const emit = defineEmits(['NotebookChanged'])
+
+    function getNotesList()
+    {
+        let API = {...notebookApi.getUserNoteList};
+        //请求URL的参数
+        API.params= {
+            notebookId:currentSelectNotebookId
+        };
+        noteServerRequest(API).then(responseData=>{
+            if(responseData)
+            {
+                emit("NotebookChanged",responseData.data);
+            }
+        })
+    }
+
+    defineExpose({
+        addNewNoteBook,
+        addNewNote,
+        getNotesList
+    })
 
     /**
      * 初始化函数
