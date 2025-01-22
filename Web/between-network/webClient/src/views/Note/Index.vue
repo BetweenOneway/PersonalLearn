@@ -3,15 +3,21 @@
         <n-layout has-sider style="height: 100%;">
             <n-flex vertical>
                 <!--新增按钮-->
-                <n-button type="primary" text size="large" style="margin-top: 20px;">
-                    <template #icon>
-                        <n-icon>
-                            <AddBoxRound />
-                        </n-icon>
+                <n-popover v-model:show = "createMenuShow" trigger="click">
+                    <template #trigger>
+                        <n-button type="primary" text size="large" style="margin-top: 20px;">
+                            <template #icon>
+                                <n-icon>
+                                    <AddBoxRound />
+                                </n-icon>
+                            </template>
+                            新建笔记
+                        </n-button>
                     </template>
-                    新建笔记
-                </n-button>
 
+                    <n-menu :options="createMenu" :indent="18" :on-update:value="clickCreateMenu" />
+                </n-popover>
+                
                 <n-divider style="margin:15px auto"></n-divider>
                 
                 <!--菜单列-->
@@ -24,7 +30,7 @@
                 :native-scrollbar="false"
                 >
                     <div style="margin-left: 24px;">
-                        <n-button text size="large" >
+                        <n-button text size="large" @click="getRecentNoteList" >
                             最近文件
                         </n-button>
                     </div>
@@ -106,12 +112,8 @@
         AddBoxRound
     } from "@vicons/material";
     import { NIcon } from "naive-ui";
-    import { h,ref,onBeforeUnmount,watch,provide } from "vue";
-    import bus from 'vue3-eventbus'
-    import { storeToRefs } from 'pinia'
+    import { h,ref,computed,provide,inject } from "vue";
 
-    import { useUserStore } from "@/stores/userStore";
-    import { loginInvalid } from "@/Utils/userLogin";
     import { toHerf } from "@/router/go";
     
     import noteServerRequest  from "@/request"
@@ -123,13 +125,59 @@
     function renderIcon(icon) {
         return () => h(NIcon, null, { default: () => h(icon) });
     }
-  
-    const userStore = useUserStore();
-    const {token,id:user_id} = storeToRefs(userStore);
+
+    //是否显示新建子菜单
+    const createMenuShow = ref(false)
+
+    //点击新建按钮的菜单
+    const createMenu =[
+        {
+            key:'create-note',
+            icon:renderIcon(AddBoxRound),
+            label:'新建笔记'
+        },
+        {
+            key:'create-notebook',
+            icon:renderIcon(AddBoxRound),
+            label:'新建文件夹'
+        },
+    ]
+
+    //新建菜单选项回调
+    const clickCreateMenu = (key,value)=>{
+
+        //关闭用户菜单弹出信息
+        createMenuShow.value = false
+
+        switch(key){
+            case "create-note":
+                createNote();
+                break;
+            case "create-notebook":
+                createNotebook();
+                break;
+        }
+    }
+
 
     const editNoteUID = ref(null)
 
     provide('editNoteUID',editNoteUID);
+
+    //路由地址
+    const routerPath = inject('routerPath');
+
+    const selectNoteId = computed(()=>{
+        const indexOf = routerPath.value.indexOf('/note/edit/');
+        if(indexOf === -1)
+        {
+            return null;
+        }
+        else
+        {
+            return parseInt(routerPath.value.substring('/note/edit/'.length));
+        }
+    });
 
     //是否处于加载状态
     const loading = ref(true)
@@ -214,6 +262,24 @@
         changeEditNoteState(2)
     }
 
+    function getRecentNoteList()
+    {
+        noteServerRequest(noteApi.getRecentNoteList).then(responseData=>{
+            if(responseData)
+            {
+                noteList.value = responseData.data;
+                loading.value = false;
+            }
+        })
+    }
+
+    function Init()
+    {
+        console.log("Note Index view init");
+        getRecentNoteList();
+    }
+
+    Init();
 </script>
 
 <style>

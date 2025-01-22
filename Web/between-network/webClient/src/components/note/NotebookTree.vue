@@ -25,13 +25,15 @@
 </template>
 
 <script setup>
-    import { ref,h,nextTick,computed } from "vue";
+    import { ref,h,nextTick,computed,watch } from "vue";
     import { NInput } from 'naive-ui'
+    
+    import { storeToRefs } from 'pinia'
+    import { useUserStore } from "@/stores/userStore";
+
     import noteServerRequest  from "@/request"
     import notebookApi from '@/request/api/notebookApi';
-    import { storeToRefs } from 'pinia'
-
-    import { useUserStore } from "@/stores/userStore";
+    import noteApi from '@/request/api/noteApi';
 
     //当前选择笔记本ID
     const currentSelectNotebookId = ref(0);
@@ -338,11 +340,13 @@
 
     function getNotesList()
     {
-        let API = {...notebookApi.getUserNoteList};
+        console.log("get notes list=>",currentSelectNotebookId.value);
+        let API = {...noteApi.getUserNoteList};
         //请求URL的参数
         API.params= {
-            notebookId:currentSelectNotebookId
+            notebookId:currentSelectNotebookId.value
         };
+        console.log("API=>",API);
         noteServerRequest(API).then(responseData=>{
             if(responseData)
             {

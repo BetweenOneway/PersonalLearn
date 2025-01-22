@@ -82,11 +82,11 @@ router.get("/getUserNoteList",async (req,res)=>{
         data:[]
     }
 
-    console.log("start getUserNoteList")
+    console.log("start getUserNoteList=>",req.query)
 
     let status = 1
     let userInfo = req.userInfo;
-    let notebookId = req.body.notebookId;
+    let notebookId = req.query.notebookId;
 
     if(!notebookId)
     {
