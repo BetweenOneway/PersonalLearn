@@ -23,6 +23,14 @@ const notebookApi = {
         dataParam:true,
         successMessage:true
     },
+    deleteNotebook:{
+        name:['删除笔记本','彻底删除笔记本'],
+        url:'/note/deleteNotebook',
+        method:'DELETE',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
 }
 
 export default notebookApi

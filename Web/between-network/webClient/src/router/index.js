@@ -11,7 +11,7 @@ const router = createRouter({
     },
     {
         path: '/note',
-        component: ()=>import("@/views/Note/Index.vue"),
+        component: ()=>import("@/views/Note/NoteIndex.vue"),
         meta:{title:'笔记页'},
         children:[
             {

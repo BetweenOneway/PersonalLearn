@@ -81,6 +81,8 @@ router.post("/addNotebook",async (req,res)=>{
     inputInfo.notebookName = req.body.notebookName
     inputInfo.parentId = req.body.parentId
 
+    console.log("add notebook input info=>",inputInfo);
+
     const t = await sqldb.sequelize.transaction();
 
     try {
@@ -91,7 +93,7 @@ router.post("/addNotebook",async (req,res)=>{
         const newAddNotebook = await sqldb.Notebook.create(
             {
                 name:inputInfo.notebookName,
-                parentId:inputInfo.parentId,
+                parent_id:inputInfo.parentId,
                 u_id:userInfo.id,
                 time:curTime,
                 update_time:curTime,
@@ -102,7 +104,7 @@ router.post("/addNotebook",async (req,res)=>{
             }
         );
         console.log("new added notebook info:",newAddNotebook);
-        let event = statusCode.EVENT_LIST.ADD_NOTE;
+        let event = statusCode.EVENT_LIST.ADD_NOTEBOOK;
         const addLog = await sqldb.operLog.create(
             {
                 time:curTime,
@@ -119,17 +121,17 @@ router.post("/addNotebook",async (req,res)=>{
 
         t.commit();
         console.log("add notebook success,commit database success")
-        output.success = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.success
-        output.status = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.status
-        output.description = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.description
-        output.data.noteId = newAddNote.id
+        output.success = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_SUCCESS.description
+        output.data.noteId = newAddNotebook.id
         res.send(output);
     } catch (error) {
         console.log("add notebook error:",error);
         t.rollback();
-        output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.success
-        output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.status
-        output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.description
+        output.success = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_FAIL.description
         res.send(output);
     }
     console.log("End of add notebook");
@@ -156,7 +158,7 @@ router.post("/renameNotebook",async (req,res)=>{
 
     let inputInfo = {}
     inputInfo.id = req.body.id
-    inputInfo.newName = req.body.title
+    inputInfo.newName = req.body.newName
 
     const t = await sqldb.sequelize.transaction();
 
@@ -192,7 +194,7 @@ router.post("/renameNotebook",async (req,res)=>{
                 }
             );
             //记录日志
-            let event = statusCode.EVENT_LIST.UPDATE_NOTE;
+            let event = statusCode.EVENT_LIST.RENAME_NOTEBOOK;
             const addLog = await sqldb.operLog.create(
                 {
                     time:curTime,
@@ -226,4 +228,88 @@ router.post("/renameNotebook",async (req,res)=>{
     console.log("End of rename notebook");
     return
 })
+
+/**
+ * 删除笔记本
+ */
+router.delete("/deleteNotebook",async (req,res)=>{
+    let output={
+        success:true,
+        status:'',
+        description:'',
+        data:[]
+    }
+    console.log("start del notebook,req.query:",req.query);
+
+    //目标状态
+    let isCompleteDel = req.query.isCompleteDel.toLowerCase() === 'true'
+    let notebookId = req.query.notebookId
+    let userInfo = req.userInfo;
+
+    const t = await sqldb.sequelize.transaction();
+    try {
+        let userInfo = validateInfo.userInfo;
+        let curTime = new Date().toLocaleString()
+        let targetStatus = isCompleteDel? -1:0
+
+        const updateNum = await sqldb.Note.update(
+            {
+                status:targetStatus,
+                update_time:curTime
+            },
+            {
+                where:{
+                    id:noteId,
+                    u_id:userInfo.id,
+                    status:{
+                        [Op.ne]:targetStatus
+                    }
+                },
+                transaction:t
+            }
+        );
+        if(updateNum>0)
+        {
+            let event = isCompleteDel? statusCode.EVENT_LIST.COMPEL_DELETE_NOTEBOOK : statusCode.EVENT_LIST.DELETE_NOTEBOOK;
+            const users = await sqldb.operLog.create(
+                {
+                    time:curTime,
+                    event:event.code,
+                    desc:event.desc,
+                    u_id:userInfo.id,
+                    o_id:notebookId,
+                    type:1
+                },
+                {
+                    transaction:t
+                }
+            );
+
+            t.commit();
+            output.success = statusCode.SERVICE_STATUS.DEL_NOTE_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.DEL_NOTE_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.DEL_NOTE_SUCCESS.description
+            res.send(output);
+        }
+        else{
+            console.log("Delete note:updateNum=",updateNum);
+            t.rollback();
+            output.success = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.success
+            output.status = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.status
+            output.description = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.description
+            res.send(output);
+        }
+    } catch (error) {
+        console.log(error)
+
+        t.rollback();
+        output.success = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.description
+        res.send(output);
+    }
+    console.log("End of delete note")
+    return
+})
+
 module.exports=router;

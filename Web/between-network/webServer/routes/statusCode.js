@@ -307,6 +307,16 @@ SERVICE_STATUS={
         status:'SERVICE_025',
         description:'更新用户头像失败'
     },
+    ADD_NOTEBOOK_SUCCESS:{
+        success:true,
+        status:'SERVICE_026',
+        description:'新增笔记本成功'
+    },
+    ADD_NOTEBOOK_FAIL:{
+        success:false,
+        status:'SERVICE_027',
+        description:'新增笔记本失败'
+    },
 }
 
 EVENT_LIST = {
@@ -385,6 +395,22 @@ EVENT_LIST = {
     UPDATE_USER_AVATAR:{
         code:'13',
         desc:'更新用户头像'
+    },
+    ADD_NOTEBOOK:{
+        code:'13',
+        desc:'新增笔记本'
+    },
+    DELETE_NOTEBOOK:{
+        code:'13',
+        desc:'删除笔记本'
+    },
+    COMPEL_DELETE_NOTEBOOK:{
+        code:'13',
+        desc:'彻底删除笔记本'
+    },
+    RENAME_NOTEBOOK:{
+        code:'13',
+        desc:'笔记本重命名'
     },
 }
 

@@ -14,7 +14,7 @@
 
 <script setup>
     import RootView from '@/views/RootView.vue'
-    import { onMounted, watch, ref,provide} from "vue"
+    import { onMounted, watch, ref,provide, onUnmounted} from "vue"
     import {useThemeStore} from './stores/themeStore'
     import {useUserStore} from './stores/userStore'
     import {storeToRefs} from 'pinia'
@@ -28,6 +28,7 @@
 
     //用户的共享资源
     const userStore = useUserStore();
+    const {resetUserInfo} = storeToRefs(userStore);
 
     //路由对象
     const router = useRouter()

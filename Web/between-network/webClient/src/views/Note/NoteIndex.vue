@@ -205,6 +205,7 @@
         loading.value = false;
     }
 
+    let notebookTree = ref(null);
     /**
      * 获取指定笔记本内的笔记列表
     */
@@ -231,12 +232,15 @@
      * 创建笔记
      */
     const createNote = ()=>{
-        notebookTree.addNewNote();
+        notebookTree.value.addNewNote();
     }
 
+    /**
+     * 新建笔记本
+     */
     function createNotebook()
     {
-        notebookTree.addNewNoteBook();
+        notebookTree.value.addNewNoteBook();
     }
 
     //----------------删除笔记-------------------

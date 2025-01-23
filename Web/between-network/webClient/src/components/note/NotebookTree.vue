@@ -35,6 +35,8 @@
     import notebookApi from '@/request/api/notebookApi';
     import noteApi from '@/request/api/noteApi';
 
+    import { loginInvalid } from "@/Utils/userLogin";
+
     //当前选择笔记本ID
     const currentSelectNotebookId = ref(0);
 
@@ -46,6 +48,18 @@
             ]
         },
     ]);
+
+    function resetNotebookTreeMenu()
+    {
+        notebookTreeMenu.value =[
+            {
+                label: "我的文件夹",
+                key: "0",
+                children: [
+                ]
+            },
+        ];
+    }
 
     const userStore = useUserStore();
     const {token} = storeToRefs(userStore);
@@ -76,6 +90,8 @@
         noteServerRequest(notebookApi.getNotebookList).then(responseData=>{
             if(responseData)
             {
+                //清空旧有笔记本列表
+                resetNotebookTreeMenu();
                 let allNotebook = responseData.data;
                 console.log("all notebook=>",allNotebook);
                 if(allNotebook.length <=0)
@@ -292,6 +308,7 @@
     */
     async function addNewNoteBook(newName="新增笔记本")
     {
+        console.log("add new notebook,parentId=>",currentSelectNotebookId.value)
         //获取请求API
         let API = {...notebookApi.addNotebook}
         //封装请求体中的参数
@@ -301,13 +318,19 @@
         }
         //发送请求
         await noteServerRequest(API).then(responseData =>{
-            if(!responseData)
+            if(responseData)
             {
-                return;
+                //新增笔记本成功重新获取笔记本列表
+                console.log("after add notebook,reload notebook list");
+                getNotebookList()
             }
+            
         })
     }
     
+    /**
+     * 新建笔记
+     */
     function addNewNote()
     {
 
