@@ -231,6 +231,8 @@ router.post("/renameNotebook",async (req,res)=>{
 
 /**
  * 删除笔记本
+ * isCompleteDel 是否彻底删除 否：置删除状态 是：数据库移除
+ * notebookId 待删除笔记本ID
  */
 router.delete("/deleteNotebook",async (req,res)=>{
     let output={

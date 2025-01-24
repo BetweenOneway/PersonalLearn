@@ -13,7 +13,12 @@ export const useDeleteRemindDialogStore = defineStore(
         const show = ref(false)
         //查看详情
         const showDetails = ref(false);
-        //删除文件对象数组 {id,title,type,key}
+        /**
+         * 删除文件对象数组 
+         * id 编号
+         * title 标题
+         * type 类型 1-文件 2-文件夹
+         */
         const files=ref([])
         //场景 1 正常场景 2 回收站场景
         const scene = ref(1)
@@ -69,12 +74,12 @@ export const useDeleteRemindDialogStore = defineStore(
                     case 1:
                         element.theme = 'success';
                         element.icon =StickyNote2Outlined;
-                        element.tip='笔记'
+                        element.tip='文件'
                         break;
                     case 2:
                         element.theme = 'info';
                         element.icon =EventNoteRound;
-                        element.tip='便签'
+                        element.tip='文件夹'
                         break;
                 }
             });

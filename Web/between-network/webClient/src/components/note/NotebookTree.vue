@@ -19,17 +19,26 @@
       :options="contextMenu.options"
       :x="contextMenu.x"
       :y="contextMenu.y"
-      @select="handleSelect"
-      @clickoutside="handleClickoutside"
+      @select="clickContextMenuItem"
+      @clickoutside="contextMenuClickoutside"
     />
+
+    <!--删除提醒框-->
+    <DeleteRemindDialog @deleteSuccess="deleteNotebookSuccess"></DeleteRemindDialog>
 </template>
 
 <script setup>
     import { ref,h,nextTick,computed,watch } from "vue";
     import { NInput } from 'naive-ui'
     
+    import DeleteRemindDialog from "../remind/DeleteRemindDialog.vue";
+
     import { storeToRefs } from 'pinia'
     import { useUserStore } from "@/stores/userStore";
+
+    import { useDeleteRemindDialogStore } from "@/stores/deleteRemindDialogStore";
+    const deleteRemindDialogStore = useDeleteRemindDialogStore();
+    const {DefaultDeleteRemind} = deleteRemindDialogStore;
 
     import noteServerRequest  from "@/request"
     import notebookApi from '@/request/api/notebookApi';
@@ -227,7 +236,7 @@
     const defaultExpandedKeys= ref(['my-folder']);
 
     //右键菜单处理
-    let handleSelect = async (key) => {
+    let clickContextMenuItem = async (key) => {
         contextMenu.value.show = false;
         if(key =='createNotebook')
         {
@@ -241,9 +250,19 @@
         {
             //新增笔记
         }
+        else if(key =='deleteNotebook')
+        {
+            currentSelectNotebookId.value = contextMenu.value.notebookKey;
+            //删除笔记本
+            DefaultDeleteRemind({
+                id:currentSelectNotebookId.value,
+                title:contextMenu.value.notebookLabel,
+                type:2
+            })
+        }
     };
 
-    let handleClickoutside = () => {
+    let contextMenuClickoutside = () => {
         contextMenu.value.show = false;
     }
 
@@ -262,6 +281,11 @@
                 {
                     label:'新建笔记',
                     key:'createNote',
+                }
+                ,
+                {
+                    label:'删除笔记本',
+                    key:'deleteNotebook',
                 }
             ]
         })
@@ -327,7 +351,16 @@
             
         })
     }
-    
+
+    /**
+     * 删除笔记本成功回调
+     */
+    function deleteNotebookSuccess()
+    {
+        //重新获取笔记本列表
+        getNotebookList();
+    }
+
     /**
      * 新建笔记
      */

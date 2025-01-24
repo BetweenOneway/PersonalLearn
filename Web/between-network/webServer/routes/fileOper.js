@@ -8,6 +8,16 @@ let statusCode = require("./statusCode")
 
 var router=express.Router();
 
+function deleteFile(userInfo,isCompleteDel,toDeleteFiles,res)
+{
+
+}
+
+function deleteFolder(userInfo,isCompleteDel,toDeleteFiles,res)
+{
+    
+}
+
 /**
  * 删除文件
  */
