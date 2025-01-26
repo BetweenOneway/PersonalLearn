@@ -137,6 +137,23 @@ CREATE TABLE `z_user_log`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for dumpster
+-- ----------------------------
+DROP TABLE IF EXISTS `dumpster`;
+CREATE TABLE `dumpster`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `u_id` int(11) NOT NULL COMMENT '用户编号',
+  `object_id` int(11) NOT NULL COMMENT '目标编号',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '目标名称',
+  `type` int(11) NOT NULL COMMENT '类型 1-文件 2-文件夹',
+  `related` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '关联内容',
+  `time` datetime NOT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `dumpster_user_id_fk`(`u_id`) USING BTREE,
+  CONSTRAINT `dumpster_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `z_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '回收站' ROW_FORMAT = COMPACT;
+
+-- ----------------------------
 -- View Structure for file_dumpster
 -- ----------------------------
 CREATE VIEW file_dumpster AS
