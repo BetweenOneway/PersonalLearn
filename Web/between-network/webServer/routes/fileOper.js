@@ -8,9 +8,92 @@ let statusCode = require("./statusCode")
 
 var router=express.Router();
 
-async function deleteFile(userInfo,isCompleteDel,toDeleteFiles,res)
+async function deleteFile(userInfo,isCompleteDel,toDeleteFiles,t)
 {
+    if(0 == toDeleteFiles.length)
+    {
+        return true;
+    }
 
+    let curTime = new Date().toLocaleString()
+    const targetStatus = 1;
+    let event = statusCode.EVENT_LIST.RENAME_NOTEBOOK;
+
+    try {
+        let toDeleteNotesId = [];
+        let dumpsterList = [];
+        let logList = [];
+        for(let note of toDeleteFiles)
+        {
+            toDeleteNotesId.push(note.id);
+            dumpsterList.push(
+                {
+                    u_id:userInfo.id,
+                    object_id:note.id,
+                    name:note.title,
+                    type:1,
+                    time:curTime
+                }
+            );
+            logList.push(
+                {
+                    time:curTime,
+                    event:event.code,
+                    desc:event.desc,
+                    u_id:userInfo.id,
+                    o_id:note.id,
+                    type:1
+                }
+            );
+        }
+        if(isCompleteDel)
+        {
+
+        }
+        else{
+            //更新笔记本状态
+            const noteUpdateResult = await sqldb.Note.update(
+                {
+                    status:targetStatus,
+                    update_time:curTime,
+                },
+                {
+                    where:{
+                        id: {
+                            [Op.in]:toDeleteNotesId,
+                        },
+                        u_id:userInfo.id,
+                        status:{
+                            [Op.ne]:targetStatus
+                        }
+                    },
+                    transaction:t
+                }
+            );
+            console.log("noteUpdateResult=>",noteUpdateResult);
+            //回收站表新增相应记录
+            const dumpsterAddResult = await sqldb.dumpster.bulkCreate(
+                dumpsterList,
+                {
+                    transaction:t
+                }
+            );
+            console.log("dumpsterAddResult=>",dumpsterAddResult);
+
+            //记录日志
+            const addLogResult = await sqldb.operLog.bulkCreate(
+                logList,
+                {
+                    transaction:t
+                }
+            );
+            console.log("addLogResult=>",addLogResult);
+        }
+        
+        return true;
+    } catch (error) {
+        return false;
+    }
 }
 
 /**
@@ -18,14 +101,13 @@ async function deleteFile(userInfo,isCompleteDel,toDeleteFiles,res)
  * isCompleteDel 是否彻底删除 否：置删除状态 是：数据库移除
  * notebookId 待删除笔记本ID
  */
-async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,res)
+async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
 {
     if(0 == toDeleteNotebooks.length)
     {
-        return;
+        return true;
     }
     const targetStatus = 1;
-    const t = await sqldb.sequelize.transaction();
 
     let curTime = new Date().toLocaleString()
 
@@ -93,7 +175,7 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,res)
                     u_id:userInfo.id,
                     object_id:toDeleteNotebook.id,
                     name:toDeleteNotebook.title,
-                    type:1,
+                    type:2,
                     related:related,
                     time:curTime
                 },
@@ -119,11 +201,12 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,res)
                 }
             );
         }
-        t.commit();
+        return true;
     } catch (error) {
         console.log("delete notebook error=>",error);
-        t.rollback();
+        return false;
     }
+    return true;
 }
 
 /**
@@ -147,199 +230,33 @@ router.delete("/deleteFiles",async (req,res)=>{
     const t = await sqldb.sequelize.transaction();
 
     try {
-        
-        let curTime = new Date().toLocaleString()
-
-        let noteIdList = [];
-        let memoIdList = [];
-
-        for(let fileInfo of toDeleteFiles)
+        let toDeleteNotebooks = [];
+        let toDeleteNotes = [];
+        for(let file of toDeleteFiles)
         {
-            if(fileInfo.type == '1')
+            if(1 == file.type)
             {
-                noteIdList.push(fileInfo.id);
+                toDeleteNotes.push(file)
             }
-            else if(fileInfo.type == '2')
+            else if(2 == file.type)
             {
-                memoIdList.push(fileInfo.id);
+                toDeleteNotebooks.push(file);
             }
         }
-
-        console.log("noteIdList=",noteIdList);
-        console.log("memoIdList=",memoIdList);
-        //数据为空
-        if(noteIdList.length == 0 && memoIdList.length == 0)
+        if(0 != toDeleteNotebooks.length)
         {
-            output.success = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.success
-            output.status = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.status
-            output.description = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.description
-            res.send(output);
-            return;
-        }
-        let noteEffectedNum = 0;
-        let memoEffectedNum = 0;
-
-        //笔记
-        if(noteIdList.length != 0)
-        {
-            if(isCompleteDel)
+            if(!deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t))
             {
-                //彻底删除 则移除数据
-                noteEffectedNum = await sqldb.Note.destroy(
-                    {
-                        where:{
-                            type:1,
-                            id:noteIdList,
-                        },
-                        transaction:t
-                    }
-                );
-                console.log("noteEffectedNum:",noteEffectedNum);
-            }
-            else
-            {
-                let targetStatus = 0;
-                noteEffectedNum = await sqldb.Note.update(
-                    {
-                        status:targetStatus,
-                        update_time:curTime
-                    },
-                    {
-                        where:{
-                            id:noteIdList,
-                            u_id:userInfo.id,
-                            status:{
-                                [Op.ne]:targetStatus
-                            }
-                        },
-                        transaction:t
-                    }
-                );
-            }
-            
-        }
-        //删除便签
-        if(memoIdList.length != 0)
-        {
-            //便签
-            if(isCompleteDel)
-            {
-                //彻底删除 则移除数据
-                memoEffectedNum = await sqldb.Memo.destroy(
-                    {
-                        where:{
-                            type:1,
-                            id:memoIdList,
-                        },
-                        transaction:t
-                    }
-                );
-                console.log("noteEffectedNum:",noteEffectedNum);
-            }
-            else
-            {
-                let targetStatus = 0;
-                memoEffectedNum = await sqldb.Memo.update(
-                    {
-                        status:targetStatus,
-                        update_time:curTime
-                    },
-                    {
-                        where:{
-                            id:memoIdList,
-                            u_id:userInfo.id,
-                            status:{
-                                [Op.ne]:targetStatus
-                            }
-                        },
-                        transaction:t
-                    }
-                );
-            }
-            
-        }
-
-        //操作文件数量与传入数量不一致 回滚
-        if((memoIdList.length != 0 && memoEffectedNum != memoIdList.length) 
-            || (noteIdList.length != 0 && noteEffectedNum != noteIdList.length))
-        {
-            t.rollback();
-            if(isCompleteDel)
-            {
-                output.success = statusCode.SERVICE_STATUS.COMPLETE_DEL_FILE_FAIL.success
-                output.status = statusCode.SERVICE_STATUS.COMPLETE_DEL_FILE_FAIL.status
-                output.description = statusCode.SERVICE_STATUS.COMPLETE_DEL_FILE_FAIL.description
-            }
-            else
-            {
-                output.success = statusCode.SERVICE_STATUS.DEL_FILE_FAIL.success
-                output.status = statusCode.SERVICE_STATUS.DEL_FILE_FAIL.status
-                output.description = statusCode.SERVICE_STATUS.DEL_FILE_FAIL.description
-            }
-            
-            res.send(output);
-            return;
-        }
-
-        //记录日志
-        {
-            let operNum = 0;
-            let event = null;
-            let logList = [];
-
-            //笔记相关日志
-            if(noteIdList.length > 0)
-            {
-                event = isCompleteDel? statusCode.EVENT_LIST.NOTE_COMPEL_DEL : statusCode.EVENT_LIST.NOTE_DEL;
-                for(let noteId of noteIdList)
-                {
-                    let log = {
-                        time:curTime,
-                        event:event.code,
-                        desc:event.desc,
-                        u_id:userInfo.id,
-                        o_id:noteId,
-                        type:1
-                    }
-                    logList.push(log);
-                }
-                operNum = await sqldb.operLog.bulkCreate(logList,
-                    {
-                        transaction:t
-                    }
-                );
-    
-                console.log("add note log operNum:",operNum);
-            }
-            
-
-            //便签相关日志
-            if(noteIdList.length > 0)
-            {
-                event = isCompleteDel? statusCode.EVENT_LIST.MEMO_COMPEL_DEL : statusCode.EVENT_LIST.MEMO_DEL;
-                logList = [];
-                for(let memoId of memoIdList)
-                {
-                    let log = {
-                        time:curTime,
-                        event:event.code,
-                        desc:event.desc,
-                        u_id:userInfo.id,
-                        o_id:memoId,
-                        type:2
-                    }
-                    logList.push(log);
-                }
-                operNum = await sqldb.operLog.bulkCreate(logList,
-                    {
-                        transaction:t
-                    }
-                );
-                console.log("add memo log operNum:",operNum);
+                throw new Error("Delete folder error");
             }
         }
-
-        t.commit();
+        if(0 != toDeleteNotebooks.length)
+        {
+            if(!deleteFile(userInfo,isCompleteDel,toDeleteNotes,t))
+            {
+                throw new Error("Delete file error");
+            }
+        }
         if(isCompleteDel)
         {
             output.success = statusCode.SERVICE_STATUS.COMPLETE_DEL_FILE_SUCCESS.success

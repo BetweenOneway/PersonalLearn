@@ -107,7 +107,7 @@ CREATE TABLE `z_oper_log`  (
   `desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '描述',
   `u_id` int(11) NOT NULL COMMENT '用户编号',
   `o_id` int(11) NULL DEFAULT NULL COMMENT '操作对象编号',
-  `type` int(11) NULL DEFAULT NULL COMMENT '对象类型 1:笔记 2:便签',
+  `type` int(11) NULL DEFAULT NULL COMMENT '对象类型 1:笔记 2:文件夹',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `z_oper_log_z_user_id_fk`(`u_id`) USING BTREE,
   CONSTRAINT `z_oper_log_z_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `z_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
