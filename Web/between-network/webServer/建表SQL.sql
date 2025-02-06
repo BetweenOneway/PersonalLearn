@@ -69,7 +69,7 @@ CREATE TABLE `notebook`  (
   `u_id` int(11) NOT NULL COMMENT '用户编号',
   `level` int(11) NOT NULL DEFAULT 1 COMMENT '笔记本层级',
   `parent_id` int(11) NOT NULL DEFAULT 0 COMMENT '上一级笔记本编号',
-  `status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态【0：被删除，1：正常/私有 2:公开】',
+  `status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态【0：被删除，1：正常/私有】',
   UNIQUE INDEX `z_note_pk`(`id`) USING BTREE,
   INDEX `notebook_user_id_fk`(`u_id`) USING BTREE,
   CONSTRAINT `notebook_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `z_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE

@@ -26,15 +26,21 @@ router.get("/getUserNotebookList",async (req,res)=>{
 
     console.log("start get user notebook list")
 
+    //0 被删除
+    let targetStatus = 0;
     try {
         let userInfo = req.userInfo
         console.log("parsed userinfo=>",userInfo)
 
-        const notes = await sqldb.Notebook.findAll(
+        //查询属于当前用户的，未被删除的笔记本
+        const notebooks = await sqldb.Notebook.findAll(
             {
                 attributes: ['id', 'name','level','parent_id'],
                 where:{
-                    u_id:userInfo.id
+                    u_id:userInfo.id,
+                    status:{
+                        [Op.ne]:targetStatus
+                    }
                 },
                 order:[
                     ['level', 'DESC']
@@ -46,7 +52,7 @@ router.get("/getUserNotebookList",async (req,res)=>{
         output.status = statusCode.SERVICE_STATUS.GET_NOTEBOOK_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.GET_NOTEBOOK_SUCCESS.description
 
-        output.data = notes
+        output.data = notebooks
         res.send(output);
     } catch (error) {
         console.log(error)

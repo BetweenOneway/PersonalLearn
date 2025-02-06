@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function(sequelize,DataTypes){
-    var dumpster = sequelize.define('dumpster',{
+    var Dumpster = sequelize.define('dumpster',{
         id:{
             type:DataTypes.INTEGER,
             primaryKey:true,
@@ -28,5 +28,5 @@ module.exports = function(sequelize,DataTypes){
         freezeTableName: true,
         timestamps: false
     });
-    return dumpster;
+    return Dumpster;
 };

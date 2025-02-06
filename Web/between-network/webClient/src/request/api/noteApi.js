@@ -23,14 +23,6 @@ const noteApi = {
         dataParam:false,
         successMessage:true
     },
-    deleteNote:{
-        name:['删除笔记','彻底删除笔记'],
-        url:'/note/deleteNote',
-        method:'DELETE',
-        userPower:true,
-        dataParam:false,
-        successMessage:true
-    },
     createNote:{
         name:'创建笔记',
         url:'/note/createNote',
