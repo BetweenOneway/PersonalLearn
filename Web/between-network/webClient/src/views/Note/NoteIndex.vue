@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="width: 100%;">
         <n-layout has-sider style="height: 100%;">
             <n-flex vertical>
                 <!--新增按钮-->
@@ -95,7 +95,7 @@
                 </n-layout-sider>
 
                 <!--笔记编辑容器-->
-                <n-layout-content embeded content-style="padding:20px">
+                <n-layout-content embeded content-style="padding:20px;">
                     <!--子路由-->
                     <router-view @save="getNoteListInNotebook()" @deleteSuccess="deleteNoteSuccess" :change-state="isChangeEditNote"/>
                 </n-layout-content>

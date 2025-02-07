@@ -73,6 +73,9 @@
     const userStore = useUserStore();
     const {token} = storeToRefs(userStore);
 
+    //是否处于加载状态
+    const loading = ref(false)
+
     watch(
         ()=>token.value,
         newData=>{
@@ -99,6 +102,7 @@
         noteServerRequest(notebookApi.getNotebookList).then(responseData=>{
             if(responseData)
             {
+                loading.value = false;
                 //清空旧有笔记本列表
                 resetNotebookTreeMenu();
                 let allNotebook = responseData.data;

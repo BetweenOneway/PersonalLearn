@@ -25,6 +25,14 @@ const router = createRouter({
     {
         path: '/test',
         component: ()=>import("@/views/test/Index.vue"),
+        children:[
+            {
+                path:'imgcontainer',
+                props:true,
+                component:()=>import("@/components/test/imgContainer.vue"),
+                meta:{title:'img-container'}
+            },
+        ]
     },
   ],
 })
