@@ -1,6 +1,7 @@
 <template>
     <div style="width: 100%;">
         <n-layout has-sider style="height: 100%;">
+            <!--笔记本列表及功能页-->
             <n-flex vertical>
                 <!--新增按钮-->
                 <n-popover v-model:show = "createMenuShow" trigger="click">

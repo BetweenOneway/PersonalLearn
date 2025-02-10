@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ckeditor/ckeditor5-vue": "^7.3.0",
+    "@vicons/ionicons5": "^0.13.0",
     "@vicons/utils": "^0.1.4",
     "axios": "^1.7.9",
     "ckeditor5": "^44.1.0",

@@ -32,6 +32,18 @@ const router = createRouter({
                 component:()=>import("@/components/test/imgContainer.vue"),
                 meta:{title:'img-container'}
             },
+            {
+                path:'expandMenu',
+                props:true,
+                component:()=>import("@/components/test/expandMenu.vue"),
+                meta:{title:'expand menu'}
+            },
+            {
+                path:'split',
+                props:true,
+                component:()=>import("@/components/test/split.vue"),
+                meta:{title:'split'}
+            },
         ]
     },
   ],
