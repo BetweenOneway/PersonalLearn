@@ -376,7 +376,8 @@ void testFunction()
 
 void testFileOper()
 {
-    FILE_OPER::testWriteContainerToFile();
+    //FILE_OPER::testWriteContainerToFile();
+    FILE_OPER::StingStreamToVector();
 }
 
 int main()
