@@ -27,6 +27,16 @@ const router = createRouter({
         component: () => import('@/views/forView.vue'),
     },
     {
+        path: '/cherryMarkdown',
+        name: 'CherryMarkdown',
+        component: () => import('@/views/CherryMarkdownView.vue'),
+    },
+    {
+        path: '/ContainerView',
+        name: 'ContainerView',
+        component: () => import('@/views/ContainerView.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting
