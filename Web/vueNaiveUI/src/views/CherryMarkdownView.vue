@@ -1,34 +1,30 @@
 <template>
-    <!-- <n-space>
-        <div id="markdown-container" style="width:1010px;height:600px"></div>
-    </n-space> -->
-    <div id="markdown-container"></div>
+    <div class="editor-container">
+      <div ref="editorContainer"></div>
+    </div>
 </template>
  
 <script setup>
+    import { ref, onMounted, onUnmounted } from 'vue';
+    import 'cherry-markdown/dist/cherry-markdown.css';
+    import Cherry from 'cherry-markdown';
 
-import { ref, onMounted, onUnmounted } from 'vue';
-import 'cherry-markdown/dist/cherry-markdown.css';
-import Cherry from 'cherry-markdown';
-onMounted(() => {
-const cherryInstance = new Cherry({
-  id: 'markdown-container',
-  value: '# welcome to cherry editor wangwei!',
-});
-})
+    const editorContainer = ref(null);
+    let editor = null;
 
+    onMounted(() => {
+        editor = new Cherry({
+            el: editorContainer.value,
+            //id: 'markdown-container', 
+            value: '## hello world', 
+        });
+    })
 </script>
 
 <style scoped>
-.parent-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+.editor-container {
   width: 100%;
+  height: 100vh;
+  position: relative; /* 确保子元素相对于此容器定位 */
 }
-
-/* .editor-container {
-  flex: 1;
-  overflow: auto;
-} */
 </style>
