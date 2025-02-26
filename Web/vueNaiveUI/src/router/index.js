@@ -32,6 +32,11 @@ const router = createRouter({
         component: () => import('@/views/CherryMarkdownView.vue'),
     },
     {
+        path: '/editormd',
+        name: 'editor-md-v3',
+        component: () => import('@/views/EditorMd.vue'),
+    },
+    {
         path: '/ContainerView',
         name: 'ContainerView',
         component: () => import('@/views/ContainerView.vue'),
