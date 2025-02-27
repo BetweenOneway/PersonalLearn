@@ -21,7 +21,8 @@ void testLine()
 
 void Ray()
 {
-    testGetUnitLengthAndDistance();
+    //testGetUnitLengthAndDistance();
+    testDir();
 }
 
 void Quaternion()
@@ -93,11 +94,11 @@ void testAlgo()
 }
 int main()
 {
-    TestPlane();
+    //TestPlane();
     //testDot();
     //Vector();
     //Quaternion();
-    //Ray();
+    Ray();
     //testLine();
     //Plane();
     //Learn();

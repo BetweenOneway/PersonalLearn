@@ -1,6 +1,14 @@
 ﻿#include "testRay.h"
 #include <iostream>
 using namespace std;
+#include "Oper3DFile.h"
+
+void PrintRay(std::vector<Vector3>& verts, const Ray& ray) {
+    for (int i = -10; i < 10; i++)
+    {
+        verts.push_back(ray.GetPoint(i));
+    }
+};
 
 void testRay()
 {
@@ -72,4 +80,32 @@ void testGetUnitLengthAndDistance()
 
     cout << ray.GetDistance(point4) << endl;//4
     cout << ray.GetUnitsLenth(point4) << endl;//3
+}
+
+void testDir()
+{
+    Vector3 x(1.0f, 0.0f, 0.0f);
+    Vector3 y(0.0f, 1.0f, 0.0f);
+
+    Vector3 dir = x + y;
+    dir.normalize();
+
+    Ray ray({ 0.0f,0.0f,0.0f }, dir);
+
+    std::vector<Vector3> rayVerts;
+    PrintRay(rayVerts, ray);
+
+    WriteOBJFile(rayVerts, "./output/rayVerts.obj");
+
+    /// <summary>
+    /// 第二段射线
+    /// </summary>
+    rayVerts.clear();
+    Vector3 negY(0.0f, -1.0f, 0.0f);
+    Vector3 dir1 = dir + negY;
+    dir1.normalize();
+    Ray ray1({ 0.0f,0.0f,0.0f }, dir1);
+    PrintRay(rayVerts, ray1);
+
+    WriteOBJFile(rayVerts, "./output/rayVerts1.obj");
 }

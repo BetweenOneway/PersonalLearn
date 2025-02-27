@@ -8,3 +8,5 @@ void testRay();
 void testRay2();
 
 void testRayIntersect();
+
+void testDir();

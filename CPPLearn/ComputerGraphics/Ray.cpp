@@ -21,6 +21,11 @@ Vector3 Ray::GetDirection() const
     return origin;
 }
 
+Vector3 Ray::GetPoint(float t) const
+{
+    return Vector3(origin + (direction * t));
+}
+
 constexpr float VF_EPS_2 = 0.000001f;
 
 bool Ray::GetRayIntersect(const Triangle& triangle,

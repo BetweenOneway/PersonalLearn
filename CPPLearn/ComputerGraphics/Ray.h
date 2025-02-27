@@ -12,6 +12,7 @@ public:
     
     Vector3 GetOrigin() const;
     Vector3 GetDirection() const;
+    Vector3 GetPoint(float t) const;
     bool GetRayIntersect(const Triangle& triangle,
     std::vector<Vector3>* posiPoints, std::vector<unsigned>* posiSurfIdx,
     std::vector<Vector3>* negaPoints, std::vector<unsigned>* negaSurfIdx);
