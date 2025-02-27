@@ -1,5 +1,5 @@
 <template>
-    <n-flex>
+    <n-flex justify="space-around" align="center" style="height:100vh">
         <n-card>
             <RouterLink to="/tree">测试树状组件</RouterLink>
         </n-card>
@@ -16,10 +16,14 @@
             <RouterLink to="/editormd">测试Editor-Md-V3</RouterLink>
         </n-card>
     </n-flex>
-    
-
 </template>
 
 <script setup>
     import { RouterLink } from 'vue-router'
 </script>
+
+<style scoped>
+.n-card {
+  max-width: 300px;
+}
+</style>
