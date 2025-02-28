@@ -149,6 +149,7 @@
     <ClCompile Include="BSpine.cpp" />
     <ClCompile Include="CalcBoundary.cpp" />
     <ClCompile Include="CommonFunctions.cpp" />
+    <ClCompile Include="Curvature.cpp" />
     <ClCompile Include="Curve.cpp" />
     <ClCompile Include="index.cpp" />
     <ClCompile Include="Lagrange.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="CommonFunctions.h" />
     <ClInclude Include="ComputerGraphics.h" />
+    <ClInclude Include="Curvature.h" />
     <ClInclude Include="Curve.h" />
     <ClInclude Include="LeastSquareMethod.h" />
     <ClInclude Include="LSM.h" />

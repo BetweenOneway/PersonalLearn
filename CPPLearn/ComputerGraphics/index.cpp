@@ -11,6 +11,7 @@ using namespace std;
 #include "CalcBoundary.h"
 #include "testCommonFunctions.h"
 #include "testAlgo.h"
+#include "Curvature.h"
 
 void testLine()
 {
@@ -92,19 +93,28 @@ void testAlgo()
 {
     TEST_ALGO::testAlgo();
 }
+
+void testCurvature()
+{
+    NS_CURVATURE::CalcCurvatureMethod1();
+    //NS_CURVATURE::CalcCurvatureMethod2();
+    NS_CURVATURE::CalcCurvatureMethod3();
+}
+
 int main()
 {
     //TestPlane();
     //testDot();
     //Vector();
     //Quaternion();
-    Ray();
+    //Ray();
     //testLine();
     //Plane();
     //Learn();
     //CalcBoundary();
     //CommonFunctions();
     //testAlgo();
+    testCurvature();
     system("pause");
     return 0;
 }
