@@ -181,13 +181,14 @@ namespace NS_CURVATURE {
     }
 
     int CalcCurvatureMethod2() {
+        // 会报错
         // 示例点集
         std::vector<Point> points = {
+            {-2, 1.5},
+            {-1, 1},
             {0, 0},
-            {1, 0.5},
-            {2, 1},
-            {3, 1.5},
-            {4, 2}
+            {1, 1},
+            {2, 2}
         };
 
         std::vector<double> curvatures = computeCurvatureCircleFitting(points);

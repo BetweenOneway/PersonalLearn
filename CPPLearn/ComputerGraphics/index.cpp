@@ -97,6 +97,7 @@ void testAlgo()
 void testCurvature()
 {
     NS_CURVATURE::CalcCurvatureMethod1();
+    //会报错
     //NS_CURVATURE::CalcCurvatureMethod2();
     NS_CURVATURE::CalcCurvatureMethod3();
 }
