@@ -20,28 +20,28 @@
                 </n-popover>
                 
                 <n-divider style="margin:15px auto"></n-divider>
-                
+                <n-flex vertical>
+                <n-space>
+                    <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="getRecentNoteList" >
+                        最近文件
+                    </n-button>
+                </n-space>
+
                 <!--菜单列-->
                 <n-layout-sider
                 bordered
-                show-trigger
-                collapse-mode="width"
-                :collapsed-width="64"
-                :width="240"
+                :width="180"
                 :native-scrollbar="false"
                 >
-                    <div style="margin-left: 24px;">
-                        <n-button text size="large" @click="getRecentNoteList" >
-                            最近文件
-                        </n-button>
-                    </div>
                     <NotebookTree ref="notebookTree" @NotebookChanged="notebookChanged"/>
-                    <n-menu
-                        :collapsed-width="64"
-                        :collapsed-icon-size="22"
-                        :options="bottomMenu"
-                    />
                 </n-layout-sider>
+                <!--底部菜单栏-->
+                <n-space>
+                    <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="getRecycleNoteList" >
+                        回收站
+                    </n-button>
+                </n-space>
+                </n-flex>
             </n-flex>
             <!--笔记列表及编辑器容器-->
             <n-layout has-sider>
@@ -183,14 +183,6 @@
     //是否处于加载状态
     const loading = ref(true)
 
-    const bottomMenu = [
-        {
-            label: "回收站",
-            key: "recycle-bin",
-            icon: renderIcon(BookIcon)
-        }
-    ]
-
     //笔记列表
     const noteList = ref([]);
 
@@ -201,6 +193,7 @@
 
     function notebookChanged(e)
     {
+        //更新笔记列表数据
         noteList.value = e;
         //停止显示骨架屏
         loading.value = false;
@@ -276,6 +269,12 @@
                 loading.value = false;
             }
         })
+    }
+
+    //获取回收站中所有笔记
+    function getRecycleNoteList()
+    {
+        notebookTree.getRecycleNoteList();
     }
 
     function Init()

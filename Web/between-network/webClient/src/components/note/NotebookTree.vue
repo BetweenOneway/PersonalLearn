@@ -415,10 +415,29 @@
         })
     }
 
+    //获取回收站中笔记列表
+    function getRecycleNoteList()
+    {
+        console.log("get notes list=>",currentSelectNotebookId.value);
+        let API = {...noteApi.getUserNoteList};
+        //请求URL的参数
+        API.params= {
+            notebookId:currentSelectNotebookId.value
+        };
+        console.log("API=>",API);
+        noteServerRequest(API).then(responseData=>{
+            if(responseData)
+            {
+                emit("NotebookChanged",responseData.data);
+            }
+        })
+    }
+
     defineExpose({
         addNewNoteBook,
         addNewNote,
-        getNotesList
+        getNotesList,
+        getRecycleNoteList
     })
 
     /**
