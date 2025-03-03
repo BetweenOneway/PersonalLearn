@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <regex>
 #include <string>
+#include <vector>
 using namespace std;
 
 #include <Windows.h>
@@ -58,9 +59,47 @@ void modifyFileName(wstring fileName,wstring dir)
 	rename(srcFileName.c_str(), destFileName.c_str());
 }
 
+//将名称中以指定分隔符进行分割，如"电影天堂.狂飙.01.mp4"之类的名字分割，并剔除或者替换某一个部分
+void RenameFileMethod2(wstring fileName, wstring dir)
+{
+    string delimiter = ".";
+    string strFileName = Wstring2String(fileName);
+    string strDir = Wstring2String(dir);
+
+    vector<string> res;
+    char* strc = new char[strFileName.size() + 1];
+    strcpy(strc, strFileName.c_str());   // 将str拷贝到 char类型的strc中
+    char* temp = strtok(strc, delimiter.c_str());
+    while (temp != NULL)
+    {
+        res.push_back(string(temp));
+        temp = strtok(NULL, delimiter.c_str());	// 下一个被分割的串
+    }
+    delete[] strc;
+
+    if (0 != res.size())
+    {
+        string targetString = "鹊刀门传奇";
+        res[0] = targetString;
+    }
+    string destFileName = strDir;
+    for (int i=0;i<res.size();i++)
+    {
+        if (i != 0)
+        {
+            destFileName += delimiter;
+        }
+        destFileName += res[i];
+    }
+    string srcFileName = strDir + strFileName;
+    cout << srcFileName.c_str() << endl;
+    cout << destFileName.c_str() << endl;
+    rename(srcFileName.c_str(), destFileName.c_str());
+}
+
 void ListAllFiles()
 {
-	wstring dir(L"H:\\电视剧\\浪漫医生金师傅\\3\\");
+	wstring dir(L"D:\\Downloads\\鹊刀门传奇\\");
 	wstring searchDir = dir + L"*.*";
 	HANDLE hFind;
 	WIN32_FIND_DATA findData;
@@ -82,7 +121,7 @@ void ListAllFiles()
 		else
 		{
 			cout << findData.cFileName << endl;
-			modifyFileName(findData.cFileName,dir);
+            RenameFileMethod2(findData.cFileName,dir);
 		}
 	} while (FindNextFile(hFind, &findData));
 }
@@ -178,7 +217,7 @@ void RegToken()
 
 int main()
 {
-    //ListAllFiles();
+    ListAllFiles();
 
     //MathOrSearch();
     //RegToken();
