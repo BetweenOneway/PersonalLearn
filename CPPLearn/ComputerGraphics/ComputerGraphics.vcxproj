@@ -154,6 +154,7 @@
     <ClCompile Include="index.cpp" />
     <ClCompile Include="Lagrange.cpp" />
     <ClCompile Include="LeastSquareMethod.cpp" />
+    <ClCompile Include="Location.cpp" />
     <ClCompile Include="LSM.cpp" />
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="Matrix3x3.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="testAlgo.cpp" />
     <ClCompile Include="testCommonFunctions.cpp" />
     <ClCompile Include="testLine.cpp" />
+    <ClCompile Include="testLocation.cpp" />
     <ClCompile Include="testPlane.cpp" />
     <ClCompile Include="testQuaternion.cpp" />
     <ClCompile Include="testRay.cpp" />
@@ -186,6 +188,7 @@
     <ClInclude Include="Curvature.h" />
     <ClInclude Include="Curve.h" />
     <ClInclude Include="LeastSquareMethod.h" />
+    <ClInclude Include="Location.h" />
     <ClInclude Include="LSM.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Matrix3x3.h" />
@@ -200,6 +203,7 @@
     <ClInclude Include="testAlgo.h" />
     <ClInclude Include="testCommonFunctions.h" />
     <ClInclude Include="testLine.h" />
+    <ClInclude Include="testLocation.h" />
     <ClInclude Include="testPlane.h" />
     <ClInclude Include="testQuaternion.h" />
     <ClInclude Include="testRay.h" />

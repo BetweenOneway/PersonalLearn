@@ -105,6 +105,12 @@
     <ClCompile Include="Curvature.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Location.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="testLocation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MathUtil.h">
@@ -198,6 +204,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Curvature.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Location.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="testLocation.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

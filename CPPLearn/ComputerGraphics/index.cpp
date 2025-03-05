@@ -12,6 +12,7 @@ using namespace std;
 #include "testCommonFunctions.h"
 #include "testAlgo.h"
 #include "Curvature.h"
+#include "testLocation.h"
 
 void testLine()
 {
@@ -102,6 +103,11 @@ void testCurvature()
     NS_CURVATURE::CalcCurvatureMethod3();
 }
 
+void testLocation()
+{
+    TEST_LOCATION::testLocationTransform();
+}
+
 int main()
 {
     //TestPlane();
@@ -115,7 +121,8 @@ int main()
     //CalcBoundary();
     //CommonFunctions();
     //testAlgo();
-    testCurvature();
+    //testCurvature();
+    testLocation();
     system("pause");
     return 0;
 }
