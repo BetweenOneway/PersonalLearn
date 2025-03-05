@@ -64,7 +64,8 @@
         <!--笔记编辑容器-->
         <n-layout-content embeded content-style="padding:20px">
             <!--子路由-->
-            <router-view @save="getNoteList(false,false)" @deleteSuccess="deleteNoteSuccess" :change-state="isChangeEditNote" :action-id="contextMenu.id"/>
+            <router-view @save="getNoteList(false,false)" @deleteSuccess="deleteNoteSuccess" 
+            :change-state="isChangeEditNote" :action-id="contextMenu.id"/>
         </n-layout-content>
 
     </n-layout>

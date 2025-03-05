@@ -113,6 +113,7 @@
                             {
                                 size:'small',type:'error',tertiary:true,
                                 onClick:()=>{
+                                    console.log("row=>",row);
                                     //显示删除提醒框
                                     showFromDumpsterSingle(row);
                                 }

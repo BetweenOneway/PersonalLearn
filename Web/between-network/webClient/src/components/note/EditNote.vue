@@ -90,7 +90,8 @@
     const propsData = defineProps({
         id:{type:String,required:true},
         changeState:{type:Number},
-        actionId:{type:Number}
+        actionId:{type:Number},
+        isRecycleBinNote:{type:Boolean,default:false}
     })
 
     //当前正在编辑笔记所属的用户编号

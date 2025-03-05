@@ -232,6 +232,7 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
 
                 //关联笔记本记录中移除主笔记本编号
                 notebookIds.slice(1);
+                console.log("notebookIds=>",notebookIds);
                 let related = JSON.stringify(notebookIds);
                 //回收站表新增相应记录
                 const dumpsterAddResult = await sqldb.Dumpster.create(
@@ -294,7 +295,7 @@ router.delete("/deleteFiles",async (req,res)=>{
     console.log("start del files,req.query:",req.query);
 
     let isCompleteDel = req.query.complete =='true'?true:false;
-    //[{id,title,type,key,theme,icon,tip},{}...]
+    //[{id,title,type},{}...]
     let toDeleteFiles = req.query.files;
     //目标状态
     let userInfo = req.userInfo;
@@ -442,7 +443,7 @@ router.post("/restoreFiles",async (req,res)=>{
             );
             
         }
-        //删除便签
+        //恢复便签
         if(memoIdList.length != 0)
         {
             //便签
@@ -551,7 +552,7 @@ router.post("/restoreFiles",async (req,res)=>{
         res.send(output);
     }
 
-    console.log("End of delete files")
+    console.log("End of restore files")
     return
 })
 

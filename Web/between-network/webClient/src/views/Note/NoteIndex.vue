@@ -78,6 +78,7 @@
                                 <n-list-item 
                                 v-for="(note,index) in noteList" :key="note.id" 
                                 :data-index="index"
+                                @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
                                 :class="{'editing':(selectNoteId === note.id)}"
                                 @click="goEditNoteView(note.id)">
                                     <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.content" :top="!!note.top" :time="note.update_time"></NoteCard>
@@ -98,12 +99,26 @@
                 <!--笔记编辑容器-->
                 <n-layout-content embeded content-style="padding:20px;">
                     <!--子路由-->
-                    <router-view @save="getNoteListInNotebook()" @deleteSuccess="deleteNoteSuccess" :change-state="isChangeEditNote"/>
+                    <router-view @save="getNoteListInNotebook()" 
+                    @deleteSuccess="deleteNoteSuccess" 
+                    :change-state="isChangeEditNote"
+                    :isRecycleBinNote="isRecycleBinList"/>
                 </n-layout-content>
-
             </n-layout>
         </n-layout>
+
+        <n-dropdown
+        placement="bottom-start"
+        trigger="manual"
+        :x="contextMenu.x"
+        :y="contextMenu.y"
+        :options="contextMenu.options"
+        :show="contextMenu.show"
+        :on-clickoutside="clickContextMenuOutSide"
+        @select="selectContextMenu"
+        />
     </div>
+    
 </template>
   
 <script setup>
@@ -119,13 +134,23 @@
     
     import noteServerRequest  from "@/request"
     import noteApi from '@/request/api/noteApi';
+    import fileDumpsterApi from "@/request/api/dumpsterApi";
     
     import NoteCard from "@/components/note/NoteCard.vue";
     import NotebookTree from "@/components/note/NotebookTree.vue";
+
+    import DeleteRemindDialog from "@/components/remind/DeleteRemindDialog.vue";
+    import { useDeleteRemindDialogStore } from "@/stores/deleteRemindDialogStore";
+
+    const deleteRemindDialogStore = useDeleteRemindDialogStore();
+    const {showFromDumpsterSingle} = deleteRemindDialogStore;
     
     function renderIcon(icon) {
         return () => h(NIcon, null, { default: () => h(icon) });
     }
+
+    //是否是回收站列表
+    const isRecycleBinList = ref(false)
 
     //是否显示新建子菜单
     const createMenuShow = ref(false)
@@ -146,7 +171,6 @@
 
     //新建菜单选项回调
     const clickCreateMenu = (key,value)=>{
-
         //关闭用户菜单弹出信息
         createMenuShow.value = false
 
@@ -191,12 +215,15 @@
         defaultContent:'暂未设置内容'
     }
 
+    //选择了不同的笔记本，笔记列表改变
     function notebookChanged(e)
     {
         //更新笔记列表数据
         noteList.value = e;
         //停止显示骨架屏
         loading.value = false;
+
+        isRecycleBinList.value = false;
     }
 
     let notebookTree = ref(null);
@@ -222,6 +249,118 @@
         }
     }
 
+    //右键菜单对象
+    const contextMenu = ref({
+        id:null,//笔记编号
+        title:'',//笔记标题
+        top:false,//笔记是否置顶
+        x:0,//X轴坐标
+        y:0,//Y轴坐标
+        show:false,//是否显示右键菜单
+        options:computed(()=>{
+            let normalContextMenu = [
+                {
+                    label:"重命名",
+                    key:"rename",
+                    icon:renderIcon(DriveFileRenameOutlineOutlined)
+                },
+                {
+                    label:"删除",
+                    key:"delete",
+                    icon:renderIcon(DeleteOutlineRound)
+                },
+                {
+                    label:"取消置顶",
+                    key:"cancel-top",
+                    icon:renderIcon(ArrowCircleDownRound),
+                    show:contextMenu.value.top
+                },
+                {
+                    label:"置顶",
+                    key:"top",
+                    icon:renderIcon(ArrowCircleUpRound),
+                    show:!contextMenu.value.top
+                },
+            ];
+            //回收站上下文菜单
+            let recycleContextMenu = [
+                {
+                    label:"恢复",
+                    key:"restore",
+                    icon:renderIcon(ArrowCircleUpRound),
+                },
+                {
+                    label:"彻底删除",
+                    key:"complete-delete",
+                    icon:renderIcon(ArrowCircleUpRound),
+                }
+            ];
+            return isRecycleBinList.value? recycleContextMenu: normalContextMenu;
+        })
+    });
+
+    //显示上下文菜单
+    const showContentMenu = (e,id,top,title)=>{
+        e.preventDefault();
+        contextMenu.value.show = false;
+        nextTick().then(() => {
+            contextMenu.value.show = true;
+            contextMenu.value.x = e.clientX;
+            contextMenu.value.y = e.clientY;
+            contextMenu.value.id = id;
+            contextMenu.value.top = top,
+            contextMenu.value.title = title??noteContent.defaultTitle
+        });
+    };
+
+    const clickContextMenuOutSide = ()=>{
+        contextMenu.value.show = false;
+    };
+
+    //点击了右键菜单某一项
+    const selectContextMenu = (key)=>{
+        contextMenu.value.show = false;
+        if(key =="cancel-top")
+        {
+            SetNoteTop(false);
+        }
+        else if(key == "top")
+        {
+            SetNoteTop(true);
+        }
+        else if(key=="rename")
+        {
+            //重命名
+        }
+        else if(key == "delete")
+        {
+            DefaultDeleteRemind({
+                id:contextMenu.value.id,
+                title:contextMenu.value.title,
+                type:1,
+                key:id+':'+1
+            })
+        }
+        else if(key =="restore")
+        {
+            let note = {
+                id:contextMenu.value.id,
+                title:contextMenu.value.title,
+                type:1,
+            }
+            restoreNote(note)
+        }
+        else if(key =="complete-delete")
+        {
+            let note = {
+                id:contextMenu.value.id,
+                title:contextMenu.value.title,
+                type:1,
+            }
+            showFromDumpsterSingle(note);
+        }
+    }
+
     /**
      * 创建笔记
      */
@@ -235,6 +374,14 @@
     function createNotebook()
     {
         notebookTree.value.addNewNoteBook();
+    }
+
+    /**
+     * 恢复已删除笔记
+     */
+    function restoreNote(noteInfo)
+    {
+
     }
 
     //----------------删除笔记-------------------
@@ -274,7 +421,20 @@
     //获取回收站中所有笔记
     function getRecycleNoteList()
     {
-        notebookTree.getRecycleNoteList();
+        isRecycleBinList.value = true;
+        //发送请求
+        noteServerRequest(dumpsterApi.getFileList).then(responseData=>{
+            if(!responseData) return;
+            //回收站中的文件
+            const files = responseData.data;
+            //封装文件的key值（id:type）
+            files.forEach(item=>{
+                item.key = item.id+':'+item.type;
+            });
+            //显示回收站中的文件
+            noteList = files;
+
+        });
     }
 
     function Init()
