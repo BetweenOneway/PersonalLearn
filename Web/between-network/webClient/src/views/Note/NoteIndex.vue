@@ -37,14 +37,14 @@
                 </n-layout-sider>
                 <!--底部菜单栏-->
                 <n-space>
-                    <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="getRecycleNoteList" >
+                    <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="showRecycleBin" >
                         回收站
                     </n-button>
                 </n-space>
                 </n-flex>
             </n-flex>
             <!--笔记列表及编辑器容器-->
-            <n-layout has-sider>
+            <n-layout has-sider v-if="!isRecycleBinView">
                 <!--笔记列表容器-->
                 <n-layout-sider
                     bordered
@@ -101,9 +101,11 @@
                     <!--子路由-->
                     <router-view @save="getNoteListInNotebook()" 
                     @deleteSuccess="deleteNoteSuccess" 
-                    :change-state="isChangeEditNote"
-                    :isRecycleBinNote="isRecycleBinList"/>
+                    :change-state="isChangeEditNote"/>
                 </n-layout-content>
+            </n-layout>
+            <n-layout has-sider v-else>
+                <Dumpster></Dumpster>
             </n-layout>
         </n-layout>
 
@@ -125,8 +127,12 @@
     import {
         SubtitlesOffOutlined,
         MenuBookOutlined as BookIcon,
-        AddBoxRound
+        AddBoxRound,PlusRound,
+        DriveFileRenameOutlineOutlined,
+        DeleteOutlineRound,ArrowCircleDownRound,
+        ArrowCircleUpRound
     } from "@vicons/material";
+
     import { NIcon } from "naive-ui";
     import { h,ref,computed,provide,inject } from "vue";
 
@@ -134,10 +140,12 @@
     
     import noteServerRequest  from "@/request"
     import noteApi from '@/request/api/noteApi';
-    import fileDumpsterApi from "@/request/api/dumpsterApi";
+    
     
     import NoteCard from "@/components/note/NoteCard.vue";
     import NotebookTree from "@/components/note/NotebookTree.vue";
+
+    import Dumpster from "@/components/dumpster/Dumpster.vue";
 
     import DeleteRemindDialog from "@/components/remind/DeleteRemindDialog.vue";
     import { useDeleteRemindDialogStore } from "@/stores/deleteRemindDialogStore";
@@ -150,7 +158,7 @@
     }
 
     //是否是回收站列表
-    const isRecycleBinList = ref(false)
+    const isRecycleBinView = ref(false)
 
     //是否显示新建子菜单
     const createMenuShow = ref(false)
@@ -183,7 +191,6 @@
                 break;
         }
     }
-
 
     const editNoteUID = ref(null)
 
@@ -223,7 +230,7 @@
         //停止显示骨架屏
         loading.value = false;
 
-        isRecycleBinList.value = false;
+        isRecycleBinView.value = false;
     }
 
     let notebookTree = ref(null);
@@ -282,20 +289,7 @@
                     show:!contextMenu.value.top
                 },
             ];
-            //回收站上下文菜单
-            let recycleContextMenu = [
-                {
-                    label:"恢复",
-                    key:"restore",
-                    icon:renderIcon(ArrowCircleUpRound),
-                },
-                {
-                    label:"彻底删除",
-                    key:"complete-delete",
-                    icon:renderIcon(ArrowCircleUpRound),
-                }
-            ];
-            return isRecycleBinList.value? recycleContextMenu: normalContextMenu;
+            return normalContextMenu;
         })
     });
 
@@ -376,14 +370,6 @@
         notebookTree.value.addNewNoteBook();
     }
 
-    /**
-     * 恢复已删除笔记
-     */
-    function restoreNote(noteInfo)
-    {
-
-    }
-
     //----------------删除笔记-------------------
 
     const isChangeEditNote = ref(0)//0 不需要改变 1 需要重新加载 2 需要关闭
@@ -409,6 +395,7 @@
 
     function getRecentNoteList()
     {
+        isRecycleBinView.value = false;
         noteServerRequest(noteApi.getRecentNoteList).then(responseData=>{
             if(responseData)
             {
@@ -418,23 +405,10 @@
         })
     }
 
-    //获取回收站中所有笔记
-    function getRecycleNoteList()
+    //显示回收站界面
+    function showRecycleBin()
     {
-        isRecycleBinList.value = true;
-        //发送请求
-        noteServerRequest(dumpsterApi.getFileList).then(responseData=>{
-            if(!responseData) return;
-            //回收站中的文件
-            const files = responseData.data;
-            //封装文件的key值（id:type）
-            files.forEach(item=>{
-                item.key = item.id+':'+item.type;
-            });
-            //显示回收站中的文件
-            noteList = files;
-
-        });
+        isRecycleBinView.value = true;
     }
 
     function Init()

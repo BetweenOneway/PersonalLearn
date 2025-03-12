@@ -28,12 +28,12 @@ router.get("/getFileList",async (req,res)=>{
 
         const fileLists = await sqldb.Dumpster.findAll(
             {
-                attributes: ['id','title',['update_time','updateTime'],'type'],
+                attributes: ['id','name','type','time'],
                 where:{
                     u_id:userInfo.id
                 },
                 order:[
-                    ['update_time','DESC']
+                    ['time','DESC']
                 ],
                 raw:true,
             }
@@ -46,7 +46,6 @@ router.get("/getFileList",async (req,res)=>{
 
     } catch (error) {
         console.log("get dumpster file lists error:",error);
-        t.rollback();
         output.success = statusCode.SERVICE_STATUS.GET_DUMPSTER_FILE_LIST_FAIL.success
         output.status = statusCode.SERVICE_STATUS.GET_DUMPSTER_FILE_LIST_FAIL.status
         output.description = statusCode.SERVICE_STATUS.GET_DUMPSTER_FILE_LIST_FAIL.description

@@ -270,12 +270,12 @@ SERVICE_STATUS={
     GET_DUMPSTER_FILE_LIST_SUCCESS:{
         success:true,
         status:'SERVICE_025',
-        description:'彻底删除文件成功'
+        description:'查询回收站文件成功'
     },
     GET_DUMPSTER_FILE_LIST_FAIL:{
         success:false,
         status:'SERVICE_025',
-        description:'彻底删除文件失败'
+        description:'查询回收站文件失败'
     },
     RESTORE_FILE_SUCCESS:{
         success:true,

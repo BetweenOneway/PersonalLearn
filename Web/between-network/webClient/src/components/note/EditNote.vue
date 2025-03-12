@@ -1,7 +1,7 @@
 <template>
     <div style="width: 100%;height: 100%;">
         <!--骨架屏-->
-        <n-space vertical :wrap-item="false" v-if="loading">
+        <n-space v-if="loading" vertical :wrap-item="false" >
             <n-skeleton :height="36" width="100%"></n-skeleton>
             <n-skeleton text width="30%"></n-skeleton>
             <n-skeleton text width="60%"></n-skeleton>
