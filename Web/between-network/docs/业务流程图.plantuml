@@ -1,0 +1,64 @@
+@startuml
+autoactivate on
+
+==删除笔记==
+webClient->webServer:deleteNote
+    note over webServer
+        将正常状态的笔记置为已删除状态
+        在回收站中记录该笔记记录
+        记录操作
+    end note
+return operStatus
+
+==恢复已删除笔记==
+webClient->webServer:restoreDeleteNote
+    note over webServer
+        将置为已删除状态的笔记重新置为正常状态
+        从回收站中移除该条记录
+        记录操作
+    end note
+return operStatus
+
+==彻底删除笔记==
+webClient->webServer:completeDeleteNote
+    note over webServer
+        将已删除状态的笔记从表中移除
+        将回收站中相应记录移除
+        记录操作
+    end note
+return operStatus
+
+==删除文件夹==
+
+webClient->webServer:deleteNotebook
+    note over webServer
+        查询该文件夹下所有的子文件夹及所有笔记记录
+        分别将笔记本表和笔记表中的记录状态置为已删除状态
+        在回收站中记录该条记录
+        记录操作
+    end note
+return operStatus
+
+==彻底删除文件夹==
+
+webClient->webServer:completeDeleteNotebook
+    note over webServer
+        查询该文件夹下所有的子文件夹
+        将笔记本表中从属于指定文件夹的笔记从已删除状态直接移除
+        将笔记本表中的指定记录从已删除状态清楚
+        从回收站表中移除该条记录
+        记录操作
+    end note
+return operStatus
+
+==恢复已删除文件夹==
+
+webClient->webServer:restoreDeleteNotebook
+    note over webServer
+        查询该文件夹下所有的子文件夹及所有笔记记录
+        分别将笔记本表和笔记表中的对应记录的状态从已删除状态更新为正常状态
+        在回收站中移除该条记录
+        记录操作
+    end note
+return operStatus
+@enduml
