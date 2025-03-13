@@ -7,14 +7,6 @@ const fileApi = {
         dataParam:false,
         successMessage:true
     },
-    restoreFiles:{
-        name:['恢复','批量恢复'],
-        url:'/file/restoreFiles',
-        method:'POST',
-        userPower:true,
-        dataParam:false,
-        successMessage:true
-    },
     getRecentlyUse:
     {
         name:'获取最近使用的文件',

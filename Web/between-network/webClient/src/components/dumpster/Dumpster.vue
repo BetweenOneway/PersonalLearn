@@ -211,7 +211,7 @@
         const length = rowChecked.value.length;
         if(length === 0) throw message.warning('未选择任何文件')
 
-        let API = {...fileApi.restoreFiles};
+        let API = {...fileDumpsterApi.restoreFiles};
 
         API.name = length === 1 ? API.name[0]:API.name[1];
 

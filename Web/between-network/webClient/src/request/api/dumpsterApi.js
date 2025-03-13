@@ -6,7 +6,15 @@ const fileDumpsterApi = {
         userPower:true,
         dataParam:false,
         successMessage:false
-    }
+    },
+    restoreFiles:{
+        name:['恢复','批量恢复'],
+        url:'/file/restoreFiles',
+        method:'POST',
+        userPower:true,
+        dataParam:false,
+        successMessage:true
+    },
 }
 
 export default fileDumpsterApi
