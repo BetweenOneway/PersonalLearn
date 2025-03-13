@@ -33,11 +33,13 @@ const levels = {
 //只有属于错误级别的日志才会记录在 example.log 文件中
 const logConfiguration = {
     transports: [
+        //输出到控制台的控制
         new winston.transports.Console(
             {
                 level: 'info',
             }
         ),
+        //输出到文件的控制
         new winston.transports.File({
             level: 'error',//只有当 info.level 小于或等于此级别时才记录
             // Create the log directory if it does not exist
@@ -46,11 +48,12 @@ const logConfiguration = {
         //new winston.transports.Http({host: 'localhost', port: 8080}),
         //new winston.transports.Stream({stream})
     ],
+    //日志格式控制
     format: winston.format.combine(
         winston.format.timestamp({
             format: 'MMM-DD-YYYY HH:mm:ss'
         }),
-        winston.format.printf(info => `${info.level}: ${[info.timestamp]}: ${info.message}`),
+        winston.format.printf(info => `${[info.timestamp]}:[${info.level}] ${info.message}`),
     )
 };
 
