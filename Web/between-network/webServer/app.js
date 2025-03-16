@@ -20,17 +20,28 @@ const sequelizeTest = require("./routes/sequelizeTest")
 
 let statusCode = require("./routes/statusCode")
 
+function Init()
+{
+    global.logger = require('./utils/log');
+    global.sqldb = require('./sqldb');
+    global.redisOper =require("./utils/redisOper");
+    global.statusCode = require("./routes/statusCode");
+}
+
+Init();
+
 //启动数据库
-var sqldb = require('./sqldb');
 sqldb.sequelize.sync({force: false}).then(function() {
-    console.log("Server successed to start");
+    logger.info("Server successed to start");
     // let rawAttrs = sqldb.Note.rawAttributes;
     // console.log("note:",rawAttrs);
     // rawAttrs = sqldb.User.rawAttributes;
     // console.log("user:",rawAttrs);
 }).catch(function(err){
-    console.log("Server failed to start due to error: %s", err);
+    //console.log("Server failed to start due to error:%s",err);
+    logger.error(`Server failed to start due to error: ${err}`);
 });
+
 
 /*
 请求路径 http://127.0.0.1:5050/user/login?lid=30&pname=dell

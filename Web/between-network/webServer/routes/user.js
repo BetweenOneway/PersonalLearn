@@ -1,15 +1,11 @@
 const express=require("express");
 const crypto = require("crypto")
 const stringRandom = require("string-random");
-let redisOper =require("../utils/redisOper")
-
-//数据库
-var sqldb = require('../sqldb');
 
 //邮箱操作
 var mailOper =require("../utils/mail")
 //状态码定义
-var statusCode = require("./statusCode")
+
 var router=express.Router();
 
 const path = require('path')
@@ -52,7 +48,7 @@ router.post("/login",async(req,res)=>{
     //校验输入参数
     if(0 == userEmail.length || 0 == userPassword.length)
     {
-        console.log("user login:param error")
+        logger.log("user login:param error")
         output.success = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.success
         output.status = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.status
         output.description = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.description
@@ -72,7 +68,7 @@ router.post("/login",async(req,res)=>{
                     }
                 }
             );
-            console.log("get userInfo:",userInfo);
+            logger.log(`get userInfo:${userInfo}`);
             if(!userInfo)
             {
                 console.log("account & password not matched")
