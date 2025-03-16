@@ -1,12 +1,227 @@
 const express=require("express");
 const { Op } = require("sequelize");
 
-//数据库
-var sqldb = require('../sqldb');
-
 let statusCode = require("./statusCode")
 
 var router=express.Router();
+
+/**
+ * 
+ * @param {*} userInfo 
+ * @param {*} notebooks 
+ * @param {*} t 
+ * @returns 
+ */
+async function RestoreNotebooks(userInfo,notebooks,t)
+{
+    logger.info(`start restore notebooks=>${notebooks.length}`);
+    if(0 == notebooks.length)
+    {
+        return true;
+    }
+    //0-被删除
+    const targetStatus = 0;
+
+    let curTime = new Date().toLocaleString()
+
+    try {
+        for(let notebook of notebooks)
+        {
+            //记录该笔记本ID以及其子笔记本ID
+            let notebookIds = [];
+            notebookIds.push(notebook.id);
+    
+            
+            let targetParentIds = [];
+            targetParentIds.push(notebook.id);
+            //查询出指定文件夹的所有子文件夹，要求状态已删除
+            do {
+                let childNotebookIds = [];
+                childNotebookIds = await sqldb.Notebook.findAll(
+                    {
+                        attributes: ['id'],
+                        where:{
+                            parent_id:{
+                                [Op.in]:targetParentIds
+                            },
+                            u_id:userInfo.id,
+                            status:{
+                                [Op.eq]:targetStatus,
+                            }
+                        },
+                        raw:true,
+                    }
+                );
+                logger.info(`childNotebookIds=>${childNotebookIds}`);
+                logger.info(`childNotebookIds.length=>${childNotebookIds.length}`);
+                if(0 != childNotebookIds.length)
+                {
+                    //再以子文件夹为目标，查询更下一级的笔记本
+                    targetParentIds = [];
+                    for(let elm of childNotebookIds)
+                    {
+                        targetParentIds.push(elm.id);
+                        notebookIds.push(elm.id);
+                    }
+                }
+            } while (0 != childNotebookIds.length);
+    
+            logger.info(`to restore notebookIds=>${notebookIds}`);
+
+            {
+                //更新笔记本状态为正常
+                const updateNum = await sqldb.Notebook.update(
+                    {
+                        status:1,
+                        update_time:curTime,
+                    },
+                    {
+                        where:{
+                            id: {
+                                [Op.in]:notebookIds,
+                            },
+                            u_id:userInfo.id,
+                            status:{
+                                [Op.ne]:targetStatus
+                            }
+                        },
+                        transaction:t
+                    }
+                );
+                logger.info(`Notebook update Num=>${updateNum}`);
+
+                //回收站表中移除相应记录
+                const dumpsterDestroyResult = await sqldb.Dumpster.destroy(
+                    {
+                        where:{
+                            object_id: {
+                                [Op.eq]:notebook.id,
+                            },
+                            type:2,//笔记本
+                            u_id:userInfo.id
+                        },
+                        transaction:t
+                    }
+                );
+                logger.info(`remove notebook form dumpster Result=>${dumpsterDestroyResult}`);
+            }
+
+            //记录日志
+            let event = statusCode.EVENT_LIST.RESTORE_NOTEBOOK;
+
+            const addLog = await sqldb.operLog.create(
+                {
+                    time:curTime,
+                    event:event.code,
+                    desc:event.desc,
+                    u_id:userInfo.id,
+                    o_id:notebook.id,
+                    type:1
+                },
+                {
+                    transaction:t
+                }
+            );
+        }
+        return true;
+    } catch (error) {
+        logger.error(`restore notebook error=>${error}`);
+        return false;
+    }
+    return true;
+}
+
+async function RestoreNotes(userInfo,notes,t)
+{
+    logger.info(`start restore notes=>${notes.length}`);
+
+    if(0 == notes.length)
+    {
+        return true;
+    }
+
+    let curTime = new Date().toLocaleString()
+    const targetStatus = 1;//正常状态
+    let event = statusCode.EVENT_LIST.RESTORE_NOTE;
+
+    try {
+        let toDeleteNotesId = [];
+        let dumpsterList = [];
+        let logList = [];
+        for(let note of notes)
+        {
+            toDeleteNotesId.push(note.id);
+            dumpsterList.push(
+                {
+                    u_id:userInfo.id,
+                    object_id:note.id,
+                    name:note.title,
+                    type:1,
+                    time:curTime
+                }
+            );
+            logList.push(
+                {
+                    time:curTime,
+                    event:event.code,
+                    desc:event.desc,
+                    u_id:userInfo.id,
+                    o_id:note.id,
+                    type:1
+                }
+            );
+        }
+
+        //更新笔记状态
+        const noteUpdateResult = await sqldb.Note.update(
+            {
+                status:targetStatus,
+                update_time:curTime,
+            },
+            {
+                where:{
+                    id: {
+                        [Op.in]:toDeleteNotesId,
+                    },
+                    u_id:userInfo.id,
+                    status:{
+                        [Op.ne]:targetStatus
+                    }
+                },
+                transaction:t
+            }
+        );
+        logger.info(`noteUpdateResult=>${noteUpdateResult}`);
+        //回收站表中移除相应记录
+        const dumpsterDestroyResult = await sqldb.Dumpster.destroy(
+            {
+                where:{
+                    object_id: {
+                        [Op.in]:toDeleteNotesId,
+                    },
+                    type:1,
+                    u_id:userInfo.id
+                },
+                transaction:t
+            }
+        );
+        logger.info(`noteDestroyResult=>${dumpsterDestroyResult}`);
+
+        //记录日志
+        const addLogResult = await sqldb.operLog.bulkCreate(
+            logList,
+            {
+                transaction:t
+            }
+        );
+        logger.info(`addLogResult=>${addLogResult}`);
+    } catch (error) {
+        logger.error(`Restore notes error=>${error}`);
+        return false;
+    }
+
+    return true;
+}
 
 /**
  * 获取用户回收站中的文件
@@ -65,169 +280,54 @@ router.post("/restoreFiles",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start restore files,req.body:",req.body);
+    console.log("start restore files,req.query:",req.query);
 
-    //[{id,title,type,key,theme,icon,tip},{}...]
-    let toRestoreFiles = req.body.files;
+    let isCompleteDel = req.query.complete =='true'?true:false;
+    //[{id,title,type},{}...]
+    let toDeleteFiles = req.query.files;
     //目标状态
     let userInfo = req.userInfo;
 
     const t = await sqldb.sequelize.transaction();
 
     try {
-        
-        let curTime = new Date().toLocaleString()
-
-        let noteIdList = [];
-        let memoIdList = [];
-
-        for(let fileInfo of toRestoreFiles)
+        //将要删除的数据按类型分类
+        let toDeleteNotebooks = [];
+        let toDeleteNotes = [];
+        for(let file of toDeleteFiles)
         {
-            if(fileInfo.type == '1')
+            if(1 == file.type)
             {
-                noteIdList.push(fileInfo.id);
+                toDeleteNotes.push(file)
             }
-            else if(fileInfo.type == '2')
+            else if(2 == file.type)
             {
-                memoIdList.push(fileInfo.id);
+                toDeleteNotebooks.push(file);
             }
         }
-
-        console.log("noteIdList=",noteIdList);
-        console.log("memoIdList=",memoIdList);
-        //数据为空
-        if(noteIdList.length == 0 && memoIdList.length == 0)
+        if(0 != toDeleteNotebooks.length)
         {
-            output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
-            output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status
-            output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description
-            res.send(output);
-            return;
-        }
-        let noteEffectedNum = 0;
-        let memoEffectedNum = 0;
-
-        //笔记
-        if(noteIdList.length != 0)
-        {
-            const noteEffectedNum = await sqldb.Note.update(
-                {
-                    status:1,
-                    update_time:curTime
-                },
-                {
-                    where:{
-                        id:noteIdList,
-                        u_id:userInfo.id,
-                        top:{
-                            [Op.ne]: targetTop
-                        },
-                        status:0
-                    },
-                    transaction: t
-                }
-            );
-            
-        }
-        //恢复便签
-        if(memoIdList.length != 0)
-        {
-            //便签
-            const noteEffectedNum = await sqldb.Memo.update(
-                {
-                    status:1,
-                    update_time:curTime
-                },
-                {
-                    where:{
-                        id:memoIdList,
-                        u_id:userInfo.id,
-                        top:{
-                            [Op.ne]: targetTop
-                        },
-                        status:0
-                    },
-                    transaction: t
-                }
-            );
-        }
-
-        //操作文件数量与传入数量不一致 回滚
-        if((memoIdList.length != 0 && memoEffectedNum != memoIdList.length) 
-            || (noteIdList.length != 0 && noteEffectedNum != noteIdList.length))
-        {
-            throw "更新数量与传入数量不一致";
-        }
-
-        //记录日志
-        {
-            let operNum = 0;
-            let event = null;
-            let logList = [];
-
-            //笔记相关日志
-            if(noteIdList.length > 0)
+            if(!await deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t))
             {
-                event = statusCode.EVENT_LIST.RESTORE_NOTE;
-                for(let noteId of noteIdList)
-                {
-                    let log = {
-                        time:curTime,
-                        event:event.code,
-                        desc:event.desc,
-                        u_id:userInfo.id,
-                        o_id:noteId,
-                        type:1
-                    }
-                    logList.push(log);
-                }
-                operNum = await sqldb.operLog.bulkCreate(logList,
-                    {
-                        transaction:t
-                    }
-                );
-    
-                console.log("add note log operNum:",operNum);
-            }
-            
-
-            //便签相关日志
-            if(noteIdList.length > 0)
-            {
-                event = statusCode.EVENT_LIST.RESTORE_MEMO;
-                logList = [];
-                for(let memoId of memoIdList)
-                {
-                    let log = {
-                        time:curTime,
-                        event:event.code,
-                        desc:event.desc,
-                        u_id:userInfo.id,
-                        o_id:memoId,
-                        type:2
-                    }
-                    logList.push(log);
-                }
-                operNum = await sqldb.operLog.bulkCreate(logList,
-                    {
-                        transaction:t
-                    }
-                );
-                console.log("add memo log operNum:",operNum);
+                throw new Error("restore notebook error");
             }
         }
-
-        t.commit();
+        if(0 != toDeleteNotes.length)
+        {
+            if(!await deleteNotes(userInfo,isCompleteDel,toDeleteNotes,t))
+            {
+                throw new Error("restore notes error");
+            }
+        }
 
         output.success = statusCode.SERVICE_STATUS.RESTORE_FILE_SUCCESS.success
         output.status = statusCode.SERVICE_STATUS.RESTORE_FILE_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.RESTORE_FILE_SUCCESS.description
 
-        res.send(output);
-        return;
+        t.commit();
     } catch (error) {
         //出错处理
-        console.log(error)
+        logger.error(`restore files error=>${error}`);
 
         t.rollback();
 
@@ -235,10 +335,11 @@ router.post("/restoreFiles",async (req,res)=>{
         output.status = statusCode.SERVICE_STATUS.RESTORE_FILE_FAIL.status
         output.description = statusCode.SERVICE_STATUS.RESTORE_FILE_FAIL.description
 
-        res.send(output);
     }
 
-    console.log("End of restore files")
+    logger.info("End of restore files")
+
+    res.send(output);
     return
 })
 

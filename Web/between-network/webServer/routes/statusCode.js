@@ -328,30 +328,6 @@ EVENT_LIST = {
         code:'1',
         desc:'邮箱密码登录'
     },
-    MEMO_SET_TOP:{
-        code:'2',
-        desc:'便签置顶'
-    },
-    MEMO_UNSET_TOP:{
-        code:'3',
-        desc:'便签取消置顶'
-    },
-    MEMO_DEL:{
-        code:'4',
-        desc:'删除便签'
-    },
-    MEMO_COMPEL_DEL:{
-        code:'5',
-        desc:'彻底删除便签'
-    },
-    ADD_MEMO:{
-        code:'6',
-        desc:'新增便签'
-    },
-    UPDATE_MEMO:{
-        code:'7',
-        desc:'更新便签'
-    },
     NOTE_SET_TOP:{
         code:'8',
         desc:'笔记置顶'
@@ -380,9 +356,9 @@ EVENT_LIST = {
         code:'13',
         desc:'恢复笔记'
     },
-    RESTORE_MEMO:{
+    RESTORE_NOTEBOOK:{
         code:'13',
-        desc:'恢复便签'
+        desc:'恢复笔记本'
     },
     QUERY_USER_INFO:{
         code:'13',

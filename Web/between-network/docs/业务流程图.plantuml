@@ -16,19 +16,10 @@ DeleteRemindDialog->fileOper:deleteFile
     fileOper->fileOper:deleteNotes
         note over fileOper
             将正常状态的笔记置为已删除状态
-            在回收站中记录该笔记记录
+            在回收站中记录对应信息
             记录操作
         end note
     return
-return operStatus
-
-==恢复已删除笔记==
-DumpsterComponent->dumpster:restoreFiles
-    note over dumpster
-        将置为已删除状态的笔记重新置为正常状态
-        从回收站中移除该条记录
-        记录操作
-    end note
 return operStatus
 
 ==彻底删除笔记==
@@ -36,6 +27,15 @@ DumpsterComponent->fileOper:deleteFile
     note over fileOper
         将已删除状态的笔记从表中移除
         将回收站中相应记录移除
+        记录操作
+    end note
+return operStatus
+
+==恢复已删除笔记==
+DumpsterComponent->dumpster:restoreFiles
+    note over dumpster
+        将置为已删除状态的笔记重新置为正常状态
+        从回收站中移除该条记录
         记录操作
     end note
 return operStatus

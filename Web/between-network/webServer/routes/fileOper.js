@@ -9,7 +9,7 @@ let statusCode = require("./statusCode")
 var router=express.Router();
 
 /**
- * 
+ * 删除/彻底删除笔记
  * @param {*} userInfo 
  * @param {*} isCompleteDel 
  * @param {*} toDeleteFiles 
@@ -18,7 +18,7 @@ var router=express.Router();
  */
 async function deleteNotes(userInfo,isCompleteDel,toDeleteFiles,t)
 {
-    console.log("start delete notes=>",toDeleteFiles.length);
+    logger.info(`start delete notes=>${toDeleteFiles.length}`);
 
     if(0 == toDeleteFiles.length)
     {
@@ -65,7 +65,7 @@ async function deleteNotes(userInfo,isCompleteDel,toDeleteFiles,t)
         }
         if(isCompleteDel)
         {
-            //更新笔记本状态
+            //笔记表中移除相应记录
             const noteDestroyResult = await sqldb.Note.destroy(
                 {
                     where:{
@@ -80,10 +80,24 @@ async function deleteNotes(userInfo,isCompleteDel,toDeleteFiles,t)
                     transaction:t
                 }
             );
-            console.log("noteDestroyResult=>",noteDestroyResult);
+            logger.info(`noteDestroyResult=>${noteDestroyResult}`);
+            //回收站表中移除相应记录
+            const dumpsterDestroyResult = await sqldb.Dumpster.destroy(
+                {
+                    where:{
+                        object_id: {
+                            [Op.in]:toDeleteNotesId,
+                        },
+                        type:1,
+                        u_id:userInfo.id
+                    },
+                    transaction:t
+                }
+            );
+            logger.info(`noteDestroyResult=>${dumpsterDestroyResult}`);
         }
         else{
-            //更新笔记本状态
+            //更新笔记状态
             const noteUpdateResult = await sqldb.Note.update(
                 {
                     status:targetStatus,
@@ -102,7 +116,7 @@ async function deleteNotes(userInfo,isCompleteDel,toDeleteFiles,t)
                     transaction:t
                 }
             );
-            console.log("noteUpdateResult=>",noteUpdateResult);
+            logger.info(`noteUpdateResult=>${noteUpdateResult}`);
 
             //回收站表新增相应记录
             const dumpsterAddResult = await sqldb.Dumpster.bulkCreate(
@@ -111,7 +125,7 @@ async function deleteNotes(userInfo,isCompleteDel,toDeleteFiles,t)
                     transaction:t
                 }
             );
-            console.log("dumpsterAddResult=>",dumpsterAddResult);
+            logger.info(`dumpsterAddResult=>${dumpsterAddResult}`);
         }
 
         //记录日志
@@ -121,7 +135,7 @@ async function deleteNotes(userInfo,isCompleteDel,toDeleteFiles,t)
                 transaction:t
             }
         );
-        console.log("addLogResult=>",addLogResult);
+        logger.info(`addLogResult=>${addLogResult}`);
         
         return true;
     } catch (error) {
@@ -136,7 +150,7 @@ async function deleteNotes(userInfo,isCompleteDel,toDeleteFiles,t)
  */
 async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
 {
-    console.log("start delete folder=>",toDeleteNotebooks.length);
+    logger.info(`start delete folder=>${toDeleteNotebooks.length}`);
     if(0 == toDeleteNotebooks.length)
     {
         return true;
@@ -173,8 +187,8 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
                         raw:true,
                     }
                 );
-                console.log("childNotebookIds=>",childNotebookIds);
-                console.log("childNotebookIds.length=>",childNotebookIds.length);
+                logger.info(`childNotebookIds=>${childNotebookIds}`);
+                logger.info(`childNotebookIds.length=>${childNotebookIds.length}`);
                 if(0 != childNotebookIds.length)
                 {
                     targetParentIds = [];
@@ -186,7 +200,7 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
                 }
             } while (0 != childNotebookIds.length);
     
-            console.log("to update notebookIds=>",notebookIds);
+            logger.info(`to update notebookIds=>${notebookIds}`);
 
             if(isCompleteDel)
             {
@@ -205,7 +219,22 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
                         transaction:t
                     }
                 );
-                console.log('updateNum=>',updateNum);
+                logger.info(`complete delte notebook num=>${updateNum}`);
+
+                //回收站表中移除相应记录
+                const dumpsterDestroyResult = await sqldb.Dumpster.destroy(
+                    {
+                        where:{
+                            object_id: {
+                                [Op.in]:notebookIds,
+                            },
+                            type:2,
+                            u_id:userInfo.id
+                        },
+                        transaction:t
+                    }
+                );
+                logger.info(`note book Destroy Result=>${dumpsterDestroyResult}`);
             }
             else
             {
@@ -228,27 +257,22 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
                         transaction:t
                     }
                 );
-                console.log('Notebook updateNum=>',updateNum);
+                logger.info(`Notebook updateNum=>${updateNum}`);
 
-                //关联笔记本记录中移除主笔记本编号
-                notebookIds.slice(1);
-                console.log("notebookIds=>",notebookIds);
-                let related = JSON.stringify(notebookIds);
-                //回收站表新增相应记录
+                //回收站表只记录主笔记本的相应记录，相应的子笔记本不做记录
                 const dumpsterAddResult = await sqldb.Dumpster.create(
                     {
                         u_id:userInfo.id,
                         object_id:toDeleteNotebook.id,
                         name:toDeleteNotebook.title,
                         type:2,
-                        related:related,
                         time:curTime
                     },
                     {
                         transaction:t
                     }
                 );
-                console.log("dumpster Add Result=>",dumpsterAddResult);
+                logger.info(`dumpster Add Result=>${dumpsterAddResult}`);
             }
 
             //记录日志
@@ -276,7 +300,7 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
         }
         return true;
     } catch (error) {
-        console.log("delete notebook error=>",error);
+        logger.error(`delete notebook error=>${error}`);
         return false;
     }
     return true;
