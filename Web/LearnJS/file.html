@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function writeFile()
+            {
+                var content = "这是直接使用HTML5进行导出的";
+                var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+                saveAs(blob, "file.txt");//saveAs(blob,filename)
+            }
+        </script>
+    </head>
+    <body>
+        <button onclick="writeFile()">wirte file</button>
+    </body>
+</html>
