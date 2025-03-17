@@ -51,7 +51,7 @@ const logConfiguration = {
     //日志格式控制
     format: winston.format.combine(
         winston.format.timestamp({
-            format: 'MMM-DD-YYYY HH:mm:ss'
+            format: 'YYYY-MM-DD HH:mm:ss'
         }),
         winston.format.printf(info => `${[info.timestamp]}:[${info.level}] ${info.message}`),
     )
