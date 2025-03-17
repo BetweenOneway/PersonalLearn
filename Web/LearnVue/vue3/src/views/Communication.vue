@@ -57,6 +57,7 @@
     //当组件卸载完毕之前 移除监听
     onBeforeUnmount(()=>{
         //
+        console.log("Communication beforeUnmount")
         bus.off('sendMsgToBrother',getMsgByBus)
     })
     bus.on('sendMsgToBrother',getMsgByBus)

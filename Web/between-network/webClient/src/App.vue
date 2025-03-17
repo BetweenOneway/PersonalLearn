@@ -14,7 +14,7 @@
 
 <script setup>
     import RootView from '@/views/RootView.vue'
-    import { onMounted, watch, ref,provide, onUnmounted} from "vue"
+    import { onMounted, watch, ref,provide, onBeforeUnmount} from "vue"
     import {useThemeStore} from './stores/themeStore'
     import {useUserStore} from './stores/userStore'
     import {storeToRefs} from 'pinia'
@@ -41,6 +41,11 @@
             routerPath.value = newData.path;
         }
     );
+
+    //
+    onBeforeUnmount(()=>{
+        resetUserInfo();
+    })
 
     //为后代提供路由地址数据
     provide('routerPath',routerPath);
