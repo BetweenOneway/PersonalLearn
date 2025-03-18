@@ -48,15 +48,14 @@
                 }
                 //打开连接创建请求  
                 xhr.open(type,url,true);
-                xhr.setRequestHeader('Origin', 'http://localhost:8080');
                 xhr.withCredentials = true;
                 //发送请求
                 xhr.send();
             }
             function writeAndReadCookie()
             {
-                document.cookie="userId=828";
-                document.cookie="userName=hulk";
+                document.cookie="userId=829";
+                document.cookie="userName=wang";
                 var strCookie=document.cookie;
                 console.log(`get cookie=>${strCookie}`); //userId=828; userName=hulk
             }
@@ -65,7 +64,7 @@
             {
                 console.log("get server cookie");
                 document.cookie="userId=828";
-                document.cookie="userName=hulk";
+                document.cookie="userName=wei";
                 //sendRequest({url:"http://localhost:18081/"});
                 ajax({url:"http://localhost:18081/set-cookie"}).then(result=>{
                     console.log('result=>',result);
