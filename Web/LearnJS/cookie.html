@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <script>
+            function ajax({url,type="get",data}){
+                return new Promise(
+                    function(resolve,reject)
+                    {
+                        var xhr = new XMLHttpRequest();
+                        xhr.onreadystatechange = function(){
+                            if(xhr.readyState == 4 && xhr.status==200)
+                            {
+                                //var result = JSON.parse(xhr.responseText);
+                                resolve(xhr.responseText);
+                            }
+                        }
+                        if(type=="get" && data !== undefined)
+                        {
+                            url+="?"+data;
+                        }
+                        xhr.open(type,url,true);
+                        if(type=="post")
+                        {
+                            xhr.setRequestHeader("Content-Type","application/x-www/form-urlencoded");
+                            xhr.send(data);
+                        }
+                        else
+                        {
+                            xhr.send();
+                        }
+                    }
+                );
+            }
+            function sendRequest({url,type="get",data})
+            {
+                //创建异步对象
+                var xhr = new XMLHttpRequest();
+                console.log(xhr);
+                //绑定监听，接收响应
+                xhr.onreadystatechange=function(){
+                    //console.log(xhr.readyState);
+                    if(xhr.readyState==4 && xhr.status == 200)
+                    {
+                        //接收响应  
+                        return xhr.responseText;
+                    }
+                }
+                //打开连接创建请求  
+                xhr.open(type,url,true);
+                xhr.setRequestHeader('Origin', 'http://localhost:8080');
+                xhr.withCredentials = true;
+                //发送请求
+                xhr.send();
+            }
+            function writeAndReadCookie()
+            {
+                document.cookie="userId=828";
+                document.cookie="userName=hulk";
+                var strCookie=document.cookie;
+                console.log(`get cookie=>${strCookie}`); //userId=828; userName=hulk
+            }
+
+            function getServerCookie()
+            {
+                console.log("get server cookie");
+                document.cookie="userId=828";
+                document.cookie="userName=hulk";
+                //sendRequest({url:"http://localhost:18081/"});
+                ajax({url:"http://localhost:18081/set-cookie"}).then(result=>{
+                    console.log('result=>',result);
+                    var strCookie=document.cookie;
+                    console.log(`get cookie=>${strCookie}`); 
+                })
+                // var strCookie=document.cookie;
+                // console.log(`get cookie=>${strCookie}`); 
+            }
+
+            function getServerCookie1()
+            {
+                fetch('http://localhost:18081/set-cookie', {
+                    method: 'GET',
+                    credentials: 'include', // 包含凭证信息
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data); // 打印服务器响应
+
+                    // 读取所有Cookie
+                    const cookies = document.cookie.split('; ').reduce((acc, cookie) => {
+                        const [key, value] = cookie.split('=');
+                        acc[key] = decodeURIComponent(value);
+                        return acc;
+                    }, {});
+
+                    console.log('Cookies:', cookies);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        </script>
+    </head>
+    <body>
+        <button onclick="writeAndReadCookie()">write And read cookie</button>
+        <button onclick="getServerCookie()">getServerCookie</button>
+        <button onclick="getServerCookie1()">getServerCookie1</button>
+    </body>
+</html>
