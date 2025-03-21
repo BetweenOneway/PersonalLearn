@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <script src="../../assets/jquery.js"></script>
         <script>
-            function ajax({url,type="get",data}){
+            function SendAjax({url,type="get",data}){
                 return new Promise(
                     function(resolve,reject)
                     {
@@ -32,6 +32,7 @@
                     }
                 );
             }
+            
             function sendRequest({url,type="get",data})
             {
                 //创建异步对象
@@ -52,6 +53,7 @@
                 //发送请求
                 xhr.send();
             }
+
             function writeAndReadCookie()
             {
                 document.cookie="userId=829";
@@ -63,16 +65,22 @@
             function getServerCookie()
             {
                 console.log("get server cookie");
-                document.cookie="userId=828";
-                document.cookie="userName=wei";
-                //sendRequest({url:"http://localhost:18081/"});
-                ajax({url:"http://localhost:18081/set-cookie"}).then(result=>{
-                    console.log('result=>',result);
+                document.cookie="userId=69";
+                document.cookie="userName=wei-70";
+                if(true)
+                {
+                    sendRequest({url:"http://localhost:18081/cookie-method1"});
                     var strCookie=document.cookie;
                     console.log(`get cookie=>${strCookie}`); 
-                })
-                // var strCookie=document.cookie;
-                // console.log(`get cookie=>${strCookie}`); 
+                }
+                else
+                {
+                    SendAjax({url:"http://localhost:18081/cookie-method1"}).then(result=>{
+                        console.log('result=>',result);
+                        var strCookie=document.cookie;
+                        console.log(`get cookie=>${strCookie}`); 
+                    })
+                }
             }
 
             function getServerCookie1()
@@ -96,11 +104,88 @@
                 })
                 .catch(error => console.error('Error:', error));
             }
+            
+            //该方法可以在文件中访问，无需http-server
+            function getServerCookie2(){
+                console.log("getServerCookie2=>",document.cookie)
+                $.ajax({
+                    url: "http://localhost:18081/cookie-method2",
+                    type: "GET",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true,
+                    success: function (data) {
+                        console.log("get server cookie 2=>",data);
+                    }
+                });
+            }
+
+            function setLocalStorage()
+            {
+                localStorage.setItem("localStorage-key","localStorage-value");
+            }
+
+            function getLocalStorage()
+            {
+                localStorage.getItem("localStorage-key");
+            }
+
+            function removeLocalStorage()
+            {
+                localStorage.removeItem("localStorage-key");
+            }
+
+            function clearLocalStorage()
+            {
+                localStorage.clear();
+            }
+            //
+            function setSessionStorage()
+            {
+                sessionStorage.setItem("sessionStorage-key","sessionStorage-value");
+            }
+
+            function getSessionStorage()
+            {
+                sessionStorage.getItem("sessionStorage-key");
+            }
+
+            function removeSessionStorage()
+            {
+                sessionStorage.removeItem("sessionStorage-key");
+            }
+
+            function clearSessionStorage()
+            {
+                sessionStorage.clear();
+            }
+
         </script>
     </head>
     <body>
-        <button onclick="writeAndReadCookie()">write And read cookie</button>
-        <button onclick="getServerCookie()">getServerCookie</button>
-        <button onclick="getServerCookie1()">getServerCookie1</button>
+        <fieldset>
+            <legend>Cookie</legend>
+            <button onclick="writeAndReadCookie()">write And read cookie</button>
+            <button onclick="getServerCookie()">getServerCookie</button>
+            <button onclick="getServerCookie1()">getServerCookie1</button>
+            <button onclick="getServerCookie2()">getServerCookie2</button>
+        </fieldset>
+        
+        <fieldset>
+            <legend>localStorage</legend>
+            <button onclick="setLocalStorage()">setLocalStorage</button>
+            <button onclick="getLocalStorage()">getLocalStorage</button>
+            <button onclick="removeLocalStorage()">removeLocalStorage</button>
+            <button onclick="clearLocalStorage()">clearLocalStorage</button>
+        </fieldset>
+
+        <fieldset>
+            <legend>sessionStorage</legend>
+            <button onclick="setSessionStorage()">setSessionStorage</button>
+            <button onclick="getSessionStorage()">getSessionStorage</button>
+            <button onclick="removeSessionStorage()">removeSessionStorage</button>
+            <button onclick="clearSessionStorage()">clearSessionStorage</button>
+        </fieldset>
     </body>
 </html>
