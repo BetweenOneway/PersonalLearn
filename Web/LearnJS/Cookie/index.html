@@ -49,12 +49,14 @@
                 }
                 //打开连接创建请求  
                 xhr.open(type,url,true);
+                //只有打开这个属性，请求中才会自动携带Cookie信息
                 xhr.withCredentials = true;
                 //发送请求
                 xhr.send();
             }
 
-            function writeAndReadCookie()
+            //本地读写Cookie 本地读写需要启动http-server 从文件启动无法读写 控制台也不行
+            function writeAndReadLocalCookie()
             {
                 document.cookie="userId=829";
                 document.cookie="userName=wang";
@@ -62,20 +64,25 @@
                 console.log(`get cookie=>${strCookie}`); //userId=828; userName=hulk
             }
 
-            function getServerCookie()
+            //Ajax方式获取Cookie
+            function getServerCookieByAjax()
             {
-                console.log("get server cookie");
                 document.cookie="userId=69";
                 document.cookie="userName=wei-70";
                 if(true)
                 {
-                    sendRequest({url:"http://localhost:18081/cookie-method1"});
+                    console.log(`get cookie before send set header request=>${document.cookie}`); 
+                    sendRequest({url:"http://localhost:18081/rwCookie-SetHeader"});
                     var strCookie=document.cookie;
-                    console.log(`get cookie=>${strCookie}`); 
+                    console.log(`get cookie after SetHeader=>${document.cookie}`); 
+
+                    sendRequest({url:"http://localhost:18081/rwCookie-NotSetHeader"});
+                    var strCookie=document.cookie;
+                    console.log(`get cookie NotSetHeader=>${document.cookie}`);
                 }
                 else
                 {
-                    SendAjax({url:"http://localhost:18081/cookie-method1"}).then(result=>{
+                    SendAjax({url:"http://localhost:18081/rwCookie-SetHeader"}).then(result=>{
                         console.log('result=>',result);
                         var strCookie=document.cookie;
                         console.log(`get cookie=>${strCookie}`); 
@@ -83,9 +90,10 @@
                 }
             }
 
-            function getServerCookie1()
+            //使用fetch的方式获取Cookie
+            function getServerCookieByFetch()
             {
-                fetch('http://localhost:18081/set-cookie', {
+                fetch('http://localhost:18081/rwCookie-SetHeader', {
                     method: 'GET',
                     credentials: 'include', // 包含凭证信息
                 })
@@ -105,11 +113,11 @@
                 .catch(error => console.error('Error:', error));
             }
             
-            //该方法可以在文件中访问，无需http-server
-            function getServerCookie2(){
+            //jQuery方式访问Cookie 该方法可以在文件中访问，无需http-server
+            function getServerCookieByjQuery(){
                 console.log("getServerCookie2=>",document.cookie)
                 $.ajax({
-                    url: "http://localhost:18081/cookie-method2",
+                    url: "http://localhost:18081/rwCookie-SetHeader",
                     type: "GET",
                     xhrFields: {
                         withCredentials: true
@@ -121,6 +129,7 @@
                 });
             }
 
+            //localStorage
             function setLocalStorage()
             {
                 localStorage.setItem("localStorage-key","localStorage-value");
@@ -140,7 +149,8 @@
             {
                 localStorage.clear();
             }
-            //
+            
+            //sessionStorage
             function setSessionStorage()
             {
                 sessionStorage.setItem("sessionStorage-key","sessionStorage-value");
@@ -166,10 +176,10 @@
     <body>
         <fieldset>
             <legend>Cookie</legend>
-            <button onclick="writeAndReadCookie()">write And read cookie</button>
-            <button onclick="getServerCookie()">getServerCookie</button>
-            <button onclick="getServerCookie1()">getServerCookie1</button>
-            <button onclick="getServerCookie2()">getServerCookie2</button>
+            <button onclick="writeAndReadLocalCookie()">writeAndReadLocalCookie</button>
+            <button onclick="getServerCookieByAjax()">getServerCookieByAjax</button>
+            <button onclick="getServerCookieByFetch()">getServerCookieByFetch</button>
+            <button onclick="getServerCookieByjQuery()">getServerCookieByjQuery</button>
         </fieldset>
         
         <fieldset>

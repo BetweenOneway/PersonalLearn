@@ -20,42 +20,24 @@ const cookieExpires = () => {
     return d.toGMTString()
 }
 
-app.get('/set-cookie', (req, res) => {
-    //res.setHeader("Access-Control-Allow-Origin", "*")
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-
-    // 设置一组Cookie
-    res.cookie('cookie1', 'server-value1', { maxAge: 900000, httpOnly: false });
-    res.cookie('cookie2', 'server-value2', { maxAge: 900000, httpOnly: false });
-
-    // 返回响应
-    res.send('Cookies have been set');
-});
-
-app.get('/cookie-method1', (req, res) => {
+app.get('/rwCookie-NotSetHeader', (req, res) => {
     const cookieStr = req.headers.cookie // 获取 cookie
-    console.log(`req cookie=>${cookieStr}`) // 在控制台输出 cookie
+    console.log(` rwCookie-NotSetHeader req cookie=>${cookieStr}`) // 在控制台输出 cookie
 
-    // res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
-    // res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    // res.setHeader("Access-Control-Allow-Credentials", "true");
-
-    //res.setHeader('Access-Control-Allow-Credentials', 'true');
-    //res.cookie('msg', 'hello', { maxAge: 900000, httpOnly: true });
-    res.setHeader('Set-Cookie', `msg=server-method1-250321; path=/;expires=${cookieExpires()};`)
+    res.setHeader('Set-Cookie', `key-not-set-header-1=server-method1-250321; path=/rwCookie-NotSetHeader;expires=${cookieExpires()};`)
     res.send('Hello cookie method1!');
 });
 
-app.get('/cookie-method2', (req, res) => {
+app.get('/rwCookie-SetHeader', (req, res) => {
     const cookieStr = req.headers.cookie // 获取 cookie
-    console.log(`req cookie method2=>${cookieStr}`) // 在控制台输出 cookie
+    console.log(` rwCookie-SetHeader req cookie=>${cookieStr}`) // 在控制台输出 cookie
 
     console.log("origin=>",req.headers.origin);
     res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.setHeader("Access-Control-Allow-Credentials", "true");
 
-    res.setHeader('Set-Cookie', `msg=server-cookie-method2; path=/;expires=${cookieExpires()};`)
-    res.cookie('cookie2', 'server-value2', { maxAge: 900000, httpOnly: false });
+    res.setHeader('Set-Cookie', `key-set-header-1=server-cookie-method2; path=/rwCookie-SetHeader;expires=${cookieExpires()};`)
+    res.cookie('key-set-header-2', 'server-value2', { maxAge: 900000, httpOnly: false });
     res.send('Hello cookie method2!');
 });
