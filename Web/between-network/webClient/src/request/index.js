@@ -85,8 +85,13 @@ const noteServerRequest = axios.create({
 
 //添加请求拦截器
 noteServerRequest.interceptors.request.use(
-    config=>request(config),
-    error=>requestError(error)
+    function (config) {
+        // 在发送请求之前做些什么
+        return request(config);
+      }, function (error) {
+        // 对请求错误做些什么
+        return requestError(error);
+    }
 );
 
 noteServerRequest.interceptors.response.use(
