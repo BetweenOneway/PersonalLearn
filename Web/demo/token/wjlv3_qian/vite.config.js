@@ -14,6 +14,7 @@ export default defineConfig({
     }
   },
   server:{
+    port:18080,
     open:true
   }
 })

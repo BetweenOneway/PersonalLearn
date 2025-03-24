@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken'); // 用于处理 JSON Web Tokens
 var app = express();
 var server = app.listen(18081);//这里监听的是请求的端口
 app.use(cors({
-  origin:["http://localhost:8080","http://127.0.0.1:8080"],//这里的端口是指网页端口，并非请求端口
+  origin:["http://localhost:18080","http://127.0.0.1:18080"],//这里的端口是指网页端口，并非请求端口
   //origin: ["http://127.0.0.1:8080"],
   credentials: true,
 }));//从此所有响应，自动带Access-Control-Allow-Origin:http://127.0.0.1:5500
@@ -60,6 +60,9 @@ app.use((req, res, next) => {
         return res.status(401).send({ message: 'Unauthorized' }); // 如果验证失败，返回 401 Unauthorized
     }
 })
+
+app.use(express.json()); // 解析 JSON 格式的请求体
+app.use(express.urlencoded({ extended: false })); // 解析 URL 编码的请求体
 
 app.get('/rwCookie-NotSetHeader', (req, res) => {
     const cookieStr = req.headers.cookie // 获取 cookie

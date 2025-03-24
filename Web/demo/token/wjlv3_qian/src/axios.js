@@ -11,7 +11,7 @@ export function createAxios(option = {}) {
 
 // 创建一个名为 houseApi 的 axios 实例，设置基本 URL 和超时时间
 export const houseApi = createAxios({
-    baseURL: 'http://localhost:3000', // 设定基础 URL
+    baseURL: 'http://localhost:18081/', // 设定基础 URL
     timeout: 5000, // 请求超时时间设置为 5000 毫秒（5 秒）
 });
 

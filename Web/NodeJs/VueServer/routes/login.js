@@ -5,7 +5,7 @@ let jwt = require('jsonwebtoken');
 
 const ACCESS_TOKEN_EXPIRATION = 5; //访问令牌有效期
 const REFRESH_TOKEN_EXPIRATION = '1d'; //刷新令牌有效期
-const SECRET_KEY = 'WANGJIALONG';
+const SECRET_KEY = 'VUESERVER';
 const refreshTokenMap = new Map();
 
 // 生成函数令牌
@@ -28,15 +28,18 @@ function getToken(name) {
 
 //=================================>账号密码登录
 router.post('/userLogin', async (req, res) => {
+    console.log("body=>",req.body);
     const { username, password } = req.body; // 直接解构请求体
     let user = {
         username:'admin',
         password:'123',
         phone:'1350000000'
     }
+    console.log("user=>",user);
     if (!user) {
         return res.status(200).send({ message: '账号错误', code: 1 }); // 账号不存在
     }
+    console.log("password=>",password);
     if (user.password !== password) { // 验证密码
         return res.status(200).send({ message: '密码错误', code: 2 });
     }
