@@ -88,5 +88,15 @@ app.get('/rwCookie-SetHeader', (req, res) => {
 
 const login=require("./routes/login");
 
+app.use(function(req,res,next){
+    console.log(`req-0:${req.method} ${req.url}`);
+    next();
+});
+
+app.use("/login",function(req,res,next){
+    console.log(`userLogin-0:${req.method} ${req.url}`);
+    next();
+});
+
 //用户相关
 app.use("/login",login);

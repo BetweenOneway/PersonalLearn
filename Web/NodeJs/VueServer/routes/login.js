@@ -28,7 +28,7 @@ function getToken(name) {
 
 //=================================>账号密码登录
 router.post('/userLogin', async (req, res) => {
-    console.log("body=>",req.body);
+    console.log(`userLogin:${req.method} ${req.url}`)
     const { username, password } = req.body; // 直接解构请求体
     let user = {
         username:'admin',
