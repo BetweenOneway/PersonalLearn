@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors=require("cors");
 const jwt = require('jsonwebtoken'); // 用于处理 JSON Web Tokens
+var createError = require('http-errors'); // 用于创建 HTTP 错误
+//var path = require('path'); // 用于处理文件和目录路径
 
 var app = express();
 var server = app.listen(18081);//这里监听的是请求的端口
@@ -40,7 +42,7 @@ app.use((req, res, next) => {
 
     // 判断 refreshToken 是否过期
     try {
-        jwt.verify(refreshToken, 'WANGJIALONG'); // 验证 refreshToken
+        jwt.verify(refreshToken, 'VUESERVER'); // 验证 refreshToken
     } catch (error) {
         console.log(error); // 打印错误信息
         return res.status(403).send({ message: 'Forbidden' }); // 如果验证失败，返回 403 Forbidden
@@ -53,7 +55,7 @@ app.use((req, res, next) => {
 
     // 验证 accessToken
     try {
-        const user = jwt.verify(accessToken, 'WANGJIALONG'); // 验证 accessToken
+        const user = jwt.verify(accessToken, 'VUESERVER'); // 验证 accessToken
         res.locals.user = user; // 将用户信息存储在 res.locals 中，供后续中间件使用
         return next(); // 验证成功，调用 next() 继续处理请求
     } catch (error) {
@@ -100,3 +102,8 @@ app.use("/login",function(req,res,next){
 
 //用户相关
 app.use("/login",login);
+
+// 捕获 404 错误并转发到错误处理器
+app.use(function (req, res, next) {
+    next(createError(404)); // 创建 404 错误
+});
