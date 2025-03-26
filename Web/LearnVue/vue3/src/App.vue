@@ -7,39 +7,40 @@ import { onMounted,onBeforeUnmount,onUnmounted } from 'vue'
 import { RouterView } from 'vue-router'
 import { saveAs } from 'file-saver'
 
-function loadFunction()
+function handleBeforeUnload()
 {
-    console.log("app.vue unload");
-    //该函数无效怎么都不会触发
-    let blob = new Blob(["App.vue unload"], {type: "text/plain;charset=utf-8"});
-    saveAs(blob, "./unload.txt");
-}
-
-function unloadFunction()
-{
-    console.log("App.vue onUnmounted")
-    let blob = new Blob(["App.vue onBeforeUnmount"], {type: "text/plain;charset=utf-8"});
-    saveAs(blob, "./onUnmounted.txt");
-    sleep(5000);
+    localStorage.removeItem("username");
 }
 
 onMounted(()=>{
     console.log("App.vue onMounted")
-    // window.addEventListener('beforeunload', () => {
-    //     //界面关闭或者刷新都会触发该函数
-    //     let blob = new Blob(["App.vue beforeunload"], {type: "text/plain;charset=utf-8"});
-    //     saveAs(blob, "./beforeunload.txt");
-    // })
-    window.addEventListener('unload', unloadFunction)
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    let curItem = localStorage.getItem("username");
+    console.log(curItem);
+    if(!!curItem)
+    {
+        console.log("有内容")
+        localStorage.setItem("username", "David");
+    }
+    else
+    {
+        console.log("无内容")
+        localStorage.setItem("username", "JohnDoe");
+    }
 })
 
 onBeforeUnmount(()=>{
+    //没啥用，怎么都触发不了
     //window.removeEventListener('unload', unloadFunction)
-    console.log("App.vue onBeforeUnmount")
+   //alert("App.vue onBeforeUnmount")
+   //localStorage.removeItem("username");
 })
 
 onUnmounted(()=>{
-    window.removeEventListener('unload', unloadFunction)
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+    //也没啥用，怎么都触发不了
+    localStorage.removeItem("username");
+    //window.removeEventListener('unload', unloadFunction)
 })
 
 

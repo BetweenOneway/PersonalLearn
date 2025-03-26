@@ -14,6 +14,11 @@ const router = createRouter({
         path: '/communication',
         name: 'communication',
         component: Communication
+    },
+    {
+        path: '/LifeCycle',
+        name: 'LifeCycle',
+        component:  ()=>import("@/views/LifeCycle.vue"),
     }
   ]
 })
