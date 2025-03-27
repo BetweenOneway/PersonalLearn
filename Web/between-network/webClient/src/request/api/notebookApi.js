@@ -3,7 +3,7 @@ const notebookApi = {
         name:'获取笔记本列表',
         url:'/notebook/getUserNotebookList',
         method:'GET',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:false
     },
@@ -11,7 +11,7 @@ const notebookApi = {
         name:'新增笔记本',
         url:'/notebook/addNotebook',
         method:'POST',
-        userPower:true,
+        userAuth:true,
         dataParam:true,
         successMessage:true
     },
@@ -19,7 +19,7 @@ const notebookApi = {
         name:'笔记本重命名',
         url:'/notebook/renameNotebook',
         method:'POST',
-        userPower:true,
+        userAuth:true,
         dataParam:true,
         successMessage:true
     },
@@ -27,7 +27,7 @@ const notebookApi = {
         name:['删除笔记本','彻底删除笔记本'],
         url:'/note/deleteNotebook',
         method:'DELETE',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:true
     },

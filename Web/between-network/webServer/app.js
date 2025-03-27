@@ -70,6 +70,18 @@ app.use(express.static('public'));
 //拦截要放在所有路由之前
 app.all('*', async (req, res, next) => {
     console.log('Accessing interceptor ...')
+    // 定义不需要验证的路径
+    let pathExcludeArr = [
+        '/user/login', // 用户登录
+        '/user/register', // 注册
+        '/user/SendVerifyCode',//发送验证码
+    ]
+    
+    // 如果请求路径在不需要验证的路径中，直接调用 next() 继续处理
+    if (pathExcludeArr.includes(req.path)) {
+        return next()
+    }
+
     let validateSuccess = await interceptor.Interceptor_ValidateUserToken(req);
     if(!validateSuccess)
     {

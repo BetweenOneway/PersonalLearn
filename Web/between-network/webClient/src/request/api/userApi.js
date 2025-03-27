@@ -3,7 +3,7 @@ const userApi = {
         name:'邮箱密码登陆',
         url:'/user/login',
         method:'POST',
-        userPower:false,
+        userAuth:false,
         dataParam:true,
         successMessage:true
     },
@@ -11,7 +11,7 @@ const userApi = {
         name:'邮箱注册',
         url:'/user/register',
         method:'POST',
-        userPower:false,
+        userAuth:false,
         dataParam:true,
         successMessage:false
     },
@@ -19,15 +19,15 @@ const userApi = {
         name:'退出登陆',
         url:'/user/logout',
         method:'GET',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:false
     },
-    getBasicInfo:{
+    getUserInfo:{
         name:'获取用户基本信息',
         url:'/user/getUserInfo',
         method:'GET',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:false
     },
@@ -35,7 +35,7 @@ const userApi = {
         name:'更新用户基本信息',
         url:'/user/updateUserInfo',
         method:'POST',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:true
     },
@@ -43,7 +43,7 @@ const userApi = {
         name:'更新用户头像',
         url:'/user/uploadHeadPic',
         method:'POST',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:true
     }

@@ -20,6 +20,9 @@
     import {storeToRefs} from 'pinia'
     import {useRouter} from 'vue-router'
 
+    import noteServerRequest from "@/request"
+    import userApi from "@/request/api/userApi"
+
     const themeStore = useThemeStore()
     const {theme} = storeToRefs(themeStore)
     //const {changeTheme} = themeStore
@@ -28,7 +31,8 @@
 
     //用户的共享资源
     const userStore = useUserStore();
-    const {resetUserInfo} = storeToRefs(userStore);
+    const {resetUserInfo} = useUserStore()
+    const {token:userToken,setUserInfo} = storeToRefs(userStore);
 
     //路由对象
     const router = useRouter()
@@ -57,6 +61,31 @@
     //为后代组件提供数据
     provide('needReload',needReload);
     
+    //初始化
+    async function Init()
+    {
+        console.log("usertoken=>",userToken);
+        if(!!userToken.value)
+        {
+            //获取请求API
+            let API = {...userApi.getUserInfo}
+            //发送请求
+            await noteServerRequest(API).then(responseData =>{
+                if(!responseData)
+                {
+                    console.log("获取用户信息失败，清空本地存储");
+                    resetUserInfo();
+                    return;
+                }
+                setUserInfo(responseData.userToken,responseData.userInfo)
+            })
+        }
+        else
+        {
+            console.log("本地未保存token，清空用户信息")
+            resetUserInfo();
+        }
+    }
     //监听主题是否发生改变
     onMounted(()=>{
         window.addEventListener('storage',event=>{
@@ -85,6 +114,7 @@
                     }, 1000);
                 }
             }
-        })
+        });
+        Init();
     })
 </script>

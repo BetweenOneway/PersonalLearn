@@ -9,11 +9,8 @@ import { toHerf } from '../router/go'
 const request = async config =>{
     //加载条开始
     window.$loadingBar.start();
-    //判断是否需要请求头中的userToken
-    if(config.userPower) 
-    {
-        config.headers.userToken = await getUserToken();
-    }
+    
+    config.headers.userToken = await getUserToken();
     //是否需要将请求体中的参数转换成URL参数
     if(config.dataParam)
     {
@@ -34,13 +31,13 @@ const requestError = error =>{
     if(error.config)
     {
         //采用消息显示失败的原因
-        window.$message.error("发送"+error.config.name+"请求失败");
+        //window.$message.error("发送"+error.config.name+"请求失败");
     }
     else{
-        window.$message.error(error);
+        //window.$message.error(error);
     }
     //返回失败的原因
-    //return Promise.reject(error);
+    return Promise.reject(error);
 }
 
 /*

@@ -3,7 +3,7 @@ const noteApi = {
         name:'获取最近访问笔记列表',
         url:'/note/getRecentNoteList',
         method:'GET',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:false
     },
@@ -11,7 +11,7 @@ const noteApi = {
         name:'获取笔记本内的笔记列表',
         url:'/note/getUserNoteList',
         method:'GET',
-        userPower:true,
+        userAuth:true,
         dataParam:true,
         successMessage:false
     },
@@ -19,7 +19,7 @@ const noteApi = {
         name:['置顶笔记','取消置顶笔记'],
         url:'/note/setNoteTop',
         method:'GET',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:true
     },
@@ -27,7 +27,7 @@ const noteApi = {
         name:'创建笔记',
         url:'/note/createNote',
         method:'PUT',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:true
     },
@@ -35,7 +35,7 @@ const noteApi = {
         name:'保存笔记',
         url:'/note/saveNote',
         method:'POST',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:true
     },
@@ -43,7 +43,7 @@ const noteApi = {
         name:'获取笔记信息',
         url:'/note/getNoteInfo',
         method:'GET',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:false
     }

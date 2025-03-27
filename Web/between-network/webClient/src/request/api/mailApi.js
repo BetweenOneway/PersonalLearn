@@ -3,7 +3,7 @@ const mailApi = {
         name:'获取邮箱注册验证码',
         url:'/user/SendVerifyCode',
         method:'GET',
-        userPower:false,
+        userAuth:false,
         dataParam:false,
         successMessage:true
     }

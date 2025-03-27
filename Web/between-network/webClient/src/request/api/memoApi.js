@@ -3,7 +3,7 @@ const memoApi = {
         name:'获取便签列表',
         url:'/memo/getUserMemoList',
         method:'GET',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:false
     },
@@ -11,7 +11,7 @@ const memoApi = {
         name:['置顶便签','取消置顶便签'],
         url:'/memo/setMemoTop',
         method:'GET',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:true
     },
@@ -19,7 +19,7 @@ const memoApi = {
         name:['删除便签','彻底删除便签'],
         url:'/memo/deleteMemo',
         method:'DELETE',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:true
     },
@@ -27,7 +27,7 @@ const memoApi = {
         name:['保存便签','新增便签'],
         url:['/memo/updateMemo','/memo/addMemo'],
         method:['POST','PUT'],
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:true
     },
@@ -35,7 +35,7 @@ const memoApi = {
         name:'获取便签信息',
         url:'memo/getMemoInfo',
         method:'GET',
-        userPower:true,
+        userAuth:true,
         dataParam:false,
         successMessage:false
     }
