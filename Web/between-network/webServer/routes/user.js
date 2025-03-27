@@ -34,7 +34,7 @@ function checkDirectory(dirPath) {
 
 //用户登录
 router.post("/login",async(req,res)=>{
-    console.log("user login service start",req.body);
+    logger.info("user login service start",req.body);
     var userEmail = req.body.userEmail
     var userPassword = req.body.userPassword
     var output={
@@ -48,7 +48,7 @@ router.post("/login",async(req,res)=>{
     //校验输入参数
     if(0 == userEmail.length || 0 == userPassword.length)
     {
-        logger.log("user login:param error")
+        logger.error("user login:param error")
         output.success = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.success
         output.status = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.status
         output.description = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.description
@@ -68,10 +68,10 @@ router.post("/login",async(req,res)=>{
                     }
                 }
             );
-            logger.log(`get userInfo:${userInfo}`);
+            logger.info(`get userInfo:${userInfo}`);
             if(!userInfo)
             {
-                console.log("account & password not matched")
+                logger.error("account & password not matched")
                 output.success = statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.success
                 output.status=statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.status
                 output.description=statusCode.SERVICE_STATUS.ACCOUNT_PASSWORD_NOT_MATCHED.description
@@ -81,7 +81,7 @@ router.post("/login",async(req,res)=>{
             //账号状态异常
             if(userInfo.status == 0)
             {
-                console.log("login account locked")
+                logger.error("login account locked")
                 output.success = statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.success
                 output.status=statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.status
                 output.description=statusCode.SERVICE_STATUS.ACCOUNT_CLOCK.description
@@ -105,11 +105,11 @@ router.post("/login",async(req,res)=>{
             //设置reddis缓存
             (async function(){
                 try {
-                    console.log("user login:set redis")
+                    logger.info("user login:set redis")
                     const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
                     await redisOper.RedisSet(userTokenKey,JSON.stringify(userInfo),24*60*60)
 
-                    console.log("user login:set redis success")
+                    logger.info("user login:set redis success")
                    
                     output.userToken = userTokenKey
                     output.userInfo = userInfo
@@ -118,7 +118,7 @@ router.post("/login",async(req,res)=>{
                     output.description = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.description
                     res.send(output)
                 } catch (error) {
-                    console.log("user login:set redis error")
+                    logger.error(`user login:set redis error=>${error}`)
                     console.log(error)
                     output.success = statusCode.REDIS_STATUS.SET_FAIL.success
                     output.status = statusCode.REDIS_STATUS.SET_FAIL.status
@@ -128,7 +128,7 @@ router.post("/login",async(req,res)=>{
             })()
         } catch (error) {
             //出错处理
-            console.log("user login error:",error)
+            logger.error(`user login error=>${error}`)
             await t.rollback();
             output.success = statusCode.SERVICE_STATUS.LOGIN_FAIL.success
             output.status = statusCode.SERVICE_STATUS.LOGIN_FAIL.status
@@ -147,11 +147,11 @@ router.get("/logout",(req,res)=>{
     }
     console.log("退出登录",req.query);
     var userToken = req.get('userToken')
-    if(!userToken && userToken==="" )
+    if(!userToken || userToken==="" )
     {
-        output.success = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.success
-        output.status = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.status
-        output.description = statusCode.SERVICE_STATUS.REQ_PARAM_ERROR.description
+        output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
+        output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status
+        output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description
         res.send(output)
         return
     }
@@ -385,7 +385,7 @@ router.get("/getUserInfo",async(req,res)=>{
         success:false,
         status:'',
         description:'',
-        data:{}
+        userInfo:{}
     }
 
     let userId = req.userInfo.id;
@@ -427,7 +427,7 @@ router.get("/getUserInfo",async(req,res)=>{
             output.success = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.description
-            output.data = userBasicInfo;
+            output.userInfo = userBasicInfo;
             res.send(output)
         } catch (error) {
             //出错处理

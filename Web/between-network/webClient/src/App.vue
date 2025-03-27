@@ -31,8 +31,8 @@
 
     //用户的共享资源
     const userStore = useUserStore();
-    const {resetUserInfo} = useUserStore()
-    const {token:userToken,setUserInfo} = storeToRefs(userStore);
+    const {setUserInfo,resetUserInfo} = useUserStore()
+    const {token:userToken} = storeToRefs(userStore);
 
     //路由对象
     const router = useRouter()
@@ -77,6 +77,7 @@
                     resetUserInfo();
                     return;
                 }
+                console.log("responseData=>",responseData)
                 setUserInfo(responseData.userToken,responseData.userInfo)
             })
         }

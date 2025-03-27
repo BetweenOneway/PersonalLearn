@@ -91,6 +91,7 @@ export const useUserStore = defineStore(
             const userToken = localStorage.getItem("userToken")
             //userToken本地存储删除
             localStorage.removeItem(userToken)
+            localStorage.removeItem("user")
         }
 
         watch(()=>token.value,newData=>{
