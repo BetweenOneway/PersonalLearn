@@ -88,9 +88,9 @@ export const useUserStore = defineStore(
         const resetUserInfo = ()=>{
             console.log("reset user info")
             token.value = null;
-            const userToken = localStorage.getItem("userToken")
+            //const userToken = localStorage.getItem("userToken")
             //userToken本地存储删除
-            localStorage.removeItem(userToken)
+            //localStorage.removeItem(userToken)
             localStorage.removeItem("user")
         }
 
