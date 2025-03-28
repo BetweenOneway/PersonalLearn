@@ -31,7 +31,7 @@
 
     //用户的共享资源
     const userStore = useUserStore();
-    const {setUserInfo,resetUserInfo} = useUserStore()
+    const {setUserBasicInfo,resetUserInfo} = useUserStore()
     const {token:userToken} = storeToRefs(userStore);
 
     //路由对象
@@ -48,7 +48,7 @@
 
     //
     onBeforeUnmount(()=>{
-        resetUserInfo();
+        // resetUserInfo();
     })
 
     //为后代提供路由地址数据
@@ -78,7 +78,7 @@
                     return;
                 }
                 console.log("responseData=>",responseData)
-                setUserInfo(responseData.userToken,responseData.userInfo)
+                setUserBasicInfo(responseData.userInfo)
             })
         }
         else
@@ -87,7 +87,7 @@
             resetUserInfo();
         }
     }
-    //监听主题是否发生改变
+    
     onMounted(()=>{
         window.addEventListener('storage',event=>{
             if(event.key ==="theme")
