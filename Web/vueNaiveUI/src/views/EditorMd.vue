@@ -1,15 +1,16 @@
 <template>
-    <n-button @click="modeChange">预览/编辑模式切换</n-button>
-    <n-space v-if="isPreviewMode">
-        <MdPreview :editorId="id" :modelValue="text" />
-        <MdCatalog :editorId="id" :scrollElement="scrollElement" />
-    </n-space>
-    <n-space v-else>
-        <MdEditor v-model="text" :toolbarsExclude="toolbarsExclude" 
-        @onUploadImg="onUploadImg" 
-        @onSave="codeSave"/>
-    </n-space>
-    
+    <div class="editor-container">
+        <n-button @click="modeChange">预览/编辑模式切换</n-button>
+        <div v-if="isPreviewMode">
+            <MdPreview :editorId="id" :modelValue="text" />
+            <MdCatalog :editorId="id" :scrollElement="scrollElement" />
+        </div>
+        <div v-else>
+            <MdEditor v-model="text" :toolbarsExclude="toolbarsExclude" 
+            @onUploadImg="onUploadImg" 
+            @onSave="codeSave"/>
+        </div>
+    </div>
 </template>
   
 <script setup>
@@ -38,3 +39,11 @@
         isPreviewMode.value = !isPreviewMode.value
     }
 </script>
+
+<style scoped>
+.editor-container {
+  width: 100%;
+  height: 100vh;
+  position: relative; /* 确保子元素相对于此容器定位 */
+}
+</style>
