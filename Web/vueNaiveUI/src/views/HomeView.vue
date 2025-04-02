@@ -13,6 +13,9 @@
             <RouterLink to="/cherryMarkdown">测试CherryMarkdown</RouterLink>
         </n-card>
         <n-card>
+            <RouterLink to="/cherryMarkdown1">测试CherryMarkdown 1</RouterLink>
+        </n-card>
+        <n-card>
             <RouterLink to="/editormd">测试Editor-Md-V3</RouterLink>
         </n-card>
     </n-flex>

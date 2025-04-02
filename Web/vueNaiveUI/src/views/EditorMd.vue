@@ -46,4 +46,14 @@
   height: 100vh;
   position: relative; /* 确保子元素相对于此容器定位 */
 }
+
+.md-editor {
+  height: calc(100vh - 50px); /* 设置高度 */
+}
+
+.md-editor .md-editor-content {
+  height: calc(100% - 50px); /* 调整内容区域高度 */
+}
+
+
 </style>

@@ -28,8 +28,13 @@ const router = createRouter({
     },
     {
         path: '/cherryMarkdown',
-        name: 'CherryMarkdown',
+        name: 'CherryMarkdownTest0',
         component: () => import('@/views/CherryMarkdownView.vue'),
+    },
+    {
+        path: '/cherryMarkdown1',
+        name: 'CherryMarkdownTest1',
+        component: () => import('@/views/CherryMarkdownView1.vue'),
     },
     {
         path: '/editormd',
