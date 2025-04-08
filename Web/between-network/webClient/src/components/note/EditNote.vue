@@ -20,9 +20,13 @@
                             </n-gi>
                             <n-gi span="0 m:2 l:2">
                                 <n-space justify="space-between" align="center">
+                                    <n-button type="primary" @click="SwitchMode()">
+                                        {{editPreviewButtonContent}}
+                                    </n-button>
                                     <n-button type="primary" @click="saveNote()">
                                         保存
                                     </n-button>
+                                    <!--这个删除后期可以挪到三个点的菜单栏里-->
                                     <n-button type="primary" @click="deleteNote()">
                                         删除
                                     </n-button>
@@ -36,7 +40,7 @@
                 </n-layout-header>
                 <n-layout-content style="height:calc(85% - 10px - 10px)">
                     <!--富文本编辑器-->
-                    <n-card :bordered="false" size="small">
+                    <n-card v-if="useCkEditor" :bordered="false" size="small">
                         <!--编辑器-->
                         <Ckeditor
                         :editor="EditorType" 
@@ -44,6 +48,9 @@
                         v-model="note.content"
                         :config="getEditorConfigs()"/>
                     </n-card>
+                    <div v-else >
+                        <div ref="editorContainer"></div>
+                    </div>
                 </n-layout-content>
                 <n-layout-footer style="margin-bottom:10px">
                     <!--底部状态栏-->
@@ -68,6 +75,8 @@
     import { Ckeditor } from '@ckeditor/ckeditor5-vue';
     import {EditorType,getEditorConfigs} from "@/ckEditor"
     import 'ckeditor5/ckeditor5.css';
+    import 'cherry-markdown/dist/cherry-markdown.css';
+    import Cherry from 'cherry-markdown';
 
     import {FiberManualRecordRound,
         MoreHorizRound
@@ -82,8 +91,16 @@
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
     const {DefaultDeleteRemind} = deleteRemindDialogStore;
 
+    //是否使用CkEditor
+    let useCkEditor = ref(false);
+    const isPreviewMode = ref(true);
+    const editPreviewButtonContent = ref("编辑");
+    const editorContainer = ref(null);
     //自定义事件
     const emits = defineEmits(['save','deleteSuccess']);
+
+    //CherryMarkdown 实例
+    let cherryInstance = null;
 
     //const ckeditor5 = CKEditor.component;
 
@@ -140,6 +157,7 @@
                 console.log("get note info:",responseData)
                 //笔记的信息
                 note.value = responseData.data;
+                cherryInstance.setValue(note.value.content);
                 //编辑笔记的用户编号
                 editNoteUID.value = note.value.u_id;
                 //加载已完毕
@@ -155,17 +173,18 @@
             getNoteInfo();
         }
     )
+
     //获取选定笔记信息
     getNoteInfo();
 
     //编辑器对象
-    let editor = null;
+    let ckEditor = null;
     /**
      * 编辑器加载完成处理函数
      */
     const editorReady = (editorObj)=>{
         //保存编辑器对象
-        editor = editorObj;
+        ckEditor = editorObj;
         // 在编辑器区域插入工具栏
         editorObj.ui.getEditableElement().parentElement.insertBefore(
             editorObj.ui.view.toolbar.element,
@@ -173,8 +192,8 @@
         );
     }
 
-    //快捷键Ctrl+s保存笔记
     onMounted(()=>{
+        //快捷键Ctrl+s保存笔记
         window.addEventListener('keydown',(e)=>{
             //console.log(e);
             //ctrl+s
@@ -186,7 +205,47 @@
                 saveNote();
             }
         })
+
+        //创建Cherry MarkDown实例
+        cherryInstance = new Cherry(
+            {
+                el: editorContainer.value,
+                value: note.value.content,
+                editor: {
+                    defaultModel: 'previewOnly',
+                },
+                toolbars: {
+                    // 定义顶部工具栏
+                    toolbar: ['bold','italic','strikethrough','|','color','header','|','list'],
+                    // 定义侧边栏，默认为空
+                    sidebar: [],
+                    // 定义顶部右侧工具栏，默认为空
+                    toolbarRight: [],
+                    // 定义选中文字时弹出的“悬浮工具栏”，默认为 ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', '|', 'size', 'color']
+                    bubble: false,
+                    // 定义光标出现在行首位置时出现的“提示工具栏”，默认为 ['h1', 'h2', 'h3', '|', 'checklist', 'quote', 'table', 'code']
+                    float: false,
+                    hiddenToolbar: ['panel', 'justify'],
+                },
+            }
+        );
     })
+
+    function SwitchMode()
+    {
+        console.log("switch mode=>",isPreviewMode.value)
+        //预览=>编辑
+        if(isPreviewMode.value == true)
+        {
+            cherryInstance.switchModel('edit&preview');
+            editPreviewButtonContent.value = "预览"
+        }
+        else{
+            cherryInstance.switchModel('previewOnly');
+            editPreviewButtonContent.value = "编辑"
+        }
+        isPreviewMode.value = !isPreviewMode.value
+    }
 
     /**
      * 保存笔记
@@ -197,8 +256,11 @@
         //标题
         const title = note.value.title;
         //笔记主体内容(不含标题)
-        //const body = note.value.content;//editor.plugins.get('Title').getBody();
-        //笔记主体内容（不含标题）
+        //const body = note.value.content;//ckEditor.plugins.get('Title').getBody();
+        
+        //笔记主体内容（不含标题） 获取编辑器内容
+        note.value.content = cherryInstance.getValue();
+        
         const content = note.value.content;
 
         //表单

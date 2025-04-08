@@ -3,7 +3,7 @@
     <input type="text" v-model="editorContent"/>
     <button @click="getContent">show</button>
     <button @click="SwitchMode">{{editButtonText}}</button>
-    <div>
+    <div class="Editor-container">
         <div id="markdown-container"></div>
     </div>
 </template>
@@ -30,6 +30,9 @@
             {
                 id: 'markdown-container',
                 value: editorContent.value,
+                editor: {
+                    defaultModel: 'previewOnly',
+                },
                 toolbars: {
                     // 定义顶部工具栏
                     toolbar: ['bold','italic','strikethrough','|','color','header','|','list'],
@@ -76,3 +79,10 @@
         isEditMode.value = !isEditMode.value
     }
 </script>
+
+<style scoped>
+    .Editor-container{
+        width: 300px;
+        height: 500px;
+    }
+</style>
