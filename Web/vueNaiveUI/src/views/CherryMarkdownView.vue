@@ -1,5 +1,5 @@
 <template>
-    <div class="editor-container">
+    <div v-if="showMD" class="editor-container">
       <div ref="editorContainer"></div>
     </div>
 </template>
@@ -11,8 +11,10 @@
 
     const editorContainer = ref(null);
     let editor = null;
+    const showMD = ref(true);
 
     onMounted(() => {
+        alert(editorContainer.value),
         editor = new Cherry({
             el: editorContainer.value,
             //id: 'markdown-container', 

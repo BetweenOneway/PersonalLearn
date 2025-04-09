@@ -3,9 +3,16 @@
     <input type="text" v-model="editorContent"/>
     <button @click="getContent">show</button>
     <button @click="SwitchMode">{{editButtonText}}</button>
-    <div class="Editor-container">
-        <div id="markdown-container"></div>
+    <div style="width: 100%;height: 100%;">
+        <n-layout style="width: 100%;height: 100vh;">
+            <n-layout-content style="height:calc(85% - 10px - 10px)">
+                <n-card style="width: 100%;height: 100%;">
+                    <div id="markdown-container"></div>
+                </n-card>
+            </n-layout-content>
+        </n-layout>
     </div>
+    
 </template>
     
 <script setup>

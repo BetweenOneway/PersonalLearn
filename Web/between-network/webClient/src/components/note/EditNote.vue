@@ -1,14 +1,14 @@
 <template>
     <div style="width: 100%;height: 100%;">
         <!--骨架屏-->
-        <n-space v-if="loading" vertical :wrap-item="false" >
+        <n-space v-show="loading" vertical :wrap-item="false" >
             <n-skeleton :height="36" width="100%"></n-skeleton>
             <n-skeleton text width="30%"></n-skeleton>
             <n-skeleton text width="60%"></n-skeleton>
             <n-skeleton text width="40%"></n-skeleton>
             <n-skeleton text width="80%"></n-skeleton>
         </n-space>
-        <div v-else style="width: 100%;height: 100%;">
+        <div v-show="!loading" style="width: 100%;height: 100%;">
             <n-layout style="width: 100%;height: 100%;">
                 <n-layout-header style="margin-top:10px">
                     <!--发布时间 分享 更多操作-->
@@ -20,7 +20,7 @@
                             </n-gi>
                             <n-gi span="0 m:2 l:2">
                                 <n-space justify="space-between" align="center">
-                                    <n-button type="primary" @click="SwitchMode()">
+                                    <n-button v-if="!useCkEditor" type="primary" @click="SwitchMode()">
                                         {{editPreviewButtonContent}}
                                     </n-button>
                                     <n-button type="primary" @click="saveNote()">
@@ -48,9 +48,9 @@
                         v-model="note.content"
                         :config="getEditorConfigs()"/>
                     </n-card>
-                    <div v-else >
+                    <n-card v-else :bordered="false" size="small">
                         <div ref="editorContainer"></div>
-                    </div>
+                    </n-card>
                 </n-layout-content>
                 <n-layout-footer style="margin-bottom:10px">
                     <!--底部状态栏-->
@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-    import { ref,inject,watch,onMounted } from 'vue';
+    import { ref,inject,watch,onMounted,onUnmounted } from 'vue';
     import { Ckeditor } from '@ckeditor/ckeditor5-vue';
     import {EditorType,getEditorConfigs} from "@/ckEditor"
     import 'ckeditor5/ckeditor5.css';
@@ -93,6 +93,7 @@
 
     //是否使用CkEditor
     let useCkEditor = ref(false);
+
     const isPreviewMode = ref(true);
     const editPreviewButtonContent = ref("编辑");
     const editorContainer = ref(null);
@@ -174,9 +175,6 @@
         }
     )
 
-    //获取选定笔记信息
-    getNoteInfo();
-
     //编辑器对象
     let ckEditor = null;
     /**
@@ -206,29 +204,39 @@
             }
         })
 
-        //创建Cherry MarkDown实例
-        cherryInstance = new Cherry(
-            {
-                el: editorContainer.value,
-                value: note.value.content,
-                editor: {
-                    defaultModel: 'previewOnly',
-                },
-                toolbars: {
-                    // 定义顶部工具栏
-                    toolbar: ['bold','italic','strikethrough','|','color','header','|','list'],
-                    // 定义侧边栏，默认为空
-                    sidebar: [],
-                    // 定义顶部右侧工具栏，默认为空
-                    toolbarRight: [],
-                    // 定义选中文字时弹出的“悬浮工具栏”，默认为 ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', '|', 'size', 'color']
-                    bubble: false,
-                    // 定义光标出现在行首位置时出现的“提示工具栏”，默认为 ['h1', 'h2', 'h3', '|', 'checklist', 'quote', 'table', 'code']
-                    float: false,
-                    hiddenToolbar: ['panel', 'justify'],
-                },
-            }
-        );
+        //这里获取不到 是个null
+        // alert(editorContainer.value);
+        //console.log("editorContainer.value",editorContainer.value);
+    
+        if(!useCkEditor.value)
+        {
+            cherryInstance = new Cherry(
+                {
+                    el: editorContainer.value,
+                    value: note.value.content,
+                    editor: {
+                        defaultModel: 'previewOnly',
+                    },
+                    toolbars: {
+                        // 定义顶部工具栏
+                        toolbar: ['bold','italic','strikethrough','|','color','header','|','list'],
+                        // 定义侧边栏，默认为空
+                        sidebar: [],
+                        // 定义顶部右侧工具栏，默认为空
+                        toolbarRight: [],
+                        // 定义选中文字时弹出的“悬浮工具栏”，默认为 ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', '|', 'size', 'color']
+                        bubble: false,
+                        // 定义光标出现在行首位置时出现的“提示工具栏”，默认为 ['h1', 'h2', 'h3', '|', 'checklist', 'quote', 'table', 'code']
+                        float: false,
+                        hiddenToolbar: ['panel', 'justify'],
+                    },
+                }
+            );
+        }
+    });
+    
+    onUnmounted(()=>{
+        cherryInstance.destroy();
     })
 
     function SwitchMode()
@@ -259,7 +267,11 @@
         //const body = note.value.content;//ckEditor.plugins.get('Title').getBody();
         
         //笔记主体内容（不含标题） 获取编辑器内容
-        note.value.content = cherryInstance.getValue();
+        if(!useCkEditor)
+        {
+            note.value.content = cherryInstance.getValue();
+        }
+        
         
         const content = note.value.content;
 
@@ -298,6 +310,11 @@
         };
         DefaultDeleteRemind(noteInfo);
     }
+
+    //获取选定笔记信息
+    getNoteInfo();
+
+    // Init();
 </script>
 
 <style scoped>
