@@ -15,7 +15,6 @@
                             新建笔记
                         </n-button>
                     </template>
-
                     <n-menu :options="createMenu" :indent="18" :on-update:value="clickCreateMenu" />
                 </n-popover>
                 
@@ -238,7 +237,7 @@
      * 获取指定笔记本内的笔记列表
     */
     function getNoteListInNotebook(){
-        notebookTree.getNotesList();
+        notebookTree.value.getNotesList();
     }
 
     /**

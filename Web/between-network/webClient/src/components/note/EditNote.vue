@@ -12,7 +12,7 @@
             <n-layout style="width: 100%;height: 100%;">
                 <n-layout-header style="margin-top:10px">
                     <!--发布时间 分享 更多操作-->
-                    <n-card size="small">
+                    <n-card size="small" :bordered="false">
                         <n-grid x-gap="20" cols="12" item-responsive responsive="screen">
                             <n-gi span="0 m:10 l:10">
                                 <n-input v-model:value="note.title" size="large" placeholder="笔记标题" 
@@ -26,13 +26,17 @@
                                     <n-button type="primary" @click="saveNote()">
                                         保存
                                     </n-button>
-                                    <!--这个删除后期可以挪到三个点的菜单栏里-->
-                                    <n-button type="primary" @click="deleteNote()">
-                                        删除
-                                    </n-button>
-                                    <n-button quaternary circle>
-                                        <n-icon size="20" :component="MoreHorizRound"/>
-                                    </n-button>
+                                    
+                                    <!--笔记操作菜单-->
+                                    <n-popover v-model:show = "noteOperationMenuShow" trigger="click">
+                                        <template #trigger>
+                                            <n-button quaternary circle>
+                                                <n-icon size="20" :component="MoreHorizRound"/>
+                                            </n-button>
+                                        </template>
+                                        <n-menu :options="noteOperationMenu" :indent="18" :on-update:value="clickNoteOperationMenu" />
+                                    </n-popover>
+
                                 </n-space>
                             </n-gi>
                         </n-grid>
@@ -48,7 +52,7 @@
                         v-model="note.content"
                         :config="getEditorConfigs()"/>
                     </n-card>
-                    <n-card v-else :bordered="false" size="small">
+                    <n-card v-else :bordered="false" size="small" style="width: 100%;height: 100%;">
                         <div ref="editorContainer"></div>
                     </n-card>
                 </n-layout-content>
@@ -59,7 +63,7 @@
                             <!--发布时间-->
                             <n-space color="#18A058" align="center" :wrap-item="false">
                                 <n-icon :component="FiberManualRecordRound"></n-icon>
-                                <n-text depth="3">保存并发布于:{{ note.update_time }}</n-text>
+                                <n-text depth="3">更新于:{{ note.update_time }}</n-text>
                             </n-space>
                         </n-space>
                     </n-card>
@@ -71,7 +75,8 @@
 </template>
 
 <script setup>
-    import { ref,inject,watch,onMounted,onUnmounted } from 'vue';
+    import { ref,inject,watch,onMounted,onUnmounted,h } from 'vue';
+    import { NIcon } from "naive-ui";
     import { Ckeditor } from '@ckeditor/ckeditor5-vue';
     import {EditorType,getEditorConfigs} from "@/ckEditor"
     import 'ckeditor5/ckeditor5.css';
@@ -79,7 +84,10 @@
     import Cherry from 'cherry-markdown';
 
     import {FiberManualRecordRound,
-        MoreHorizRound
+        MoreHorizRound,
+        MinusRound,
+        PublicFilled,
+        PublicOffFilled
     } from'@vicons/material'
     
     import { toHerf } from "@/router/go"
@@ -102,6 +110,48 @@
 
     //CherryMarkdown 实例
     let cherryInstance = null;
+
+    let noteOperationMenuShow = ref(false);
+    
+    function renderIcon(icon) {
+        return () => h(NIcon, null, { default: () => h(icon) });
+    }
+
+    //点击新建按钮的菜单
+    const noteOperationMenu =[
+        {
+            key:'delete-note',
+            icon:renderIcon(MinusRound),
+            label:'删除笔记'
+        },
+        {
+            key:'public-note',
+            icon:renderIcon(PublicFilled),
+            label:'公开笔记'
+        },
+        {
+            key:'unpublic-note',
+            icon:renderIcon(PublicOffFilled),
+            label:'取消公开笔记'
+        },
+    ]
+
+    //新建菜单选项回调
+    const clickNoteOperationMenu = (key,value)=>{
+        //关闭用户菜单弹出信息
+        noteOperationMenuShow.value = false
+
+        switch(key){
+            case "delete-note":
+                deleteNote();
+                break;
+            case "public-note":
+                //createNotebook();
+                break;
+            case "unpublic-note":
+                break;
+        }
+    }
 
     //const ckeditor5 = CKEditor.component;
 
@@ -267,11 +317,11 @@
         //const body = note.value.content;//ckEditor.plugins.get('Title').getBody();
         
         //笔记主体内容（不含标题） 获取编辑器内容
-        if(!useCkEditor)
+        if(!useCkEditor.value)
         {
             note.value.content = cherryInstance.getValue();
+            console.log("get CherryMarkDown内容=>",note.value.content);
         }
-        
         
         const content = note.value.content;
 
@@ -311,6 +361,21 @@
         DefaultDeleteRemind(noteInfo);
     }
 
+    /**
+     * 公开笔记
+    */
+    function PublicNote()
+    {
+
+    }
+
+    /**
+     * 取消公开笔记
+    */
+    function UnpublicNote()
+    {
+
+    }
     //获取选定笔记信息
     getNoteInfo();
 

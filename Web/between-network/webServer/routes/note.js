@@ -147,13 +147,10 @@ router.get("/setNoteTop",async (req,res)=>{
     //目标状态
     let targetTop = req.query.targetTop
     let noteId = req.query.noteId
-    let userToken = req.get('userToken')
 
-    console.log("user Token:",userToken);
-
-    if(!userToken.length || !noteId || targetTop === undefined || (0!= targetTop && 1!= targetTop))
+    if(!noteId || targetTop === undefined || (0!= targetTop && 1!= targetTop))
     {
-        console.log("note set top, userToken or noteId or targetTop empty")
+        console.log("note set top, noteId or targetTop empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
         output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
         output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
@@ -161,18 +158,7 @@ router.get("/setNoteTop",async (req,res)=>{
         return
     }
 
-    //验证用户是否登陆
-    let validateInfo = await validate.IsUserValidate(userToken);
-    if(!validateInfo.isValidated)
-    {
-        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
-        res.send(output)
-        return
-    }
-
-    let userInfo = validateInfo.userInfo;
+    let userInfo = req.userInfo;
 
     const t = await sqldb.sequelize.transaction();
 
@@ -252,40 +238,28 @@ router.put("/createNote",async (req,res)=>{
         description:"",
         data:{}
     }
-    let inputInfo = {}
-    inputInfo.userToken = req.get('userToken')
-
-    if(!inputInfo.userToken)
-    {
-        console.log("Add note, userToken empty")
-        output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
-        output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
-        output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
-        res.send(output)
-        return
-    }
-
-    //验证用户是否登陆
-    let validateInfo = await validate.IsUserValidate(inputInfo.userToken);
-    if(!validateInfo.isValidated)
-    {
-        console.log("Add note,user info invalidated")
-        output.success = statusCode.SERVICE_STATUS.NOT_LOGIN.success
-        output.status = statusCode.SERVICE_STATUS.NOT_LOGIN.status
-        output.description = statusCode.SERVICE_STATUS.NOT_LOGIN.description
-        res.send(output)
-        return
-    }
 
     const t = await sqldb.sequelize.transaction();
 
+    let notebookId = req.query.notebookId;
+
+    if(!notebookId)
+    {
+        //参数错误
+        console.log("create note param error notebookId undefined=>",notebookId)
+        output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
+        output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status
+        output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description
+    }
+
     try {
-        let userInfo = validateInfo.userInfo;
+        let userInfo = req.userInfo;
         let curTime = new Date().toLocaleString()
 
         const newAddNote = await sqldb.Note.create(
             {
                 u_id:userInfo.id,
+                notebook_id:notebookId,
                 time:curTime,
                 update_time:curTime,
                 status:1,

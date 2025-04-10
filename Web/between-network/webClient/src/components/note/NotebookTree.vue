@@ -370,7 +370,21 @@
      */
     function addNewNote()
     {
-
+        console.log("create note=>",currentSelectNotebookId.value);
+        let API = {...noteApi.createNote};
+        //请求URL的参数
+        API.params= {
+            notebookId:currentSelectNotebookId.value
+        };
+        console.log("API=>",API);
+        noteServerRequest(API).then(responseData=>{
+            console.log("create responseData=>",responseData);
+            if(responseData?.success)
+            {
+                //重新获取笔记列表
+                getNotesList();
+            }
+        })
     }
 
     /**
