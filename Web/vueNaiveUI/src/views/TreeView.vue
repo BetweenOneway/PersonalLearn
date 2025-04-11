@@ -22,6 +22,8 @@
         show-irrelevant-nodes
         :render-label="nodelabel"
         :render-suffix="nodesuffix"
+        :draggable="true"
+        @drop="handleDrop"
       />
     </div>
 </template>
@@ -215,4 +217,79 @@
         }
         console.log("obj=>",obj);
     }
+
+    /**
+     * 处理拖拽事件
+     * @param {Object} info - 拖拽信息
+     */
+     const handleDrop = (info) => {
+      const { node, dragNode, dropPosition } = info;
+
+      // 打印调试信息
+      console.log('Dragged Node:', dragNode);
+      console.log('Target Node:', node);
+      console.log('Drop Position:', dropPosition);
+
+      // 在这里实现你的逻辑，比如修改 datatree 的结构
+      // 示例：将拖拽节点插入到目标节点的指定位置
+
+      removeNode(dragNode.key); // 先移除拖拽节点
+      insertNode(node.key, dragNode, dropPosition); // 再插入到新位置
+    };
+
+    /**
+     * 移除指定节点
+     * @param {string} key - 节点的 key
+     */
+    const removeNode = (key) => {
+      const findAndRemove = (data) => {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].key === key) {
+            data.splice(i, 1);
+            return true;
+          }
+          if (data[i].children) {
+            if (findAndRemove(data[i].children)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+      findAndRemove(datatree.value);
+    };
+
+    /**
+     * 插入节点到指定位置
+     * @param {string} targetKey - 目标节点的 key
+     * @param {Object} dragNode - 拖拽节点
+     * @param {number} position - 插入位置（-1: 前面, 0: 子节点, 1: 后面）
+     */
+    const insertNode = (targetKey, dragNode, position) => {
+      const findAndInsert = (data) => {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].key === targetKey) {
+            if (position === 0) {
+              // 插入为子节点
+              if (!data[i].children) {
+                data[i].children = [];
+              }
+              data[i].children.push(dragNode);
+            } else {
+              // 插入到兄弟节点的位置
+              const index = position === -1 ? i : i + 1;
+              data.splice(index, 0, dragNode);
+            }
+            return true;
+          }
+          if (data[i].children) {
+            if (findAndInsert(data[i].children)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+      findAndInsert(datatree.value);
+    };
 </script>
