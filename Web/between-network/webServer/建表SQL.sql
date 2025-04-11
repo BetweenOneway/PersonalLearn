@@ -68,6 +68,7 @@ CREATE TABLE `notebook`  (
   `update_time` datetime NOT NULL COMMENT '最后修改时间',
   `u_id` int(11) NOT NULL COMMENT '用户编号',
   `level` int(11) NOT NULL DEFAULT 1 COMMENT '笔记本层级',
+  `index_in_notebook` int(11)  COMMENT '笔记本在当前级别内的排序序号',
   `parent_id` int(11) NOT NULL DEFAULT 0 COMMENT '上一级笔记本编号',
   `status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态【0：被删除，1：正常/私有】',
   UNIQUE INDEX `z_note_pk`(`id`) USING BTREE,

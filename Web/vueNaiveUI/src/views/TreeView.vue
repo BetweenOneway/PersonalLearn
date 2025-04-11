@@ -37,16 +37,19 @@
             label:'语文',
             key:'01',
             isedit:false,
+            index:1,
             children:[
                 {
                     label:'一年级',
                     key:'0111',
                     isedit:false,
+                    index:1,
                 },
                 {
                     label:'二年级',
                     key:'0112',
                     isedit:false,
+                    index:1,
                 }
             ]
         },

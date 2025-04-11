@@ -25,6 +25,10 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.INTEGER,
             defaultValue:0
         },
+        index:{
+            type:DataTypes.INTEGER,
+            field:'index_in_notebook',
+        },
         parent_id:{
             type:DataTypes.INTEGER,
             defaultValue:1

@@ -31,6 +31,14 @@ const notebookApi = {
         dataParam:false,
         successMessage:true
     },
+    updateNotebookRelation:{
+        name:'更新笔记本关系',
+        url:'/notebook/updateNotebookRelation',
+        method:'POST',
+        userAuth:true,
+        dataParam:true,
+        successMessage:true
+    },
 }
 
 export default notebookApi

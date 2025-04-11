@@ -35,7 +35,7 @@ router.get("/getUserNotebookList",async (req,res)=>{
         //查询属于当前用户的，未被删除的笔记本
         const notebooks = await sqldb.Notebook.findAll(
             {
-                attributes: ['id', 'name','level','parent_id'],
+                attributes: ['id', 'name','level','index','parent_id'],
                 where:{
                     u_id:userInfo.id,
                     status:{
@@ -235,4 +235,85 @@ router.post("/renameNotebook",async (req,res)=>{
     return
 })
 
+/**
+ * 更新笔记本之间的关系
+ */
+router.post("/updateNotebookRelation",async (req,res)=>{
+    let output={
+        success:true,
+        status:'',
+        description:'',
+    }
+    
+    //[{id,level,parent_id,index}]
+    let notebookList = req.body.notebookList;
+    //目标状态
+    let userInfo = req.userInfo;
+    
+    logger.info(`start update notebook realtion=>${notebookList}`);
+
+    if(0 == notebookList.length)
+    {
+        output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
+        output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status
+        output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description
+        return;
+    }
+    //无效状态定义
+    const  invalidStatus = [0];
+    let curTime = new Date().toLocaleString()
+
+    const t = await sqldb.sequelize.transaction();
+    
+    try {
+        for(let notebook of notebookList)
+        {
+            //更新
+            const updateNum = await sqldb.Notebook.update(
+                {
+                    name:inputInfo.newName,
+                    update_time:curTime,
+                },
+                {
+                    where:{
+                        id: inputInfo.id,
+                        u_id:userInfo.id,
+                        status:{
+                            [Op.notIn]:invalidStatus,
+                        }
+                    },
+                    transaction:t
+                }
+            );
+            //记录日志
+            let event = statusCode.EVENT_LIST.UPDATE_NOTEBOOK_RELATION;
+            const addLog = await sqldb.operLog.create(
+                {
+                    time:curTime,
+                    event:event.code,
+                    desc:event.desc,
+                    u_id:userInfo.id,
+                    o_id:inputInfo.id,
+                    type:1
+                },
+                {
+                    transaction:t
+                }
+            );
+        }
+        t.commit();
+        logger.info(`update notebooks relation,commit database success`)
+        output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.description;
+    } catch (error) {
+        t.rollback();
+        logger.error(`update notebooks relation,occurs error=>${error},rollback`);
+        output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.description;
+    }
+    res.send(output);
+    return;
+})
 module.exports=router;

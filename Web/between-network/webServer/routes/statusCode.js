@@ -388,6 +388,10 @@ EVENT_LIST = {
         code:'13',
         desc:'笔记本重命名'
     },
+    UPDATE_NOTEBOOK_RELATION:{
+        code:'13',
+        desc:'更新笔记本关系'
+    },
 }
 
 module.exports = {REDIS_STATUS,DB_STATUS,SERVICE_STATUS,EVENT_LIST}

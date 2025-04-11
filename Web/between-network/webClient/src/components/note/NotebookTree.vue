@@ -47,12 +47,12 @@
     import { loginInvalid } from "@/Utils/userLogin";
 
     //当前选择笔记本ID
-    const currentSelectNotebookId = ref(0);
+    const currentSelectNotebookId = ref(-1);
 
     const notebookTreeMenu = ref([
         {
             label: "我的文件夹",
-            key: "0",
+            key: -1,
             children: [
             ]
         },
@@ -63,7 +63,7 @@
         notebookTreeMenu.value =[
             {
                 label: "我的文件夹",
-                key: "0",
+                key: -1,
                 children: [
                 ]
             },
@@ -117,8 +117,11 @@
                 {
                     notebookMap.set(notebook.id,{
                         label: notebook.name,
-                        key: ''+notebook.id,
+                        key: notebook.id,
                         isedit:false,
+                        level:notebook.level,
+                        parent_id:notebook.parent_id,
+                        index:notebook.index,
                     })
                 }
                 console.log('notebookmap=>',notebookMap);
@@ -236,8 +239,8 @@
     //     }
     // }
 
-    //默认打开的菜单KEY
-    const defaultExpandedKeys= ref(['my-folder']);
+    //默认展开笔记本
+    const defaultExpandedKeys= ref([currentSelectNotebookId.value]);
 
     //右键菜单处理
     let clickContextMenuItem = async (key) => {
