@@ -46,8 +46,9 @@
 
     import { loginInvalid } from "@/Utils/userLogin";
 
-    //当前选择笔记本对象
+    //选择笔记本对象
     let currentSelectNode = ref({});
+    let prevSelectNode = ref({});
 
     const notebookTreeMenu = ref([
         {
@@ -303,12 +304,14 @@
                 //对于有子文件夹的文件夹，点击展开按钮并不会触发该事件
                 //只有点击文件夹名称才会触发
                 console.log("click=>",option);
+                prevSelectNode.value = currentSelectNode.value;
                 currentSelectNode.value = option;
                 //获取当前文件夹下所有笔记
-                getNotesList()
+                getNotesList(false);
             },
             ondblclick() {
                 currentSelectNode.value = option;
+                prevSelectNode.value = currentSelectNode.value;
                 //双击事件
                 option.isedit = true
                 nextTick(() => {
@@ -319,6 +322,7 @@
             onContextmenu(e) {
                 console.log('on contextmenu=>',option)
                 currentSelectNode.value = option;
+                prevSelectNode.value = currentSelectNode.value;
                 e.preventDefault();
                 //contextMenu.value.show = false;
                 nextTick().then(() => {
@@ -413,8 +417,21 @@
 
     const emit = defineEmits(['NotebookChanged'])
 
-    function getNotesList()
+
+    /**
+     * @param force[Boolean] 是否强制获取所有笔记
+     */
+    function getNotesList(force = true)
     {
+        if(!force)
+        {
+            //重复点选同一文件夹，不发送请求
+            if(!!prevSelectNode.value?.key && 
+            prevSelectNode.value.key == currentSelectNode.value.key)
+            {
+                return;
+            }
+        }
         console.log("get notes list=>",currentSelectNode.value);
         let API = {...noteApi.getUserNoteList};
         //请求URL的参数
