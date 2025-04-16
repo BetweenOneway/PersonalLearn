@@ -43,7 +43,8 @@ router.get("/getUserNotebookList",async (req,res)=>{
                     }
                 },
                 order:[
-                    ['level', 'DESC']
+                    ['level', 'ASC'],
+                    ['index', 'ASC']
                 ],
                 raw:true,
             }
@@ -83,23 +84,20 @@ router.post("/addNotebook",async (req,res)=>{
         }
     }
 
-    let inputInfo = {}
-    inputInfo.notebookName = req.body.notebookName
-    inputInfo.parentId = req.body.parentId
-
-    console.log("add notebook input info=>",inputInfo);
+    const {notebookName,parentId,index,level} = req.body;
 
     const t = await sqldb.sequelize.transaction();
 
     try {
-        console.log("userInfo:",req.userInfo);
         let userInfo = req.userInfo;
         let curTime = new Date().toLocaleString()
-
+        
         const newAddNotebook = await sqldb.Notebook.create(
             {
-                name:inputInfo.notebookName,
-                parent_id:inputInfo.parentId,
+                name:notebookName,
+                parent_id:parentId,
+                index:index,
+                level:level,
                 u_id:userInfo.id,
                 time:curTime,
                 update_time:curTime,
@@ -109,6 +107,7 @@ router.post("/addNotebook",async (req,res)=>{
                 transaction:t
             }
         );
+        
         console.log("new added notebook info:",newAddNotebook);
         let event = statusCode.EVENT_LIST.ADD_NOTEBOOK;
         const addLog = await sqldb.operLog.create(

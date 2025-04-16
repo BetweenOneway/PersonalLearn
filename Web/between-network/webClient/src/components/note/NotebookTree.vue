@@ -46,8 +46,8 @@
 
     import { loginInvalid } from "@/Utils/userLogin";
 
-    //当前选择笔记本ID
-    const currentSelectNotebookId = ref(-1);
+    //当前选择笔记本对象
+    let currentSelectNode = ref({});
 
     const notebookTreeMenu = ref([
         {
@@ -125,7 +125,7 @@
                     })
                 }
                 console.log('notebookmap=>',notebookMap);
-                //将低级菜单对象并入高级菜单对象
+                //将低级菜单对象并入高级菜单对象 保留顶级菜单
                 for(let notebook of allNotebook)
                 {
                     //获取当前菜单对象
@@ -240,14 +240,14 @@
     // }
 
     //默认展开笔记本
-    const defaultExpandedKeys= ref([currentSelectNotebookId.value]);
+    const defaultExpandedKeys= ref([currentSelectNode.value.key]);
 
     //右键菜单处理
     let clickContextMenuItem = async (key) => {
         contextMenu.value.show = false;
+        console.log("click context menu item currentSelectNode=>",currentSelectNode.value);
         if(key =='createNotebook')
         {
-            currentSelectNotebookId.value = contextMenu.value.notebookKey;
             //新增笔记本
             await addNewNoteBook();
             //重新获取笔记本列表
@@ -259,11 +259,10 @@
         }
         else if(key =='deleteNotebook')
         {
-            currentSelectNotebookId.value = contextMenu.value.notebookKey;
             //删除笔记本
             DefaultDeleteRemind({
-                id:currentSelectNotebookId.value,
-                title:contextMenu.value.notebookLabel,
+                id:currentSelectNode.value.key,
+                title:currentSelectNode.value.label,
                 type:2
             })
         }
@@ -278,7 +277,6 @@
         show:false,
         x:0,//X轴坐标
         y:0,//Y轴坐标
-        notebookKey:'',
         options:computed(()=>{
             return [
                 {
@@ -304,13 +302,13 @@
                 //单击笔记本
                 //对于有子文件夹的文件夹，点击展开按钮并不会触发该事件
                 //只有点击文件夹名称才会触发
-                console.log("click=>",option.label);
-                currentSelectNotebookId.value = option.key;
+                console.log("click=>",option);
+                currentSelectNode.value = option;
                 //获取当前文件夹下所有笔记
                 getNotesList()
             },
             ondblclick() {
-                currentSelectNotebookId.value = option.key;
+                currentSelectNode.value = option;
                 //双击事件
                 option.isedit = true
                 nextTick(() => {
@@ -320,15 +318,13 @@
             },
             onContextmenu(e) {
                 console.log('on contextmenu=>',option)
-                currentSelectNotebookId.value = option.key;
+                currentSelectNode.value = option;
                 e.preventDefault();
                 //contextMenu.value.show = false;
                 nextTick().then(() => {
                     contextMenu.value.show = true;
                     contextMenu.value.x = e.clientX;
                     contextMenu.value.y = e.clientY;
-                    contextMenu.value.notebookKey = option.key;
-                    contextMenu.value.notebookLabel = option.label;
                 });
             }
         };
@@ -339,13 +335,15 @@
     */
     async function addNewNoteBook(newName="新增笔记本")
     {
-        console.log("add new notebook,parentId=>",currentSelectNotebookId.value)
+        console.log("add new notebook,parentId=>",currentSelectNode.value.key)
         //获取请求API
         let API = {...notebookApi.addNotebook}
         //封装请求体中的参数
         API.data = {
             notebookName:newName,
-            parentId:currentSelectNotebookId.value,
+            parentId:currentSelectNode.value.key,
+            index:(currentSelectNode.value?.children?.length)??0,
+            level:currentSelectNode.value.level + 1,
         }
         //发送请求
         await noteServerRequest(API).then(responseData =>{
@@ -373,11 +371,11 @@
      */
     function addNewNote()
     {
-        console.log("create note=>",currentSelectNotebookId.value);
+        console.log("create note=>",currentSelectNode.value);
         let API = {...noteApi.createNote};
         //请求URL的参数
         API.params= {
-            notebookId:currentSelectNotebookId.value
+            notebookId:currentSelectNode.value.key
         };
         console.log("API=>",API);
         noteServerRequest(API).then(responseData=>{
@@ -417,11 +415,11 @@
 
     function getNotesList()
     {
-        console.log("get notes list=>",currentSelectNotebookId.value);
+        console.log("get notes list=>",currentSelectNode.value);
         let API = {...noteApi.getUserNoteList};
         //请求URL的参数
         API.params= {
-            notebookId:currentSelectNotebookId.value
+            notebookId:currentSelectNode.value.key
         };
         console.log("API=>",API);
         noteServerRequest(API).then(responseData=>{
@@ -435,11 +433,11 @@
     //获取回收站中笔记列表
     function getRecycleNoteList()
     {
-        console.log("get notes list=>",currentSelectNotebookId.value);
+        console.log("get notes list=>",currentSelectNode.value);
         let API = {...noteApi.getUserNoteList};
         //请求URL的参数
         API.params= {
-            notebookId:currentSelectNotebookId.value
+            notebookId:currentSelectNode.value.key
         };
         console.log("API=>",API);
         noteServerRequest(API).then(responseData=>{
