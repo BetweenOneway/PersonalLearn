@@ -9,6 +9,8 @@
             block-line
             show-irrelevant-nodes
             :render-label="notebookNode"
+            :draggable="true"
+            @drop="handleDrop"
         />
     </div>
 
@@ -98,7 +100,7 @@
     /**
      * 获取用户笔记本列表
     */
-    function getNotebookList()
+    function getNotebookList(targetKey = -1)
     {
         noteServerRequest(notebookApi.getNotebookList).then(responseData=>{
             if(responseData)
@@ -154,7 +156,17 @@
                 {
                     notebookTreeMenu.value[0].children.push(level1Notebook[1]);
                 }
-
+                //如果有选择节点，则更新选择节点
+                if(!!currentSelectNode.value?.key)
+                {                
+                    if(targetKey != -1)
+                    {
+                        currentSelectNode.value = notebookMap.get(targetKey);
+                    }
+                    else{
+                        currentSelectNode.value = notebookTreeMenu.value[0];
+                    }
+                }
                 defaultExpandedKeys.value[0] = notebookTreeMenu.value[0].key
                 console.log('notebookTreeMenu=>',notebookTreeMenu.value);
                 console.log("default expand keys=>",defaultExpandedKeys.value);
@@ -241,7 +253,8 @@
     // }
 
     //默认展开笔记本
-    const defaultExpandedKeys= ref([currentSelectNode.value.key]);
+    
+    const defaultExpandedKeys= ref([currentSelectNode.value?.key??-1]);
 
     //右键菜单处理
     let clickContextMenuItem = async (key) => {
@@ -260,10 +273,12 @@
         }
         else if(key =='deleteNotebook')
         {
+            let toDeleteNotebook = currentSelectNode.value;
+            currentSelectNode.value = {};
             //删除笔记本
             DefaultDeleteRemind({
-                id:currentSelectNode.value.key,
-                title:currentSelectNode.value.label,
+                id:toDeleteNotebook.key,
+                title:toDeleteNotebook.label,
                 type:2
             })
         }
@@ -417,7 +432,6 @@
 
     const emit = defineEmits(['NotebookChanged'])
 
-
     /**
      * @param force[Boolean] 是否强制获取所有笔记
      */
@@ -464,6 +478,135 @@
             }
         })
     }
+
+    /**
+     * 处理拖拽改变笔记本关系
+    */
+    async function changeNotebookRelation(dragNode,node,dropPosition)
+    {
+        let newParentId = -1;
+        let newLevel = 0;
+        if(dropPosition == "inside")
+        {
+            //此时节点为父节点
+            if(dragNode.parent_id == node.key)
+            {
+                return;
+            }
+            newParentId = node.key;
+            newLevel = node.level + 1;
+        }
+        else
+        {
+            //此时节点为同级子节点
+            if(drageNode.parent_id == node.parent_id)
+            {
+                return;
+            }
+            newParentId = node.parent_id;
+            newLevel = node.level;
+        }
+
+        let notebooks = [
+            {
+                id:dragNode.key,
+                parent_id:newParentId,
+                level:newLevel,
+            }
+        ];
+        //发送请求，更改层级关系
+        //获取请求API
+        let API = {...notebookApi.updateNotebookRelation}
+        //封装请求体中的参数
+        API.data = {
+            notebookList:notebooks
+        }
+        //发送请求
+        await noteServerRequest(API).then(responseData =>{
+            if(responseData)
+            {
+                //更改笔记本关系成功重新获取笔记本列表
+                console.log("after add notebook,reload notebook list");
+                getNotebookList(dragNode.key)
+                //本地直接更新？重新获取？
+                //removeNode(dragNode.key); // 先移除拖拽节点
+                //insertNode(node.key, dragNode, dropPosition); // 再插入到新位置
+            }
+            
+        })
+    }
+
+    /**
+     * 处理拖拽事件
+     * @param {Object} info - 拖拽信息
+     */
+     const handleDrop = (info) => {
+        console.log("handle drop info=>",info);
+        const { node, dragNode, dropPosition } = info;
+
+        // 打印调试信息
+        console.log('Dragged Node:', dragNode);
+        console.log('Target Node:', node);
+        console.log('Drop Position:', dropPosition);
+
+        changeNotebookRelation(dragNode,node,dropPosition)
+    };
+
+    /**
+     * 移除指定节点
+     * @param {string} key - 节点的 key
+     */
+    const removeNode = (key) => {
+      const findAndRemove = (data) => {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].key === key) {
+            data.splice(i, 1);
+            return true;
+          }
+          if (data[i].children) {
+            if (findAndRemove(data[i].children)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+      findAndRemove(datatree.value);
+    };
+
+    /**
+     * 插入节点到指定位置
+     * @param {string} targetKey - 目标节点的 key
+     * @param {Object} dragNode - 拖拽节点
+     * @param {number} position - 插入位置（before: 前面, inside: 子节点, after: 后面）
+     */
+    const insertNode = (targetKey, dragNode, position) => {
+      const findAndInsert = (data) => {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].key === targetKey) {
+            if (position === "inside") {
+              // 插入为子节点
+              if (!data[i].children) {
+                data[i].children = [];
+              }
+              data[i].children.push(dragNode);
+            } else {
+              // 插入到兄弟节点的位置
+              const index = position === "before" ? i : i + 1;
+              data.splice(index, 0, dragNode);
+            }
+            return true;
+          }
+          if (data[i].children) {
+            if (findAndInsert(data[i].children)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+      findAndInsert(notebookTreeMenu.value);
+    };
 
     defineExpose({
         addNewNoteBook,

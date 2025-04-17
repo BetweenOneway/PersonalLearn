@@ -270,12 +270,13 @@ router.post("/updateNotebookRelation",async (req,res)=>{
             //更新
             const updateNum = await sqldb.Notebook.update(
                 {
-                    name:inputInfo.newName,
+                    level:notebook.level,
+                    parent_id:notebook.parent_id,
                     update_time:curTime,
                 },
                 {
                     where:{
-                        id: inputInfo.id,
+                        id: notebook.id,
                         u_id:userInfo.id,
                         status:{
                             [Op.notIn]:invalidStatus,
@@ -315,4 +316,5 @@ router.post("/updateNotebookRelation",async (req,res)=>{
     res.send(output);
     return;
 })
+
 module.exports=router;

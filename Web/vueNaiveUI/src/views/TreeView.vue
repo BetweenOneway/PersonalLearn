@@ -226,6 +226,7 @@
      * @param {Object} info - 拖拽信息
      */
      const handleDrop = (info) => {
+        console.log("handle drop info=>",info);
       const { node, dragNode, dropPosition } = info;
 
       // 打印调试信息
@@ -266,13 +267,13 @@
      * 插入节点到指定位置
      * @param {string} targetKey - 目标节点的 key
      * @param {Object} dragNode - 拖拽节点
-     * @param {number} position - 插入位置（-1: 前面, 0: 子节点, 1: 后面）
+     * @param {number} position - 插入位置（before: 前面, inside: 子节点, after: 后面）
      */
     const insertNode = (targetKey, dragNode, position) => {
       const findAndInsert = (data) => {
         for (let i = 0; i < data.length; i++) {
           if (data[i].key === targetKey) {
-            if (position === 0) {
+            if (position === "inside") {
               // 插入为子节点
               if (!data[i].children) {
                 data[i].children = [];
@@ -280,7 +281,7 @@
               data[i].children.push(dragNode);
             } else {
               // 插入到兄弟节点的位置
-              const index = position === -1 ? i : i + 1;
+              const index = position === "before" ? i : i + 1;
               data.splice(index, 0, dragNode);
             }
             return true;
