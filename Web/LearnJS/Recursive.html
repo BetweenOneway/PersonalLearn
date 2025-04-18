@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function FindNotebookByKey(startNode,key)
+        {
+            console.log("startNode=>",startNode);
+            if(startNode.key == key)
+            {
+                console.log("find target node");
+                return startNode;
+            }
+            else if(0 != startNode.children.length)
+            {
+                for(var childNode of startNode.children)
+                {
+                    let findResult = FindNotebookByKey(childNode,key);
+                    if(!!findResult)
+                    {
+                        console.log("findResult back=>",findResult);
+                        return findResult;
+                    }
+                }
+            }
+            return undefined;
+        }
+        
+        let data = [
+            {
+                key:'0',
+                children:[
+                    {
+                        key:'01',
+                        children:[
+                            {
+                                key:'011',
+                                children:[
+                                    {
+                                        key:'0111',
+                                        children:[],
+                                    },
+                                ],
+                            },
+                            {
+                                key:'012',
+                                children:[
+                                    {   
+                                        key:'0121',
+                                        children:[],
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                    {
+                        key:'02',
+                        children:[],
+                    },
+                    {
+                        key:'03',
+                        children:[],
+                    }
+                ],
+            }
+        ]
+        
+        function testFind()
+        {
+            let findResult = FindNotebookByKey(data[0],'0121');
+            console.log("final findResult=>",findResult);
+        }
+        
+        function testBool()
+        {
+            let a;
+            if(!!a)
+            {
+                console.log("true");
+            }
+            else{
+                console.log("false")
+            }
+        }
+    </script>
+</head>
+<body>
+    <button onclick="testFind()"> 递归查找</button>
+    <button onclick="testBool()"> bool</button>
+</body>
+</html>
