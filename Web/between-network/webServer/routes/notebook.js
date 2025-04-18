@@ -272,6 +272,7 @@ router.post("/updateNotebookRelation",async (req,res)=>{
                 {
                     level:notebook.level,
                     parent_id:notebook.parent_id,
+                    index:notebook.index,
                     update_time:curTime,
                 },
                 {

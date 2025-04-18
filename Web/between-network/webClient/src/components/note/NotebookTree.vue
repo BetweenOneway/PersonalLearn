@@ -73,6 +73,26 @@
         ];
     }
 
+    function FindNotebookByKey(startNode,key)
+    {
+        if(startNode.key == key)
+        {
+            return startNode;
+        }
+        else if(0 != startNode.children.length)
+        {
+            for(var childNode of startNode.children)
+            {
+                let findResult = FindNotebookByKey(childNode,key);
+                if(!!findResult)
+                {
+                    return findResult;
+                }
+            }
+        }
+        return undefined;
+    }
+
     const userStore = useUserStore();
     const {token} = storeToRefs(userStore);
 
@@ -486,6 +506,15 @@
     {
         let newParentId = -1;
         let newLevel = 0;
+        
+        let notebooks = [
+            {
+                id:dragNode.key,
+                parent_id:newParentId,
+                level:newLevel,
+            }
+        ];
+
         if(dropPosition == "inside")
         {
             //此时节点为父节点
@@ -493,8 +522,14 @@
             {
                 return;
             }
-            newParentId = node.key;
-            newLevel = node.level + 1;
+            notebooks.push(
+                {
+                    id:dragNode.key,
+                    parent_id:node.key,
+                    level:node.level+1,
+                    index:node?.children.length??0,
+                }
+            )
         }
         else
         {
@@ -503,17 +538,56 @@
             {
                 return;
             }
-            newParentId = node.parent_id;
-            newLevel = node.level;
+
+            let parentNotebook = FindNotebookByKey(notebookTreeMenu.value[0],node.parent_id);
+            if(!!!parentNotebook)
+            {
+                return;
+            }
+
+            if(dropPosition == "before")
+            {
+                notebooks.push({
+                    id:dragNode.key,
+                    parent_id:node.parent_id,
+                    level:node.level,
+                    index:node.index,
+                });
+
+                for(var notebook of parentNotebook.children)
+                {
+                    if(notebook.index >= node.index)
+                    {
+                        notebooks.push({
+                            id:notebook.key,
+                            index:notebook.index+1,
+                        });
+                    }
+                }
+            }
+            else if(dropPosition == "after")
+            {
+                var newIndex = node.index + 1;
+                notebooks.push({
+                    id:dragNode.key,
+                    parent_id:node.parent_id,
+                    level:node.level,
+                    index:newIndex,
+                });
+
+                for(var notebook of parentNotebook.children)
+                {
+                    if(notebook.index >= newIndex)
+                    {
+                        notebooks.push({
+                            id:notebook.key,
+                            index:notebook.index+1,
+                        });
+                    }
+                }
+            }
         }
 
-        let notebooks = [
-            {
-                id:dragNode.key,
-                parent_id:newParentId,
-                level:newLevel,
-            }
-        ];
         //发送请求，更改层级关系
         //获取请求API
         let API = {...notebookApi.updateNotebookRelation}
