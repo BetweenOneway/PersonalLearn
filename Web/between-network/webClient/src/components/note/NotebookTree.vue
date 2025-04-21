@@ -79,7 +79,7 @@
         {
             return startNode;
         }
-        else if(0 != startNode.children.length)
+        else if(0 != (startNode?.children?.length ?? 0))
         {
             for(var childNode of startNode.children)
             {
@@ -508,11 +508,6 @@
         let newLevel = 0;
         
         let notebooks = [
-            {
-                id:dragNode.key,
-                parent_id:newParentId,
-                level:newLevel,
-            }
         ];
 
         if(dropPosition == "inside")
@@ -534,7 +529,7 @@
         else
         {
             //此时节点为同级子节点
-            if(drageNode.parent_id == node.parent_id)
+            if(dragNode.parent_id == node.parent_id)
             {
                 return;
             }
@@ -542,6 +537,7 @@
             let parentNotebook = FindNotebookByKey(notebookTreeMenu.value[0],node.parent_id);
             if(!!!parentNotebook)
             {
+                console.log("can not find parent notebook=>",node.parent_id);
                 return;
             }
 
@@ -588,6 +584,7 @@
             }
         }
 
+        console.log("to update notebook list=>",notebooks);
         //发送请求，更改层级关系
         //获取请求API
         let API = {...notebookApi.updateNotebookRelation}

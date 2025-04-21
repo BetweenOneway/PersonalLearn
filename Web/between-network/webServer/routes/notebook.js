@@ -243,7 +243,7 @@ router.post("/updateNotebookRelation",async (req,res)=>{
         status:'',
         description:'',
     }
-    
+    console.log("start update Notebook Relation:",req.body);
     //[{id,level,parent_id,index}]
     let notebookList = req.body.notebookList;
     //目标状态
@@ -294,7 +294,7 @@ router.post("/updateNotebookRelation",async (req,res)=>{
                     event:event.code,
                     desc:event.desc,
                     u_id:userInfo.id,
-                    o_id:inputInfo.id,
+                    o_id:notebook.id,
                     type:1
                 },
                 {

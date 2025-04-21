@@ -36,7 +36,7 @@ const notebookApi = {
         url:'/notebook/updateNotebookRelation',
         method:'POST',
         userAuth:true,
-        dataParam:true,
+        dataParam:false,
         successMessage:true
     },
 }
