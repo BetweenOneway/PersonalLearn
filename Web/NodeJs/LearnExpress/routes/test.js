@@ -13,4 +13,9 @@ router.get("/testMultiCallback",function (req, res, next) {
   }
 )
 
+router.post("/posArray",async (req,res)=>{
+    console.log("post array=>",req.body)
+    res.send("got it")
+})
+
 module.exports=router;
