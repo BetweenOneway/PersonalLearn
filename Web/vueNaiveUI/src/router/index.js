@@ -47,6 +47,11 @@ const router = createRouter({
         component: () => import('@/views/ContainerView.vue'),
     },
     {
+        path: '/admin',
+        name: 'Admin',
+        component: () => import('@/views/Admin.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting

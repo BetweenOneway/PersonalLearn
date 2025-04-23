@@ -18,6 +18,9 @@
         <n-card>
             <RouterLink to="/editormd">测试Editor-Md-V3</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/admin">测试Admin页面布局</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 
