@@ -1,114 +1,69 @@
 <template>
-    <n-space vertical>
-      <n-switch v-model:value="collapsed" />
-      <n-layout has-sider>
-        <n-layout-sider
-          bordered
-          collapse-mode="width"
-          :collapsed-width="64"
-          :width="240"
-          :collapsed="collapsed"
-          @collapse="collapsed = true"
-          @expand="collapsed = false"
-        >
-          <n-menu
-            :collapsed="collapsed"
-            :collapsed-width="64"
-            :collapsed-icon-size="22"
-            :options="menuOptions"
-            :render-label="renderMenuLabel"
-          />
-        </n-layout-sider>
-        <n-layout>
-          <span>这里写菜单内容</span>
-        </n-layout>
-      </n-layout>
-    </n-space>
+    <n-layout has-sider>
+      <!-- 左侧菜单 -->
+      <n-layout-sider>
+        <n-menu
+          :options="menuOptions"
+          :value="activeKey"
+          @update:value="handleMenuSelect"
+        />
+      </n-layout-sider>
+  
+      <!-- 右侧内容区域 -->
+      <n-layout-content>
+        <div v-if="isDefaultView">
+            <h1>欢迎来到我们的网站</h1>
+            <p>请选择左侧菜单中的选项以开始浏览。</p>
+        </div>
+      <router-view v-else />
+      </n-layout-content>
+    </n-layout>
   </template>
   
-  <script setup>
-  import { NIcon } from "naive-ui";
-  import { h, ref } from "vue";
+<script setup>
+    import { ref,computed } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { NLayout, NLayoutSider, NLayoutContent, NMenu } from 'naive-ui';
+  import { useRoute } from 'vue-router';
+
+    const route = useRoute();
+
+      const router = useRouter();
+      const activeKey = ref(null);
+      
   
-  const menuOptions = [
-    {
-      label: "且听风吟",
-      key: "hear-the-wind-sing",
-      href: "https://baike.baidu.com/item/%E4%B8%94%E5%90%AC%E9%A3%8E%E5%90%9F/3199"
-    },
-    {
-      label: "1973年的弹珠玩具",
-      key: "pinball-1973",
-      disabled: true,
-      children: [
+      // 定义菜单选项
+      const menuOptions = [
         {
-          label: "鼠",
-          key: "rat"
-        }
-      ]
-    },
-    {
-      label: "寻羊冒险记",
-      key: "a-wild-sheep-chase",
-      disabled: true
-    },
-    {
-      label: "舞，舞，舞",
-      key: "dance-dance-dance",
-      children: [
-        {
-          type: "group",
-          label: "人物",
-          key: "people",
-          children: [
-            {
-              label: "叙事者",
-              key: "narrator"
-            },
-            {
-              label: "羊男",
-              key: "sheep-man"
-            }
-          ]
+          label: 'Admin',
+          key: 'Admin',
+          path: '/admin',
         },
         {
-          label: "饮品",
-          key: "beverage",
-          children: [
-            {
-              label: "威士忌",
-              key: "whisky",
-              href: "https://baike.baidu.com/item/%E5%A8%81%E5%A3%AB%E5%BF%8C%E9%85%92/2959816?fromtitle=%E5%A8%81%E5%A3%AB%E5%BF%8C&fromid=573&fr=aladdin"
-            }
-          ]
+          label: 'About',
+          key: 'About',
+          path: '/admin/about',
         },
         {
-          label: "食物",
-          key: "food",
-          children: [
-            {
-              label: "三明治",
-              key: "sandwich"
-            }
-          ]
+          label: 'Contact',
+          key: 'Contact',
+          path: '/admin/contact',
         },
-        {
-          label: "过去增多，未来减少",
-          key: "the-past-increases-the-future-recedes"
-        }
-      ]
-    }
-  ];
+      ];
   
-   let collapsed = ref(true)
-    function renderMenuLabel(option) {
-          if ("href" in option) {
-            return h(
-              "a",
-              { href: option.href, target: "_blank" },
-              option.label
-            );
-          }
-          return option.label;
-    }
+      // 判断是否为默认视图
+    const isDefaultView = computed(() => {
+      return route.path === '/admin' && (!activeKey.value || activeKey.value === 'Admin');
+    });
+
+      // 菜单选择事件处理
+      const handleMenuSelect = (key) => {
+        const selectedMenu = menuOptions.find((item) => item.key === key);
+        if (selectedMenu && selectedMenu.path) {
+          router.push(selectedMenu.path); // 路由跳转
+          activeKey.value = key; // 更新激活的菜单项
+          console.log("activeKey.value=>",activeKey.value);
+        }
+      };
   </script>
+  

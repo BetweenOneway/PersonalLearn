@@ -50,6 +50,20 @@ const router = createRouter({
         path: '/admin',
         name: 'Admin',
         component: () => import('@/views/Admin.vue'),
+        children:[
+            {
+                path:'about',
+                props:true,
+                component:()=>import("@/components/admin/About.vue"),
+                meta:{title:'Admin/About'}
+            },
+            {
+                path:'contact',
+                props:true,
+                component:()=>import("@/components/admin/Contact.vue"),
+                meta:{title:'Admin/Contact'}
+            },
+        ]
     },
     {
       //path: '/about',
