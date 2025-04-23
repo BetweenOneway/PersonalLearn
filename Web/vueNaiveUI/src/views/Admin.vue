@@ -43,7 +43,7 @@
     const route = useRoute();
 
     const router = useRouter();
-    const activeKey = ref(null);
+    
 
     // 定义菜单选项
     const menuOptions = [
@@ -63,6 +63,8 @@
           path: '/admin/contact',
         },
     ];
+
+    const activeKey = ref(menuOptions[0].key);
 
     // 当前激活的 Tab 键值
     const activeTab = ref(null);
