@@ -65,6 +65,8 @@
     import userApi from '@/request/api/userApi';
     import { loginInvalid } from "@/Utils/userLogin";
 
+    import { toHerf } from "@/router/go";
+
     //主题信息
     const themeStore = useThemeStore()
     const {theme,isDarkTheme} = storeToRefs(themeStore)
@@ -89,14 +91,9 @@
     //点击头像的菜单
     const userMenu =[
         {
-            key:'user-center',
+            key:'info-manage',
             icon:renderIcon(AccountBoxFilled),
-            label:'个人中心'
-        },
-        {
-            key:'account-setting',
-            icon:renderIcon(ManageAccountsFilled),
-            label:'账号设置'
+            label:'管理'
         },
         {
             key:'sign-out',
@@ -115,10 +112,8 @@
             case "sign-out":
                 signOutLogin();
                 break;
-            case "user-center":
-                //userBasicInfoRef.value.changeActive();
-                break;
-            case "account-setting":
+            case 'info-manage':
+                toHerf('/admin')
                 break;
         }
     }

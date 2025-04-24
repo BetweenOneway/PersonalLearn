@@ -23,6 +23,31 @@ const router = createRouter({
         ]
     },
     {
+        path: '/admin',
+        name: '后台管理',
+        component: () => import('@/views/Admin/Index.vue'),
+        children:[
+            {
+                path:'updatepersonalinfo',
+                props:true,
+                component:()=>import("@/components/admin/UpdatePersonalInfo.vue"),
+                meta:{title:'更新个人信息'}
+            },
+            {
+                path:'forgetpassword',
+                props:true,
+                component:()=>import("@/components/admin/ForgetPassword.vue"),
+                meta:{title:'忘记密码'}
+            },
+            {
+                path:'recycle',
+                props:true,
+                component:()=>import("@/components/admin/Recycle.vue"),
+                meta:{title:'回收站'}
+            },
+        ]
+    },
+    {
         path: '/test',
         component: ()=>import("@/views/test/Index.vue"),
         children:[
