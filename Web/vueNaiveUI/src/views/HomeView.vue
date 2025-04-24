@@ -1,6 +1,9 @@
 <template>
     <n-flex justify="space-around" align="center" style="height:100vh">
         <n-card>
+            <RouterLink to="/test">随便测试</RouterLink>
+        </n-card>
+        <n-card>
             <RouterLink to="/tree">测试树状组件</RouterLink>
         </n-card>
         <n-card>
