@@ -12,8 +12,7 @@
       <!-- 右侧内容区域 -->
       <n-layout-content>
         <div v-if="isDefaultView">
-            <h1>欢迎来到我们的网站</h1>
-            <p>请选择左侧菜单中的选项以开始浏览。</p>
+            <AdminDefault />
         </div>
         <n-tabs
         v-model:value="activeTab"
@@ -39,11 +38,11 @@
     import { useRouter } from 'vue-router';
     import { NLayout, NLayoutSider, NLayoutContent, NMenu } from 'naive-ui';
     import { useRoute } from 'vue-router';
+    import AdminDefault from '@/components/admin/AdminDefault.vue';
 
     const route = useRoute();
 
     const router = useRouter();
-    
 
     // 定义菜单选项
     const menuOptions = [
@@ -74,10 +73,10 @@
 
     // 添加 Tab 页
     const addTab = (key, label, path) => {
-      if (!tabs.value.some((tab) => tab.key === key)) {
-        tabs.value.push({ key, label, path });
-      }
-      activeTab.value = key; // 激活对应 Tab
+        if (!tabs.value.some((tab) => tab.key === key)) {
+            tabs.value.push({ key, label, path });
+        }
+        activeTab.value = key; // 激活对应 Tab
     };
 
     // 关闭 Tab 页
@@ -107,8 +106,8 @@
         || 0 == tabs.value.length;
     });
 
-      // 菜单选择事件处理
-      const handleMenuSelect = (key) => {
+    // 菜单选择事件处理
+    const handleMenuSelect = (key) => {
         console.log("menu select key=>",key);
         const selectedMenu = menuOptions.find((item) => item.key === key);
         if (selectedMenu && selectedMenu.path) {
@@ -116,7 +115,11 @@
             router.push(selectedMenu.path); // 路由跳转
             activeKey.value = key; // 更新激活的菜单项
             console.log("activeKey.value=>",activeKey.value);
+            if(activeKey.value==='Admin')
+            {
+                tabs.value = [];
+            }
         }
-      };
+    };
   </script>
   
