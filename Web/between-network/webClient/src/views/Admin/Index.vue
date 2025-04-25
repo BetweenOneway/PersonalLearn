@@ -16,6 +16,7 @@
             type="card"
             closable
             @close="handleTabClose"
+            @update:value="handleTabChange"
             >
                 <n-tab-pane
                 v-for="(tab,index) in tabs"
@@ -32,10 +33,9 @@
   </template>
   
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { useRouter } from 'vue-router';
     import { NLayout, NLayoutSider, NLayoutContent, NMenu } from 'naive-ui';
-    import { useRoute } from 'vue-router';
 
     const router = useRouter();
 
@@ -110,6 +110,15 @@
         }
     };
 
+    // 标签页切换处理 
+    const handleTabChange = (key) => {
+        console.log(' 切换到标签页:', key);
+        const index = tabs.value.findIndex((tab) => tab.key === key);
+        const selectTab = tabs.value[index];
+        router.push(selectTab.path);
+        activeTab.value = key;
+    };
+
     function FindMenuItemByKey(startNode,key)
     {
         for( var menuItem of startNode)
@@ -147,5 +156,13 @@
             }
         }
     };
+
+    function Init()
+    {
+        activeTab.value = 'Admin';
+        tabs.value = [{label: '首页',key: 'Admin',path:'/admin'}];
+    }
+
+    Init();
 </script>
   
