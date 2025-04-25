@@ -4,43 +4,38 @@
       <n-layout-sider>
         <n-menu
           :options="menuOptions"
-          :value="activeKey"
+          :value="activeTab"
           @update:value="handleMenuSelect"
         />
       </n-layout-sider>
   
       <!-- 右侧内容区域 -->
-      <n-layout-content>
-        <div v-if="isDefaultView">
-            <AdminDefault />
-        </div>
-        <n-tabs
-        v-model:value="activeTab"
-        type="card"
-        closable
-        @close="handleTabClose" v-else
-      >
-        <n-tab-pane
-          v-for="tab in tabs"
-          :key="tab.key"
-          :name="tab.key"
-          :tab="tab.label"
-        >
-          <router-view v-if="tab.key === activeTab" />
-        </n-tab-pane>
-      </n-tabs>
-      </n-layout-content>
+        <n-layout-content>
+            <n-tabs
+            v-model:value="activeTab"
+            type="card"
+            closable
+            @close="handleTabClose"
+            >
+                <n-tab-pane
+                v-for="(tab,index) in tabs"
+                :key="tab.key"
+                :name="tab.key"
+                :tab="tab.label"
+                :closable="index !== 0"
+                >
+                    <router-view v-if="tab.key === activeTab" />
+                </n-tab-pane>
+        </n-tabs>
+        </n-layout-content>
     </n-layout>
   </template>
   
 <script setup>
-    import { ref,computed } from 'vue';
+    import { ref } from 'vue';
     import { useRouter } from 'vue-router';
     import { NLayout, NLayoutSider, NLayoutContent, NMenu } from 'naive-ui';
     import { useRoute } from 'vue-router';
-    import AdminDefault from '@/components/admin/AdminDefault.vue';
-
-    const route = useRoute();
 
     const router = useRouter();
 
@@ -80,13 +75,13 @@
         },
     ];
 
-    const activeKey = ref(menuOptions[0].key);
-
     // 当前激活的 Tab 键值
-    const activeTab = ref(null);
+    const activeTab = ref('Admin');
 
     // 所有打开的 Tab 页
-    const tabs = ref([]);
+    const tabs = ref([
+        {label: '首页',key: 'Admin',path:'/admin'}
+    ]);
 
     // 添加 Tab 页
     const addTab = (key, label, path) => {
@@ -110,18 +105,10 @@
                 activeTab.value = lastTab.key;
             } else {
                 router.push('/admin');
-                activeTab.value = null;
-                activeKey.value = 'Admin'
+                activeTab.value = 'Admin';
             }
         }
     };
-  
-      // 判断是否为默认视图
-    const isDefaultView = computed(() => {
-        console.log(`is default view=>route.path=[${route.path}] | activeKey.value=[${activeKey.value}]`)
-        return (route.path === '/admin' && (!activeKey.value || activeKey.value === 'Admin')) 
-        || 0 == tabs.value.length;
-    });
 
     function FindMenuItemByKey(startNode,key)
     {
@@ -152,13 +139,13 @@
         if (selectedMenu && selectedMenu.path) {
             addTab(selectedMenu.key, selectedMenu.label, selectedMenu.path);
             router.push(selectedMenu.path); // 路由跳转
-            activeKey.value = key; // 更新激活的菜单项
-            console.log("activeKey.value=>",activeKey.value);
-            if(activeKey.value==='Admin')
+            activeTab.value = key; // 更新激活的菜单项
+            console.log("activeTab.value=>",activeTab.value);
+            if(activeTab.value==='Admin')
             {
-                tabs.value = [];
+                tabs.value = [{label: '首页',key: 'Admin',path:'/admin'}];
             }
         }
     };
-  </script>
+</script>
   

@@ -26,7 +26,14 @@ const router = createRouter({
         path: '/admin',
         name: '后台管理',
         component: () => import('@/views/Admin/Index.vue'),
+        redirect: '/admin/console',
         children:[
+            {
+                path:'console',
+                props:true,
+                component:()=>import("@/components/admin/Console.vue"),
+                meta:{title:'主控台'}
+            },
             {
                 path:'updatepersonalinfo',
                 props:true,
