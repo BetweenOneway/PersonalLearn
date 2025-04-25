@@ -1,15 +1,15 @@
 <template>
     <n-layout has-sider>
-      <!-- 左侧菜单 -->
-      <n-layout-sider>
-        <n-menu
-          :options="menuOptions"
-          :value="activeTab"
-          @update:value="handleMenuSelect"
-        />
-      </n-layout-sider>
+        <!-- 左侧菜单 -->
+        <n-layout-sider :inverted="inverted" bordered>
+            <n-menu
+            :options="menuOptions"
+            :value="activeTab"
+            @update:value="handleMenuSelect"
+            />
+        </n-layout-sider>
   
-      <!-- 右侧内容区域 -->
+        <!-- 右侧内容区域 -->
         <n-layout-content>
             <n-tabs
             v-model:value="activeTab"
@@ -38,6 +38,8 @@
     import { NLayout, NLayoutSider, NLayoutContent, NMenu } from 'naive-ui';
 
     const router = useRouter();
+
+    const inverted=ref(false);
 
     // 定义菜单选项
     const menuOptions = [
@@ -165,4 +167,6 @@
 
     Init();
 </script>
+
+<style scoped></style>
   
