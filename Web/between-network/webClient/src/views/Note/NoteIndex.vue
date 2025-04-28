@@ -21,7 +21,7 @@
                 <n-divider style="margin:15px auto"></n-divider>
                 <n-flex vertical>
                 <n-space>
-                    <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="getRecentNoteList" >
+                    <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="getRecentNoteList(false)" >
                         最近文件
                     </n-button>
                 </n-space>
@@ -392,8 +392,14 @@
         changeEditNoteState(2)
     }
 
-    function getRecentNoteList()
+    function getRecentNoteList(isInit = true)
     {
+        if(!isInit)
+        {
+            console.log("notebookTree.value=>",notebookTree.value)
+            notebookTree.value.ClearSelectNode();
+        }
+        
         isRecycleBinView.value = false;
         noteServerRequest(noteApi.getRecentNoteList).then(responseData=>{
             if(responseData)

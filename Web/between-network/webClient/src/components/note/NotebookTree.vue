@@ -457,6 +457,8 @@
      */
     function getNotesList(force = true)
     {
+        console.log("get Notes list prevSelectNode=>",prevSelectNode.value)
+        console.log("currentSelectNode=>",currentSelectNode.value);
         if(!force)
         {
             //重复点选同一文件夹，不发送请求
@@ -466,13 +468,13 @@
                 return;
             }
         }
-        console.log("get notes list=>",currentSelectNode.value);
+
         let API = {...noteApi.getUserNoteList};
         //请求URL的参数
         API.params= {
             notebookId:currentSelectNode.value.key
         };
-        console.log("API=>",API);
+        console.log("get notes list API=>",API);
         noteServerRequest(API).then(responseData=>{
             if(responseData)
             {
@@ -679,11 +681,19 @@
       findAndInsert(notebookTreeMenu.value);
     };
 
+    function ClearSelectNode()
+    {
+        prevSelectNode.value = {};
+        currentSelectNode.value = {};
+        console.log("Clear Prev Select Node =>",prevSelectNode.value);
+    }
+
     defineExpose({
         addNewNoteBook,
         addNewNote,
         getNotesList,
-        getRecycleNoteList
+        getRecycleNoteList,
+        ClearSelectNode
     })
 
     /**
