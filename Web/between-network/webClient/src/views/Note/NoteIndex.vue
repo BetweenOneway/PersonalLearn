@@ -133,7 +133,7 @@
     } from "@vicons/material";
 
     import { NIcon } from "naive-ui";
-    import { h,ref,computed,provide,inject } from "vue";
+    import { h,ref,computed,provide,inject,nextTick } from "vue";
 
     import { toHerf } from "@/router/go";
     
@@ -150,6 +150,8 @@
     import { useDeleteRemindDialogStore } from "@/stores/deleteRemindDialogStore";
 
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
+    const {DefaultDeleteRemind} = deleteRemindDialogStore;
+
     const {showFromDumpsterSingle} = deleteRemindDialogStore;
     
     function renderIcon(icon) {
@@ -331,7 +333,7 @@
                 id:contextMenu.value.id,
                 title:contextMenu.value.title,
                 type:1,
-                key:id+':'+1
+                key:contextMenu.value.id+':'+1
             })
         }
         else if(key =="restore")
