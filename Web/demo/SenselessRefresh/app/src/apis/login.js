@@ -15,6 +15,8 @@ export const getList = () => {
         url: '/getList',
         method: 'get'
 
+    }).then(responseData=>{
+        console.log("getList responseData=>",responseData);
     })
 
 }

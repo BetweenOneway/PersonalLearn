@@ -26,7 +26,7 @@ export const refreshToken = () => {
         server.get('/refresh', Object.assign({}, {
             headers: { [PASS]: r_tk }
         })).then((res) => {
-
+            console.log("refreshToken res=>",res);
             // 长token失效，删除token，重新登录
             if (res.code === 4004) {
                 flag = false
