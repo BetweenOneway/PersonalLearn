@@ -61,6 +61,19 @@ namespace CLASS_TEST {
         cout << "child Call" << endl;
     }
 
+    void child::getNum()
+    {
+        cout <<"m_num=" << m_num << endl;
+        cout << "m_num=" << classBase::m_num << endl;
+    }
+
+    void testClassScope()
+    {
+        child chi;
+        chi.m_num = 10;
+        chi.getNum();
+    }
+
     void testFinalOvertide()
     {
         //child newChild;

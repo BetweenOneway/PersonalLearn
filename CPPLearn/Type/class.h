@@ -9,19 +9,27 @@ namespace CLASS_TEST {
         {
             Call();
         }
+
+        int m_num;
     };
 
     class child :public classBase
     {
+    public:
+        int m_num;
+    public:
+        void getNum();
     private:
         void SayHi() override;
         void SayHello()const;
         void Call();
+        
     };
 
     class Base1
     {
     };
+
     class Child1 : public Base1
     {
     public:
@@ -148,4 +156,5 @@ namespace CLASS_TEST {
     };
 
     void testRefMem();
+    void testClassScope();
 }
