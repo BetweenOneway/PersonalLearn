@@ -452,6 +452,16 @@
 
     const emit = defineEmits(['NotebookChanged'])
 
+    function getRecentNoteList()
+    {
+        noteServerRequest(noteApi.getRecentNoteList).then(responseData=>{
+            if(responseData)
+            {
+                emit("NotebookChanged",responseData.data);
+            }
+        })
+    }
+
     /**
      * @param force[Boolean] 是否强制获取所有笔记
      */
@@ -469,18 +479,26 @@
             }
         }
 
-        let API = {...noteApi.getUserNoteList};
-        //请求URL的参数
-        API.params= {
-            notebookId:currentSelectNode.value.key
-        };
-        console.log("get notes list API=>",API);
-        noteServerRequest(API).then(responseData=>{
-            if(responseData)
-            {
-                emit("NotebookChanged",responseData.data);
-            }
-        })
+        if(!currentSelectNode.value.key)
+        {
+            console.log("currentSelectNode.value.key=>",currentSelectNode.value.key);
+            getRecentNoteList();
+        }
+        else
+        {
+            let API = {...noteApi.getUserNoteList};
+            //请求URL的参数
+            API.params= {
+                notebookId:currentSelectNode.value.key
+            };
+            console.log("get notes list API=>",API);
+            noteServerRequest(API).then(responseData=>{
+                if(responseData)
+                {
+                    emit("NotebookChanged",responseData.data);
+                }
+            })
+        }
     }
 
     //获取回收站中笔记列表
