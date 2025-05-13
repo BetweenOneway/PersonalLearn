@@ -232,6 +232,8 @@
         loading.value = false;
 
         isRecycleBinView.value = false;
+        //关闭正在编辑的笔记页面
+        changeEditNoteState(2)
     }
 
     let notebookTree = ref(null);
@@ -247,6 +249,7 @@
      * @param {Number} id 笔记编号
      */
     const goEditNoteView = (id)=>{
+        console.log("got edit note view =>",id);
         if(id)
         {
             toHerf(`/note/edit/${id}`);
@@ -390,7 +393,7 @@
      const deleteNoteSuccess = ()=>{
 
         getNoteListInNotebook()
-        //
+        //删除笔记成功，关闭正在编辑笔记
         changeEditNoteState(2)
     }
 

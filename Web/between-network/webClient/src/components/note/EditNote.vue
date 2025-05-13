@@ -158,7 +158,7 @@
     const propsData = defineProps({
         id:{type:String,required:true},
         changeState:{type:Number},
-        actionId:{type:Number},
+        actionId:{type:Number},//上下文菜单ID
         isRecycleBinNote:{type:Boolean,default:false}
     })
 
@@ -168,8 +168,11 @@
     watch(
         ()=>propsData.changeState,
         newData=>{
-            if(propsData.actionId == Number.parseInt(propsData.id))
+            console.log("propsData.actionId=>",propsData.actionId);
+            console.log("Number.parseInt(propsData.id)=>",Number.parseInt(propsData.id));
+            //if(propsData.actionId == Number.parseInt(propsData.id))
             {
+                console.log("new Data=>",newData);
                 switch(newData)
                 {
                     case 1:
@@ -190,6 +193,7 @@
 
     //笔记信息
     const note = ref({})
+    
     /**
      * 获取编辑笔记信息
      */
