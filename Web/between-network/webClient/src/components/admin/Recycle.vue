@@ -17,7 +17,7 @@
             :pagination="pagination"
             v-model:checked-row-keys="rowChecked"
             @update:page="rowChecked=[]"
-            style="height:calc(100% - 34px - 20px)"
+            style="height:calc(100vh - 34px - 20px)"
         />
     </n-layout>
     <!--删除提醒框-->
@@ -29,7 +29,6 @@
     import {NTag,NSpace,NButton,NText, useMessage} from 'naive-ui'
     import noteServerRequest  from "@/request"
     import dumpsterApi from '@/request/api/dumpsterApi';
-    import fileApi from '@/request/api/fileApi';
     import DeleteRemindDialog from "@/components/remind/DeleteRemindDialog.vue";
     import {useDeleteRemindDialogStore} from '@/stores/deleteRemindDialogStore'
 
@@ -66,16 +65,16 @@
                 //颜色
                 let color="success"
                 //标签文本
-                let label = "笔记"
+                let label = "文件"
                 switch(type)
                 {
                     case 1:
                         color="success"
-                        label = "笔记"
+                        label = "文件"
                         break;
                     case 2:
                         color="info"
-                        label = "便签"
+                        label = "文件夹"
                         break;
                 }
                 //渲染成标签元素
@@ -151,6 +150,7 @@
             files.forEach(item=>{
                 item.key = item.id+':'+item.type;
             });
+            console.log("dumpster get file list=>",files);
             //显示回收站中的文件
             data.value = files;
             //整理被勾选的记录
@@ -209,7 +209,7 @@
         const length = rowChecked.value.length;
         if(length === 0) throw message.warning('未选择任何文件')
 
-        let API = {...fileApi.restoreFiles};
+        let API = {...dumpsterApi.restoreFiles};
 
         API.name = length === 1 ? API.name[0]:API.name[1];
 

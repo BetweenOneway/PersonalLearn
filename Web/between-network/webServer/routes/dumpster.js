@@ -243,7 +243,7 @@ router.get("/getFileList",async (req,res)=>{
 
         const fileLists = await sqldb.Dumpster.findAll(
             {
-                attributes: ['id','name','type','time'],
+                attributes: ['id',['name','title'],'type',['time','updateTime']],
                 where:{
                     u_id:userInfo.id
                 },
