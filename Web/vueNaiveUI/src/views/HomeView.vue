@@ -24,6 +24,9 @@
         <n-card>
             <RouterLink to="/admin">测试Admin页面布局</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/router">测试RouterView</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 

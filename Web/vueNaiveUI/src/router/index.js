@@ -71,6 +71,25 @@ const router = createRouter({
         ]
     },
     {
+        path: '/router',
+        name: 'Router',
+        component: () => import('@/views/Router.vue'),
+        children:[
+            {
+                path:'routerview1',
+                props:true,
+                component:()=>import("@/components/router/RouterView1.vue"),
+                meta:{title:'Router/RouterView1'}
+            },
+            {
+                path:'routerview2',
+                props:true,
+                component:()=>import("@/components/router/RouterView2.vue"),
+                meta:{title:'Router/RouterView2'}
+            },
+        ]
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting
