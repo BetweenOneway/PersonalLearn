@@ -24,6 +24,6 @@
 
     function ClearAll()
     {
-        router.push({ query: {} });
+        router.push('/router/');
     }
 </script>
