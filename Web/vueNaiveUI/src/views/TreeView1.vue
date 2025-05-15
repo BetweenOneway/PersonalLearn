@@ -4,6 +4,8 @@
       :data="data"
       :default-expanded-keys="defaultExpandedKeys"
       :node-props="nodeProps"
+      selectable
+      v-model:selected-keys="selectedKeys"
     />
     <n-dropdown
       trigger="manual"
@@ -15,6 +17,7 @@
       @select="handleSelect"
       @clickoutside="handleClickoutside"
     />
+    <n-button @click="ClearSelect">清空选择</n-button>
 </template>
   
 <script setup>
@@ -59,6 +62,7 @@
     console.log("data=>",data);
 
     let defaultExpandedKeys= ref(["40", "41"]);
+    let selectedKeys= ref([]);
     let showDropdown = showDropdownRef;
     let x = xRef;
     let y = yRef;
@@ -66,15 +70,25 @@
     let handleSelect = () => {
         showDropdownRef.value = false;
     };
+
     let handleClickoutside = () => {
         showDropdownRef.value = false;
     }
+
+    //Tree元素取消选择
+    function ClearSelect()
+    {
+        console.log("selected-keys=>",selectedKeys.value);
+        selectedKeys.value = [];
+    }
+
     let nodeProps = ({ option }) => {
         return {
             onClick() {
                 //对于有子文件夹的文件夹，点击展开按钮并不会触发该事件
                 //只有点击文件夹名称才会触发
                 console.log(`[Click] ${option.key} - ${option.label}`);
+                console.log("selected-keys=>",selectedKeys.value);
             },
             onContextmenu(e) {
                 console.log('option=>',option);
