@@ -11,6 +11,7 @@
             :render-label="notebookNode"
             :draggable="true"
             @drop="handleDrop"
+            v-model:selected-keys="treeSelectedKeys"
         />
     </div>
 
@@ -51,6 +52,8 @@
     //选择笔记本对象
     let currentSelectNode = ref({});
     let prevSelectNode = ref({});
+    //树状组件点选项
+    let treeSelectedKeys = ref([]);
 
     const notebookTreeMenu = ref([
         {
@@ -704,6 +707,7 @@
         prevSelectNode.value = {};
         currentSelectNode.value = {};
         console.log("Clear Prev Select Node =>",prevSelectNode.value);
+        treeSelectedKeys.value=[];
     }
 
     defineExpose({

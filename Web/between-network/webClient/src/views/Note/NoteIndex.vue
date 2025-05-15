@@ -419,6 +419,7 @@
     function showRecycleBin()
     {
         isRecycleBinView.value = true;
+        notebookTree.value.ClearSelectNode();
     }
 
     function Init()
