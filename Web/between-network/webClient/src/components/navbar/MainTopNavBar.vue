@@ -118,12 +118,15 @@
         }
     }
 
+    //退出登录
     const signOutLogin = async ()=>{
         noteServerRequest(userApi.logout).then(responseData=>{
             if(!responseData) return;
             console.log("sign out login")
             //登录失效处理
-            loginInvalid(false)
+            loginInvalid(false);
+            //回到主页
+            toHerf();
         })
     }
 
