@@ -27,6 +27,9 @@
         <n-card>
             <RouterLink to="/router">测试RouterView</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/layout">学习布局</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 

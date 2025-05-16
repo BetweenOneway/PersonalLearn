@@ -1,8 +1,8 @@
 <template>
     <n-space justify="space-between" align="center" style="height: 100%;">
-            <a href="/">
-                <n-image :src="logoDarkImage"></n-image>
-            </a>
+        <a href="/">
+            <n-image :src="logoDarkImage"></n-image>
+        </a>
         <n-space align="center" :wrap-item="false">
             <!--头像-->
             <n-popover v-model:show = "userMenuShow" trigger="click" width="260px" content-style="padding:10px">

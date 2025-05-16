@@ -4,7 +4,6 @@
             <RouterView />
         </n-layout-content>
     </n-layout>
-    
 </template>
 
 <script setup>

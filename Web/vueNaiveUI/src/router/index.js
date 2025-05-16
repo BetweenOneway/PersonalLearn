@@ -90,6 +90,11 @@ const router = createRouter({
         ]
     },
     {
+        path: '/Layout',
+        name: 'LayoutView',
+        component: () => import('@/views/LayoutView.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting
