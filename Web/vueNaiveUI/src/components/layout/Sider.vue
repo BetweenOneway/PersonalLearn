@@ -22,9 +22,9 @@
             </div>
             <div class="flex items-center p-4 space-x-4">
                 <div class="flex-1">
-                <NButton block @click="show = true">
-                    store.siderButton
-                </NButton>
+                    <NButton block @click="show = true">
+                        store.siderButton
+                    </NButton>
                 </div>
                 <NButton @click="handleClearAll">
                     <SvgIcon icon="ri:close-circle-line" />
@@ -59,7 +59,7 @@
     // )
 
     function handleUpdateCollapsed() {
-        collapsed.value = true;
+        collapsed.value = !collapsed.value;
     }
 
     const getMobileClass = computed(() => {
