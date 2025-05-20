@@ -37,7 +37,8 @@ const router = createRouter({
             {
                 path:'updatepersonalinfo',
                 props:true,
-                component:()=>import("@/components/admin/UpdatePersonalInfo.vue"),
+                //component:()=>import("@/components/admin/UpdatePersonalInfo.vue"),
+                component:()=>import("@/components/admin/account/AccountSetting.vue"),
                 meta:{title:'更新个人信息'}
             },
             {

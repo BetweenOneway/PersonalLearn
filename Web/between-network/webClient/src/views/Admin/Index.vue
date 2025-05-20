@@ -10,11 +10,12 @@
         </n-layout-sider>
   
         <!-- 右侧内容区域 -->
-        <n-layout-content>
+        <n-layout-content :class="{ 'layout-default-background': theme.name != 'dark' }">
             <n-tabs
             v-model:value="activeTab"
             type="card"
             closable
+            tab-style="background-color:#FFF;"
             @close="handleTabClose"
             @update:value="handleTabChange"
             >
@@ -33,13 +34,23 @@
   </template>
   
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref,watch } from 'vue';
+    import {storeToRefs} from 'pinia'
     import { useRouter } from 'vue-router';
     import { NLayout, NLayoutSider, NLayoutContent, NMenu } from 'naive-ui';
+    import {useThemeStore} from '@/stores/themeStore'
+
+    const themeStore = useThemeStore()
+    const {theme} = storeToRefs(themeStore)
 
     const router = useRouter();
 
     const inverted=ref(false);
+
+    watch(theme,(newVal,oldVal)=>{
+        console.log("theme.newVal=>",newVal);
+        console.log("theme.oldVal=>",oldVal);
+    })
 
     // 定义菜单选项
     const menuOptions = [
@@ -168,5 +179,9 @@
     Init();
 </script>
 
-<style scoped></style>
+<style scoped>
+    .layout-default-background {
+        background: #f5f7f9;
+    }
+</style>
   
