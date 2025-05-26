@@ -30,6 +30,9 @@
         <n-card>
             <RouterLink to="/layout">学习布局</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/Cropper">学习Cropper2.0</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 

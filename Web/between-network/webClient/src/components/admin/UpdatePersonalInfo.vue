@@ -42,10 +42,10 @@
                 </n-form-item>
             </n-form>
 
-                <n-space>
-                    <n-button v-show="updateFormItem" :disabled="!showUpdateBtn" type="success" @click="toUpdateBasicInfo">更新</n-button>
-                    <n-button v-bind="editBtnObj.props" type="success" ghost @click="clickEditBtn(!updateFormItem)">{{editBtnObj.text}}</n-button>
-                </n-space>
+            <n-space>
+                <n-button v-show="updateFormItem" :disabled="!showUpdateBtn" type="success" @click="toUpdateBasicInfo">更新</n-button>
+                <n-button v-bind="editBtnObj.props" type="success" ghost @click="clickEditBtn(!updateFormItem)">{{editBtnObj.text}}</n-button>
+            </n-space>
     </n-layout-content>
 
     <!--裁剪图像窗口-->
