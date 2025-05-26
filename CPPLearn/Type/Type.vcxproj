@@ -143,6 +143,7 @@
     <ClCompile Include="class.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="fileOper.cpp" />
+    <ClCompile Include="friendClass.cpp" />
     <ClCompile Include="function.cpp" />
     <ClCompile Include="hash.cpp" />
     <ClCompile Include="lambda.cpp" />

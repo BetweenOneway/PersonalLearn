@@ -157,4 +157,5 @@ namespace CLASS_TEST {
 
     void testRefMem();
     void testClassScope();
+    void testFirendClass();
 }

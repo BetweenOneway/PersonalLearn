@@ -308,7 +308,8 @@ void testClass()
     //CLASS_TEST::testLozengeInherit();
     //CLASS_TEST::testInherit2();
     //CLASS_TEST::testRefMem();
-    CLASS_TEST::testClassScope();
+    //CLASS_TEST::testClassScope();
+    CLASS_TEST::testFirendClass();
 }
 
 void testStruct()
