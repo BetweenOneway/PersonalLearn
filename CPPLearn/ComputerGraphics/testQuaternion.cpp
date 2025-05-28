@@ -20,4 +20,8 @@ void verifyRotateDirection()
     Vector3 dest = (q * src);
     //dest.normalize();
     cout << dest.getX()<<","<<dest.getY()<<","<<dest.getZ() << endl;
+
+    Quaternion qTest = Quaternion::FromAxisAngle(Vector3(0.0f,0.0f,1.0f), (45) / 180.0f * kPi);
+    Vector3 dest1 = (qTest * src);
+    cout << dest1.getX() << "," << dest1.getY() << "," << dest1.getZ() << endl;
 }

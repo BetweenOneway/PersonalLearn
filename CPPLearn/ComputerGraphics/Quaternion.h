@@ -1,9 +1,13 @@
 ﻿#pragma once
+#include <math.h>
 #include "Vector3.h"
 
 class Quaternion
 {
 public:
+    Quaternion() = default;
+    Quaternion(float real, const Vector3& i);
+    Quaternion(float _w, float _x, float _y, float _z);
     //转换成单位四元数
     void identity()
     {
@@ -29,6 +33,11 @@ public:
 	Quaternion& operator*=(const Quaternion &a);
 	//让四元数的模等于1
 	void normalize();
+
+    static inline Quaternion FromAxisAngle(const Vector3& axis, float angle)
+    {
+        return Quaternion(cos(angle / 2), axis * sin(angle / 2));
+    }
 public:
     float w, x, y, z;
 };

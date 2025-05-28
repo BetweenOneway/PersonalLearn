@@ -4,6 +4,22 @@
 
 const Quaternion kQuaternionIdentity = { 1.0f,0.0f,0.0f,0.0f };
 
+Quaternion::Quaternion(float _w, float _x, float _y, float _z)
+{
+    w = _w;
+    x = _x;
+    y = _y;
+    z = _z;
+}
+
+Quaternion::Quaternion(float real, const Vector3& i)
+{
+    w = real;
+    x = i.getX();
+    y = i.getY();
+    z = i.getZ();
+}
+
 void Quaternion::setToRotateAboutX(float theta)
 {
     float thetaOver2 = theta * 0.5f;

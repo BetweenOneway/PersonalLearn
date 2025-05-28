@@ -113,7 +113,7 @@ int main()
     //TestPlane();
     //testDot();
     //Vector();
-    //Quaternion();
+    Quaternion();
     //Ray();
     //testLine();
     //Plane();
