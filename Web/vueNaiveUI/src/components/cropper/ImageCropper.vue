@@ -1,17 +1,19 @@
 <template>
-    <div class=".cropper-container">
+    <div class="cropper-container">
         <cropper-canvas ref="croppercanvas" background>
             <cropper-image ref="cropperimage" :src=imgUrl alt="Picture" rotatable scalable skewable translatable></cropper-image>
             <!--选择区域与其他区域的明暗对比-->
             <cropper-shade hidden></cropper-shade>
-            <!--move 移动 select 支持自拉框-->
+            <!--背景图片的操作方式-->
             <cropper-handle action="move" plain></cropper-handle>
-            <cropper-selection ref="cropperselection" initial-coverage="0.5" movable resizable outlined
+            <cropper-selection id="cropperSelection" ref="cropperselection" 
+            x="100" y="50" aspectRatio="1" width="100px" height="100px" movable
             @change="onCropperSelectionChange">
                 <!--选择框的表格-->
                 <cropper-grid role="grid" covered></cropper-grid>
                 <!--选择框的中间十字-->
                 <cropper-crosshair centered></cropper-crosshair>
+                <!--选择框的操作方式move 移动 select 支持自拉框-->
                 <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
                 <!--缩放选择框的组件-->
                 <cropper-handle action="n-resize"></cropper-handle>
@@ -24,6 +26,25 @@
                 <cropper-handle action="sw-resize"></cropper-handle>
             </cropper-selection>
         </cropper-canvas>
+    </div>
+    <h6>Preview</h6>
+    <div class="preview-container">
+        <cropper-viewer
+          class="preview preview-lg"
+          selection="#cropperSelection"
+        />
+        <cropper-viewer
+          class="preview preview-md"
+          selection="#cropperSelection"
+        />
+        <cropper-viewer
+          class="preview preview-sm"
+          selection="#cropperSelection"
+        />
+        <cropper-viewer
+          class="preview preview-xs"
+          selection="#cropperSelection"
+        />
     </div>
 </template>
     
@@ -64,25 +85,71 @@
         };
 
         if (!inSelection(selection, maxSelection)) {
-            event.preventDefault();
+            //event.preventDefault();
         }
+    }
+
+    // 将data:image转成新的file
+    function dataURLtoFile(dataurl, filename) {
+        var arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        const blob = new Blob([u8arr], { type: mime });
+        const file = new File([blob], filename, { type: mime });
+        return file;
+    }
+
+    const emit = defineEmits(['success']);
+    async function handleConfirm() {
+
+        const res = await cropperselection.value.$toCanvas();
+
+        const dataImage = res.toDataURL('image/png');
+        const file = dataURLtoFile(dataImage, fileObj.value.name);
+        emit('success', {
+            ...fileObj.value,
+            file: file,
+            fileShow: dataImage,
+        });
     }
 </script>
 
 <style scoped>
+    .cropper-container {
+        border: 1px solid ;
+        width: 400px;
+        height: 300px;
+    }
+    cropper-canvas {
+      width: 100%;
+      height: 100%;
+    }
+    .preview-container
+    {
+        display:flex;
+    }
+    .preview-lg {
+    height: 9rem;
+    width: 16rem;
+  }
 
-body{
-    min-width: 320px;
-}
-.cropper-container {
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 0.375rem;
+  .preview-md {
+    height: 4.5rem;
+    width: 8rem;
+  }
 
-}
+  .preview-sm {
+    height: 2.25rem;
+    width: 4rem;
+  }
 
-cropper-canvas{
-    height:320px;
-    min-width: 500px;
-}
-
+  .preview-xs {
+    height: 1.125rem;
+    width: 2rem;
+  }
 </style>
