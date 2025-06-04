@@ -1,7 +1,9 @@
 <template>
     <n-layout>
         <n-layout-content>
-            <RouterView />
+            <n-message-provider>
+                <RouterView />
+            </n-message-provider>
         </n-layout-content>
     </n-layout>
 </template>

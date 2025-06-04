@@ -33,6 +33,9 @@
         <n-card>
             <RouterLink to="/Cropper">学习Cropper2.0</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/VueCropper">学习VueCropper</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 

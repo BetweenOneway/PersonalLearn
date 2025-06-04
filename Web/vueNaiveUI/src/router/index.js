@@ -100,6 +100,11 @@ const router = createRouter({
         component: () => import('@/views/Cropper.vue'),
     },
     {
+        path: '/VueCropper',
+        name: 'VueCropper',
+        component: () => import('@/views/VueCropper.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting
