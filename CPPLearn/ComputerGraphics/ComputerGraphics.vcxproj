@@ -209,6 +209,7 @@
     <ClInclude Include="testRay.h" />
     <ClInclude Include="testVectorMatrix.h" />
     <ClInclude Include="Triangle.h" />
+    <ClInclude Include="Type.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

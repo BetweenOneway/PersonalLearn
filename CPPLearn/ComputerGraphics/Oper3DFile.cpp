@@ -14,7 +14,13 @@ void WriteOBJFile(const vector<Point3D>& Vertices, const char* pszFileName)
 
 bool ReadOBJFile(vector<Point3D>& Vertices, const char* pszFileName)
 {
-    ifstream in; 
+    vector<Surf> surfs;
+    return ReadOBJFile(Vertices, surfs, pszFileName);
+}
+
+bool ReadOBJFile(vector<Point3D>& Vertices, vector<Surf>& surfs, const char* pszFileName)
+{
+    ifstream in;
     in.open(pszFileName);
     if (!in)
         return false;
@@ -26,7 +32,7 @@ bool ReadOBJFile(vector<Point3D>& Vertices, const char* pszFileName)
         std::istringstream iss(line);
         float x = 0.0f, y = 0.0f, z = 0.0f;
         if (line[0] == 'v') {
-            iss >> word >> x >> y >>z;
+            iss >> word >> x >> y >> z;
             Point3D point(x, y, z);
             Vertices.push_back(point);
         }
@@ -36,10 +42,12 @@ bool ReadOBJFile(vector<Point3D>& Vertices, const char* pszFileName)
         {
             int a, b, c;
             iss >> word >> a >> b >> c;
-            //tri.a = a - 1; //The obj file face number starts with 1
-            //tri.b = b - 1;
-            //tri.c = c - 1;
-            //numfaces++;
+            //OBJ文件中面的索引是从1开始的，而读进来之后，点的索引却是从1开始的
+            Surf surf;
+            surf.x = a-1;
+            surf.y = b-1;
+            surf.z = c-1;
+            surfs.push_back(surf);
         }
     }
     in.close();
