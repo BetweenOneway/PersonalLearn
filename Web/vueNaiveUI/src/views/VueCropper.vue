@@ -200,4 +200,7 @@
   color: #666666;
 }
 
+img{
+    max-width: none;
+}
 </style>

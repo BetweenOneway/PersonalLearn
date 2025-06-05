@@ -141,4 +141,8 @@
 .pre-item {
 	padding-right: 20px;
 }
+
+img{
+    max-width: none;
+}
 </style>
