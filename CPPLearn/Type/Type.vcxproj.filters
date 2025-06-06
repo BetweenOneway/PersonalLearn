@@ -63,6 +63,9 @@
     <ClCompile Include="friendClass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="type.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="container.h">
@@ -93,6 +96,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="fileOper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="type.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

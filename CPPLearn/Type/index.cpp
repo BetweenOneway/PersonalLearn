@@ -24,7 +24,7 @@ using namespace std;
 #include "function.h"
 
 #include "fileOper.h"
-
+#include "type.h"
 
 enum class Color:int {
     Red,
@@ -382,8 +382,14 @@ void testFileOper()
     FILE_OPER::StingStreamToVector();
 }
 
+void testTypeOf()
+{
+    TYPE_OF::testTypeId();
+}
+
 int main()
 {
+    testTypeOf();
     //testFileOper();
     //testStream();
     //testDist();
@@ -393,7 +399,7 @@ int main()
     //testWired();
     //testScope();
     //testStatic();
-    testClass();
+    //testClass();
     //testStruct();
     //testType();
     //testString();
