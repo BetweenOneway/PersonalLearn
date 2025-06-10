@@ -14,6 +14,8 @@ import 'vfonts/FiraCode.css'
 //基本样式（包含Tailwind.css）
 import "./style.css"
 
+import 'normalize.css/normalize.css';
+
 import VueParticles from "@tsparticles/vue3"
 import { loadFull } from "tsparticles"
 

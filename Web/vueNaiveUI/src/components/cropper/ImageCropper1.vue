@@ -52,29 +52,23 @@
             :dynamic="selection.dynamic"
             @change="onSelectionChange"
             >
-            <cropper-grid
-                :hidden="grid.hidden"
-                :rows="grid.rows"
-                :columns="grid.columns"
-                :bordered="grid.bordered"
-                :covered="grid.covered"
-                :theme-color="grid.themeColor"
-            />
-            <cropper-crosshair
-                :hidden="crosshair.hidden"
-                :centered="crosshair.centered"
-                :theme-color="crosshair.themeColor"
-            />
-            <cropper-handle
-                v-for="subhandle in handles"
-                :key="subhandle.action"
-                :action="subhandle.action"
-                :hidden="subhandle.hidden"
-                :theme-color="subhandle.themeColor"
-            />
+                <cropper-crosshair centered />
+                <cropper-handle
+                action="move"
+                theme-color="rgba(255, 255, 255, 0.35)"
+                />
+                <cropper-handle action="n-resize" />
+                <cropper-handle action="e-resize" />
+                <cropper-handle action="s-resize" />
+                <cropper-handle action="w-resize" />
+                <cropper-handle action="ne-resize" />
+                <cropper-handle action="nw-resize" />
+                <cropper-handle action="se-resize" />
+                <cropper-handle action="sw-resize" />
             </cropper-selection>
         </cropper-canvas>
     </div>
+    <!--预览-->
     <div class="previews clearfix">
         <h6>Preview</h6>
         <cropper-viewer
@@ -98,7 +92,7 @@
           selection="#cropperSelection"
         />
     </div>
-  </template>
+</template>
   
 <script setup>
     import 'cropperjs';
@@ -143,8 +137,8 @@
         y: undefined,
         width: undefined,
         height: undefined,
-        aspectRatio: undefined,
-        initialAspectRatio: undefined,
+        aspectRatio: 1,
+        initialAspectRatio: 1,
         initialCoverage: 0.5,
         dynamic: false,
         movable: true,
@@ -235,30 +229,29 @@
   }
 
   .preview {
-    border: 1px solid var(--vp-c-divider);
     float: left;
     margin-bottom: 1rem;
     margin-right: 1rem;
   }
 
   .preview-lg {
-    height: 9rem;
-    width: 16rem;
+    height: 200px;
+    width: 200px;
   }
 
   .preview-md {
-    height: 4.5rem;
-    width: 8rem;
+    height: 100px;
+    width: 100px;
   }
 
   .preview-sm {
-    height: 2.25rem;
-    width: 4rem;
+    height: 50px;
+    width: 50px;
   }
 
   .preview-xs {
-    height: 1.125rem;
-    width: 2rem;
+    height: 30px;
+    width: 30px
   }
   
   </style>  
