@@ -148,7 +148,7 @@
         keyboard: false,
         outlined: false,
         precise: false,
-      })
+    })
     const grid = ref({
         hidden: false,
         rows: 3,

@@ -1,14 +1,20 @@
 <template>
     <div class="cropper-container">
         <cropper-canvas ref="croppercanvas" background>
-            <cropper-image ref="cropperimage" :src=imgUrl alt="Picture" rotatable scalable skewable translatable></cropper-image>
+            <!--width和initial-center-size有的带:，有的不带-->
+            <cropper-image ref="cropperimage" :src=imgUrl alt="Picture" 
+            initial-center-size="cover"
+            rotatable scalable skewable translatable></cropper-image>
             <!--选择区域与其他区域的明暗对比-->
             <cropper-shade hidden></cropper-shade>
             <!--背景图片的操作方式-->
-            <cropper-handle action="move" plain></cropper-handle>
-            <cropper-selection id="cropperSelection" ref="cropperselection" 
-            x="100" y="50" aspectRatio="1" width="100px" height="100px" movable
-            @change="onCropperSelectionChange">
+            <cropper-handle action="select" plain></cropper-handle>
+            <cropper-selection 
+            id="cropperSelection" 
+            ref="cropperselection"
+            :width="100" :height="100" movable
+            hidden
+            outlined>
                 <!--选择框的表格-->
                 <cropper-grid role="grid" covered></cropper-grid>
                 <!--选择框的中间十字-->
@@ -60,6 +66,25 @@
     const cropperimage = ref();
     const cropperselection = ref();
     
+    const selection = ref({
+        hidden: false,
+        x: undefined,
+        y: undefined,
+        width: 100,
+        height: 100,
+        aspectRatio: 1,
+        initialAspectRatio: 1,
+        initialCoverage: 0.5,
+        dynamic: false,
+        movable: true,
+        resizable: true,
+        zoomable: false,
+        multiple: false,
+        keyboard: false,
+        outlined: false,
+        precise: false,
+    })
+    
     function inSelection(selection, maxSelection) {
       return (
         selection.x >= maxSelection.x
@@ -70,6 +95,7 @@
     }
 
     function onCropperSelectionChange(event) {
+        return;
         if (!croppercanvas.value) {
             return;
         }
