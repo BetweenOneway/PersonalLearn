@@ -142,65 +142,65 @@
 
 <style scoped>
     .avatar {
-  display: flex;
-}
-.avatar .avatar-left {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 400px;
-  height: 400px;
-  background-color: #F0F2F5;
-  margin-right: 10px;
-  border-radius: 4px;
-}
-.avatar .avatar-left .avatar-left-crop {
-  width: 400px;
-  height: 400px;
-  position: relative;
-}
-.avatar .avatar-left .avatar-left-crop .crop-box {
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  overflow: hidden;
-}
-.avatar .avatar-left .avatar-left-p {
-  text-align: center;
-  width: 100%;
-  position: absolute;
-  bottom: 20px;
-  color: #ffffff;
-  font-size: 14px;
-}
-.avatar .avatar-right {
-  width: 150px;
-  height: 400px;
-  background-color: #F0F2F5;
-  border-radius: 4px;
-  padding: 16px 0;
-  box-sizing: border-box;
-}
-.avatar .avatar-right .avatar-right-div {
-  border: 3px solid #ffffff;
-  border-radius: 50%;
-}
-.avatar .avatar-right .avatar-right-previews {
-  width: 200px;
-  height: 200px;
-  overflow: hidden;
-  border-radius: 50%;
-}
-.avatar .avatar-right .avatar-right-text {
-  text-align: center;
-  margin-top: 50px;
-  font-size: 14px;
-}
-.avatar .avatar-right .avatar-right-text span {
-  color: #666666;
-}
+        display: flex;
+    }
+    .avatar .avatar-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 400px;
+    background-color: #F0F2F5;
+    margin-right: 10px;
+    border-radius: 4px;
+    }
+    .avatar .avatar-left .avatar-left-crop {
+        width: 400px;
+        height: 400px;
+        position: relative;
+    }
+    .avatar .avatar-left .avatar-left-crop .crop-box {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .avatar .avatar-left .avatar-left-p {
+        text-align: center;
+        width: 100%;
+        position: absolute;
+        bottom: 20px;
+        color: #ffffff;
+        font-size: 14px;
+    }
+    .avatar .avatar-right {
+        width: 150px;
+        height: 400px;
+        background-color: #F0F2F5;
+        border-radius: 4px;
+        padding: 16px 0;
+        box-sizing: border-box;
+    }
+    .avatar .avatar-right .avatar-right-div {
+        border: 3px solid #ffffff;
+        border-radius: 50%;
+    }
+    .avatar .avatar-right .avatar-right-previews {
+        width: 200px;
+        height: 200px;
+        overflow: hidden;
+        border-radius: 50%;
+    }
+    .avatar .avatar-right .avatar-right-text {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 14px;
+    }
+    .avatar .avatar-right .avatar-right-text span {
+        color: #666666;
+    }
 
-img{
-    max-width: none;
-}
+    img{
+        max-width: none;
+    }
 </style>
