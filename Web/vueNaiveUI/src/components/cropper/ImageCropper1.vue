@@ -1,257 +1,325 @@
 <template>
-    <div class="cropper-container">
-        <cropper-canvas
-        v-if="ready"
-        ref="cropperCanvas"
-        :background="canvas.background"
-        :disabled="canvas.disabled"
-        :hidden="canvas.hidden"
-        :scale-step="canvas.scaleStep"
-        :theme-color="canvas.themeColor"
-        >
-            <cropper-image
-            ref="cropperImage"
-            :hidden="image.hidden"
-            :rotatable="image.rotatable"
-            :scalable="image.scalable"
-            :skewable="image.skewable"
-            :translatable="image.translatable"
-            :initial-center-size="image.initialCenterSize"
-            :src="image.src"
-            :alt="image.alt"
-            @transform="onImageTransform"
-            />
-            <cropper-shade
-            :hidden="shade.hidden"
-            :theme-color="shade.themeColor"
-            />
-            <cropper-handle
-            :action="handle.action"
-            :hidden="handle.hidden"
-            :plain="handle.plain"
-            :theme-color="handle.themeColor"
-            />
-            <cropper-selection
-            id="cropperSelection"
-            ref="cropperSelection"
-            :x="selection.x"
-            :y="selection.y"
-            :width="selection.width"
-            :height="selection.height"
-            :aspect-ratio="selection.aspectRatio"
-            :initial-coverage="selection.initialCoverage"
-            :hidden="selection.hidden"
-            :initial-aspect-ratio="selection.initialAspectRatio"
-            :movable="selection.movable"
-            :resizable="selection.resizable"
-            :zoomable="selection.zoomable"
-            :multiple="selection.multiple"
-            :keyboard="selection.keyboard"
-            :outlined="selection.outlined"
-            :precise="selection.precise"
-            :dynamic="selection.dynamic"
-            @change="onSelectionChange"
-            >
-                <cropper-crosshair centered />
-                <cropper-handle
-                action="move"
-                theme-color="rgba(255, 255, 255, 0.35)"
-                />
-                <cropper-handle action="n-resize" />
-                <cropper-handle action="e-resize" />
-                <cropper-handle action="s-resize" />
-                <cropper-handle action="w-resize" />
-                <cropper-handle action="ne-resize" />
-                <cropper-handle action="nw-resize" />
-                <cropper-handle action="se-resize" />
-                <cropper-handle action="sw-resize" />
-            </cropper-selection>
-        </cropper-canvas>
-    </div>
-    <!--预览-->
-    <div class="previews clearfix">
-        <h6>Preview</h6>
-        <cropper-viewer
-          v-if="ready"
-          class="preview preview-lg"
-          selection="#cropperSelection"
-        />
-        <cropper-viewer
-          v-if="ready"
-          class="preview preview-md"
-          selection="#cropperSelection"
-        />
-        <cropper-viewer
-          v-if="ready"
-          class="preview preview-sm"
-          selection="#cropperSelection"
-        />
-        <cropper-viewer
-          v-if="ready"
-          class="preview preview-xs"
-          selection="#cropperSelection"
-        />
+    <div style="display: flex" class="avatar">
+        <div class="avatar-left">
+            <div v-show="!imageOption.src">
+                <n-upload 
+                ref="upload"
+                style="text-align: center;margin-bottom: 24px"
+                :on-change="handleFileChange"
+                accept="image/png, image/jpeg, image/jpg"
+                :show-file-list="false"
+                :default-upload="false"
+                >
+                    <n-button slot="trigger" size="small" type="primary" ref="uploadBtn">上传文件</n-button>
+                </n-upload>
+                <div>支持jpg、png格式的图片，大小不超过3M</div>
+            </div>
+            <div v-show="imageOption.src" >
+                <div class="avatar-left-crop">
+                <cropper-canvas ref="croppercanvas" background>
+                    <!--width和initial-center-size有的带:，有的不带-->
+                    <cropper-image ref="cropperimage" :src="imageOption.src" alt="Picture" 
+                    :initial-center-size="imageOption.initialCenterSize"
+                    rotatable scalable skewable translatable></cropper-image>
+                    <!--选择区域与其他区域的明暗对比-->
+                    <cropper-shade hidden></cropper-shade>
+                    <!--背景图片的操作方式 如果不希望背景图乱动或者有一个选区后无法重新选择 这个要删除掉-->
+                    <!-- <cropper-handle action="select" plain></cropper-handle> -->
+                    <!---->
+                    <cropper-selection 
+                    id="cropperSelection" 
+                    ref="cropperselection"
+                    :width="selectionOption.width" :height="selectionOption.height" :movable="selectionOption.movable"
+                    :outlined="selectionOption.outlined"
+                    :resizable="selectionOption.resizable"
+                    @change="onCropperSelectionChange">
+                        <!--选择框的表格-->
+                        <cropper-grid role="grid" covered></cropper-grid>
+                        <!--选择框的中间十字-->
+                        <cropper-crosshair centered></cropper-crosshair>
+                        <!--选择框的操作方式move 移动 select 支持自拉框-->
+                        <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
+                        <!--缩放选择框的组件 选择框上的点 缩放用-->
+                        <!-- <cropper-handle action="n-resize"></cropper-handle>
+                        <cropper-handle action="e-resize"></cropper-handle>
+                        <cropper-handle action="s-resize"></cropper-handle>
+                        <cropper-handle action="w-resize"></cropper-handle>
+                        <cropper-handle action="ne-resize"></cropper-handle>
+                        <cropper-handle action="nw-resize"></cropper-handle>
+                        <cropper-handle action="se-resize"></cropper-handle>
+                        <cropper-handle action="sw-resize"></cropper-handle> -->
+                    </cropper-selection>
+                </cropper-canvas>
+                </div>
+            </div>
+        </div>
+        <!--预览区-->
+        <div class="avatar-right">
+            <div class="avatar-right-div" v-for="item in previewsDiv" :style="item.style">
+                <div v-show="imageOption.src" class="avatar-right-previews" :style="item.zoomStyle">
+                    <cropper-viewer selection="#cropperSelection"/>
+                </div>
+            </div>
+            <div class="avatar-right-text">
+                <n-button-group v-if="imageOption.src" size="small">
+                    <n-button ghost @click="ChangePicture">
+                        重新上传
+                    </n-button>
+                    <n-button ghost @click="UploadPreviews">
+                        确定
+                    </n-button>
+                </n-button-group>
+                <span v-else>预览</span>
+            </div>
+        </div>
     </div>
 </template>
-  
+
 <script setup>
     import 'cropperjs';
     import { ref } from 'vue';
+    import { useMessage } from "naive-ui";
 
-    import img from '@/assets/picture.jpg'
-
-    let ready = ref(true);
-    const canvas = ref( {
-        hidden: false,
-        background: true,
-        disabled: false,
-        scaleStep: 0.1,
-        themeColor: '#3399ff',
-    });
-    
-    const image = ref({
-        hidden: false,
-        initialCenterSize: 'contain',
-        rotatable: true,
-        scalable: true,
-        skewable: true,
-        translatable: true,
-        src: 'https://avatars2.githubusercontent.com/u/15681693?s=460&v=4',
-        alt: 'The image to crop',
+    const imageOption = ref({
+        src:"",
+        initialCenterSize:"cover",//cover contain
     })
 
-    const shade = ref({
-        themeColor: 'rgba(0, 0, 0, 0.65)',
-    })
-
-    const handle =ref( {
-        hidden: false,
-        action: 'select',
-        plain: true,
-        themeColor: 'rgba(51, 153, 255, 0.5)',
-    })
-
-    const selection = ref({
+    const selectionOption = ref({
         hidden: false,
         x: undefined,
         y: undefined,
-        width: undefined,
-        height: undefined,
+        width: 100,
+        height: 100,
         aspectRatio: 1,
         initialAspectRatio: 1,
         initialCoverage: 0.5,
         dynamic: false,
         movable: true,
-        resizable: true,
+        resizable: false,
         zoomable: false,
         multiple: false,
         keyboard: false,
-        outlined: false,
+        outlined: true,
         precise: false,
     })
-    const grid = ref({
-        hidden: false,
-        rows: 3,
-        columns: 3,
-        bordered: true,
-        covered: true,
-        themeColor: 'rgba(238, 238, 238, 0.5)',
-      })
-    const crosshair=ref({
-        hidden: false,
-        centered: true,
-        themeColor: 'rgba(238, 238, 238, 0.5)',
-    })
-    let handles = ref([
+
+    const message = useMessage()
+
+    //实时预览图样式
+    let previewsDiv = ref([
+        //108px 预览样式
         {
-          hidden: false,
-          action: 'move',
-          themeColor: 'rgba(255, 255, 255, 0.35)',
+            style: {
+                width: '108px',
+                height: '108px',
+                margin: '0 auto'
+            },
+            zoomStyle: {
+                zoom: 0.54
+            }
         },
+        //68px 预览样式
         {
-          hidden: false,
-          action: 'n-resize',
-          themeColor: '#3399ff',
+            style: {
+                width: '68px',
+                height: '68px',
+                margin: '27px auto'
+            },
+            zoomStyle: {
+                zoom: 0.34
+            }
         },
+        //48px 预览样式
         {
-          hidden: false,
-          action: 'e-resize',
-          themeColor: '#3399ff',
-        },
-        {
-          hidden: false,
-          action: 's-resize',
-          themeColor: '#3399ff',
-        },
-        {
-          hidden: false,
-          action: 'w-resize',
-          themeColor: '#3399ff',
-        },
-        {
-          hidden: false,
-          action: 'ne-resize',
-          themeColor: '#3399ff',
-        },
-        {
-          hidden: false,
-          action: 'nw-resize',
-          themeColor: '#3399ff',
-        },
-        {
-          hidden: false,
-          action: 'se-resize',
-          themeColor: '#3399ff',
-        },
-        {
-          hidden: false,
-          action: 'sw-resize',
-          themeColor: '#3399ff',
-        },
-      ])
-</script>
-  
-<style scoped>
-  .cropper-container {
-    max-width: 1200px;
-    height:20rem;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-    cropper-canvas {
-        height: 100%;
+            style: {
+                width: '48px',
+                height: '48px',
+                margin: '0 auto'
+            },
+            zoomStyle: {
+                zoom: 0.24
+            }
+        }
+    ]);
+
+    const croppercanvas = ref();
+    const cropperimage = ref();
+    const cropperselection = ref();
+
+    function handleFileChange(fileList) 
+    {
+        const file = fileList.fileList[0];
+        console.log("file=>",file);
+        console.log("file.file=>",file.file);
+        const isIMAGE = file.file.type === 'image/jpeg' || file.file.type === 'image/png';
+        const isLt3M = file.file.size / 1024 / 1024 < 3;
+        if (!isIMAGE) {
+            message.error('请选择 jpg、png 格式的图片！',{
+                closable: true
+            })
+            return false;
+        }
+        if (!isLt3M) {
+            message.error('上传图片大小不能超过 3MB',{
+                closable: true
+            })
+          return false;
+        }
+        let reader = new FileReader();
+        reader.readAsDataURL(file.file);
+        reader.onload = e => {
+            imageOption.value.src = e.target.result //base64
+        }
+    }
+      
+    function inSelection(selection, maxSelection) {
+      return (
+        selection.x >= maxSelection.x
+        && selection.y >= maxSelection.y
+        && (selection.x + selection.width) <= (maxSelection.x + maxSelection.width)
+        && (selection.y + selection.height) <= (maxSelection.y + maxSelection.height)
+      );
     }
 
-  .previews {
-    margin-bottom: 0;
-    margin-right: -1rem;
-  }
+    function onCropperSelectionChange(event) {
+        if (!croppercanvas.value) {
+            return;
+        }
 
-  .preview {
-    float: left;
-    margin-bottom: 1rem;
-    margin-right: 1rem;
-  }
+        const selection = event.detail;
+        const cropperCanvasRect = croppercanvas.value.getBoundingClientRect();
 
-  .preview-lg {
-    height: 200px;
-    width: 200px;
-  }
+        let type = 0;//0--canvas 1--image
+        let maxSelection = {};
+        if(type == 0)
+        {
+            maxSelection = {
+                x: 0,
+                y: 0,
+                width: cropperCanvasRect.width,
+                height: cropperCanvasRect.height,
+            };
+        }
+        else if(type == 1)
+        {
+            const cropperImageRect = cropperimage.value.getBoundingClientRect();
+            maxSelection = {
+                x: cropperImageRect.left - cropperCanvasRect.left,
+                y: cropperImageRect.top - cropperCanvasRect.top,
+                width: cropperImageRect.width,
+                height: cropperImageRect.height,
+            };
+        }
 
-  .preview-md {
-    height: 100px;
-    width: 100px;
-  }
+        if (!inSelection(selection, maxSelection)) {
+            event.preventDefault();
+        }
+    }
 
-  .preview-sm {
-    height: 50px;
-    width: 50px;
-  }
+    // 将data:image转成新的file
+    function dataURLtoFile(dataurl, filename) {
+        var arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        const blob = new Blob([u8arr], { type: mime });
+        const file = new File([blob], filename, { type: mime });
+        return file;
+    }
 
-  .preview-xs {
-    height: 30px;
-    width: 30px
-  }
-  
-  </style>  
+    async function UploadPreviews() {
+        console.log("Upload preview");
+
+        const res = await cropperselection.value.$toCanvas();
+
+        const dataImage = res.toDataURL('image/png');
+        const file = dataURLtoFile(dataImage, fileObj.value.name);
+        emit('success', {
+            ...fileObj.value,
+            file: file,
+            fileShow: dataImage,
+        });
+    }
+
+    function ChangePicture()
+    {
+        imageOption.value.src="";
+    }
+
+</script>
+
+<style scoped>
+    /**必备 */
+    cropper-canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .avatar {
+        display: flex;
+    }
+    .avatar .avatar-left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 400px;
+        height: 400px;
+        background-color: #F0F2F5;
+        margin-right: 10px;
+        border-radius: 4px;
+    }
+    .avatar .avatar-left .avatar-left-crop {
+        width: 400px;
+        height: 400px;
+        position: relative;
+    }
+    .avatar .avatar-left .avatar-left-crop .crop-box {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .avatar .avatar-left .avatar-left-p {
+        text-align: center;
+        width: 100%;
+        position: absolute;
+        bottom: 20px;
+        color: #ffffff;
+        font-size: 14px;
+    }
+    .avatar .avatar-right {
+        width: 150px;
+        height: 400px;
+        background-color: #F0F2F5;
+        border-radius: 4px;
+        padding: 16px 0;
+        box-sizing: border-box;
+    }
+    .avatar .avatar-right .avatar-right-div {
+        border: 3px solid #ffffff;
+        border-radius: 50%;
+    }
+    .avatar .avatar-right .avatar-right-previews {
+        width: 200px;
+        height: 200px;
+        overflow: hidden;
+        border-radius: 50%;
+    }
+    .avatar .avatar-right .avatar-right-text {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 14px;
+    }
+    .avatar .avatar-right .avatar-right-text span {
+        color: #666666;
+    }
+
+    img{
+        max-width: none;
+    }
+</style>

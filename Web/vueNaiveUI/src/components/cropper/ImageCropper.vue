@@ -1,39 +1,42 @@
 <template>
     <div class="avatar">
-        <div class="cropper-container">
-            <cropper-canvas ref="croppercanvas" background>
-                <!--width和initial-center-size有的带:，有的不带-->
-                <cropper-image ref="cropperimage" :src="imageOption.src" alt="Picture" 
-                :initial-center-size="imageOption.initialCenterSize"
-                rotatable scalable skewable translatable></cropper-image>
-                <!--选择区域与其他区域的明暗对比-->
-                <cropper-shade hidden></cropper-shade>
-                <!--背景图片的操作方式 如果不希望背景图乱动或者有一个选区后无法重新选择 这个要删除掉-->
-                <!-- <cropper-handle action="select" plain></cropper-handle> -->
-                <!---->
-                <cropper-selection 
-                id="cropperSelection" 
-                ref="cropperselection"
-                :width="selectionOption.width" :height="selectionOption.height" :movable="selectionOption.movable"
-                :outlined="selectionOption.outlined"
-                :resizable="selectionOption.resizable">
-                    <!--选择框的表格-->
-                    <cropper-grid role="grid" covered></cropper-grid>
-                    <!--选择框的中间十字-->
-                    <cropper-crosshair centered></cropper-crosshair>
-                    <!--选择框的操作方式move 移动 select 支持自拉框-->
-                    <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
-                    <!--缩放选择框的组件 选择框上的点 缩放用-->
-                    <!-- <cropper-handle action="n-resize"></cropper-handle>
-                    <cropper-handle action="e-resize"></cropper-handle>
-                    <cropper-handle action="s-resize"></cropper-handle>
-                    <cropper-handle action="w-resize"></cropper-handle>
-                    <cropper-handle action="ne-resize"></cropper-handle>
-                    <cropper-handle action="nw-resize"></cropper-handle>
-                    <cropper-handle action="se-resize"></cropper-handle>
-                    <cropper-handle action="sw-resize"></cropper-handle> -->
-                </cropper-selection>
-            </cropper-canvas>
+        <div v-show="state">
+            <div class="cropper-container">
+                <cropper-canvas ref="croppercanvas" background>
+                    <!--width和initial-center-size有的带:，有的不带-->
+                    <cropper-image ref="cropperimage" :src="imageOption.src" alt="Picture" 
+                    :initial-center-size="imageOption.initialCenterSize"
+                    rotatable scalable skewable translatable></cropper-image>
+                    <!--选择区域与其他区域的明暗对比-->
+                    <cropper-shade hidden></cropper-shade>
+                    <!--背景图片的操作方式 如果不希望背景图乱动或者有一个选区后无法重新选择 这个要删除掉-->
+                    <!-- <cropper-handle action="select" plain></cropper-handle> -->
+                    <!---->
+                    <cropper-selection 
+                    id="cropperSelection" 
+                    ref="cropperselection"
+                    :width="selectionOption.width" :height="selectionOption.height" :movable="selectionOption.movable"
+                    :outlined="selectionOption.outlined"
+                    :resizable="selectionOption.resizable"
+                    @change="onCropperSelectionChange">
+                        <!--选择框的表格-->
+                        <cropper-grid role="grid" covered></cropper-grid>
+                        <!--选择框的中间十字-->
+                        <cropper-crosshair centered></cropper-crosshair>
+                        <!--选择框的操作方式move 移动 select 支持自拉框-->
+                        <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
+                        <!--缩放选择框的组件 选择框上的点 缩放用-->
+                        <!-- <cropper-handle action="n-resize"></cropper-handle>
+                        <cropper-handle action="e-resize"></cropper-handle>
+                        <cropper-handle action="s-resize"></cropper-handle>
+                        <cropper-handle action="w-resize"></cropper-handle>
+                        <cropper-handle action="ne-resize"></cropper-handle>
+                        <cropper-handle action="nw-resize"></cropper-handle>
+                        <cropper-handle action="se-resize"></cropper-handle>
+                        <cropper-handle action="sw-resize"></cropper-handle> -->
+                    </cropper-selection>
+                </cropper-canvas>
+            </div>
         </div>
         <div class="preview-container">
             <cropper-viewer
@@ -50,6 +53,7 @@
             />
         </div>
         <button type="primary" @click="handleConfirm">确 认</button>
+        <n-button @click="ChangeState">状态切换</n-button>
     </div>
 </template>
     
@@ -66,8 +70,8 @@
     const cropperselection = ref();
     
     const imageOption = ref({
-        src:"https://avatars2.githubusercontent.com/u/15681693?s=460&v=4",
-        initialCenterSize:"cover"
+        src:"",
+        initialCenterSize:"cover",//cover contain
     })
 
     const selectionOption = ref({
@@ -89,6 +93,13 @@
         precise: false,
     })
     
+    const state = ref(false)
+    function ChangeState()
+    {
+        state.value = !state.value;
+        imageOption.value.src="https://avatars2.githubusercontent.com/u/15681693?s=460&v=4"
+    }
+
     function inSelection(selection, maxSelection) {
       return (
         selection.x >= maxSelection.x
@@ -99,23 +110,37 @@
     }
 
     function onCropperSelectionChange(event) {
-        return;
         if (!croppercanvas.value) {
             return;
         }
 
-        const cropperCanvasRect = croppercanvas.value.getBoundingClientRect();
         const selection = event.detail;
-        const cropperImageRect = cropperimage.value.getBoundingClientRect();
-        const maxSelection = {
-            x: cropperImageRect.left - cropperCanvasRect.left,
-            y: cropperImageRect.top - cropperCanvasRect.top,
-            width: cropperImageRect.width,
-            height: cropperImageRect.height,
-        };
+        const cropperCanvasRect = croppercanvas.value.getBoundingClientRect();
+
+        let type = 0;//0--canvas 1--image
+        let maxSelection = {};
+        if(type == 0)
+        {
+            maxSelection = {
+                x: 0,
+                y: 0,
+                width: cropperCanvasRect.width,
+                height: cropperCanvasRect.height,
+            };
+        }
+        else if(type == 1)
+        {
+            const cropperImageRect = cropperimage.value.getBoundingClientRect();
+            maxSelection = {
+                x: cropperImageRect.left - cropperCanvasRect.left,
+                y: cropperImageRect.top - cropperCanvasRect.top,
+                width: cropperImageRect.width,
+                height: cropperImageRect.height,
+            };
+        }
 
         if (!inSelection(selection, maxSelection)) {
-            //event.preventDefault();
+            event.preventDefault();
         }
     }
 

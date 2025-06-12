@@ -100,6 +100,11 @@ const router = createRouter({
         component: () => import('@/views/Cropper.vue'),
     },
     {
+        path: '/Cropperjs1',
+        name: 'Cropperjs2.0',
+        component: () => import('@/views/CropperJs1.vue'),
+    },
+    {
         path: '/VueCropper',
         name: 'VueCropper',
         component: () => import('@/views/VueCropper.vue'),
