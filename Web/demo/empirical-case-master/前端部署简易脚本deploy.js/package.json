@@ -1,0 +1,23 @@
+{
+  "name": "wdh-deploy",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --mode development",
+    "build:test": "vite build --mode test",
+    "build:prod": "vite build --mode production",
+    "deploy:test": "node ./script/deploy.test.js test",
+    "deploy:prod": "node ./script/deploy production"
+  },
+  "dependencies": {
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^3.0.1",
+    "archiver": "^5.3.1",
+    "ssh2": "^1.11.0",
+    "vite": "^4.4.5",
+    "vite-plugin-vue-setup-extend": "^0.4.0"
+  }
+}

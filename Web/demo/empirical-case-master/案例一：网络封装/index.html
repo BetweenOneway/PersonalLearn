@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zn-CH">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <p>在此示例中，<mark>高亮</mark>文本引起读者关注。</p>
+
+    <!-- <script src="./ajax1.js"></script> -->
+    <!-- <script src="./ajax2.js"></script> -->
+    <script src="./request/index.js"></script>
+    <script src="./request/error.js"></script>
+    <script src="./request/repeatRequest.js"></script>
+    <script>
+      async function a() {
+        const res = await ajaxFunc({
+          url: '/ok',
+          type: 'get',
+          data: {
+            name: 'zhangsan',
+            age: 18,
+          },
+        });
+        console.log('业务代码--请求成功返回：', res);
+      }
+
+      for (let i = 0; i < 10; i++) {
+        a();
+      }
+    </script>
+  </body>
+</html>
