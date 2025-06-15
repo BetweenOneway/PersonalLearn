@@ -1,7 +1,21 @@
 <template>
-    <div class="avatar">
-        <div v-show="state">
-            <div class="cropper-container">
+    <div style="display: flex" class="avatar">
+        <div class="avatar-left">
+            <div v-show="!imageOption.src">
+                <n-upload 
+                ref="upload"
+                style="text-align: center;margin-bottom: 24px"
+                :on-change="handleFileChange"
+                accept="image/png, image/jpeg, image/jpg"
+                :show-file-list="false"
+                :default-upload="false"
+                >
+                    <n-button slot="trigger" size="small" type="primary" ref="uploadBtn">上传文件</n-button>
+                </n-upload>
+                <div>支持jpg、png格式的图片，大小不超过3M</div>
+            </div>
+            <div v-show="imageOption.src" >
+                <div class="avatar-left-crop">
                 <cropper-canvas ref="croppercanvas" background>
                     <!--width和initial-center-size有的带:，有的不带-->
                     <cropper-image ref="cropperimage" :src="imageOption.src" alt="Picture" 
@@ -36,39 +50,36 @@
                         <cropper-handle action="sw-resize"></cropper-handle> -->
                     </cropper-selection>
                 </cropper-canvas>
+                </div>
             </div>
         </div>
-        <div class="preview-container">
-            <cropper-viewer
-            class="preview preview-lg"
-            selection="#cropperSelection"
-            />
-            <cropper-viewer
-            class="preview preview-md"
-            selection="#cropperSelection"
-            />
-            <cropper-viewer
-            class="preview preview-sm"
-            selection="#cropperSelection"
-            />
+        <!--预览区-->
+        <div class="avatar-right">
+            <div class="avatar-right-div" v-for="item in previewsDiv" :style="item.style">
+                <div v-show="imageOption.src" class="avatar-right-previews" :style="item.zoomStyle">
+                    <cropper-viewer selection="#cropperSelection"/>
+                </div>
+            </div>
+            <div class="avatar-right-text">
+                <n-button-group v-if="imageOption.src" size="small">
+                    <n-button ghost @click="ChangePicture">
+                        重新上传
+                    </n-button>
+                    <n-button ghost @click="UploadPreviews">
+                        确定
+                    </n-button>
+                </n-button-group>
+                <span v-else>预览</span>
+            </div>
         </div>
-        <button type="primary" @click="handleConfirm">确 认</button>
-        <n-button @click="ChangeState">状态切换</n-button>
     </div>
 </template>
-    
+
 <script setup>
     import 'cropperjs';
     import { ref } from 'vue';
-    import img from '@/assets/picture.jpg'
+    import { useMessage } from "naive-ui";
 
-    let imgUrl = img
-    console.log(imgUrl)
-
-    const croppercanvas = ref();
-    const cropperimage = ref();
-    const cropperselection = ref();
-    
     const imageOption = ref({
         src:"",
         initialCenterSize:"cover",//cover contain
@@ -92,14 +103,78 @@
         outlined: true,
         precise: false,
     })
-    
-    const state = ref(false)
-    function ChangeState()
-    {
-        state.value = !state.value;
-        imageOption.value.src="https://avatars2.githubusercontent.com/u/15681693?s=460&v=4"
-    }
 
+    const message = useMessage()
+
+    //实时预览图样式
+    let previewsDiv = ref([
+        //108px 预览样式
+        {
+            style: {
+                width: '108px',
+                height: '108px',
+                margin: '0 auto'
+            },
+            zoomStyle: {
+                zoom: 0.54
+            }
+        },
+        //68px 预览样式
+        {
+            style: {
+                width: '68px',
+                height: '68px',
+                margin: '27px auto'
+            },
+            zoomStyle: {
+                zoom: 0.34
+            }
+        },
+        //48px 预览样式
+        {
+            style: {
+                width: '48px',
+                height: '48px',
+                margin: '0 auto'
+            },
+            zoomStyle: {
+                zoom: 0.24
+            }
+        }
+    ]);
+
+    const croppercanvas = ref();
+    const cropperimage = ref();
+    const cropperselection = ref();
+
+    function handleFileChange(fileList) 
+    {
+        const file = fileList.fileList[0];
+        //console.log("file=>",file);
+        console.log("file.file=>",file.file);
+        const isIMAGE = file.file.type === 'image/jpeg' || file.file.type === 'image/png';
+        const isLt3M = file.file.size / 1024 / 1024 < 3;
+        if (!isIMAGE) {
+            message.error('请选择 jpg、png 格式的图片！',{
+                closable: true
+            })
+            return false;
+        }
+        if (!isLt3M) {
+            message.error('上传图片大小不能超过 3MB',{
+                closable: true
+            })
+          return false;
+        }
+        let reader = new FileReader();
+        reader.readAsDataURL(file.file);
+        reader.onload = e => {
+            imageOption.value.src = e.target.result //base64
+        }
+
+        console.log("imageOption=>",imageOption.value);
+    }
+      
     function inSelection(selection, maxSelection) {
       return (
         selection.x >= maxSelection.x
@@ -159,8 +234,8 @@
         return file;
     }
 
-    const emit = defineEmits(['success']);
-    async function handleConfirm() {
+    async function UploadPreviews() {
+        console.log("Upload preview");
 
         const res = await cropperselection.value.$toCanvas();
 
@@ -172,37 +247,81 @@
             fileShow: dataImage,
         });
     }
+
+    function ChangePicture()
+    {
+        imageOption.value.src="";
+    }
+
 </script>
 
 <style scoped>
-    .cropper-container {
-        border: 1px solid ;
-        width: 400px;
-        height: 300px;
-    }
-
+    /**必备 */
     cropper-canvas {
       width: 100%;
       height: 100%;
     }
 
-    .preview-container
-    {
-        display:flex;
+    .avatar {
+        display: flex;
     }
-    .preview-lg {
-        height: 108px;
-        width: 108px;
+    .avatar .avatar-left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 400px;
+        height: 400px;
+        background-color: #F0F2F5;
+        margin-right: 10px;
+        border-radius: 4px;
+    }
+    .avatar .avatar-left .avatar-left-crop {
+        width: 400px;
+        height: 400px;
+        position: relative;
+    }
+    .avatar .avatar-left .avatar-left-crop .crop-box {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .avatar .avatar-left .avatar-left-p {
+        text-align: center;
+        width: 100%;
+        position: absolute;
+        bottom: 20px;
+        color: #ffffff;
+        font-size: 14px;
+    }
+    .avatar .avatar-right {
+        width: 150px;
+        height: 400px;
+        background-color: #F0F2F5;
+        border-radius: 4px;
+        padding: 16px 0;
+        box-sizing: border-box;
+    }
+    .avatar .avatar-right .avatar-right-div {
+        border: 3px solid #ffffff;
         border-radius: 50%;
     }
-
-    .preview-md {
-        height: 68px;
-        width: 68px;
+    .avatar .avatar-right .avatar-right-previews {
+        width: 200px;
+        height: 200px;
+        overflow: hidden;
+        border-radius: 50%;
+    }
+    .avatar .avatar-right .avatar-right-text {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 14px;
+    }
+    .avatar .avatar-right .avatar-right-text span {
+        color: #666666;
     }
 
-    .preview-sm {
-        height: 48px;
-        width: 48px;
+    img{
+        max-width: none;
     }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div style="display: flex" class="avatar">
         <div class="avatar-left">
-            <div v-show="!imageOption.src">
+            <div v-show="!imageOption.fileData">
                 <n-upload 
                 ref="upload"
                 style="text-align: center;margin-bottom: 24px"
@@ -14,11 +14,11 @@
                 </n-upload>
                 <div>支持jpg、png格式的图片，大小不超过3M</div>
             </div>
-            <div v-show="imageOption.src" >
+            <div v-show="imageOption.fileData" >
                 <div class="avatar-left-crop">
                 <cropper-canvas ref="croppercanvas" background>
                     <!--width和initial-center-size有的带:，有的不带-->
-                    <cropper-image ref="cropperimage" :src="imageOption.src" alt="Picture" 
+                    <cropper-image ref="cropperimage" :src="imageOption.fileData" alt="Picture" 
                     :initial-center-size="imageOption.initialCenterSize"
                     rotatable scalable skewable translatable></cropper-image>
                     <!--选择区域与其他区域的明暗对比-->
@@ -55,17 +55,22 @@
         </div>
         <!--预览区-->
         <div class="avatar-right">
-            <div class="avatar-right-div" v-for="item in previewsDiv" :style="item.style">
-                <div v-show="imageOption.src" class="avatar-right-previews" :style="item.zoomStyle">
+            <div v-show="imageOption.fileData">
+                <cropper-viewer selection="#cropperSelection" v-for="item in previewsDiv" :style="item.style"
+                class="avatar-right-previews"/>
+            </div>
+
+            <!-- <div class="avatar-right-div" v-for="item in previewsDiv" :style="item.style">
+                <div v-show="imageOption.fileData" class="avatar-right-previews" >
                     <cropper-viewer selection="#cropperSelection"/>
                 </div>
-            </div>
+            </div> -->
             <div class="avatar-right-text">
-                <n-button-group v-if="imageOption.src" size="small">
+                <n-button-group v-if="imageOption.fileData" size="small">
                     <n-button ghost @click="ChangePicture">
                         重新上传
                     </n-button>
-                    <n-button ghost @click="UploadPreviews">
+                    <n-button ghost @click="UploadPreviews(true)">
                         确定
                     </n-button>
                 </n-button-group>
@@ -82,6 +87,8 @@
 
     const imageOption = ref({
         src:"",
+        fileName:"",
+        fileData:"",
         initialCenterSize:"cover",//cover contain
     })
 
@@ -150,7 +157,7 @@
     function handleFileChange(fileList) 
     {
         const file = fileList.fileList[0];
-        console.log("file=>",file);
+        //console.log("file=>",file);
         console.log("file.file=>",file.file);
         const isIMAGE = file.file.type === 'image/jpeg' || file.file.type === 'image/png';
         const isLt3M = file.file.size / 1024 / 1024 < 3;
@@ -166,11 +173,11 @@
             })
           return false;
         }
-        let reader = new FileReader();
-        reader.readAsDataURL(file.file);
-        reader.onload = e => {
-            imageOption.value.src = e.target.result //base64
-        }
+        imageOption.value.fileType = file.file.type;
+        imageOption.value.fileName = file.file.name;
+        imageOption.value.fileData = URL.createObjectURL(file.file);
+
+        console.log("imageOption=>",imageOption.value);
     }
       
     function inSelection(selection, maxSelection) {
@@ -232,18 +239,37 @@
         return file;
     }
 
-    async function UploadPreviews() {
+    //确认
+    async function UploadPreviews(isCircle=false) {
         console.log("Upload preview");
 
         const res = await cropperselection.value.$toCanvas();
 
-        const dataImage = res.toDataURL('image/png');
-        const file = dataURLtoFile(dataImage, fileObj.value.name);
-        emit('success', {
-            ...fileObj.value,
-            file: file,
-            fileShow: dataImage,
-        });
+        if (isCircle) {
+            // 圆形图片
+            // 创建一个新的canvas来处理圆形裁剪
+            const circularCanvas = document.createElement('canvas');;
+            const context = circularCanvas.getContext('2d');
+            // 设置canvas的宽高与裁剪区域相同
+            const size = Math.min(res.width, res.height); // 确保是正方形
+            circularCanvas.width = size;
+            circularCanvas.height = size;
+            // 绘制圆形裁剪区域
+            context.beginPath();
+            context.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2); // 在中心绘制圆形
+            context.closePath();
+            context.clip(); // 剪切区域
+            // 在圆形剪切区域内绘制图片
+            context.drawImage(res, 0, 0, size, size);
+            // 导出圆形图片数据
+            const dataImage = circularCanvas.toDataURL(imageOption.value.fileType);
+            console.log("confirm circle dataImage=>",dataImage);
+        }
+        else{
+            const dataImage = res.toDataURL(imageOption.value.fileType);
+            const file = dataURLtoFile(dataImage, "Cropper-file");
+            console.log("confirm square dataImage=>",dataImage);
+        }
     }
 
     function ChangePicture()
@@ -300,16 +326,15 @@
         padding: 16px 0;
         box-sizing: border-box;
     }
-    .avatar .avatar-right .avatar-right-div {
+    /* .avatar .avatar-right .avatar-right-div {
         border: 3px solid #ffffff;
         border-radius: 50%;
-    }
-    .avatar .avatar-right .avatar-right-previews {
-        width: 200px;
-        height: 200px;
-        overflow: hidden;
+    } */
+
+    cropper-viewer {
         border-radius: 50%;
     }
+
     .avatar .avatar-right .avatar-right-text {
         text-align: center;
         margin-top: 50px;

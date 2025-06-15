@@ -145,6 +145,7 @@ function onCropperSelectionChange(event) {
  * 确认裁剪
  */
 const emit = defineEmits(['success']);
+
 async function handleConfirm() {
   if (isCropperSelection.value) {
     const res = await cropperselection.value.$toCanvas();
@@ -189,6 +190,7 @@ function handleUploadSuccess() {
       fileShow: URL.createObjectURL(files[0]),
     };
     console.log("files[0]=>",files[0]);
+    console.log("fileObj=>",fileObj.value);
   }
 }
 </script>
