@@ -95,9 +95,9 @@ const router = createRouter({
         component: () => import('@/views/LayoutView.vue'),
     },
     {
-        path: '/Cropper',
-        name: 'Cropper',
-        component: () => import('@/views/Cropper.vue'),
+        path: '/CropperJs2',
+        name: 'Cropper2',
+        component: () => import('@/views/CropperJs2.vue'),
     },
     {
         path: '/Cropperjs1',

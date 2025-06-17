@@ -1,4 +1,5 @@
 <template>
+    <h3>ImageCropper-2</h3>
     <div style="display: flex" class="avatar">
         <div class="avatar-left">
             <div v-show="!imageOption.src">
@@ -16,56 +17,63 @@
             </div>
             <div v-show="imageOption.src" >
                 <div class="avatar-left-crop">
-                <cropper-canvas ref="croppercanvas" background>
-                    <!--width和initial-center-size有的带:，有的不带-->
-                    <cropper-image ref="cropperimage" :src="imageOption.src" alt="Picture" 
-                    :initial-center-size="imageOption.initialCenterSize"
-                    rotatable scalable skewable translatable></cropper-image>
-                    <!--选择区域与其他区域的明暗对比-->
-                    <cropper-shade hidden></cropper-shade>
-                    <!--背景图片的操作方式 如果不希望背景图乱动或者有一个选区后无法重新选择 这个要删除掉-->
-                    <!-- <cropper-handle action="select" plain></cropper-handle> -->
-                    <!---->
-                    <cropper-selection 
-                    id="cropperSelection" 
-                    ref="cropperselection"
-                    :width="selectionOption.width" :height="selectionOption.height" :movable="selectionOption.movable"
-                    :outlined="selectionOption.outlined"
-                    :resizable="selectionOption.resizable"
-                    @change="onCropperSelectionChange">
-                        <!--选择框的表格-->
-                        <cropper-grid role="grid" covered></cropper-grid>
-                        <!--选择框的中间十字-->
-                        <cropper-crosshair centered></cropper-crosshair>
-                        <!--选择框的操作方式move 移动 select 支持自拉框-->
-                        <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
-                        <!--缩放选择框的组件 选择框上的点 缩放用-->
-                        <!-- <cropper-handle action="n-resize"></cropper-handle>
-                        <cropper-handle action="e-resize"></cropper-handle>
-                        <cropper-handle action="s-resize"></cropper-handle>
-                        <cropper-handle action="w-resize"></cropper-handle>
-                        <cropper-handle action="ne-resize"></cropper-handle>
-                        <cropper-handle action="nw-resize"></cropper-handle>
-                        <cropper-handle action="se-resize"></cropper-handle>
-                        <cropper-handle action="sw-resize"></cropper-handle> -->
-                    </cropper-selection>
-                </cropper-canvas>
+                    <cropper-canvas ref="croppercanvas" background>
+                        <!--width和initial-center-size有的带:，有的不带-->
+                        <cropper-image ref="cropperimage" :src="imageOption.src" 
+                        alt="Picture" 
+                        rotatable scalable skewable translatable></cropper-image>
+                        <!--选择区域与其他区域的明暗对比-->
+                        <cropper-shade hidden></cropper-shade>
+                        <!--背景图片的操作方式 如果不希望背景图乱动或者有一个选区后无法重新选择 这个要删除掉-->
+                        <!-- <cropper-handle action="select" plain></cropper-handle> -->
+                        <!---->
+                        <cropper-selection 
+                        id="cropperSelection" 
+                        ref="cropperselection"
+                        :width="selectionOption.width" :height="selectionOption.height" 
+                        :movable="selectionOption.movable"
+                        :outlined="selectionOption.outlined"
+                        :resizable="selectionOption.resizable"
+                        :aspectRatio="selectionOption.aspectRatio"
+                        @change="onCropperSelectionChange">
+                            <!--选择框的中间十字-->
+                            <cropper-crosshair centered></cropper-crosshair>
+                            <!--选择框的操作方式move 移动 select 支持自拉框-->
+                            <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
+                            <!--缩放选择框的组件 选择框上的点 缩放用-->
+                            <cropper-handle action="n-resize"></cropper-handle>
+                            <cropper-handle action="e-resize"></cropper-handle>
+                            <cropper-handle action="s-resize"></cropper-handle>
+                            <cropper-handle action="w-resize"></cropper-handle>
+                            <cropper-handle action="ne-resize"></cropper-handle>
+                            <cropper-handle action="nw-resize"></cropper-handle>
+                            <cropper-handle action="se-resize"></cropper-handle>
+                            <cropper-handle action="sw-resize"></cropper-handle>
+                        </cropper-selection>
+                    </cropper-canvas>
                 </div>
             </div>
         </div>
         <!--预览区-->
         <div class="avatar-right">
-            <div class="avatar-right-div" v-for="item in previewsDiv" :style="item.style">
-                <div v-show="imageOption.src" class="avatar-right-previews" :style="item.zoomStyle">
+            <div v-if="imageOption.src">
+                <cropper-viewer selection="#cropperSelection" v-for="item in previewsDiv" :style="item.style"
+                class="avatar-right-previews"/>
+            </div>
+            <div v-else class="avatar-right-div" v-for="item in previewsDiv" :style="item.style">
+            </div>
+
+            <!-- <div class="avatar-right-div" v-for="item in previewsDiv" :style="item.style">
+                <div v-show="imageOption.fileData" class="avatar-right-previews" >
                     <cropper-viewer selection="#cropperSelection"/>
                 </div>
-            </div>
+            </div> -->
             <div class="avatar-right-text">
                 <n-button-group v-if="imageOption.src" size="small">
                     <n-button ghost @click="ChangePicture">
-                        重新上传
+                        重新选择
                     </n-button>
-                    <n-button ghost @click="UploadPreviews">
+                    <n-button ghost @click="UploadPreviews(true)">
                         确定
                     </n-button>
                 </n-button-group>
@@ -96,7 +104,7 @@
         initialCoverage: 0.5,
         dynamic: false,
         movable: true,
-        resizable: false,
+        resizable: true,
         zoomable: false,
         multiple: false,
         keyboard: false,

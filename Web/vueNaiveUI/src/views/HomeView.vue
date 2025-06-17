@@ -31,10 +31,10 @@
             <RouterLink to="/layout">学习布局</RouterLink>
         </n-card>
         <n-card>
-            <RouterLink to="/Cropper">学习Cropper2.0</RouterLink>
+            <RouterLink to="/Cropperjs1">学习VueCropperJs2.0-1</RouterLink>
         </n-card>
         <n-card>
-            <RouterLink to="/Cropperjs1">学习VueCropperJs2.0-1</RouterLink>
+            <RouterLink to="/CropperJs2">学习Cropper2.0-2</RouterLink>
         </n-card>
         <n-card>
             <RouterLink to="/VueCropper">学习VueCropper</RouterLink>

@@ -29,7 +29,8 @@
                     <cropper-selection 
                     id="cropperSelection" 
                     ref="cropperselection"
-                    :width="selectionOption.width" :height="selectionOption.height" :movable="selectionOption.movable"
+                    :width="selectionOption.width" :height="selectionOption.height" 
+                    :movable="selectionOption.movable"
                     :outlined="selectionOption.outlined"
                     :resizable="selectionOption.resizable"
                     @change="onCropperSelectionChange">
@@ -55,9 +56,11 @@
         </div>
         <!--预览区-->
         <div class="avatar-right">
-            <div v-show="imageOption.fileData">
+            <div v-if="imageOption.fileData">
                 <cropper-viewer selection="#cropperSelection" v-for="item in previewsDiv" :style="item.style"
                 class="avatar-right-previews"/>
+            </div>
+            <div v-else class="avatar-right-div" v-for="item in previewsDiv" :style="item.style">
             </div>
 
             <!-- <div class="avatar-right-div" v-for="item in previewsDiv" :style="item.style">
@@ -68,7 +71,7 @@
             <div class="avatar-right-text">
                 <n-button-group v-if="imageOption.fileData" size="small">
                     <n-button ghost @click="ChangePicture">
-                        重新上传
+                        重新选择
                     </n-button>
                     <n-button ghost @click="UploadPreviews(true)">
                         确定
@@ -274,7 +277,7 @@
 
     function ChangePicture()
     {
-        imageOption.value.src="";
+        imageOption.value.fileData="";
     }
 
 </script>
@@ -326,10 +329,10 @@
         padding: 16px 0;
         box-sizing: border-box;
     }
-    /* .avatar .avatar-right .avatar-right-div {
+    .avatar .avatar-right .avatar-right-div {
         border: 3px solid #ffffff;
         border-radius: 50%;
-    } */
+    }
 
     cropper-viewer {
         border-radius: 50%;

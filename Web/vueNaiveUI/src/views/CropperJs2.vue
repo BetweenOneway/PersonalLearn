@@ -3,7 +3,7 @@
 </template>
    
 <script setup>
-    import ImageCropper from '@/components/cropper/ImageCropper.vue';
+    import ImageCropper from '@/components/cropper/ImageCropper2.vue';
 
     function handleCropperSuccess()
     {
