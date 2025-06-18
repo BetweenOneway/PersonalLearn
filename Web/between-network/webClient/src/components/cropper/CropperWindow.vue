@@ -6,22 +6,47 @@
             <n-space justify="space-between" :wrap-item="false" style="height: 100%">
                 <!--裁剪框元素-->
                 <div style="height:100%;width:calc(100% - 200px)">
-                    <img id="image" :src="picSrc" style="max-height: 100%;max-width: 100%;" />
+                    <cropper-canvas ref="croppercanvas" background>
+                        <!--width和initial-center-size有的带:，有的不带-->
+                        <cropper-image ref="cropperimage" :src="imageOption.src" 
+                        alt="Picture" 
+                        rotatable scalable skewable translatable></cropper-image>
+                        <!--选择区域与其他区域的明暗对比-->
+                        <cropper-shade hidden></cropper-shade>
+                        <!--背景图片的操作方式 如果不希望背景图乱动或者有一个选区后无法重新选择 这个要删除掉-->
+                        <!-- <cropper-handle action="select" plain></cropper-handle> -->
+                        <!---->
+                        <cropper-selection 
+                        id="cropperSelection" 
+                        ref="cropperselection"
+                        :width="selectionOption.width" :height="selectionOption.height" 
+                        :movable="selectionOption.movable"
+                        :outlined="selectionOption.outlined"
+                        :resizable="selectionOption.resizable"
+                        :aspectRatio="selectionOption.aspectRatio"
+                        @change="onCropperSelectionChange">
+                            <!--选择框的中间十字-->
+                            <cropper-crosshair centered></cropper-crosshair>
+                            <!--选择框的操作方式move 移动 select 支持自拉框-->
+                            <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
+                            <!--缩放选择框的组件 选择框上的点 缩放用-->
+                            <cropper-handle action="n-resize"></cropper-handle>
+                            <cropper-handle action="e-resize"></cropper-handle>
+                            <cropper-handle action="s-resize"></cropper-handle>
+                            <cropper-handle action="w-resize"></cropper-handle>
+                            <cropper-handle action="ne-resize"></cropper-handle>
+                            <cropper-handle action="nw-resize"></cropper-handle>
+                            <cropper-handle action="se-resize"></cropper-handle>
+                            <cropper-handle action="sw-resize"></cropper-handle>
+                        </cropper-selection>
+                    </cropper-canvas>
                 </div>
                 
                 <!--裁剪预览区域-->
                 <n-space vertical justify="center" :wrap-item="false" style="width:170px">
-                    <n-space vertical align="center">
-                        <div class="img-preview img-preview-120"></div>
-                        <n-text>120*120</n-text>
-                    </n-space>
-                    <n-space vertical align="center">
-                        <div class="img-preview img-preview-40"></div>
-                        <n-text>40*40</n-text>
-                    </n-space>
-                    <n-space vertical align="center">
-                        <div class="img-preview img-preview-36"></div>
-                        <n-text>36*36</n-text>
+                    <n-space vertical align="center" v-for="item in previewsDiv">
+                        <cropper-viewer selection="#cropperSelection" :style="item.style" class="img-preview"></cropper-viewer>
+                        <n-text>{{ item.text }}</n-text>
                     </n-space>
                 </n-space>
             </n-space>
@@ -29,86 +54,6 @@
         
         <template #action>
             <n-space justify="center" :size="60">
-                <!--功能按钮-->
-                <n-button-group>
-                    <!--放大-->
-                    <n-tooltip>
-                        <template #trigger>
-                            <n-button circle @click="cropper.zoom(0.1)">
-                                <template #icon>
-                                    <n-icon :component="ZoomInRound"></n-icon>
-                                </template>
-                            </n-button>
-                        </template>
-                        放大
-                    </n-tooltip>
-                    <!--缩小-->
-                    <n-tooltip>
-                        <template #trigger>
-                            <n-button circle @click="cropper.zoom(-0.1)">
-                                <template #icon>
-                                    <n-icon :component="ZoomOutRound"></n-icon>
-                                </template>
-                            </n-button>
-                        </template>
-                        缩小
-                    </n-tooltip>
-                    <!--顺时针旋转-->
-                    <n-tooltip>
-                        <template #trigger>
-                            <n-button circle @click="cropper.rotate(45)">
-                                <template #icon>
-                                    <n-icon :component="RotateRightRound"></n-icon>
-                                </template>
-                            </n-button>
-                        </template>
-                        顺时针旋转
-                    </n-tooltip>
-                    <!--逆时针旋转-->
-                    <n-tooltip>
-                        <template #trigger>
-                            <n-button circle @click="cropper.rotate(-45)">
-                                <template #icon>
-                                    <n-icon :component="RotateLeftRound"></n-icon>
-                                </template>
-                            </n-button>
-                        </template>
-                        逆时针旋转
-                    </n-tooltip>
-                    <!--上下翻转-->
-                    <n-tooltip>
-                        <template #trigger>
-                            <n-button circle @click="cropper.scaleY(sacleYFactor=-sacleYFactor)">
-                                <template #icon>
-                                    <n-icon :component="SwapVertRound"></n-icon>
-                                </template>
-                            </n-button>
-                        </template>
-                        上下翻转
-                    </n-tooltip>
-                    <!--左右翻转-->
-                    <n-tooltip>
-                        <template #trigger>
-                            <n-button circle @click="cropper.scaleX(sacleXFactor = -sacleXFactor)">
-                                <template #icon>
-                                    <n-icon :component="SwapHorizRound"></n-icon>
-                                </template>
-                            </n-button>
-                        </template>
-                        左右翻转
-                    </n-tooltip>
-                    <!--重置-->
-                    <n-tooltip>
-                        <template #trigger>
-                            <n-button circle @click="cropper.reset()">
-                                <template #icon>
-                                    <n-icon :component="AutorenewRound"></n-icon>
-                                </template>
-                            </n-button>
-                        </template>
-                        重置
-                    </n-tooltip>
-                </n-button-group>
                 <!--确定，取消-->
                 <n-button-group>
                     <n-button @click="showCropper=false">取消</n-button>
@@ -130,9 +75,63 @@
         ,SwapVertRound,SwapHorizRound,AutorenewRound,
         ContentCutRound
     } from'@vicons/material'
-    //import "cropperjs/dist/cropper.css"
-    import Cropper from 'cropperjs'
 
+    import 'cropperjs';
+
+    const imageOption = ref({
+        src:"",
+        initialCenterSize:"cover",//cover contain
+    })
+
+    const selectionOption = ref({
+        hidden: false,
+        x: undefined,
+        y: undefined,
+        width: 100,
+        height: 100,
+        aspectRatio: 1,
+        initialAspectRatio: 1,
+        initialCoverage: 0.5,
+        dynamic: false,
+        movable: true,
+        resizable: true,
+        zoomable: false,
+        multiple: false,
+        keyboard: false,
+        outlined: true,
+        precise: false,
+    })
+
+    //实时预览图样式
+    let previewsDiv = ref([
+        //120px 预览样式
+        {
+            style: {
+                width: '120px',
+                height: '120px',
+                margin: '0 auto'
+            },
+            text:"120*120"
+        },
+        //40px 预览样式
+        {
+            style: {
+                width: '40px',
+                height: '40px',
+                margin: '0 auto'
+            },
+            text:"40*40"
+        },
+        //36px 预览样式
+        {
+            style: {
+                width: '36px',
+                height: '36px',
+                margin: '0 auto'
+            },
+            text:"36*36"
+        }
+    ]);
     //自定义事件
     const emits = defineEmits(['cut'])
 
@@ -143,29 +142,56 @@
         dataURL:null,
     }
 
-    const initCropper = ()=>{
-        const image = document.getElementById('image');
-        
-        //
-        cropper?.destroy();
-
-        //创建Cropper实例
-        cropper = new Cropper(image, {
-            dragMode:'move',//拖拽模式
-            viewMode:1,//视图模式
-            aspectRatio:1,//长宽比
-            autoCropArea:0.5,//裁剪框大小
-            cropBoxResizable:false,//不允许更改裁剪框尺寸
-            toggleDragModeOnDblclick:false,//禁用双击模式切换
-            preview:'.img-preview',//裁剪框的预览
-        })
-    }
-
     //裁剪框窗口显示状态
     const showCropper = ref(false);
 
-    //头像图片
-    const picSrc = ref(null);
+    const croppercanvas = ref();
+    const cropperimage = ref();
+    const cropperselection = ref();
+
+    function inSelection(selection, maxSelection) {
+      return (
+        selection.x >= maxSelection.x
+        && selection.y >= maxSelection.y
+        && (selection.x + selection.width) <= (maxSelection.x + maxSelection.width)
+        && (selection.y + selection.height) <= (maxSelection.y + maxSelection.height)
+      );
+    }
+
+    function onCropperSelectionChange(event) {
+        if (!croppercanvas.value) {
+            return;
+        }
+
+        const selection = event.detail;
+        const cropperCanvasRect = croppercanvas.value.getBoundingClientRect();
+
+        let type = 0;//0--canvas 1--image
+        let maxSelection = {};
+        if(type == 0)
+        {
+            maxSelection = {
+                x: 0,
+                y: 0,
+                width: cropperCanvasRect.width,
+                height: cropperCanvasRect.height,
+            };
+        }
+        else if(type == 1)
+        {
+            const cropperImageRect = cropperimage.value.getBoundingClientRect();
+            maxSelection = {
+                x: cropperImageRect.left - cropperCanvasRect.left,
+                y: cropperImageRect.top - cropperCanvasRect.top,
+                width: cropperImageRect.width,
+                height: cropperImageRect.height,
+            };
+        }
+
+        if (!inSelection(selection, maxSelection)) {
+            event.preventDefault();
+        }
+    }
 
     /**
      * 显示裁剪窗口
@@ -183,29 +209,26 @@
         resultData.dataURL = null;
 
         //选中图像的重置
-        picSrc.value = imgURL;
+        imageOption.value.src = imgURL;
         //显示头像上传窗口
         showCropper.value = true;
-
-        nextTick(()=>{
-            initCropper()
-        })
     }
     
     /**
      * 获取裁剪区域画布数据
      */
-    const getCropperCanvas=()=>{
+     async function getCropperCanvas()
+     {
         console.log("get cropper canvas");
-        let cropperCanvas = cropper.getCroppedCanvas({
+        const res = await cropperselection.value.$toCanvas({
             width:120,
             height:120,
         });
 
         //转成Base64图像
-        resultData.dataURL = cropperCanvas.toDataURL('img/png');
+        resultData.dataURL = res.toDataURL('img/png');
 
-        cropperCanvas.toBlob(blob=>{
+        res.toBlob(blob=>{
             resultData.blobData = blob;
             //通知父组件 裁剪成功
             emits('cut',resultData);
@@ -219,30 +242,18 @@
         return resultData;
     }
 
-    //翻转因子
-    let sacleXFactor = 1,sacleYFactor=1;
     defineExpose({showCropperWindow,getResultData});
 </script>
 
 <style scoped>
+    cropper-canvas {
+        width: 100%;
+        height: 100%;
+    }
+
     .img-preview{
         border:1px solid darkgray;
         border-radius: 50%;
         overflow:hidden;
-    }
-
-    .img-preview-120 {
-        width:120px;
-        height:120px;
-    }
-
-    .img-preview-40 {
-        width:40px;
-        height:40px;
-    }
-
-    .img-preview-36 {
-        width:36px;
-        height:36px;
     }
 </style>

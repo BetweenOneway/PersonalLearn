@@ -1,4 +1,5 @@
 <template>
+    <h3>ImageCropper-1</h3>
     <div style="display: flex" class="avatar">
         <div class="avatar-left">
             <div v-show="!imageOption.fileData">

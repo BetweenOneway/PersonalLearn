@@ -57,8 +57,15 @@
         <!--预览区-->
         <div class="avatar-right">
             <div v-if="imageOption.src">
-                <cropper-viewer selection="#cropperSelection" v-for="item in previewsDiv" :style="item.style"
-                class="avatar-right-previews"/>
+                <!-- <cropper-viewer selection="#cropperSelection" v-for="item in previewsDiv" :style="item.style"
+                class="avatar-right-previews"/> -->
+                <!-- <div class="img-preview">
+                    <cropper-viewer selection="#cropperSelection" class="img-previews img-preview-120"/>
+                </div> -->
+                <n-space vertical align="center" v-for="item in previewsDiv">
+                        <cropper-viewer selection="#cropperSelection" :style="item.style" class="img-previews"></cropper-viewer>
+                        <n-text>{{ item.text }}</n-text>
+                    </n-space>
             </div>
             <div v-else class="avatar-right-div" v-for="item in previewsDiv" :style="item.style">
             </div>
@@ -125,18 +132,20 @@
             },
             zoomStyle: {
                 zoom: 0.54
-            }
+            },
+            text:"108*108"
         },
         //68px 预览样式
         {
             style: {
                 width: '68px',
                 height: '68px',
-                margin: '27px auto'
+                margin: '0 auto'
             },
             zoomStyle: {
                 zoom: 0.34
-            }
+            },
+            text:"68*68"
         },
         //48px 预览样式
         {
@@ -147,7 +156,8 @@
             },
             zoomStyle: {
                 zoom: 0.24
-            }
+            },
+            text:"48*48"
         }
     ]);
 
@@ -320,6 +330,16 @@
         overflow: hidden;
         border-radius: 50%;
     }
+
+    .img-previews{
+        overflow: hidden;
+        border-radius: 50%;
+    }
+    .img-preview-120 {
+        width:150px;
+        height:150px;
+    }
+    
     .avatar .avatar-right .avatar-right-text {
         text-align: center;
         margin-top: 50px;
