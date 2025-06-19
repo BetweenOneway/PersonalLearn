@@ -55,7 +55,7 @@
 </template>
   
 <script setup>
-    import {computed, ref,watch} from 'vue'
+    import {computed, onMounted, ref,watch} from 'vue'
     import { useUserStore } from "@/stores/userStore"
     import {storeToRefs} from 'pinia'
     import noteServerRequest from "@/request"
@@ -257,4 +257,13 @@
             cropperRef.value.showCropperWindow();
         })
     }
+
+    //初始化
+    function Init(){
+        restoreFormValue();
+    }
+
+    onMounted(()=>{
+        Init();
+    })
 </script>
