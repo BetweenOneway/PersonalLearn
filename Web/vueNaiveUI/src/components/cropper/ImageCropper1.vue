@@ -17,41 +17,42 @@
             </div>
             <div v-show="imageOption.fileData" >
                 <div class="avatar-left-crop">
-                <cropper-canvas ref="croppercanvas" background>
-                    <!--width和initial-center-size有的带:，有的不带-->
-                    <cropper-image ref="cropperimage" :src="imageOption.fileData" alt="Picture" 
-                    :initial-center-size="imageOption.initialCenterSize"
-                    rotatable scalable skewable translatable></cropper-image>
-                    <!--选择区域与其他区域的明暗对比-->
-                    <cropper-shade hidden></cropper-shade>
-                    <!--背景图片的操作方式 如果不希望背景图乱动或者有一个选区后无法重新选择 这个要删除掉-->
-                    <!-- <cropper-handle action="select" plain></cropper-handle> -->
-                    <!---->
-                    <cropper-selection 
-                    id="cropperSelection" 
-                    ref="cropperselection"
-                    :width="selectionOption.width" :height="selectionOption.height" 
-                    :movable="selectionOption.movable"
-                    :outlined="selectionOption.outlined"
-                    :resizable="selectionOption.resizable"
-                    @change="onCropperSelectionChange">
-                        <!--选择框的表格-->
-                        <cropper-grid role="grid" covered></cropper-grid>
-                        <!--选择框的中间十字-->
-                        <cropper-crosshair centered></cropper-crosshair>
-                        <!--选择框的操作方式move 移动 select 支持自拉框-->
-                        <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
-                        <!--缩放选择框的组件 选择框上的点 缩放用-->
-                        <!-- <cropper-handle action="n-resize"></cropper-handle>
-                        <cropper-handle action="e-resize"></cropper-handle>
-                        <cropper-handle action="s-resize"></cropper-handle>
-                        <cropper-handle action="w-resize"></cropper-handle>
-                        <cropper-handle action="ne-resize"></cropper-handle>
-                        <cropper-handle action="nw-resize"></cropper-handle>
-                        <cropper-handle action="se-resize"></cropper-handle>
-                        <cropper-handle action="sw-resize"></cropper-handle> -->
-                    </cropper-selection>
-                </cropper-canvas>
+                    <cropper-canvas ref="croppercanvas" background>
+                        <!--width和initial-center-size有的带:，有的不带-->
+                        <cropper-image ref="cropperimage" :src="imageOption.fileData" alt="Picture" 
+                        :initial-center-size="imageOption.initialCenterSize"
+                        rotatable scalable skewable translatable 
+                        @transform="onCropperImageTransform"></cropper-image>
+                        <!--选择区域与其他区域的明暗对比-->
+                        <cropper-shade hidden></cropper-shade>
+                        <!--背景图片的操作方式 如果不希望背景图乱动或者有一个选区后无法重新选择 这个要删除掉-->
+                        <!-- <cropper-handle action="select" plain></cropper-handle> -->
+                        <!---->
+                        <cropper-selection 
+                        id="cropperSelection" 
+                        ref="cropperselection"
+                        :width="selectionOption.width" :height="selectionOption.height" 
+                        :movable="selectionOption.movable"
+                        :outlined="selectionOption.outlined"
+                        :resizable="selectionOption.resizable"
+                        @change="onCropperSelectionChange">
+                            <!--选择框的表格-->
+                            <cropper-grid role="grid" covered></cropper-grid>
+                            <!--选择框的中间十字-->
+                            <cropper-crosshair centered></cropper-crosshair>
+                            <!--选择框的操作方式move 移动 select 支持自拉框-->
+                            <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
+                            <!--缩放选择框的组件 选择框上的点 缩放用-->
+                            <!-- <cropper-handle action="n-resize"></cropper-handle>
+                            <cropper-handle action="e-resize"></cropper-handle>
+                            <cropper-handle action="s-resize"></cropper-handle>
+                            <cropper-handle action="w-resize"></cropper-handle>
+                            <cropper-handle action="ne-resize"></cropper-handle>
+                            <cropper-handle action="nw-resize"></cropper-handle>
+                            <cropper-handle action="se-resize"></cropper-handle>
+                            <cropper-handle action="sw-resize"></cropper-handle> -->
+                        </cropper-selection>
+                    </cropper-canvas>
                 </div>
             </div>
         </div>
@@ -193,6 +194,73 @@
       );
     }
 
+    function onCropperImageTransform(event) {
+        console.log("onCropperImageTransform")
+        if (!croppercanvas || imageOption.value.initialCenterSize === 'none') {
+            return;
+        }
+
+        const cropperCanvasRect = croppercanvas.value.getBoundingClientRect();
+
+        // 1. Clone the cropper image.
+        const cropperImageClone = cropperimage.value.cloneNode();
+
+        // 2. Apply the new matrix to the cropper image clone.
+        cropperImageClone.style.transform = `matrix(${event.detail.matrix.join(', ')})`;
+
+        // 3. Make the cropper image clone invisible.
+        cropperImageClone.style.opacity = '0';
+
+        // 4. Append the cropper image clone to the cropper canvas.
+        croppercanvas.value.appendChild(cropperImageClone);
+
+        // 5. Compute the boundaries of the cropper image clone.
+        const cropperImageRect = cropperImageClone.getBoundingClientRect();
+
+        // 6. Remove the cropper image clone.
+        croppercanvas.value.removeChild(cropperImageClone);
+
+        if (
+            (
+                imageOption.value.initialCenterSize === 'contain' && 
+                (
+                    (
+                        cropperImageRect.top > cropperCanvasRect.top
+                        && cropperImageRect.right < cropperCanvasRect.right
+                    )
+                    || 
+                    (
+                        cropperImageRect.right < cropperCanvasRect.right
+                        && cropperImageRect.bottom < cropperCanvasRect.bottom
+                    )
+                    || 
+                    (
+                        cropperImageRect.bottom < cropperCanvasRect.bottom
+                        && cropperImageRect.left > cropperCanvasRect.left
+                    )
+                    || 
+                    (
+                        cropperImageRect.left > cropperCanvasRect.left
+                        && cropperImageRect.top > cropperCanvasRect.top
+                    )
+                )
+            )
+            || 
+            (
+                imageOption.value.initialCenterSize === 'cover' && 
+                (
+                cropperImageRect.top > cropperCanvasRect.top
+                || cropperImageRect.right < cropperCanvasRect.right
+                || cropperImageRect.bottom < cropperCanvasRect.bottom
+                || cropperImageRect.left > cropperCanvasRect.left
+                )
+            )
+        ) 
+        {
+            event.preventDefault();
+        }
+    }
+
     function onCropperSelectionChange(event) {
         if (!croppercanvas.value) {
             return;
@@ -297,23 +365,18 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 400px;
-        height: 400px;
+        width: 552px;
+        height: 376.2px;
         background-color: #F0F2F5;
         margin-right: 10px;
         border-radius: 4px;
     }
     .avatar .avatar-left .avatar-left-crop {
-        width: 400px;
-        height: 400px;
+        width: 552px;
+        height: 376.2px;
         position: relative;
     }
-    .avatar .avatar-left .avatar-left-crop .crop-box {
-        width: 100%;
-        height: 100%;
-        border-radius: 4px;
-        overflow: hidden;
-    }
+
     .avatar .avatar-left .avatar-left-p {
         text-align: center;
         width: 100%;

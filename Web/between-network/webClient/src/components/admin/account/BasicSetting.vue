@@ -44,7 +44,7 @@
             <n-space justify="center">
                 <label>
                     <n-avatar round :size="120" :src="head_image"></n-avatar>
-                    <input ref="fileInputRef" style="display:none" type="file" accept="image/jpeg,image/jpg,image/png,image/gif" @change="selectImageFile">
+                    <input ref="fileInputRef" :disabled="!updateFormItem" style="display:none" type="file" accept="image/jpeg,image/jpg,image/png,image/gif" @change="selectImageFile">
                 </label>
             </n-space>
 

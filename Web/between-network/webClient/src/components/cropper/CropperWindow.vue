@@ -10,7 +10,9 @@
                         <!--width和initial-center-size有的带:，有的不带-->
                         <cropper-image ref="cropperimage" :src="imageOption.src" 
                         alt="Picture" 
-                        rotatable scalable skewable translatable></cropper-image>
+                        :initial-center-size="imageOption.initialCenterSize"
+                        rotatable scalable skewable translatable
+                        @transform="onCropperImageTransform"></cropper-image>
                         <!--选择区域与其他区域的明暗对比-->
                         <cropper-shade hidden></cropper-shade>
                         <!--背景图片的操作方式 如果不希望背景图乱动或者有一个选区后无法重新选择 这个要删除掉-->
@@ -70,11 +72,8 @@
 </template>
 
 <script setup>
-    import {ref,nextTick} from 'vue'
-    import {ZoomInRound,ZoomOutRound,RotateRightRound,RotateLeftRound
-        ,SwapVertRound,SwapHorizRound,AutorenewRound,
-        ContentCutRound
-    } from'@vicons/material'
+    import {ref} from 'vue'
+    import { ContentCutRound } from'@vicons/material'
 
     import 'cropperjs';
 
@@ -132,10 +131,9 @@
             text:"36*36"
         }
     ]);
+
     //自定义事件
     const emits = defineEmits(['cut'])
-
-    let cropper = null;
 
     let resultData = {
         blobData:null,
@@ -149,6 +147,73 @@
     const cropperimage = ref();
     const cropperselection = ref();
 
+    function onCropperImageTransform(event) {
+        console.log("onCropperImageTransform")
+        if (!croppercanvas || imageOption.value.initialCenterSize === 'none') {
+            return;
+        }
+
+        const cropperCanvasRect = croppercanvas.value.getBoundingClientRect();
+
+        // 1. Clone the cropper image.
+        const cropperImageClone = cropperimage.value.cloneNode();
+
+        // 2. Apply the new matrix to the cropper image clone.
+        cropperImageClone.style.transform = `matrix(${event.detail.matrix.join(', ')})`;
+
+        // 3. Make the cropper image clone invisible.
+        cropperImageClone.style.opacity = '0';
+
+        // 4. Append the cropper image clone to the cropper canvas.
+        croppercanvas.value.appendChild(cropperImageClone);
+
+        // 5. Compute the boundaries of the cropper image clone.
+        const cropperImageRect = cropperImageClone.getBoundingClientRect();
+
+        // 6. Remove the cropper image clone.
+        croppercanvas.value.removeChild(cropperImageClone);
+
+        if (
+            (
+                imageOption.value.initialCenterSize === 'contain' && 
+                (
+                    (
+                        cropperImageRect.top > cropperCanvasRect.top
+                        && cropperImageRect.right < cropperCanvasRect.right
+                    )
+                    || 
+                    (
+                        cropperImageRect.right < cropperCanvasRect.right
+                        && cropperImageRect.bottom < cropperCanvasRect.bottom
+                    )
+                    || 
+                    (
+                        cropperImageRect.bottom < cropperCanvasRect.bottom
+                        && cropperImageRect.left > cropperCanvasRect.left
+                    )
+                    || 
+                    (
+                        cropperImageRect.left > cropperCanvasRect.left
+                        && cropperImageRect.top > cropperCanvasRect.top
+                    )
+                )
+            )
+            || 
+            (
+                imageOption.value.initialCenterSize === 'cover' && 
+                (
+                cropperImageRect.top > cropperCanvasRect.top
+                || cropperImageRect.right < cropperCanvasRect.right
+                || cropperImageRect.bottom < cropperCanvasRect.bottom
+                || cropperImageRect.left > cropperCanvasRect.left
+                )
+            )
+        ) 
+        {
+            event.preventDefault();
+        }
+    }
+    
     function inSelection(selection, maxSelection) {
       return (
         selection.x >= maxSelection.x
@@ -165,8 +230,12 @@
 
         const selection = event.detail;
         const cropperCanvasRect = croppercanvas.value.getBoundingClientRect();
+        const cropperImageRect = cropperimage.value.getBoundingClientRect();
 
-        let type = 0;//0--canvas 1--image
+        console.log("selection=>",selection);
+        console.log("cropperCanvasRect=>",cropperCanvasRect);
+        console.log("cropperImageRect=>",cropperImageRect);
+        let type = 2;//0--canvas 1--image
         let maxSelection = {};
         if(type == 0)
         {
@@ -179,7 +248,6 @@
         }
         else if(type == 1)
         {
-            const cropperImageRect = cropperimage.value.getBoundingClientRect();
             maxSelection = {
                 x: cropperImageRect.left - cropperCanvasRect.left,
                 y: cropperImageRect.top - cropperCanvasRect.top,
@@ -187,7 +255,25 @@
                 height: cropperImageRect.height,
             };
         }
-
+        else{
+            //混合处理，以最小范围处理
+            var minWidth =  cropperCanvasRect.width;
+            if(minWidth > cropperImageRect.width)
+            {
+                minWidth = cropperImageRect.width;
+            }
+            var minHeight =  cropperCanvasRect.height;
+            if(minHeight > cropperImageRect.height)
+            {
+                minHeight = cropperImageRect.height;
+            }
+            maxSelection = {
+                x:0,
+                y:0,
+                width:minWidth,
+                height:minHeight,
+            }
+        }
         if (!inSelection(selection, maxSelection)) {
             event.preventDefault();
         }
