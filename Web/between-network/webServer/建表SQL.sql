@@ -1,6 +1,14 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+-- 删除关联外键
+ALTER TABLE `z_note` DROP FOREIGN KEY `z_note_z_user_id_fk`;
+ALTER TABLE `notebook` DROP FOREIGN KEY `notebook_user_id_fk`;
+ALTER TABLE `z_memo` DROP FOREIGN KEY `z_thing_z_user_id_fk`;
+ALTER TABLE `z_oper_log` DROP FOREIGN KEY `z_oper_log_z_user_id_fk`;
+ALTER TABLE `z_user_log` DROP FOREIGN KEY `z_user_log_z_user_id_fk`;
+ALTER TABLE `dumpster` DROP FOREIGN KEY `dumpster_user_id_fk`;
+
 -- ----------------------------
 -- Table structure for z_user
 -- ----------------------------
@@ -143,6 +151,8 @@ CREATE TABLE `dumpster`  (
   INDEX `dumpster_user_id_fk`(`u_id`) USING BTREE,
   CONSTRAINT `dumpster_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `z_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '回收站' ROW_FORMAT = COMPACT;
+
+DROP VIEW IF EXISTS file_dumpster, recent_access_file;
 
 -- ----------------------------
 -- View Structure for file_dumpster
