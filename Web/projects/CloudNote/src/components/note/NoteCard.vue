@@ -9,7 +9,7 @@
         <!--笔记内容-->
         <template #description>
             <n-space vertical>
-                <n-innput autofocus :value="title" @click.stop v-if="!rename" style="width:100%"></n-innput>
+                <n-input autofocus :value="title" @click.stop v-if="rename" style="width:100%"></n-input>
                 <n-ellipsis line-clamp="2" :tooltip="false">
                     <n-text depth="3">
                         {{htmlToText(desc)}}
