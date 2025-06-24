@@ -43,7 +43,14 @@
                         @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
                         :class="{'contexting':(contextMenu.id === note.id && contextMenu.show) ,'editing':(selectNoteId === note.id)}"
                         @click="goEditNoteView(note.id)">
-                            <NoteCard :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.content" :top="!!note.top" :time="note.update_time"></NoteCard>
+                            <NoteCard 
+                                :id="note.id" :title="note.title??noteContent.defaultTitle" :desc="note.content" 
+                                :top="!!note.top" 
+                                :time="note.update_time"
+                                :rename="note.rename"
+                                @rename="renameNote"
+                                @cancelRename="displayNoteRenameInput">
+                            </NoteCard>
                         </n-list-item>
                     </template>
                 </n-list>
@@ -303,6 +310,21 @@
         contextMenu.value.show = false;
     };
 
+    /**
+     * 笔记重命名输入框显示或隐藏
+     * @param id 
+     * @param show 
+     */
+    const displayNoteRenameInput = (id,show=false)=>{
+        noteList.value.some(item=>{
+            if(item.id === id)
+            {
+                item.rename = show;
+                return true;
+            }
+        })
+    }
+
     //点击了右键菜单某一项
     const selectContextMenu = (key)=>{
         contextMenu.value.show = false;
@@ -317,6 +339,7 @@
         else if(key=="rename")
         {
             //重命名
+            displayNoteRenameInput(contextMenu.value.id,true);
         }
         else if(key == "delete")
         {
@@ -327,6 +350,29 @@
                 key:id+':'+1
             })
         }
+    }
+
+    /**
+     * 笔记重命名
+     * @param {Object} note 
+     */
+    const renameNote = (note)=>{
+        //关闭重命名输入框
+        displayNoteRenameInput(note.id,false);
+
+        //发送请求
+        let API = {...noteApi.renameNote};
+        API.data = {...note}
+        //发送请求
+        noteServerRequest(API).then(responseData=>{
+            if(responseData)
+            {
+                //重新获取笔记列表
+                getNoteList(false,false);
+                //通知子组件笔记状态发生改变
+                changeEditNoteState(1)
+            }
+        })
     }
 
     /**
