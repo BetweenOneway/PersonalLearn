@@ -23,6 +23,14 @@ const noteApi = {
         dataParam:false,
         successMessage:true
     },
+    renameNote:{
+        name:'笔记重命名',
+        url:'/note/renameNote',
+        method:'GET',
+        userAuth:true,
+        dataParam:false,
+        successMessage:true
+    },
     createNote:{
         name:'创建笔记',
         url:'/note/createNote',

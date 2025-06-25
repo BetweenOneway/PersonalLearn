@@ -155,7 +155,6 @@
 
     import Dumpster from "@/components/dumpster/Dumpster.vue";
 
-    import DeleteRemindDialog from "@/components/remind/DeleteRemindDialog.vue";
     import { useDeleteRemindDialogStore } from "@/stores/deleteRemindDialogStore";
 
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
@@ -331,7 +330,7 @@
      */
      const displayNoteRenameInput = (id,show=false)=>{
         noteList.value.some(item=>{
-            if(item.id === id)
+            if(item.id == id)
             {
                 item.rename = show;
                 return true;
@@ -405,6 +404,7 @@
      * @param {Object} note 
      */
      const renameNote = (note)=>{
+        console.log("rename note");
         //关闭重命名输入框
         displayNoteRenameInput(note.id,false);
 

@@ -226,6 +226,99 @@ router.get("/setNoteTop",async (req,res)=>{
 })
 
 /**
+ * 笔记重命名
+ */
+router.get("/renameNote",async (req,res)=>{
+    let output={
+        success:true,
+        status:'',
+        description:'',
+        data:[]
+    }
+    console.log("start set Note Top:",req.query);
+    
+    //目标状态
+    let targetTop = req.query.targetTop
+    let noteId = req.query.noteId
+
+    if(!noteId || targetTop === undefined || (0!= targetTop && 1!= targetTop))
+    {
+        console.log("note set top, noteId or targetTop empty")
+        output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
+        output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
+        output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
+        res.send(output)
+        return
+    }
+
+    let userInfo = req.userInfo;
+
+    const t = await sqldb.sequelize.transaction();
+
+    try{
+        let curTime = new Date().toLocaleString()
+        const updateNum = await sqldb.Note.update(
+            {
+                top:targetTop,
+                update_time:curTime
+            },
+            {
+                where:{
+                    id:noteId,
+                    u_id:userInfo.id,
+                    top:{
+                        [Op.ne]: targetTop
+                    },
+                    status:1
+                },
+                transaction: t
+            }
+        );
+        if(updateNum > 0)
+        {
+            let event = targetTop === 1? statusCode.EVENT_LIST.NOTE_SET_TOP : statusCode.EVENT_LIST.NOTE_UNSET_TOP;
+            
+            const newAddedLog = await sqldb.operLog.create(
+                {
+                    time: curTime,
+                    event: event.code,
+                    desc:event.desc,
+                    u_id:userInfo.id,
+                    o_id:noteId,
+                    type:1
+                }, 
+                { 
+                    transaction: t 
+                }
+            )
+            t.commit();
+            output.success = statusCode.SERVICE_STATUS.NOTE_SET_TOP_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.NOTE_SET_TOP_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.NOTE_SET_TOP_SUCCESS.description
+            res.send(output);
+        }
+        else{
+            console.log("set note top,updateNum=",updateNum);
+            t.rollback()
+            output.success = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.success
+            output.status = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.status
+            output.description = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.description
+            res.send(output);
+        }
+    }
+    catch(e){
+        console.log(e)
+        t.rollback()
+        output.success = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.description
+        res.send(output);
+    }
+    console.log("End of set note top or untop");
+    return
+})
+
+/**
  * 新增笔记
  * userToken 用户信息
  */

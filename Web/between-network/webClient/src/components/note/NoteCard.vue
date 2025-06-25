@@ -14,7 +14,7 @@
                 <n-input autofocus :default-value="title" 
                     @click.stop 
                     @keydown.enter.exact="toRenameAction" 
-                    @blur="emits('cancelRename',{id})" 
+                    @blur="emits('cancelRename',id)" 
                     v-if="rename" style="width:100%">
                 </n-input>
                 <n-ellipsis line-clamp="2" :tooltip="false">
