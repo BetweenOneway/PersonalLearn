@@ -464,46 +464,62 @@ router.post("/updateUserInfo",async (req,res)=>{
         
         let curDate = new Date().toLocaleString()
 
-        const affectedNum = await sqldb.User.update(
-            {
-                nickname:toUpdateInfo.nickname,
-                sex:toUpdateInfo.sex,
-                birthday:toUpdateInfo.birthday
-            },
+        const matchedUserCount = await sqldb.User.count(
             {
                 where:{
+                    nickname:toUpdateInfo.nickname,
+                    sex:toUpdateInfo.sex,
+                    birthday:toUpdateInfo.birthday,
                     id:userInfo.id,
                     status:1
                 },
-                transaction: t
             }
-        );
-
-        console.log("updateResult:",affectedNum)
-        if(affectedNum[0] !== 1)
+        )
+        if(matchedUserCount >=1)
         {
-            await t.rollback();
-            throw "更新用户信息失败"
+            logger.info("update user info,same data, not update");
         }
-        //记录日志
-        {
-            //记录事件
-            const affectedNum = await sqldb.UserLog.create(
+        else{
+            const affectedNum = await sqldb.User.update(
                 {
-                    desc:statusCode.EVENT_LIST.UPDATE_USER_INFO.desc,
-                    time:curDate,
-                    event:statusCode.EVENT_LIST.UPDATE_USER_INFO.code,
-                    u_id:userInfo.id
+                    nickname:toUpdateInfo.nickname,
+                    sex:toUpdateInfo.sex,
+                    birthday:toUpdateInfo.birthday
                 },
                 {
-                    //指定新增哪些字段
-                    fields:['desc','time','event','u_id'],
+                    where:{
+                        id:userInfo.id,
+                        status:1
+                    },
                     transaction: t
                 }
             );
-            console.log("affectedNum:",affectedNum);
+    
+            console.log("updateResult:",affectedNum)
+            if(affectedNum[0] !== 1)
+            {
+                throw "更新用户信息失败"
+            }
+            //记录日志
+            {
+                //记录事件
+                const affectedNum = await sqldb.UserLog.create(
+                    {
+                        desc:statusCode.EVENT_LIST.UPDATE_USER_INFO.desc,
+                        time:curDate,
+                        event:statusCode.EVENT_LIST.UPDATE_USER_INFO.code,
+                        u_id:userInfo.id
+                    },
+                    {
+                        //指定新增哪些字段
+                        fields:['desc','time','event','u_id'],
+                        transaction: t
+                    }
+                );
+                console.log("affectedNum:",affectedNum);
+            }
+            await t.commit();
         }
-        await t.commit();
         console.log("更新用户信息成功！")
         //再次查询用户信息
         const userBasicInfo = await sqldb.User.findOne(
@@ -599,26 +615,38 @@ router.post("/uploadHeadPic",async (req,res)=>{
             let imageURL = req.protocol + '://' + req.get('host') + '/imgs/avatar/' +storageFileName;
             console.log('imageURL',imageURL);
 
-            //更新用户信息
-            const affectedNum = await sqldb.User.update(
-                {
-                    head_pic:imageURL
-                },
+            //先查询是否有同样的数据，如果有则不再更新
+            const matchedUserCount = await sqldb.User.count(
                 {
                     where:{
+                        head_pic:imageURL,
                         id:userInfo.id,
                         status:1
                     },
-                    transaction: t
                 }
             );
-    
-            console.log("updateResult:",affectedNum)
-            if(affectedNum[0] !== 1)
+            logger.info(`match user count=> ${matchedUserCount}`);
+            if(matchedUserCount == 0)
             {
-                await t.rollback();
-                throw "更新用户头像信息失败"
+                const affectedNum = await sqldb.User.update(
+                    {
+                        head_pic:imageURL
+                    },
+                    {
+                        where:{
+                            id:userInfo.id,
+                            status:1
+                        },
+                        transaction: t
+                    }
+                );
+                if(affectedNum[0] !== 1)
+                {
+                    logger.info(`affectedNum[0]=>${affectedNum[0]}`);
+                    throw "更新用户头像信息失败"
+                }
             }
+            
 
             //记录日志
             //记录用户登录日志

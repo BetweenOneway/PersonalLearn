@@ -23,7 +23,6 @@
                     </n-text>
                 </n-ellipsis>
             </n-space>
-            
         </template>
         <!--底部状态栏-->
         <template #default>
