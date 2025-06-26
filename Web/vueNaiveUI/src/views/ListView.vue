@@ -43,6 +43,36 @@
                 </n-thing>
             </template>
         </n-list-item>
+        <n-list-item>
+            <n-thing title="文章标题">
+                <template #description>
+                    <n-space>
+                        <n-button size="tiny" secondary>
+                        点赞
+                        </n-button>
+                    </n-space>
+                </template>
+            </n-thing>
+            <template #suffix>
+                <n-thing title="作者" description="2025/6/26">
+                </n-thing>
+            </template>
+        </n-list-item>
+        <n-list-item>
+            <n-thing title="文章标题">
+                <template #description>
+                    <n-space>
+                        <n-button size="tiny" secondary>
+                        16.5K 点赞
+                        </n-button>
+                    </n-space>
+                </template>
+            </n-thing>
+            <template #suffix>
+                <n-thing title="作者" description="2025/6/26">
+                </n-thing>
+            </template>
+        </n-list-item>
     </n-list>
 </template>
 <script setup>

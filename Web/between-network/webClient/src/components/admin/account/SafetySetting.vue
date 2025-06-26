@@ -7,9 +7,9 @@
               <n-button type="primary" text>修改</n-button>
             </template>
             <n-thing title="账户密码">
-              <template #description
-                ><span class="text-gray-400">绑定手机和邮箱，并设置密码，帐号更安全</span></template
-              >
+                <template #description>
+                    <span class="text-gray-400">绑定手机和邮箱，并设置密码，帐号更安全</span>
+                </template>
             </n-thing>
           </n-list-item>
           <n-list-item>
@@ -17,9 +17,9 @@
               <n-button type="primary" text>修改</n-button>
             </template>
             <n-thing title="绑定手机">
-              <template #description
-                ><span class="text-gray-400">已绑定手机号：+86189****4877</span></template
-              >
+                <template #description>
+                    <span class="text-gray-400">已绑定手机号：+86189****4877</span>
+                </template>
             </n-thing>
           </n-list-item>
         </n-list>

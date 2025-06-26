@@ -207,6 +207,16 @@ SERVICE_STATUS={
         status:'SERVICE_023',
         description:'便签置顶或取消置顶失败'
     },
+    RENAME_NOTE_SUCCESS:{
+        success:true,
+        status:'SERVICE_022',
+        description:'笔记重命名成功'
+    },
+    RENAME_NOTE_FAIL:{
+        success:false,
+        status:'SERVICE_023',
+        description:'笔记重命名失败'
+    },
     DEL_NOTE_FAIL:{
         success:false,
         status:'SERVICE_024',

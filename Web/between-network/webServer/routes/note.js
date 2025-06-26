@@ -235,15 +235,15 @@ router.get("/renameNote",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start set Note Top:",req.query);
+    console.log("start rename note:",req.query);
     
     //目标状态
-    let targetTop = req.query.targetTop
-    let noteId = req.query.noteId
+    let newName = req.query.title
+    let noteId = req.query.id
 
-    if(!noteId || targetTop === undefined || (0!= targetTop && 1!= targetTop))
+    if(!noteId || newName === undefined || 0!= newName.length)
     {
-        console.log("note set top, noteId or targetTop empty")
+        console.log("note rename, noteId or newName empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
         output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
         output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
@@ -256,65 +256,81 @@ router.get("/renameNote",async (req,res)=>{
     const t = await sqldb.sequelize.transaction();
 
     try{
-        let curTime = new Date().toLocaleString()
-        const updateNum = await sqldb.Note.update(
-            {
-                top:targetTop,
-                update_time:curTime
-            },
+        const matchedNoteCount = await sqldb.User.count(
             {
                 where:{
+                    title:newName,
                     id:noteId,
                     u_id:userInfo.id,
-                    top:{
-                        [Op.ne]: targetTop
-                    },
                     status:1
-                },
-                transaction: t
+                }
             }
         );
-        if(updateNum > 0)
+
+        let updateNum = 0;
+        if(0 == matchedNoteCount)
         {
-            let event = targetTop === 1? statusCode.EVENT_LIST.NOTE_SET_TOP : statusCode.EVENT_LIST.NOTE_UNSET_TOP;
-            
-            const newAddedLog = await sqldb.operLog.create(
+            let curTime = new Date().toLocaleString()
+            updateNum = await sqldb.Note.update(
                 {
-                    time: curTime,
-                    event: event.code,
-                    desc:event.desc,
-                    u_id:userInfo.id,
-                    o_id:noteId,
-                    type:1
-                }, 
-                { 
-                    transaction: t 
+                    title:newName,
+                    update_time:curTime
+                },
+                {
+                    where:{
+                        id:noteId,
+                        u_id:userInfo.id,
+                        status:1
+                    },
+                    transaction: t
                 }
-            )
-            t.commit();
-            output.success = statusCode.SERVICE_STATUS.NOTE_SET_TOP_SUCCESS.success
-            output.status = statusCode.SERVICE_STATUS.NOTE_SET_TOP_SUCCESS.status
-            output.description = statusCode.SERVICE_STATUS.NOTE_SET_TOP_SUCCESS.description
-            res.send(output);
+            );
+            if(updateNum > 0)
+            {
+                let event = targetTop === 1? statusCode.EVENT_LIST.NOTE_SET_TOP : statusCode.EVENT_LIST.NOTE_UNSET_TOP;
+                
+                const newAddedLog = await sqldb.operLog.create(
+                    {
+                        time: curTime,
+                        event: event.code,
+                        desc:event.desc,
+                        u_id:userInfo.id,
+                        o_id:noteId,
+                        type:1
+                    }, 
+                    { 
+                        transaction: t 
+                    }
+                )
+                t.commit();
+            }
+            else
+            {
+                console.log("rename note,updateNum=",updateNum);
+                t.rollback()
+                output.success = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.success
+                output.status = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.status
+                output.description = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.description
+                res.send(output);
+                return;
+            }
         }
-        else{
-            console.log("set note top,updateNum=",updateNum);
-            t.rollback()
-            output.success = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.success
-            output.status = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.status
-            output.description = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.description
-            res.send(output);
-        }
+
+        output.success = statusCode.SERVICE_STATUS.RENAME_NOTE_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.RENAME_NOTE_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.RENAME_NOTE_SUCCESS.description
+        res.send(output);
+        
     }
     catch(e){
         console.log(e)
         t.rollback()
-        output.success = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.success
-        output.status = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.status
-        output.description = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.description
+        output.success = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.description
         res.send(output);
     }
-    console.log("End of set note top or untop");
+    console.log("End of rename");
     return
 })
 
