@@ -115,6 +115,11 @@ const router = createRouter({
         component: () => import('@/views/VueCropper1.vue'),
     },
     {
+        path: '/ListView',
+        name: 'ListView',
+        component: () => import('@/views/ListView.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting
