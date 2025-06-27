@@ -416,7 +416,7 @@
             if(responseData)
             {
                 //重新获取笔记列表
-                getNoteList(false,false);
+                getNoteListInNotebook();
                 //通知子组件笔记状态发生改变
                 changeEditNoteState(1)
             }
@@ -440,7 +440,7 @@
      * @param {Boolean} complete true彻底删除 false非彻底删除
      */
      const deleteNoteSuccess = ()=>{
-
+        console.log("NoteIndex==>deleteNoteSuccess")
         getNoteListInNotebook()
         //删除笔记成功，关闭正在编辑笔记
         changeEditNoteState(2)

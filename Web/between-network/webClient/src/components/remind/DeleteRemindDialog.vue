@@ -139,8 +139,16 @@
         console.log("start delte file,API",API)
         noteServerRequest(API).then(responseData=>{
             console.log("responseData",responseData);
-            if(!responseData) return;
-            emits('deleteSuccess');
+            if(!responseData)
+            {
+                console.log("delete file fail============");
+                return;
+            }
+            else
+            {
+                console.log("delete file success============");
+                emits('deleteSuccess');
+            }
         })
     }
 

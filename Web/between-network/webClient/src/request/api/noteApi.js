@@ -26,7 +26,7 @@ const noteApi = {
     renameNote:{
         name:'笔记重命名',
         url:'/note/renameNote',
-        method:'GET',
+        method:'POST',
         userAuth:true,
         dataParam:false,
         successMessage:true

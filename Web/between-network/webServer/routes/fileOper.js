@@ -26,7 +26,10 @@ async function deleteNotes(userInfo,isCompleteDel,toDeleteFiles,t)
     }
 
     let curTime = new Date().toLocaleString()
-    const targetStatus = 1;
+
+    const deleteStatus = 0;
+    const normalStatus = 1;
+    const completeDeleteStatus = -1;
     let event = {};
     if(isCompleteDel)
     {
@@ -74,7 +77,7 @@ async function deleteNotes(userInfo,isCompleteDel,toDeleteFiles,t)
                         },
                         u_id:userInfo.id,
                         status:{
-                            [Op.ne]:targetStatus
+                            [Op.eq]:deleteStatus
                         }
                     },
                     transaction:t
@@ -100,7 +103,7 @@ async function deleteNotes(userInfo,isCompleteDel,toDeleteFiles,t)
             //更新笔记状态
             const noteUpdateResult = await sqldb.Note.update(
                 {
-                    status:targetStatus,
+                    status:deleteStatus,
                     update_time:curTime,
                 },
                 {
@@ -110,7 +113,7 @@ async function deleteNotes(userInfo,isCompleteDel,toDeleteFiles,t)
                         },
                         u_id:userInfo.id,
                         status:{
-                            [Op.ne]:targetStatus
+                            [Op.eq]:normalStatus
                         }
                     },
                     transaction:t
@@ -158,6 +161,10 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
     //0-被删除
     const targetStatus = 0;
 
+    const deleteStatus = 0;
+    const normalStatus = 1;
+    const completeDeleteStatus = -1;
+
     let curTime = new Date().toLocaleString()
 
     try {
@@ -181,7 +188,7 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
                             },
                             u_id:userInfo.id,
                             status:{
-                                [Op.ne]:targetStatus,
+                                [Op.notIn]:[deleteStatus,completeDeleteStatus],
                             }
                         },
                         raw:true,
@@ -213,7 +220,7 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
                             },
                             u_id:userInfo.id,
                             status:{
-                                [Op.eq]:targetStatus
+                                [Op.eq]:deleteStatus
                             }
                         },
                         transaction:t
@@ -241,7 +248,7 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
                 //更新笔记本状态
                 const updateNum = await sqldb.Notebook.update(
                     {
-                        status:targetStatus,
+                        status:deleteStatus,
                         update_time:curTime,
                     },
                     {
@@ -251,7 +258,7 @@ async function deleteFolder(userInfo,isCompleteDel,toDeleteNotebooks,t)
                             },
                             u_id:userInfo.id,
                             status:{
-                                [Op.ne]:targetStatus
+                                [Op.eq]:normalStatus
                             }
                         },
                         transaction:t

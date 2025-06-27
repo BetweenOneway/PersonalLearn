@@ -228,20 +228,20 @@ router.get("/setNoteTop",async (req,res)=>{
 /**
  * 笔记重命名
  */
-router.get("/renameNote",async (req,res)=>{
+router.post("/renameNote",async (req,res)=>{
     let output={
         success:true,
         status:'',
         description:'',
         data:[]
     }
-    console.log("start rename note:",req.query);
+    console.log("start rename note:",req.body);
     
     //目标状态
-    let newName = req.query.title
-    let noteId = req.query.id
+    let newName = req.body.title
+    let noteId = req.body.id
 
-    if(!noteId || newName === undefined || 0!= newName.length)
+    if(!noteId || newName === undefined || 0 == newName.length)
     {
         console.log("note rename, noteId or newName empty")
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
@@ -256,7 +256,7 @@ router.get("/renameNote",async (req,res)=>{
     const t = await sqldb.sequelize.transaction();
 
     try{
-        const matchedNoteCount = await sqldb.User.count(
+        const matchedNoteCount = await sqldb.Note.count(
             {
                 where:{
                     title:newName,
@@ -287,7 +287,8 @@ router.get("/renameNote",async (req,res)=>{
             );
             if(updateNum > 0)
             {
-                let event = targetTop === 1? statusCode.EVENT_LIST.NOTE_SET_TOP : statusCode.EVENT_LIST.NOTE_UNSET_TOP;
+                //记录日志
+                let event = statusCode.EVENT_LIST.RENAME_NOTEBOOK;
                 
                 const newAddedLog = await sqldb.operLog.create(
                     {
@@ -306,13 +307,7 @@ router.get("/renameNote",async (req,res)=>{
             }
             else
             {
-                console.log("rename note,updateNum=",updateNum);
-                t.rollback()
-                output.success = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.success
-                output.status = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.status
-                output.description = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.description
-                res.send(output);
-                return;
+                throw "rename fail";
             }
         }
 
@@ -367,6 +362,7 @@ router.put("/createNote",async (req,res)=>{
 
         const newAddNote = await sqldb.Note.create(
             {
+                title:'新笔记',
                 u_id:userInfo.id,
                 notebook_id:notebookId,
                 time:curTime,

@@ -293,6 +293,7 @@
         else if(key =='createNote')
         {
             //新增笔记
+            addNewNote();
         }
         else if(key =='deleteNotebook')
         {
@@ -404,6 +405,7 @@
      */
     function deleteNotebookSuccess()
     {
+        console.log("NotebookTree==>deleteNotebookSuccess")
         //重新获取笔记本列表
         getNotebookList();
     }

@@ -72,6 +72,8 @@
         </div>
     </div>
     
+    <!--删除提醒框-->
+    <DeleteRemindDialog @deleteSuccess="deleteNoteSuccess"></DeleteRemindDialog>
 </template>
 
 <script setup>
@@ -95,6 +97,7 @@
     import noteServerRequest from '@/request';
     import noteApi from '@/request/api/noteApi';
 
+    import DeleteRemindDialog from "@/components/remind/DeleteRemindDialog.vue";
     import {useDeleteRemindDialogStore} from '@/stores/deleteRemindDialogStore'
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
     const {DefaultDeleteRemind} = deleteRemindDialogStore;
@@ -363,8 +366,13 @@
             type:1,
         };
         DefaultDeleteRemind(noteInfo);
+
+        emits("deleteSuccess");
     }
 
+    function deleteNoteSuccess(){
+        console.log("=============delete note success============");
+    }
     /**
      * 公开笔记
     */
