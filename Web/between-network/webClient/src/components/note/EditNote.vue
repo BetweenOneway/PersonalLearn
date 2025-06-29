@@ -367,11 +367,12 @@
         };
         DefaultDeleteRemind(noteInfo);
 
-        emits("deleteSuccess");
+        //emits("deleteSuccess");
     }
 
     function deleteNoteSuccess(){
-        console.log("=============delete note success============");
+        console.log("=============Edit note delete note success============");
+        emits("deleteSuccess");
     }
     /**
      * 公开笔记

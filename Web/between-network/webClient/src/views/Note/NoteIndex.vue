@@ -127,6 +127,8 @@
         :on-clickoutside="clickContextMenuOutSide"
         @select="selectContextMenu"
         />
+        <!--删除提醒框-->
+    <DeleteRemindDialog @deleteSuccess="deleteNoteSuccess"></DeleteRemindDialog>
     </div>
     
 </template>
@@ -352,11 +354,11 @@
         else if(key=="rename")
         {
             //重命名
-            //重命名
             displayNoteRenameInput(contextMenu.value.id,true);
         }
         else if(key == "delete")
         {
+            console.log("NoteIndex delete note");
             DefaultDeleteRemind({
                 id:contextMenu.value.id,
                 title:contextMenu.value.title,
@@ -437,11 +439,11 @@
 
     /**
      * 删除笔记成功操作
-     * @param {Boolean} complete true彻底删除 false非彻底删除
      */
      const deleteNoteSuccess = ()=>{
         console.log("NoteIndex==>deleteNoteSuccess")
         getNoteListInNotebook()
+        console.log("关闭编辑笔记")
         //删除笔记成功，关闭正在编辑笔记
         changeEditNoteState(2)
     }
