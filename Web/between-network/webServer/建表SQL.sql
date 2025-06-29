@@ -46,7 +46,7 @@ CREATE TABLE `z_note`  (
   `time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '最后修改时间',
   `u_id` int(11) NOT NULL COMMENT '用户编号',
-  `noteboo_id` int(11) NOT NULL COMMENT '所属笔记本编号',
+  `notebook_id` int(11) NOT NULL COMMENT '所属笔记本编号',
   `top` int(11) NULL DEFAULT 0 COMMENT '置顶（1：置顶，0：不置顶）',
   `status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态【0：被删除，1：正常/私有 2:公开】',
   `type` int(11) NULL DEFAULT 1 COMMENT '类型',
