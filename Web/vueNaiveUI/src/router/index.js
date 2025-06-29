@@ -120,6 +120,11 @@ const router = createRouter({
         component: () => import('@/views/ListView.vue'),
     },
     {
+        path: '/Reuseable',
+        name: '可重用子组件',
+        component: () => import('@/views/ReuseableComponentView.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting

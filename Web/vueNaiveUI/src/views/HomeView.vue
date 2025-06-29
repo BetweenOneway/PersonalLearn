@@ -45,6 +45,9 @@
         <n-card>
             <RouterLink to="/ListView">学习ListView</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/Reuseable">可重用子组件</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 
