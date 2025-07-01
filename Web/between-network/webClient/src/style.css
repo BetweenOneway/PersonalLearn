@@ -1,0 +1,20 @@
+:root {
+    --highlight-blue-color: #3071f2;
+    --layout-content-width: 1440px;
+    --layout-content-gap: 36px;
+    --border-color: #e6e6e6;
+    --layout-col-width: 456px
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none
+}
+
+a,body {
+    color: #333;
+}
+
+a:hover {
+    color: var(--highlight-blue-color)
+}
