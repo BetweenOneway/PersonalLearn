@@ -28,6 +28,8 @@ function Init()
     global.statusCode = require("./routes/statusCode");
 }
 
+console.log(process.env.NODE_ENV)
+
 Init();
 
 //启动数据库
