@@ -28,6 +28,9 @@ function Init()
     global.statusCode = require("./routes/statusCode");
 }
 
+const config = require('config')
+const title = config.get('title')
+console.log(title)
 console.log(process.env.NODE_ENV)
 
 Init();

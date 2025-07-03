@@ -21,4 +21,4 @@
     运行`redis-cli`
 5. 安装Node客户端 运行`node -v`确认安装成功
 6. 运行`npm install`安装依赖库
-7. 在当前目录下运行 `node app.js`
+7. 在当前目录下运行 `node app.js`或者执行`npm run dev:windows`
