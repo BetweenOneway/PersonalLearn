@@ -1,0 +1,8 @@
+{
+    "title":"管理系统-dev",
+    "db": {
+      "host": "localhost",
+      "user": "root",
+      "pwd": "default_password"
+    }
+}
