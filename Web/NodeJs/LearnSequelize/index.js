@@ -6,10 +6,25 @@ const Sequelize = require('sequelize');
 const employee = require('./models/employee.js')
 const department = require('./models/department.js')
 
-
 department.hasMany('employee',{
     foreignKey:'department_id',
     sourceKey:'id'
 })
 
 employee.belongsTo(department);
+
+// const result = employee.findAll(
+//     {
+//         attributes:['name'],
+//         include:[
+//             {
+//                 model:department,
+//                 as:'dept',
+//                 attributes:['name','location']
+//             }
+//         ],
+//         raw:true,
+//     }
+// );
+
+// console.log('result=>',result);

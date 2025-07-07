@@ -17,6 +17,8 @@
     "http": "^0.0.1-security",
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.1",
+    "sequelize": "^6.37.7",
     "winston": "^3.14.2"
   }
 }
