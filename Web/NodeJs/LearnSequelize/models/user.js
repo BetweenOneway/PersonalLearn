@@ -1,7 +1,7 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('database', 'username', 'password', {
-  dialect: 'mysql',
-});
+const sequelize = new Sequelize('learndatabase', 'root', '', {
+    dialect: 'mysql',
+  });
 
 class User extends Model {}
 User.init({

@@ -1,31 +1,31 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('learndatabase', 'root', '', {
-  dialect: 'mysql',
-});
-
-const Department = sequelize.define(
-  'Department',
-  {
-    // Model attributes are defined here
-    id: {
-        type:DataTypes.INTEGER,
-        primaryKey:true,
-        allowNull:false,
-        autoIncrement:true
-    },
-    name: {
-      type: DataTypes.STRING,
-      // allowNull defaults to true
-    },
-    location: {
+module.exports = (sequelize, DataTypes) => {
+    const Department = sequelize.define('department', {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      name: {
         type: DataTypes.STRING,
-        // allowNull defaults to true
-    },
-  },
-  {
-    // Other model options go here
-  },
-);
-
-module.exports=Department;
-
+        allowNull: false,
+      },
+      location: {
+        type: DataTypes.STRING,
+      },
+    },{
+        freezeTableName: true,
+        timestamps: false
+    });
+  
+    // 定义关联关系
+    Department.associate = (models) => {
+      // 一个部门有多个员工
+      Department.hasMany(models.Employee, {
+        foreignKey: 'department_id',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      });
+    };
+  
+    return Department;
+  };  
