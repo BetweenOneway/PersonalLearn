@@ -27,14 +27,14 @@ db.operLog = operLog(db.sequelize,Sequelize.DataTypes);
 db.Dumpster = dumpsterFile(db.sequelize,Sequelize.DataTypes);
 db.RecentFiles = recentAccessFiles(db.sequelize,Sequelize.DataTypes);
 
-db.User.hasOne(db.Note,
+db.User.hasMany(db.Note,
     {
         foreignKey:'u_id',
         sourceKey:'id'
     }
 );
 
-db.User.hasOne(db.Notebook,
+db.User.hasMany(db.Notebook,
     {
         foreignKey:'u_id',
         sourceKey:'id'

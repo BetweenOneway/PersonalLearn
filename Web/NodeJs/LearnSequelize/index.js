@@ -18,15 +18,28 @@ const models = {
   Employee: employee(sequelize,Sequelize.DataTypes),
 };
 
-// 建立关联关系
-Object.keys(models).forEach((modelName) => {
-  if (models[modelName].associate) {
-    models[modelName].associate(models);
-  }
-});
+function Associate1(){
+    // 建立关联关系
+    Object.keys(models).forEach((modelName) => {
+    if (models[modelName].associate) {
+        models[modelName].associate(models);
+    }
+    });
+}
 
-// 使用立即执行异步函数包裹顶级 await
-(async () => {
+function Associate2()
+{
+    models.Department.hasMany(models.Employee,{
+        foreignKey:{
+            name:'clubId'
+        }
+        
+    });
+    models.Employee.belongsTo(models.Department);
+}
+
+async function testFunc(){
+    Associate1();
     try {
       // 同步模型到数据库（仅开发环境使用） force=true会删表重建
       await sequelize.sync({ force: true });
@@ -64,4 +77,6 @@ Object.keys(models).forEach((modelName) => {
     } finally {
       await sequelize.close();
     }
-})();
+}
+
+testFunc();
