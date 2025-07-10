@@ -79,4 +79,47 @@ async function testFunc(){
     }
 }
 
-testFunc();
+async function testFunc1()
+{
+    const { DataTypes } = require('sequelize');
+
+    // 定义 User 模型
+    const User = sequelize.define('User', 
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            }
+        },
+        {
+            freezeTableName: true,
+            timestamps: false
+        }
+    );
+
+    // 定义 Note 模型（显式指定外键约束）
+    const Note = sequelize.define('Note', 
+        {
+            content: DataTypes.TEXT,
+            // 自定义外键字段名为 u_id
+            u_id: {
+                type: DataTypes.INTEGER,
+            }
+        },
+        {
+            freezeTableName: true,
+            timestamps: false
+        }
+    );
+
+    await sequelize.sync(
+        {
+            logging: console.log, 
+            force: true 
+        }
+    );
+    console.log('数据库同步完成');
+}
+
+testFunc1();
