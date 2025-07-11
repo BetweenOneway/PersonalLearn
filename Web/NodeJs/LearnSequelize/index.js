@@ -122,4 +122,48 @@ async function testFunc1()
     console.log('数据库同步完成');
 }
 
-testFunc1();
+//无关联情况下的多表联查—使用原生SQL
+async function testNotAssociateQuery()
+{
+    try {
+        // 同步模型到数据库（仅开发环境使用） force=true会删表重建
+        await sequelize.sync({ force: true });
+        console.log('数据库同步完成');
+    
+        // 创建测试数据
+        const dept = await models.Department.create({
+          name: '技术部',
+          location: '北京',
+        });
+    
+        await models.Employee.bulkCreate([
+          { name: '张三', department_id: dept.id },
+          { name: '李四', department_id: dept.id },
+        ]);
+    
+        //使用原生SQL直接查询
+        const results = await sequelize.query(
+            `SELECT 
+              Employee.name AS userName, 
+              Department.name As departmentName
+            FROM 
+              Employee 
+            JOIN 
+              Department ON Employee.department_id = Department.id`,
+              {
+                type: sequelize.QueryTypes.SELECT,
+              }
+        );
+
+        // 结果处理
+        console.log("query results=>",results)
+
+        //console.log("query metadata=>",metadata)
+    } catch (error) {
+        console.error('查询出错:', error);
+    } finally {
+        await sequelize.close();
+    }
+}
+
+testNotAssociateQuery();
