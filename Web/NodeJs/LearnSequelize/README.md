@@ -10,4 +10,7 @@
   + 迁移操作，除了会创建对应的数据库表之外，会额外创建一个表`sequelizemeta`,记录执行的迁移操作
 + 如需回退，执行`npx sequelize-cli db:migrate:undo:all`回退迁移操作
 
-## 测试Sequelize迁移文件配合node-config用法
+## 测试Sequelize迁移文件针对不同环境的用法
+
+在`config/config.json`中配置根据不同环境的数据库连接参数如`development`或`production`
+在执行命令的时候使用`npx sequelize-cli db:migrate --env 环境名称`即会加载不同的环境
