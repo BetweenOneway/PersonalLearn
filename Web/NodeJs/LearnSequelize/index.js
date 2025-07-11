@@ -141,19 +141,32 @@ async function testNotAssociateQuery()
           { name: '李四', department_id: dept.id },
         ]);
     
+        let results;
         //使用原生SQL直接查询
-        const results = await sequelize.query(
-            `SELECT 
-              Employee.name AS userName, 
-              Department.name As departmentName
-            FROM 
-              Employee 
-            JOIN 
-              Department ON Employee.department_id = Department.id`,
-              {
-                type: sequelize.QueryTypes.SELECT,
-              }
-        );
+        if(true)
+        {
+            [results] = await sequelize.query(
+                `SELECT * FROM Employee WHERE Employee.department_id = :departmentId`,
+                {
+                  replacements: { departmentId: 1 }, // 参数化值
+                  type: sequelize.QueryTypes.SELECT
+                }
+              );
+        }
+        else{
+            results = await sequelize.query(
+                `SELECT 
+                Employee.name AS userName, 
+                Department.name As departmentName
+                FROM 
+                Employee 
+                JOIN 
+                Department ON Employee.department_id = Department.id`,
+                {
+                    type: sequelize.QueryTypes.SELECT,
+                }
+            );
+        }
 
         // 结果处理
         console.log("query results=>",results)
