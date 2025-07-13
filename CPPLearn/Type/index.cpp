@@ -25,6 +25,7 @@ using namespace std;
 
 #include "fileOper.h"
 #include "type.h"
+#include "exception.h"
 
 enum class Color:int {
     Red,
@@ -387,9 +388,15 @@ void testTypeOf()
     TYPE_OF::testTypeId();
 }
 
+void testException()
+{
+    EXCEPTION::testException();
+}
+
 int main()
 {
-    testTypeOf();
+    testException();
+    //testTypeOf();
     //testFileOper();
     //testStream();
     //testDist();
