@@ -11,12 +11,16 @@ module.exports = (sequelize, DataTypes) => {
       },
       department_id: {
         type: DataTypes.INTEGER,
-        references: {
-          model: 'department',
-          key: 'id',
-        },
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
+        // references: {
+        //   model: 'department',
+        //   key: 'id',
+        // },
+        // onDelete: 'SET NULL',
+        // onUpdate: 'CASCADE',
+      },
+      status: {
+        type: DataTypes.INTEGER,
+        defaultValue:0
       },
     },
     {

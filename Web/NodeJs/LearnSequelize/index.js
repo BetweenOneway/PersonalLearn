@@ -52,12 +52,13 @@ async function testFunc(){
       });
   
       await models.Employee.bulkCreate([
-        { name: '张三', department_id: dept.id },
-        { name: '李四', department_id: dept.id },
+        { name: '张三', department_id: dept.id,status:0 },
+        { name: '李四', department_id: dept.id,status:1 },
       ]);
   
       // 执行联查
       const results = await models.Employee.findAll({
+        attributes: ['name'],
         include: [
           {
             model: models.Department,
@@ -65,7 +66,11 @@ async function testFunc(){
             attributes: ['name', 'location'],
           },
         ],
-        attributes: ['name'],
+        where: {
+            status: {
+              [Sequelize.Op.ne]: 1
+            }
+        },
       });
   
       console.log('查询结果：');
@@ -78,6 +83,8 @@ async function testFunc(){
       await sequelize.close();
     }
 }
+
+testFunc();
 
 async function testFunc1()
 {
@@ -179,4 +186,9 @@ async function testNotAssociateQuery()
     }
 }
 
-testNotAssociateQuery();
+async function testMigrationTable()
+{
+
+}
+
+
