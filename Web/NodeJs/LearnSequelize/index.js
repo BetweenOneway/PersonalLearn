@@ -2,21 +2,18 @@
 
 // const config = require('config')
 const Sequelize = require('sequelize');
-
-const employee = require('./models/employee.js')
-const department = require('./models/department.js')
-
-// const user = require("./models/user.js");
-// const post = require("./models/post.js");
 const sequelize = new Sequelize('learndatabase', 'root', '', {
     dialect: 'mysql',
 });
 
+const employee = require('./models/employee.js')
+const department = require('./models/department.js')
+
 // 导入模型
-const models = {
-  Department: department(sequelize,Sequelize.DataTypes),
-  Employee: employee(sequelize,Sequelize.DataTypes),
-};
+// const models = {
+//   Department: department(sequelize,Sequelize.DataTypes),
+//   Employee: employee(sequelize,Sequelize.DataTypes),
+// };
 
 function Associate1(){
     // 建立关联关系
@@ -84,7 +81,7 @@ async function testFunc(){
     }
 }
 
-testFunc();
+//testFunc();
 
 async function testFunc1()
 {
@@ -191,4 +188,67 @@ async function testMigrationTable()
 
 }
 
+//测试定义表时，写reference和不写reference有什么区别 以及关联对建表语句的影响
+async function testReference()
+{
+    console.log("test references");
+    // models/User.js
+    const User = sequelize.define('User', 
+        {
+            segmentKey: { 
+                type: Sequelize.DataTypes.INTEGER, 
+                primaryKey: true, 
+                autoIncrement: true 
+            },
+            name: Sequelize.DataTypes.STRING,
+        }, 
+        {
+            timestamps: false // true --启用自动生成 created_at 和 updated_at 字段 false 不自动生成
+        }
+    );
+  
+    // models/Post.js
+    const Post = sequelize.define('Post', 
+        {
+            id: { 
+                type: Sequelize.DataTypes.INTEGER, 
+                primaryKey: true, 
+                autoIncrement: true 
+            },
+            title: Sequelize.DataTypes.STRING,
+            UserKey: {
+                type: Sequelize.DataTypes.INTEGER,
+                // 放开这
+                // references: {
+                //   model: 'Users',  // 引用 Users 表
+                //   key: 'segmentKey'        // 引用 id 字段
+                // }
+            }
+        }, 
+        {
+            timestamps: false // true --启用自动生成 created_at 和 updated_at 字段 false 不自动生成
+        }
+    );
+  
+    // 定义关联关系 source.hasMany(target)
+    //或放开这
+    User.hasMany(Post,{
+        foreignKey:'UserKey',
+        sourceKey:'segmentKey'
+    });
 
+    Post.belongsTo(User,{
+        foreignKey:'UserKey',
+        targetKey:'segmentKey'
+    });
+
+    try {
+        await sequelize.sync({ force: true });
+        console.log('test references数据库同步完成');
+    
+    } catch (error) {
+        console.log("test references occurs error=>",error);
+    }
+}
+
+testReference();
