@@ -10,6 +10,13 @@
   + 迁移操作，除了会创建对应的数据库表之外，会额外创建一个表`sequelizemeta`,记录执行的迁移操作
 + 如需回退，执行`npx sequelize-cli db:migrate:undo:all`回退迁移操作
 
+### 种子文件
+
+`npx sequelize db:seed:all`执行
+`npx sequelize db:seed:undo --seed 指定种子文件` 撤销指定种子文件
+
+`npx sequelize db:seed:undo:all` 撤销所有种子文件
+
 ## 测试Sequelize迁移文件针对不同环境的用法
 
 在`config/config.json`中配置根据不同环境的数据库连接参数如`development`或`production`
