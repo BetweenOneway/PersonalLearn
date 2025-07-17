@@ -10,10 +10,10 @@ const employee = require('./models/employee.js')
 const department = require('./models/department.js')
 
 // 导入模型
-// const models = {
-//   Department: department(sequelize,Sequelize.DataTypes),
-//   Employee: employee(sequelize,Sequelize.DataTypes),
-// };
+const models = {
+  Department: department(sequelize,Sequelize.DataTypes),
+  Employee: employee(sequelize,Sequelize.DataTypes),
+};
 
 function Associate1(){
     // 建立关联关系
@@ -251,4 +251,66 @@ async function testReference()
     }
 }
 
-testReference();
+//testReference();
+
+async function testJoinQuery()
+{
+    Associate1();
+    try {
+        // 同步模型到数据库（仅开发环境使用） force=true会删表重建
+        await sequelize.sync({ force: true });
+        console.log('testJoinQuery-数据库同步完成');
+  
+        // 创建测试数据
+        const dept1 = await models.Department.create({
+            name: '技术部',
+            location: '深圳',
+        });
+        const dept2 = await models.Department.create({
+            name: '行政部',
+            location: '北京',
+        });
+        const dept3 = await models.Department.create({
+            name: '财务部',
+            location: '上海',
+        });
+        const dept4 = await models.Department.create({
+            name: '法务部',
+            location: '香港',
+        });
+    
+        await models.Employee.bulkCreate([
+            { name: '张三', department_id: dept1.id,status:0 },
+            { name: '李四', department_id: dept2.id,status:0 },
+            { name: '王二', department_id: dept3.id,status:0 },
+            { name: '孙一',status:0 },
+        ]);
+  
+        // 执行联查
+        const results = await models.Employee.findAll({
+            attributes: ['name'],
+            include: [
+            {
+                model: models.Department,
+                as: 'Department', // 确保别名与模型定义一致
+                required: false,//如果为 true，则转换为内连接 false 外连接
+                right: true, // 如果为 true，则转换为右连接
+                attributes: ['name', 'location'],
+            },
+            ],
+        });
+  
+        //SELECT `employee`.`id`, `employee`.`name`, `Department`.`id` AS `Department.id`, `Department`.`name` AS `Department.name`, `Department`.`location` AS `Department.location` FROM `employee` AS `employee` LEFT OUTER JOIN `department` AS `Department` ON `employee`.`department_id` = `Department`.`id`;
+
+        console.log('查询结果：');
+        results.forEach((emp) => {
+            console.log(`${emp?.name || 'NULL'} 属于 ${emp.Department?.name || 'NULL'} (${emp.Department?.location || 'NULL'})`);
+        });
+    } catch (error) {
+        console.error('查询出错:', error);
+    } finally {
+        await sequelize.close();
+    }
+}
+
+testJoinQuery();
