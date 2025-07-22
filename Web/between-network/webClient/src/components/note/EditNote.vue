@@ -149,9 +149,10 @@
                 deleteNote();
                 break;
             case "public-note":
-                //createNotebook();
+                PublicNote(true);
                 break;
             case "unpublic-note":
+                PublicNote(false);
                 break;
         }
     }
@@ -377,18 +378,26 @@
     /**
      * 公开笔记
     */
-    function PublicNote()
+    function PublicNote(isPublic)
     {
+        let API = {...noteApi.topNote};
+        API.name = isPublic ? API.name[0]:API.name[1];
+        //请求URL的参数
+        API.params= {
+            targetOpenStatus:isPublic?2:1,
+            noteId:contextMenu.value.id
+        };
 
+        //发送请求
+        noteServerRequest(API).then(responseData=>{
+            if(responseData)
+            {
+                //重新获取笔记列表
+                getNoteList(false,false);
+            }
+        })
     }
 
-    /**
-     * 取消公开笔记
-    */
-    function UnpublicNote()
-    {
-
-    }
     //获取选定笔记信息
     getNoteInfo();
 

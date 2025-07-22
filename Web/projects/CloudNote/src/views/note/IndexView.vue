@@ -377,7 +377,7 @@
 
     /**
      * 置顶/取消置顶笔记
-     * @param {Boolean} isTop true置顶 false非彻底删除
+     * @param {Boolean} isTop true置顶 false取消置顶
      */
     const SetNoteTop = async (isTop)=>{
         let API = {...noteApi.topNote};

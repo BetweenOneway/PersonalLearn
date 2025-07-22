@@ -23,6 +23,14 @@ const noteApi = {
         dataParam:false,
         successMessage:true
     },
+    topNote:{
+        name:['公开笔记','私有化笔记'],
+        url:'/note/setNoteOpenStatus',
+        method:'GET',
+        userAuth:true,
+        dataParam:false,
+        successMessage:true
+    },
     renameNote:{
         name:'笔记重命名',
         url:'/note/renameNote',

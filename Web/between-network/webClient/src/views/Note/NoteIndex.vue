@@ -425,6 +425,29 @@
         })
     }
 
+    /**
+     * 置顶/取消置顶笔记
+     * @param {Boolean} isTop true置顶 false取消置顶
+     */
+     const SetNoteTop = async (isTop)=>{
+        let API = {...noteApi.topNote};
+        API.name = isTop ? API.name[0]:API.name[1];
+        //请求URL的参数
+        API.params= {
+            targetTop:isTop?1:0,
+            noteId:contextMenu.value.id
+        };
+
+        //发送请求
+        noteServerRequest(API).then(responseData=>{
+            if(responseData)
+            {
+                //重新获取笔记列表
+                getNoteList(false,false);
+            }
+        })
+    }
+    
     //----------------删除笔记-------------------
 
     const isChangeEditNote = ref(0)//0 不需要改变 1 需要重新加载 2 需要关闭

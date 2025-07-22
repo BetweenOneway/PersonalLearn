@@ -226,6 +226,107 @@ router.get("/setNoteTop",async (req,res)=>{
 })
 
 /**
+ * 笔记公开/私有
+ */
+router.get("/setNoteOpenStatus",async (req,res)=>{
+    let output={
+        success:true,
+        status:'',
+        description:'',
+        data:[]
+    }
+    console.log("start set Note Open Status:",req.query);
+    
+    //目标状态
+    let targetOpenStatus = req.query.targetOpenStatus
+    let noteId = req.query.noteId
+
+    if(!noteId || targetOpenStatus === undefined || (1!= targetOpenStatus && 2!= targetOpenStatus))
+    {
+        console.log("note set open status, noteId or targetOpenStatus empty")
+        output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
+        output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
+        output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
+        res.send(output)
+        return
+    }
+
+    let userInfo = req.userInfo;
+
+    const t = await sqldb.sequelize.transaction();
+
+    try{
+        let curTime = new Date().toLocaleString()
+        const updateNum = await sqldb.Note.update(
+            {
+                status:targetOpenStatus,
+                update_time:curTime
+            },
+            {
+                where:{
+                    id:noteId,
+                    u_id:userInfo.id,
+                    [Op.and]:[
+                        {
+                            status:{
+                                [Op.ne]: targetOpenStatus
+                            }
+                        },
+                        {
+                            status:{
+                                [Op.ne]: 0
+                            }
+                        }
+                    ]
+                },
+                transaction: t
+            }
+        );
+        if(updateNum > 0)
+        {
+            let event = targetOpenStatus === 2? statusCode.EVENT_LIST.NOTE_SET_OPEN : statusCode.EVENT_LIST.NOTE_UNSET_OPEN;
+            
+            const newAddedLog = await sqldb.operLog.create(
+                {
+                    time: curTime,
+                    event: event.code,
+                    desc:event.desc,
+                    u_id:userInfo.id,
+                    o_id:noteId,
+                    type:1
+                }, 
+                { 
+                    transaction: t 
+                }
+            )
+            t.commit();
+            output.success = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_SUCCESS.description
+            res.send(output);
+        }
+        else{
+            console.log("set note top,updateNum=",updateNum);
+            t.rollback()
+            output.success = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_FAIL.success
+            output.status = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_FAIL.status
+            output.description = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_FAIL.description
+            res.send(output);
+        }
+    }
+    catch(e){
+        console.log(e)
+        t.rollback()
+        output.success = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_FAIL.description
+        res.send(output);
+    }
+    console.log("End of set note open or private");
+    return
+})
+
+/**
  * 笔记重命名
  */
 router.post("/renameNote",async (req,res)=>{

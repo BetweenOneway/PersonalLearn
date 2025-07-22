@@ -200,12 +200,22 @@ SERVICE_STATUS={
     NOTE_SET_TOP_SUCCESS:{
         success:true,
         status:'SERVICE_022',
-        description:'便签置顶或取消置顶成功'
+        description:'笔记置顶或取消置顶成功'
     },
     NOTE_SET_TOP_FAIL:{
         success:false,
         status:'SERVICE_023',
-        description:'便签置顶或取消置顶失败'
+        description:'笔记置顶或取消置顶失败'
+    },
+    NOTE_SET_OPEN_SUCCESS:{
+        success:true,
+        status:'SERVICE_022',
+        description:'笔记公开或私有成功'
+    },
+    NOTE_SET_OPEN_FAIL:{
+        success:false,
+        status:'SERVICE_023',
+        description:'笔记公开或私有失败'
     },
     RENAME_NOTE_SUCCESS:{
         success:true,
@@ -345,6 +355,14 @@ EVENT_LIST = {
     NOTE_UNSET_TOP:{
         code:'9',
         desc:'笔记取消置顶'
+    },
+    NOTE_SET_OPEN:{
+        code:'8',
+        desc:'笔记公开'
+    },
+    NOTE_UNSET_OPEN:{
+        code:'9',
+        desc:'笔记取消公开'
     },
     NOTE_DEL:{
         code:'10',
