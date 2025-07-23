@@ -45,5 +45,21 @@ module.exports = function(sequelize,DataTypes){
         freezeTableName: true,
         timestamps: false
     });
+
+    User.associate = models => {
+        User.hasMany(models.Note,
+            {
+                foreignKey: 'u_id',
+                sourceKey:'id'
+            }
+        );
+        User.hasMany(models.Notebook,
+            {
+                foreignKey: 'u_id',
+                sourceKey:'id'
+            }
+        );
+    }
+
     return User;
 };

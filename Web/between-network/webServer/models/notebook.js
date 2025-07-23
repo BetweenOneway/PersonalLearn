@@ -19,7 +19,11 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.DATE
         },
         u_id:{
-            type:DataTypes.INTEGER
+            type:DataTypes.INTEGER,
+            references: {
+                model: 'z_user',
+                key: 'id'
+            }
         },
         level:{
             type:DataTypes.INTEGER,
@@ -40,5 +44,20 @@ module.exports = function(sequelize,DataTypes){
         freezeTableName: true,
         timestamps: false
     });
+
+    Notebook.associate = models => {
+        Notebook.hasMany(models.Note,
+            {
+                foreignKey: 'notebook_id',
+                sourceKey:'id'
+            }
+        );
+        Notebook.belongsTo(models.User,
+            {
+                foreignKey: 'u_id',
+                targetKey:'id'
+            }
+        );
+    }
     return Notebook;
 };
