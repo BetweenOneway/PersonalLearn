@@ -27,18 +27,23 @@ db.operLog = operLog(db.sequelize,Sequelize.DataTypes);
 db.Dumpster = dumpsterFile(db.sequelize,Sequelize.DataTypes);
 db.RecentFiles = recentAccessFiles(db.sequelize,Sequelize.DataTypes);
 
-db.User.hasMany(db.Note,
-    {
-        foreignKey:'u_id',
-        sourceKey:'id'
+Object.keys(db).forEach((modelName) => {
+    if (db[modelName].associate) {
+        db[modelName].associate(db);
     }
-);
+});
+// db.User.hasMany(db.Note,
+//     {
+//         foreignKey:'u_id',
+//         sourceKey:'id'
+//     }
+// );
 
-db.User.hasMany(db.Notebook,
-    {
-        foreignKey:'u_id',
-        sourceKey:'id'
-    }
-);
+// db.User.hasMany(db.Notebook,
+//     {
+//         foreignKey:'u_id',
+//         sourceKey:'id'
+//     }
+// );
 
 module.exports = db;

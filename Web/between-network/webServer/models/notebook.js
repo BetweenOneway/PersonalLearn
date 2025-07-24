@@ -46,12 +46,12 @@ module.exports = function(sequelize,DataTypes){
     });
 
     Notebook.associate = models => {
-        Notebook.hasMany(models.Note,
-            {
-                foreignKey: 'notebook_id',
-                sourceKey:'id'
-            }
-        );
+        // Notebook.hasMany(models.Note,
+        //     {
+        //         foreignKey: 'notebook_id',
+        //         sourceKey:'id'
+        //     }
+        // );
         Notebook.belongsTo(models.User,
             {
                 foreignKey: 'u_id',

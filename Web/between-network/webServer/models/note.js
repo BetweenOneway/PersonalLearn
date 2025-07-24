@@ -33,10 +33,10 @@ module.exports = function(sequelize,DataTypes){
         },
         notebook_id:{
             type:DataTypes.INTEGER, 
-            references: {
-                model: 'notebook',
-                key: 'id'
-            }
+            // references: {
+            //     model: 'notebook',
+            //     key: 'id'
+            // }
         },
         top:{
             type:DataTypes.INTEGER,
@@ -62,12 +62,12 @@ module.exports = function(sequelize,DataTypes){
                 targetKey:'id'
             }
         );
-        Note.belongsTo(models.Notebook,
-            {
-                foreignKey: 'notebook_id',
-                targetKey:'id'
-            }
-        )
+        // Note.belongsTo(models.Notebook,
+        //     {
+        //         foreignKey: 'notebook_id',
+        //         targetKey:'id'
+        //     }
+        // )
     }
     return Note;
 };

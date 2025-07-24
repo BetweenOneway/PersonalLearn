@@ -36,7 +36,7 @@ console.log(process.env.NODE_ENV)
 Init();
 
 //启动数据库
-sqldb.sequelize.sync({force: false}).then(function() {
+sqldb.sequelize.sync({alter: true}).then(function() {
     logger.info("Server successed to start");
     // let rawAttrs = sqldb.Note.rawAttributes;
     // console.log("note:",rawAttrs);
