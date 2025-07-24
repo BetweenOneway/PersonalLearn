@@ -48,6 +48,9 @@
         <n-card>
             <RouterLink to="/Reuseable">可重用子组件</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/Cards">学习卡片组件</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 

@@ -125,6 +125,11 @@ const router = createRouter({
         component: () => import('@/views/ReuseableComponentView.vue'),
     },
     {
+        path: '/Cards',
+        name: '卡片组件',
+        component: () => import('@/views/CardsView.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting
