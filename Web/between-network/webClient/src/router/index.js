@@ -56,6 +56,11 @@ const router = createRouter({
         ]
     },
     {
+        path: '/blog',
+        component: ()=>import("@/views/Blog/BlogIndexView.vue"),
+        meta:{title:'博客页'},
+    },
+    {
         path: '/test',
         component: ()=>import("@/views/test/Index.vue"),
         children:[

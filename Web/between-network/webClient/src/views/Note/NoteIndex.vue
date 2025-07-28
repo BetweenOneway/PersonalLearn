@@ -128,7 +128,7 @@
         @select="selectContextMenu"
         />
         <!--删除提醒框-->
-    <DeleteRemindDialog @deleteSuccess="deleteNoteSuccess"></DeleteRemindDialog>
+        <DeleteRemindDialog @deleteSuccess="deleteNoteSuccess"></DeleteRemindDialog>
     </div>
     
 </template>

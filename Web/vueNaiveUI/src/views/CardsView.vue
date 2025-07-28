@@ -38,10 +38,10 @@
                         </div>
                     </template>
                     <template #default>
-                    default内容
-                    </template>
-                    <template #footer>
-                    #footer
+                        <div class="flex h-10 mt-2 text-gray-400">
+                            是一个面向开源及私有软件项目的托管平台。
+                        </div>
+                        <div class="flex h-10 mt-2 text-gray-400"> 开源君，2021-07-04 </div>
                     </template>
                     <template #action>
                         <n-button quaternary circle>
@@ -81,7 +81,7 @@
                         </div>
                     </template>
                     <template #default>
-                    default内容
+                        <div class="text-gray-400"> 开源君，2021-07-04 </div>
                     </template>
                     <template #footer>
                         <n-button quaternary circle>
@@ -120,228 +120,236 @@
                 </n-card>
             </n-gi>
             <n-gi>
-                <n-thing>
-                    <template #avatar>
-                        <n-avatar>
-                            <n-icon>
-                                <DollarSign />
-                            </n-icon>
-                        </n-avatar>
-                    </template>
-                    <template #header>
-                    货币
-                    </template>
-                    <template #header-extra>
-                        <n-button circle size="small">
-                            <template #icon>
-                                <DollarSign />
-                            </template>
-                        </n-button>
-                    </template>
-                    <template #description>
-                    描述
-                    </template>
-                    货币是为了提高交易效率而用于交换的中介商品。货币有多种形式，如贝壳粮食等自然物、金属纸张等加工品、银行卡信用卡等磁条卡、移动支付加密货币等APP。
-                    <template #footer>
-                    尾部
-                    </template>
-                    <template #action>
-                        <n-space>
-                            <n-button size="small">
-                            <template #icon>
+                <n-card>
+                    <n-thing>
+                        <template #avatar>
+                            <n-avatar>
                                 <n-icon>
-                                <DollarSign />
+                                    <DollarSign />
                                 </n-icon>
-                            </template>
-                            1 块钱
+                            </n-avatar>
+                        </template>
+                        <template #header>
+                        原创文章标题
+                        </template>
+                        <template #header-extra>
+                            <n-button circle size="small">
+                                <template #icon>
+                                    <DollarSign />
+                                </template>
                             </n-button>
-                            <n-button size="small">
-                            <template #icon>
-                                <n-icon>
-                                <DollarSign />
-                                </n-icon>
-                            </template>
-                            10 块钱
-                            </n-button>
-                            <n-button size="small">
-                            <template #icon>
-                                <n-icon>
-                                <DollarSign />
-                                </n-icon>
-                            </template>
-                            100 块钱
-                            </n-button>
-                        </n-space>
-                    </template>
-                </n-thing>
+                        </template>
+                        <template #description>
+                            <span class="text-gray-400"> 开源君，2021-07-04 </span>
+                        </template>
+                        货币是为了提高交易效率而用于交换的中介商品。货币有多种形式，如贝壳粮食等自然物、金属纸张等加工品、银行卡信用卡等磁条卡、移动支付加密货币等APP。
+                        <template #footer>
+                        尾部
+                        </template>
+                        <template #action>
+                            <n-space>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                1 块钱
+                                </n-button>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                10 块钱
+                                </n-button>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                100 块钱
+                                </n-button>
+                            </n-space>
+                        </template>
+                    </n-thing>
+                </n-card>
             </n-gi>
             <n-gi>
-                <n-thing>
-                    <template #avatar>
-                        <n-avatar>
-                            <n-icon>
-                                <DollarSign />
-                            </n-icon>
-                        </n-avatar>
-                    </template>
-                    <template #header>
-                    货币
-                    </template>
-                    <template #header-extra>
-                        <n-button circle size="small">
-                            <template #icon>
-                                <DollarSign />
-                            </template>
-                        </n-button>
-                    </template>
-                    <template #description>
-                    描述
-                    </template>
-                    货币是为了提高交易效率而用于交换的中介商品。货币有多种形式，如贝壳粮食等自然物、金属纸张等加工品、银行卡信用卡等磁条卡、移动支付加密货币等APP。
-                    <template #footer>
-                    尾部
-                    </template>
-                    <template #action>
-                        <n-space>
-                            <n-button size="small">
-                            <template #icon>
+                <n-card>
+                    <n-thing>
+                        <template #avatar>
+                            <n-avatar>
                                 <n-icon>
-                                <DollarSign />
+                                    <DollarSign />
                                 </n-icon>
-                            </template>
-                            1 块钱
+                            </n-avatar>
+                        </template>
+                        <template #header>
+                        货币
+                        </template>
+                        <template #header-extra>
+                            <n-button circle size="small">
+                                <template #icon>
+                                    <DollarSign />
+                                </template>
                             </n-button>
-                            <n-button size="small">
-                            <template #icon>
-                                <n-icon>
-                                <DollarSign />
-                                </n-icon>
-                            </template>
-                            10 块钱
-                            </n-button>
-                            <n-button size="small">
-                            <template #icon>
-                                <n-icon>
-                                <DollarSign />
-                                </n-icon>
-                            </template>
-                            100 块钱
-                            </n-button>
-                        </n-space>
-                    </template>
-                </n-thing>
+                        </template>
+                        <template #description>
+                        描述
+                        </template>
+                        货币是为了提高交易效率而用于交换的中介商品。货币有多种形式，如贝壳粮食等自然物、金属纸张等加工品、银行卡信用卡等磁条卡、移动支付加密货币等APP。
+                        <template #footer>
+                        尾部
+                        </template>
+                        <template #action>
+                            <n-space>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                1 块钱
+                                </n-button>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                10 块钱
+                                </n-button>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                100 块钱
+                                </n-button>
+                            </n-space>
+                        </template>
+                    </n-thing>
+                </n-card>
             </n-gi>
             <n-gi>
-                <n-thing>
-                    <template #avatar>
-                        <n-avatar>
-                            <n-icon>
-                                <DollarSign />
-                            </n-icon>
-                        </n-avatar>
-                    </template>
-                    <template #header>
-                    货币
-                    </template>
-                    <template #header-extra>
-                        <n-button circle size="small">
-                            <template #icon>
-                                <DollarSign />
-                            </template>
-                        </n-button>
-                    </template>
-                    <template #description>
-                    描述
-                    </template>
-                    货币是为了提高交易效率而用于交换的中介商品。货币有多种形式，如贝壳粮食等自然物、金属纸张等加工品、银行卡信用卡等磁条卡、移动支付加密货币等APP。
-                    <template #footer>
-                    尾部
-                    </template>
-                    <template #action>
-                        <n-space>
-                            <n-button size="small">
-                            <template #icon>
+                <n-card>
+                    <n-thing>
+                        <template #avatar>
+                            <n-avatar>
                                 <n-icon>
-                                <DollarSign />
+                                    <DollarSign />
                                 </n-icon>
-                            </template>
-                            1 块钱
+                            </n-avatar>
+                        </template>
+                        <template #header>
+                        货币
+                        </template>
+                        <template #header-extra>
+                            <n-button circle size="small">
+                                <template #icon>
+                                    <DollarSign />
+                                </template>
                             </n-button>
-                            <n-button size="small">
-                            <template #icon>
-                                <n-icon>
-                                <DollarSign />
-                                </n-icon>
-                            </template>
-                            10 块钱
-                            </n-button>
-                            <n-button size="small">
-                            <template #icon>
-                                <n-icon>
-                                <DollarSign />
-                                </n-icon>
-                            </template>
-                            100 块钱
-                            </n-button>
-                        </n-space>
-                    </template>
-                </n-thing>
+                        </template>
+                        <template #description>
+                        描述
+                        </template>
+                        货币是为了提高交易效率而用于交换的中介商品。货币有多种形式，如贝壳粮食等自然物、金属纸张等加工品、银行卡信用卡等磁条卡、移动支付加密货币等APP。
+                        <template #footer>
+                        尾部
+                        </template>
+                        <template #action>
+                            <n-space>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                1 块钱
+                                </n-button>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                10 块钱
+                                </n-button>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                100 块钱
+                                </n-button>
+                            </n-space>
+                        </template>
+                    </n-thing>
+                </n-card>
             </n-gi>
             <n-gi>
-                <n-thing>
-                    <template #avatar>
-                        <n-avatar>
-                            <n-icon>
-                                <DollarSign />
-                            </n-icon>
-                        </n-avatar>
-                    </template>
-                    <template #header>
-                    货币
-                    </template>
-                    <template #header-extra>
-                        <n-button circle size="small">
-                            <template #icon>
-                                <DollarSign />
-                            </template>
-                        </n-button>
-                    </template>
-                    <template #description>
-                    描述
-                    </template>
-                    货币是为了提高交易效率而用于交换的中介商品。货币有多种形式，如贝壳粮食等自然物、金属纸张等加工品、银行卡信用卡等磁条卡、移动支付加密货币等APP。
-                    <template #footer>
-                    尾部
-                    </template>
-                    <template #action>
-                        <n-space>
-                            <n-button size="small">
-                            <template #icon>
+                <n-card>
+                    <n-thing>
+                        <template #avatar>
+                            <n-avatar>
                                 <n-icon>
-                                <DollarSign />
+                                    <DollarSign />
                                 </n-icon>
-                            </template>
-                            1 块钱
+                            </n-avatar>
+                        </template>
+                        <template #header>
+                        货币
+                        </template>
+                        <template #header-extra>
+                            <n-button circle size="small">
+                                <template #icon>
+                                    <DollarSign />
+                                </template>
                             </n-button>
-                            <n-button size="small">
-                            <template #icon>
-                                <n-icon>
-                                <DollarSign />
-                                </n-icon>
-                            </template>
-                            10 块钱
-                            </n-button>
-                            <n-button size="small">
-                            <template #icon>
-                                <n-icon>
-                                <DollarSign />
-                                </n-icon>
-                            </template>
-                            100 块钱
-                            </n-button>
-                        </n-space>
-                    </template>
-                </n-thing>
+                        </template>
+                        <template #description>
+                        描述
+                        </template>
+                        货币是为了提高交易效率而用于交换的中介商品。货币有多种形式，如贝壳粮食等自然物、金属纸张等加工品、银行卡信用卡等磁条卡、移动支付加密货币等APP。
+                        <template #footer>
+                        尾部
+                        </template>
+                        <template #action>
+                            <n-space>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                1 块钱
+                                </n-button>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                10 块钱
+                                </n-button>
+                                <n-button size="small">
+                                <template #icon>
+                                    <n-icon>
+                                    <DollarSign />
+                                    </n-icon>
+                                </template>
+                                100 块钱
+                                </n-button>
+                            </n-space>
+                        </template>
+                    </n-thing>
+                </n-card>
             </n-gi>
         </n-grid>
     </n-card>

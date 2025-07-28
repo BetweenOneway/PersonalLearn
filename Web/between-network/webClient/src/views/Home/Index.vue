@@ -13,7 +13,7 @@
         <div id="blogs" class="content-row">
             <div class="card-title">
                 <span class="title">最近公开笔记</span>
-                <a href="#" target="_blank" rel="noopener" class="link-more">
+                <a href="/blog" target="_blank" rel="noopener" class="link-more">
                     <span>更多</span>
                     <n-icon :component="KeyboardArrowRightFilled"/>
                 </a>
