@@ -71,6 +71,59 @@ router.get("/getRecentNoteList",async (req,res)=>{
 })
 
 /**
+ * 获取公开笔记列表
+ * pageIndex 第几页
+ * pageSize 每页几条数据
+ */
+router.get("/getOpenNoteList",async (req,res)=>{
+    var output={
+        success:true,
+        status:'',
+        description:'',
+        data:[]
+    }
+
+    console.log("start getOpenNoteList")
+    
+    let targetStatus = 2
+    let pageIndex = req.pageIndex;
+    let pageSize = req.pageSize;
+    let offset = pageIndex * pageSize;
+
+    try {
+        console.log("parsed userinfo=>",userInfo)
+
+        const notes = await sqldb.Note.findAll(
+            {
+                attributes: ['id', 'title','content','top','update_time'],
+                where:{
+                    status: targetStatus,
+                },
+                order:[
+                    ['update_time','DESC']
+                ],
+                limit:pageIndex,
+                offset:offset,
+                raw:true,
+            }
+        );
+        output.success = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_SUCCESS.success
+        output.status = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_SUCCESS.status
+        output.description = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_SUCCESS.description
+
+        output.data = notes
+    } catch (error) {
+        console.log(error)
+        output.success = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_FAIL.description
+    }
+    res.send(output);
+    console.log("End of getOpenNoteList")
+    return;
+})
+
+/**
  * 获取指定笔记本内所有笔记列表
  * userToken 用户编号
  */

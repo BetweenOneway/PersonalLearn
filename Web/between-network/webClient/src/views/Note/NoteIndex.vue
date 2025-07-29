@@ -429,7 +429,7 @@
      * 置顶/取消置顶笔记
      * @param {Boolean} isTop true置顶 false取消置顶
      */
-     const SetNoteTop = async (isTop)=>{
+    const SetNoteTop = async (isTop)=>{
         let API = {...noteApi.topNote};
         API.name = isTop ? API.name[0]:API.name[1];
         //请求URL的参数

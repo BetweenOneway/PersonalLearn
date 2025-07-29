@@ -19,6 +19,14 @@
                 </a>
             </div>
         </div>
+        <div style="width: 100%;">
+            <n-grid x-gap="12" :y-gap="8" :cols="4">
+                <n-gi v-for="(blogItem,index) in blogList" :key="blog.id" :data-index="index">
+                    <blog-card :blog="blogItem"/>
+                </n-gi>
+            </n-grid>
+            <n-button>加载更多</n-button>
+        </div>
     </div>
 </template>
 
@@ -27,6 +35,9 @@
     import { toHerf } from '@/router/go';
     import { loginInvalid,getUserToken } from "@/Utils/userLogin";
     import {KeyboardArrowRightFilled} from "@vicons/material"
+
+    import noteServerRequest  from "@/request"
+    import noteApi from '@/request/api/noteApi';
 
     async function toSpecifiedRoute(inputRoute,requiredLogin=true){
         if(requiredLogin)
@@ -43,6 +54,31 @@
         }
     }
 
+    const blogList = ref([]);
+    //获取公开的笔记列表
+    async function GetOpenNoteList()
+    {
+        let API = {...noteApi.getOpenNoteList};
+        API.name = API.name;
+        //请求URL的参数
+        API.params= {
+            pageIndex:0,
+            pageSize:10
+        };
+
+        //发送请求
+        noteServerRequest(API).then(responseData=>{
+            if(responseData)
+            {
+                blogList.value = responseData.data;
+            }
+        })
+    }
+
+    function Init()
+    {
+        GetOpenNoteList();
+    }
 </script>
 
 <style scoped>

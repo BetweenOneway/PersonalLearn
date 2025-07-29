@@ -23,7 +23,7 @@ const noteApi = {
         dataParam:false,
         successMessage:true
     },
-    topNote:{
+    publicNote:{
         name:['公开笔记','私有化笔记'],
         url:'/note/setNoteOpenStatus',
         method:'GET',
@@ -62,7 +62,15 @@ const noteApi = {
         userAuth:true,
         dataParam:false,
         successMessage:false
-    }
+    },
+    getOpenNoteList:{
+        name:'获取公开笔记列表',
+        url:'/note/getOpenNoteList',
+        method:'GET',
+        userAuth:false,
+        dataParam:false,
+        successMessage:false
+    },
 }
 
 export default noteApi

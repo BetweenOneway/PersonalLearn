@@ -337,6 +337,16 @@ SERVICE_STATUS={
         status:'SERVICE_027',
         description:'新增笔记本失败'
     },
+    GET_OPEN_NOTE_SUCCESS:{
+        success:true,
+        status:'SERVICE_020',
+        description:'获取公开笔记成功'
+    },
+    GET_OPEN_NOTE_FAIL:{
+        success:false,
+        status:'SERVICE_021',
+        description:'获取公开笔记失败'
+    },
 }
 
 EVENT_LIST = {

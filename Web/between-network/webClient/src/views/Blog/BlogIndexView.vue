@@ -5,6 +5,7 @@
                 <blog-card :blog="blogItem"/>
             </n-gi>
         </n-grid>
+        <n-button>加载更多</n-button>
     </div>
 </template>
 
