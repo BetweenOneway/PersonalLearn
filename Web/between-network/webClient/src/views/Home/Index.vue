@@ -10,10 +10,11 @@
                 <n-image width="100%" :src="illustration3"></n-image>
             </div>
         </n-flex>
+        <!--博客区域-->
         <div id="blogs" class="content-row">
             <div class="card-title">
-                <span class="title">最近公开笔记</span>
-                <a href="/blog" target="_blank" rel="noopener" class="link-more">
+                <span class="title">最新博客</span>
+                <a href="/blog" target="_self" rel="noopener" class="link-more">
                     <span>更多</span>
                     <n-icon :component="KeyboardArrowRightFilled"/>
                 </a>
@@ -25,7 +26,7 @@
                     <blog-card :blog="blogItem"/>
                 </n-gi>
             </n-grid>
-            <n-button>加载更多</n-button>
+            <n-button v-if="blogList.length > 0" @click="toHerf('/blog')">加载更多</n-button>
         </div>
     </div>
 </template>
