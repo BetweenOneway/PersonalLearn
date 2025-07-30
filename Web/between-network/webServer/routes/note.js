@@ -86,13 +86,13 @@ router.get("/getOpenNoteList",async (req,res)=>{
     console.log("start getOpenNoteList")
     
     let targetStatus = 2
-    let pageIndex = req.pageIndex;
-    let pageSize = req.pageSize;
+    let pageIndex = parseInt(req.query.pageIndex);
+    let pageSize = parseInt(req.query.pageSize);
     let offset = pageIndex * pageSize;
 
-    try {
-        console.log("parsed userinfo=>",userInfo)
+    logger.info(`pageIndex:${pageIndex};pageSize:${pageSize};offset:${offset}`);
 
+    try {
         const notes = await sqldb.Note.findAll(
             {
                 attributes: ['id', 'title','content','top','update_time'],
@@ -102,7 +102,7 @@ router.get("/getOpenNoteList",async (req,res)=>{
                 order:[
                     ['update_time','DESC']
                 ],
-                limit:pageIndex,
+                limit:pageSize,
                 offset:offset,
                 raw:true,
             }

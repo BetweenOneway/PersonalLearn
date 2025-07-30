@@ -68,7 +68,7 @@ const noteApi = {
         url:'/note/getOpenNoteList',
         method:'GET',
         userAuth:false,
-        dataParam:false,
+        dataParam:true,
         successMessage:false
     },
 }

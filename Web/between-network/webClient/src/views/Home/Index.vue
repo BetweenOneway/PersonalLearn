@@ -31,6 +31,7 @@
 </template>
 
 <script setup>
+    import { ref } from 'vue';
     import illustration3 from '@/assets/img/illustrations/illustration-3.svg'
     import { toHerf } from '@/router/go';
     import { loginInvalid,getUserToken } from "@/Utils/userLogin";
@@ -58,6 +59,7 @@
     //获取公开的笔记列表
     async function GetOpenNoteList()
     {
+        console.log("Get open note list")
         let API = {...noteApi.getOpenNoteList};
         API.name = API.name;
         //请求URL的参数
@@ -75,10 +77,12 @@
         })
     }
 
-    function Init()
+    async function Init()
     {
-        GetOpenNoteList();
+        await GetOpenNoteList();
     }
+
+    Init();
 </script>
 
 <style scoped>
