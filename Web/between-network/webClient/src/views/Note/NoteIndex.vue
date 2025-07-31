@@ -12,7 +12,7 @@
                                     <AddBoxRound />
                                 </n-icon>
                             </template>
-                            新建笔记
+                            新建
                         </n-button>
                     </template>
                     <n-menu :options="createMenu" :indent="18" :on-update:value="clickCreateMenu" />
@@ -32,7 +32,7 @@
                 :width="180"
                 :native-scrollbar="false"
                 >
-                    <NotebookTree ref="notebookTree" @NotebookChanged="notebookChanged"/>
+                    <NotebookTree ref="notebookTree" @NotebookNumChange="NotebookNumChanged" @NotebookChanged="notebookChanged"/>
                 </n-layout-sider>
                 <!--底部菜单栏-->
                 <n-space>
@@ -100,7 +100,6 @@
                                 <n-icon :component="SubtitlesOffOutlined"></n-icon>
                             </template>
                         </n-empty>
-
                     </n-scrollbar>
                 </n-layout-sider>
 
@@ -168,6 +167,8 @@
         return () => h(NIcon, null, { default: () => h(icon) });
     }
 
+    let notebookTree = ref(null);
+
     //是否是回收站列表
     const isRecycleBinView = ref(false)
 
@@ -175,19 +176,36 @@
     const createMenuShow = ref(false)
 
     //点击新建按钮的菜单
-    const createMenu =[
-        {
-            key:'create-note',
-            icon:renderIcon(AddBoxRound),
-            label:'新建笔记'
-        },
-        {
-            key:'create-notebook',
-            icon:renderIcon(AddBoxRound),
-            label:'新建文件夹'
-        },
-    ]
+    const createMenu = ref([]);
 
+    //加载新建按钮菜单项
+    function LoadNewAddMentItem()
+    {
+        createMenu.value = [];
+        if(!notebookTree.value.IsEmptyNotebookTree())
+        {
+            createMenu.value.push(
+                {
+                    key:'create-note',
+                    icon:renderIcon(AddBoxRound),
+                    label:'新建笔记'
+                }
+            );
+        }
+        createMenu.value.push(
+            {
+                key:'create-notebook',
+                icon:renderIcon(AddBoxRound),
+                label:'新建笔记本'
+            }
+        );
+    }
+
+    //笔记本数量改变，重新加载新加按钮
+    function NotebookNumChanged()
+    {
+        LoadNewAddMentItem();
+    }
     //新建菜单选项回调
     const clickCreateMenu = (key,value)=>{
         //关闭用户菜单弹出信息
@@ -246,7 +264,6 @@
         changeEditNoteState(2)
     }
 
-    let notebookTree = ref(null);
     /**
      * 获取指定笔记本内的笔记列表
     */
@@ -471,7 +488,7 @@
         changeEditNoteState(2)
     }
 
-    function getRecentNoteList(isInit = true)
+    async function getRecentNoteList(isInit = true)
     {
         if(!isInit)
         {
@@ -496,10 +513,11 @@
         notebookTree.value.ClearSelectNode();
     }
 
-    function Init()
+    async function Init()
     {
         console.log("Note Index view init");
-        getRecentNoteList();
+        await getRecentNoteList();
+        LoadNewAddMentItem();
     }
 
     Init();

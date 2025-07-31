@@ -1,6 +1,6 @@
 <template>
-    <div class="div-tree" >
-        <n-tree
+    <div class="div-tree">
+        <n-tree v-if="notebookTreeMenu.length != 0"
             class="tree"
             selectable
             :data="notebookTreeMenu"
@@ -33,7 +33,7 @@
 <script setup>
     import { ref,h,nextTick,computed,watch } from "vue";
     import { NInput } from 'naive-ui'
-    
+    import { SubtitlesOffOutlined } from "@vicons/material";
     import DeleteRemindDialog from "../remind/DeleteRemindDialog.vue";
 
     import { storeToRefs } from 'pinia'
@@ -49,31 +49,25 @@
 
     import { loginInvalid } from "@/Utils/userLogin";
 
+    let rootNotebookIndex = ref(0);
     //选择笔记本对象
     let currentSelectNode = ref({});
     let prevSelectNode = ref({});
     //树状组件点选项
     let treeSelectedKeys = ref([]);
 
-    const notebookTreeMenu = ref([
-        {
-            label: "我的文件夹",
-            key: -1,
-            children: [
-            ]
-        },
-    ]);
+    const notebookTreeMenu = ref([]);
 
     function resetNotebookTreeMenu()
     {
-        notebookTreeMenu.value =[
-            {
-                label: "我的文件夹",
-                key: -1,
-                children: [
-                ]
-            },
-        ];
+        notebookTreeMenu.value =[];
+    }
+
+    const emit = defineEmits(['NotebookChanged','NotebookNumChange'])
+
+    function IsEmptyNotebookTree()
+    {
+        return 0 == notebookTreeMenu.value.length;
     }
 
     function FindNotebookByKey(startNode,key)
@@ -141,6 +135,10 @@
                 //依次创建所有菜单对象
                 for(let notebook of allNotebook)
                 {
+                    if(notebook.level == 0)
+                    {
+                        rootNotebookIndex.value = notebook.id;
+                    }
                     notebookMap.set(notebook.id,{
                         label: notebook.name,
                         key: notebook.id,
@@ -177,14 +175,14 @@
                 //此时nootebookMap中应该只有一级菜单对象
                 for(let level1Notebook of notebookMap)
                 {
-                    notebookTreeMenu.value[0].children.push(level1Notebook[1]);
+                    notebookTreeMenu.value.push(level1Notebook[1]);
                 }
                 //如果有选择节点，则更新选择节点
                 if(!!currentSelectNode.value?.key)
                 {                
                     if(targetKey != -1)
                     {
-                        currentSelectNode.value = notebookMap.get(targetKey);
+                        currentSelectNode.value = notebookMap.get(rootNotebookIndex);
                     }
                     else{
                         currentSelectNode.value = notebookTreeMenu.value[0];
@@ -193,6 +191,7 @@
                 defaultExpandedKeys.value[0] = notebookTreeMenu.value[0].key
                 console.log('notebookTreeMenu=>',notebookTreeMenu.value);
                 console.log("default expand keys=>",defaultExpandedKeys.value);
+                emit("NotebookNumChange");
             }
         })
     }
@@ -286,9 +285,19 @@
         if(key =='createNotebook')
         {
             //新增笔记本
-            await addNewNoteBook();
+            await addNewNoteBook(currentSelectNode.value.level + 1);
             //重新获取笔记本列表
             await getNotebookList();
+        }
+        else if(key == 'renameNotebook')
+        {
+            prevSelectNode.value = currentSelectNode;
+            //双击事件
+            currentSelectNode.value.isedit = true
+            nextTick(() => {
+                console.log('ondblclick=>',inputRef);
+                inputRef.value.focus()
+            })
         }
         else if(key =='createNote')
         {
@@ -322,6 +331,10 @@
                 {
                     label:'新建笔记本',
                     key:'createNotebook',
+                },
+                {
+                    label:'笔记本重命名',
+                    key:'renameNotebook',
                 },
                 {
                     label:'新建笔记',
@@ -375,10 +388,26 @@
 
     /**
      * 新增笔记本
+     * level 什么级别 0 最高级
+     * newName 新增笔记本名称
     */
-    async function addNewNoteBook(newName="新增笔记本")
+    async function addNewNoteBook(level=0,newName="我的笔记本")
     {
         console.log("add new notebook,parentId=>",currentSelectNode.value.key)
+        console.log("add new notebook,level=>",currentSelectNode.value.level)
+        
+        let newLevel = level;
+        console.log("add new notebook, newLevel=>",newLevel);
+        //如果指定新增最高级笔记本，先判断当前是否有选择的笔记本，如果有则加在选择的笔记本下
+        if(newLevel == 0)
+        {
+            if(!currentSelectNode?.value?.level)
+            {
+                newLevel = currentSelectNode.value.level + 1;
+            }
+        }
+        console.log("add new notebook, newLevel-1=>",newLevel);
+
         //获取请求API
         let API = {...notebookApi.addNotebook}
         //封装请求体中的参数
@@ -386,7 +415,7 @@
             notebookName:newName,
             parentId:currentSelectNode.value.key,
             index:(currentSelectNode.value?.children?.length)??0,
-            level:currentSelectNode.value.level + 1,
+            level:newLevel,
         }
         //发送请求
         await noteServerRequest(API).then(responseData =>{
@@ -454,8 +483,6 @@
             }
         })
     }
-
-    const emit = defineEmits(['NotebookChanged'])
 
     function getRecentNoteList()
     {
@@ -717,7 +744,8 @@
         addNewNote,
         getNotesList,
         getRecycleNoteList,
-        ClearSelectNode
+        ClearSelectNode,
+        IsEmptyNotebookTree
     })
 
     /**
