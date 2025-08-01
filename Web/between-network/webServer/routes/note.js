@@ -113,7 +113,7 @@ router.get("/getOpenNoteList",async (req,res)=>{
         output.status = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_SUCCESS.description
 
-        output.data = notes
+        output.data = notes;
     } catch (error) {
         console.log(error)
         output.success = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_FAIL.success

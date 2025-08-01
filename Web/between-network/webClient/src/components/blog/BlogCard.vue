@@ -4,7 +4,7 @@
             <template #avatar>
                 <n-avatar>
                     <n-icon>
-                        <DollarSign />
+                        <PencilOutline />
                     </n-icon>
                 </n-avatar>
             </template>
@@ -21,7 +21,7 @@
                 </n-button>
             </template>
             <template #description>
-                <span class="text-gray-400"> {{blog.author}},{{blog.createDate}}4 </span>
+                <span class="text-gray-400"> {{blog.author}},{{blog.createDate}} </span>
             </template>
             <n-ellipsis line-clamp="2" :tooltip="false">
                 <n-text depth="3">
@@ -36,7 +36,7 @@
                     <n-button size="small">
                     <template #icon>
                         <n-icon>
-                        <DollarSign />
+                        <ThumbsUpOutline />
                         </n-icon>
                     </template>
                     点赞
@@ -44,7 +44,7 @@
                     <n-button size="small">
                     <template #icon>
                         <n-icon>
-                        <DollarSign />
+                        <HeartDislikeOutline />
                         </n-icon>
                     </template>
                     不喜欢
@@ -52,7 +52,7 @@
                     <n-button size="small">
                     <template #icon>
                         <n-icon>
-                        <DollarSign />
+                        <HeartSharp />
                         </n-icon>
                     </template>
                     收藏
@@ -64,6 +64,8 @@
 </template>
 
 <script setup>
+    import { PencilOutline,ThumbsUpOutline,HeartSharp,HeartDislikeOutline } from "@vicons/ionicons5";
+
     const props = defineProps(
         {
             blog:{type:Object,required:true},//博客对象

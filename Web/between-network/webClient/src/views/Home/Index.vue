@@ -22,7 +22,7 @@
         </div>
         <div style="width: 100%;">
             <n-grid x-gap="12" :y-gap="8" :cols="4">
-                <n-gi v-for="(blogItem,index) in blogList" :key="blog.id" :data-index="index">
+                <n-gi v-for="(blogItem,index) in blogList" :key="blogItem.id" :data-index="index">
                     <blog-card :blog="blogItem"/>
                 </n-gi>
             </n-grid>
@@ -38,6 +38,8 @@
     import { loginInvalid,getUserToken } from "@/Utils/userLogin";
     import {KeyboardArrowRightFilled} from "@vicons/material"
 
+    import BlogCard from '@/components/blog/BlogCard.vue';
+    
     import noteServerRequest  from "@/request"
     import noteApi from '@/request/api/noteApi';
 
