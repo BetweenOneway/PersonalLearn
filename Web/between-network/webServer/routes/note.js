@@ -26,7 +26,7 @@ router.get("/getRecentNoteList",async (req,res)=>{
 
     console.log("start getRecentNoteList")
     
-    let exceptStatus = 1
+    let exceptStatus = 0
     let userInfo = req.userInfo
 
     try {
@@ -591,7 +591,7 @@ router.get("/getNoteInfo",async (req,res)=>{
         console.log("get note info from db");
         const noteInfo = await sqldb.Note.findOne(
             {
-                attributes: ['update_time', 'content','title','u_id'],
+                attributes: ['update_time', 'content','title','u_id','status'],
                 where: {
                     id: noteId,
                     u_id:userInfo.id

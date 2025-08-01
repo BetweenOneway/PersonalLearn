@@ -121,7 +121,7 @@
     }
 
     //点击新建按钮的菜单
-    const noteOperationMenu =[
+    const noteOperationMenu = ref([
         {
             key:'delete-note',
             icon:renderIcon(MinusRound),
@@ -137,7 +137,7 @@
             icon:renderIcon(PublicOffFilled),
             label:'取消公开笔记'
         },
-    ]
+    ]);
 
     //新建菜单选项回调
     const clickNoteOperationMenu = (key,value)=>{
@@ -198,6 +198,38 @@
     //笔记信息
     const note = ref({})
     
+    function LoadOperationMenu()
+    {
+        noteOperationMenu.value = [];
+
+        noteOperationMenu.value.push(
+            {
+                key:'delete-note',
+                icon:renderIcon(MinusRound),
+                label:'删除笔记'
+            }
+        );
+        if(2 == note.value.status)
+        {
+            noteOperationMenu.value.push(
+                {
+                    key:'unpublic-note',
+                    icon:renderIcon(PublicOffFilled),
+                    label:'取消公开笔记'
+                }
+            );
+        }
+        else{
+            noteOperationMenu.value.push(
+                {
+                    key:'public-note',
+                    icon:renderIcon(PublicFilled),
+                    label:'公开笔记'
+                }
+            );
+        }
+    }
+
     /**
      * 获取编辑笔记信息
      */
@@ -219,6 +251,7 @@
                 cherryInstance.setValue(note.value.content);
                 //编辑笔记的用户编号
                 editNoteUID.value = note.value.u_id;
+                LoadOperationMenu();
                 //加载已完毕
                 loading.value = false;
             }
@@ -392,8 +425,8 @@
         noteServerRequest(API).then(responseData=>{
             if(responseData)
             {
-                //重新获取笔记列表
-                //getNoteList(false,false);
+                note.value.status = isPublic?2:1;
+                LoadOperationMenu();
             }
         })
     }
