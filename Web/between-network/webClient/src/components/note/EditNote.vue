@@ -380,12 +380,12 @@
     */
     function PublicNote(isPublic)
     {
-        let API = {...noteApi.topNote};
+        let API = {...noteApi.publicNote};
         API.name = isPublic ? API.name[0]:API.name[1];
         //请求URL的参数
         API.params= {
             targetOpenStatus:isPublic?2:1,
-            noteId:contextMenu.value.id
+            noteId:propsData.id
         };
 
         //发送请求
@@ -393,7 +393,7 @@
             if(responseData)
             {
                 //重新获取笔记列表
-                getNoteList(false,false);
+                //getNoteList(false,false);
             }
         })
     }

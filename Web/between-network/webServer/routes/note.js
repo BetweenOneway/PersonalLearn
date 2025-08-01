@@ -26,7 +26,7 @@ router.get("/getRecentNoteList",async (req,res)=>{
 
     console.log("start getRecentNoteList")
     
-    let status = 1
+    let exceptStatus = 1
     let userInfo = req.userInfo
 
     try {
@@ -40,7 +40,9 @@ router.get("/getRecentNoteList",async (req,res)=>{
             {
                 attributes: ['id', 'title','content','top','update_time'],
                 where:{
-                    status: status,
+                    status: {
+                        [Op.ne]:exceptStatus,
+                    },
                     u_id:userInfo.id,
                     // update_time:{
                     //     [Op.gt]:endDate
@@ -85,7 +87,7 @@ router.get("/getOpenNoteList",async (req,res)=>{
 
     console.log("start getOpenNoteList")
     
-    let targetStatus = 2
+    let openStatus = 2
     let pageIndex = parseInt(req.query.pageIndex);
     let pageSize = parseInt(req.query.pageSize);
     let offset = pageIndex * pageSize;
@@ -97,7 +99,7 @@ router.get("/getOpenNoteList",async (req,res)=>{
             {
                 attributes: ['id', 'title','content','top','update_time'],
                 where:{
-                    status: targetStatus,
+                    status: openStatus,
                 },
                 order:[
                     ['update_time','DESC']
@@ -137,7 +139,7 @@ router.get("/getUserNoteList",async (req,res)=>{
 
     console.log("start getUserNoteList=>",req.query)
 
-    let status = 1
+    let exceptStatus = 0
     let userInfo = req.userInfo;
     let notebookId = req.query.notebookId;
 
@@ -154,11 +156,14 @@ router.get("/getUserNoteList",async (req,res)=>{
         try {
             console.log("parsed userinfo=>",userInfo)
 
+            //查找所有未被删除的笔记
             const notes = await sqldb.Note.findAll(
                 {
                     attributes: ['id', 'title','content','top','update_time'],
                     where:{
-                        status: status,
+                        status: {
+                            [Op.ne]:exceptStatus,
+                        },
                         u_id:userInfo.id,
                         notebook_id:notebookId
                     },
@@ -589,8 +594,7 @@ router.get("/getNoteInfo",async (req,res)=>{
                 attributes: ['update_time', 'content','title','u_id'],
                 where: {
                     id: noteId,
-                    u_id:userInfo.id,
-                    status:1
+                    u_id:userInfo.id
                 }
             }
         );

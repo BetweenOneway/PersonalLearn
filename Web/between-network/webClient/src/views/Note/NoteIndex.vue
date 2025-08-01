@@ -106,7 +106,7 @@
                 <!--笔记编辑容器-->
                 <n-layout-content embeded content-style="padding:20px;">
                     <!--子路由-->
-                    <router-view @save="getNoteListInNotebook()" 
+                    <router-view @save="" 
                     @deleteSuccess="deleteNoteSuccess" 
                     :change-state="isChangeEditNote"/>
                 </n-layout-content>
