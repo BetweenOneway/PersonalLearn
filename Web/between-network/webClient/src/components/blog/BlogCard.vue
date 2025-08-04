@@ -4,7 +4,7 @@
             <template #avatar>
                 <n-avatar>
                     <n-icon>
-                        <PencilOutline />
+                        <Pen />
                     </n-icon>
                 </n-avatar>
             </template>
@@ -12,13 +12,6 @@
                 <n-ellipsis line-clamp="1">
                     {{blog.title}}
                 </n-ellipsis>
-            </template>
-            <template #header-extra>
-                <n-button circle size="small">
-                    <template #icon>
-                        <DollarSign />
-                    </template>
-                </n-button>
             </template>
             <template #description>
                 <span class="text-gray-400"> {{blog.author}},{{blog.createDate}} </span>
@@ -29,42 +22,34 @@
                 </n-text>
             </n-ellipsis>
             <template #footer>
-            尾部
-            </template>
-            <template #action>
-                <n-space>
-                    <n-button size="small">
+                <n-button quaternary circle>
                     <template #icon>
                         <n-icon>
-                        <ThumbsUpOutline />
+                            <HeartRegular/>
                         </n-icon>
                     </template>
-                    点赞
-                    </n-button>
-                    <n-button size="small">
+                </n-button>
+                <n-button quaternary circle>
                     <template #icon>
                         <n-icon>
-                        <HeartDislikeOutline />
+                            <ThumbsUpRegular/>
                         </n-icon>
                     </template>
-                    不喜欢
-                    </n-button>
-                    <n-button size="small">
+                </n-button>
+                <n-button quaternary circle>
                     <template #icon>
                         <n-icon>
-                        <HeartSharp />
+                            <ThumbsDownRegular/>
                         </n-icon>
                     </template>
-                    收藏
-                    </n-button>
-                </n-space>
+                </n-button>
             </template>
         </n-thing>
     </n-card>
 </template>
 
 <script setup>
-    import { PencilOutline,ThumbsUpOutline,HeartSharp,HeartDislikeOutline } from "@vicons/ionicons5";
+    import { Pen,ThumbsUpRegular, ThumbsDownRegular,HeartRegular,DollarSign} from '@vicons/fa';
 
     const props = defineProps(
         {

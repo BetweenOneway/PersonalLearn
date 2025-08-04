@@ -5,7 +5,9 @@
                 <blog-card :blog="blogItem"/>
             </n-gi>
         </n-grid>
-        <n-button @click="GetOpenNoteList()">加载更多</n-button>
+        <n-flex justify="center">
+            <n-button @click="GetOpenNoteList()">加载更多</n-button>
+        </n-flex>
     </div>
 </template>
 

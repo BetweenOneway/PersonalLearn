@@ -26,7 +26,6 @@
                     <blog-card :blog="blogItem"/>
                 </n-gi>
             </n-grid>
-            <n-button v-if="blogList.length > 0" @click="toHerf('/blog')">加载更多</n-button>
         </div>
     </div>
 </template>
