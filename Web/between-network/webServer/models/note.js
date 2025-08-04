@@ -59,7 +59,8 @@ module.exports = function(sequelize,DataTypes){
         Note.belongsTo(models.User,
             {
                 foreignKey: 'u_id',
-                targetKey:'id'
+                targetKey:'id',
+                as:'User'
             }
         );
         // Note.belongsTo(models.Notebook,

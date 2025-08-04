@@ -97,23 +97,42 @@ router.get("/getOpenNoteList",async (req,res)=>{
     try {
         const notes = await sqldb.Note.findAll(
             {
-                attributes: ['id', 'title','content','top','update_time'],
+                attributes: ['id', 'title','content','time'],
+                include:[
+                    {
+                        model:sqldb.User,
+                        as:'User',
+                        attributes:['nickname'],
+                    },
+                ],
                 where:{
                     status: openStatus,
                 },
                 order:[
-                    ['update_time','DESC']
+                    ['time','DESC']
                 ],
                 limit:pageSize,
                 offset:offset,
-                raw:true,
+                // raw:true,
             }
         );
+        let openNotes = [];
+        for(let record of notes)
+        {
+            let note = {};
+            note.id = record.id;
+            note.title = record.title;
+            note.content = record.content;
+            note.createDate = record.time;
+            note.author = record.User.nickname;
+            openNotes.push(note);
+        }
+        console.log("OpenNotes=>",openNotes);
         output.success = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_SUCCESS.success
         output.status = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_SUCCESS.description
 
-        output.data = notes;
+        output.data = openNotes;
     } catch (error) {
         console.log(error)
         output.success = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_FAIL.success

@@ -50,13 +50,16 @@ module.exports = function(sequelize,DataTypes){
         User.hasMany(models.Note,
             {
                 foreignKey: 'u_id',
-                sourceKey:'id'
+                sourceKey:'id',
+                as:'Note'
             }
         );
+
         User.hasMany(models.Notebook,
             {
                 foreignKey: 'u_id',
-                sourceKey:'id'
+                sourceKey:'id',
+                as:'Notebook'
             }
         );
     }
