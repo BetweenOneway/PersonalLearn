@@ -5,7 +5,7 @@ const { Op } = require("sequelize");
 
 //数据库
 var sqldb = require('../sqldb');
-
+const Sequelize = require('sequelize');
 let statusCode = require("./statusCode")
 let validate = require("../utils/validate");
 const note = require("../models/note");
@@ -97,7 +97,9 @@ router.get("/getOpenNoteList",async (req,res)=>{
     try {
         const notes = await sqldb.Note.findAll(
             {
-                attributes: ['id', 'title','content','time'],
+                attributes: [
+                    'id', 'title','content','time'
+                ],
                 include:[
                     {
                         model:sqldb.User,
@@ -123,11 +125,17 @@ router.get("/getOpenNoteList",async (req,res)=>{
             note.id = record.id;
             note.title = record.title;
             note.content = record.content;
-            note.createDate = record.time;
+            let createDate = record.time;
+            {
+                const date = new Date(createDate);
+                createDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            }
+            
+            note.createDate = createDate;
             note.author = record.User.nickname;
             openNotes.push(note);
         }
-        console.log("OpenNotes=>",openNotes);
+        logger.info(`OpenNotes=>${JSON.stringify(openNotes)}`);
         output.success = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_SUCCESS.success
         output.status = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_SUCCESS.description

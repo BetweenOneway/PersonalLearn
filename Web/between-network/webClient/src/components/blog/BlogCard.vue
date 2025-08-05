@@ -18,7 +18,7 @@
             </template>
             <n-ellipsis line-clamp="2" :tooltip="false">
                 <n-text depth="3">
-                    {{ blog.content }}
+                    {{ htmlToText(marked(blog.content)) }}
                 </n-text>
             </n-ellipsis>
             <template #footer>
@@ -49,6 +49,11 @@
 </template>
 
 <script setup>
+    //
+    import {htmlToText} from"html-to-text"
+    //Markdown渲染插件
+    import { marked } from "marked";
+
     import { Pen,ThumbsUpRegular, ThumbsDownRegular,HeartRegular,DollarSign} from '@vicons/fa';
 
     const props = defineProps(
