@@ -10,7 +10,9 @@
             </template>
             <template #header>
                 <n-ellipsis line-clamp="1">
-                    <a href="#">{{blog.title}}</a>
+                    <n-button text @click="GotoBlogView(blog.id)">
+                        {{blog.title}}
+                    </n-button>
                 </n-ellipsis>
             </template>
             <template #description>
