@@ -10,7 +10,7 @@
             </template>
             <template #header>
                 <n-ellipsis line-clamp="1">
-                    {{blog.title}}
+                    <a href="#">{{blog.title}}</a>
                 </n-ellipsis>
             </template>
             <template #description>
@@ -61,4 +61,8 @@
             blog:{type:Object,required:true},//博客对象
         }
     )
+
+    const GotoBlogView = (id)=>{
+        console.log("got edit note view =>",id);
+    }
 </script>
