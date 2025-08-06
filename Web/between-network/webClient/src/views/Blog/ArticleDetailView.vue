@@ -11,14 +11,43 @@
             博客作者信息
         </n-layout-sider>
         <n-layout>
-            <div style="display: flex; flex-wrap: nowrap; padding: 32px 24px 56px 56px;">
-                <div style="width: calc(100% - 228px); margin-right: 36px;">
-                    文章内容
+            <n-scrollbar>
+                <div style="display: flex; flex-wrap: nowrap; padding: 32px 24px 56px 56px;">
+                    <div style="width: calc(100% - 228px); margin-right: 36px;">
+                        <h1>文章内容</h1>
+                        <h1>文章内容</h1>
+                        <h1>文章内容</h1>
+                        <h1>文章内容</h1>
+                        <h1>文章内容</h1>
+                        <h1>文章内容</h1>
+                        <h1>文章内容</h1>
+                        <h1>文章内容</h1>
+                        <h1>文章内容</h1>
+                        <h1>文章内容</h1>
+                        <h1>文章内容</h1>
+                    </div>
+                    <div style="width: 192px;">
+                        <div style="height: 200px">
+                            <n-anchor
+                            affix
+                            listen-to=".document-scroll-container"
+                            :trigger-top="24"
+                            :top="88"
+                            style="z-index: 1"
+                            :bound="24"
+                            >
+                                <n-anchor-link title="演示" href="#演示">
+                                    <n-anchor-link title="基础用法" href="#basic.vue" />
+                                    <n-anchor-link title="忽略间隔" href="#ignore-gap.vue" />
+                                    <n-anchor-link title="固定" href="#affix.vue" />
+                                    <n-anchor-link title="滚动到" href="#scrollto.vue" />
+                                </n-anchor-link>
+                                <n-anchor-link title="API" href="#API" />
+                            </n-anchor>
+                        </div>
+                    </div>
                 </div>
-                <div style="width: 192px;">
-                    目录结构
-                </div>
-            </div>
+            </n-scrollbar>
         </n-layout>
     </n-layout>
 </template>
