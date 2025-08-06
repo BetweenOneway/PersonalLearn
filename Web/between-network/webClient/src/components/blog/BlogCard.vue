@@ -57,6 +57,7 @@
     import { marked } from "marked";
 
     import { Pen,ThumbsUpRegular, ThumbsDownRegular,HeartRegular,DollarSign} from '@vicons/fa';
+    import { toHerf } from '@/router/go';
 
     const props = defineProps(
         {
@@ -65,6 +66,7 @@
     )
 
     const GotoBlogView = (id)=>{
-        console.log("got edit note view =>",id);
+        console.log("go to blog view =>",id);
+        toHerf(`/article/${id}`,true,false);
     }
 </script>

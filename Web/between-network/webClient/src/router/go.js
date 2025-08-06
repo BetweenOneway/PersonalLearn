@@ -7,7 +7,7 @@ import router from ".";
  * @param {*} isRouter 是否采用路由
  * @param {*} isNew 是否新标签页（isRouter = false）
  */
-export const toHerf = (path='/',callback=()=>{},isRouter=true,isNew)=>{
+export const toHerf = (path='/',isNew=false,isRouter=true,callback=()=>{})=>{
     if(isRouter)
     {
         //路由跳转
