@@ -11,9 +11,10 @@
             博客作者信息
         </n-layout-sider>
         <n-layout>
-            <n-scrollbar>
+            
                 <div style="display: flex; flex-wrap: nowrap; padding: 32px 24px 56px 56px;">
                     <div style="width: calc(100% - 228px); margin-right: 36px;">
+                        <n-scrollbar>
                         <h1>文章内容</h1>
                         <h1>文章内容</h1>
                         <h1>文章内容</h1>
@@ -25,9 +26,12 @@
                         <h1>文章内容</h1>
                         <h1>文章内容</h1>
                         <h1>文章内容</h1>
+                        </n-scrollbar>
                     </div>
+                    <!--目录栏-->
                     <div style="width: 192px;">
-                        <div style="height: 200px">
+                        <n-scrollbar style="width: 192px; position: sticky; top: 32px; max-height: calc(100vh - 32px - 64px); height: auto;"
+                        >
                             <n-anchor
                             affix
                             listen-to=".document-scroll-container"
@@ -44,10 +48,9 @@
                                 </n-anchor-link>
                                 <n-anchor-link title="API" href="#API" />
                             </n-anchor>
-                        </div>
+                        </n-scrollbar>
                     </div>
                 </div>
-            </n-scrollbar>
         </n-layout>
     </n-layout>
 </template>
