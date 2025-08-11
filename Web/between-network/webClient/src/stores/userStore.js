@@ -72,6 +72,31 @@ export const useUserStore = defineStore(
          * 设置用户信息
          * @param {Object} user 
          */
+        const SetUserPublicInfo = (user)=>{
+            console.log("set user public info,id=>",user.id)
+            id.value=user.id
+            nickName.value = user.nickName
+            headPic.value = user.headPic
+            level.value=user.level
+        }
+
+        /**
+         * 设置用户信息
+         * @param {Object} user 
+         */
+        const SetUserPrivacyInfo = (user)=>{
+            console.log("set user privacy info,id=>",user.id)
+            id.value=user.id
+            email.value=user.email
+            time.value=user.time
+            sex.value=user.sex;
+            birthday.value = user.birthday;
+        }
+
+        /**
+         * 设置用户信息
+         * @param {Object} user 
+         */
         const setUserBasicInfo = (user)=>{
             console.log("set user basic info,id=>",user.id)
             id.value=user.id
@@ -110,7 +135,7 @@ export const useUserStore = defineStore(
         })
 
         return {token,id,email,nickName,userNickName,headPic,userLevel,time,sex,birthday,
-            setUserInfo,setUserBasicInfo,resetUserInfo,head_image}
+            setUserInfo,setUserBasicInfo,SetUserPublicInfo,SetUserPrivacyInfo,resetUserInfo,head_image}
     },
     {
         persist: {

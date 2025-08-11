@@ -31,7 +31,7 @@
 
     //用户的共享资源
     const userStore = useUserStore();
-    const {setUserBasicInfo,resetUserInfo} = useUserStore()
+    const {SetUserPublicInfo,SetUserPrivacyInfo,resetUserInfo} = useUserStore()
     const {token:userToken} = storeToRefs(userStore);
 
     //路由对象
@@ -68,18 +68,49 @@
         if(!!userToken.value)
         {
             //获取请求API
-            let API = {...userApi.getUserInfo}
+            let API = {...userApi.getUserPublicInfo}
             //发送请求
             await noteServerRequest(API).then(responseData =>{
-                if(!responseData)
-                {
-                    console.log("获取用户信息失败，清空本地存储");
-                    resetUserInfo();
-                    return;
-                }
-                console.log("responseData=>",responseData)
-                setUserBasicInfo(responseData.userInfo)
+                return new Promise(
+                    function(suc,err){
+                        if(!responseData)
+                        {
+                            console.log("获取用户信息失败，清空本地存储");
+                            err();
+                            return;
+                        }
+                        console.log("responseData=>",responseData)
+                        SetUserPublicInfo(responseData.userInfo)
+                        suc();
+                    }
+                );
             })
+            .then(
+                (param)=>{
+                    return new Promise(
+                        async function(suc,err)
+                        {
+                            API = {...userApi.getUserPrivacyInfo};
+                            //发送请求
+                            await noteServerRequest(API).then(responseData =>{
+                                if(!responseData)
+                                {
+                                    console.log("获取用户信息失败，清空本地存储");
+                                    resetUserInfo();
+                                    return;
+                                }
+                                console.log("responseData=>",responseData)
+                                SetUserPrivacyInfo(responseData.userInfo)
+                            })
+                        }
+                    )
+                }
+            )
+            .catch(
+                ()=>{
+                    resetUserInfo();
+                }
+            )
         }
         else
         {

@@ -376,9 +376,75 @@ router.post("/register",async (req,res)=>{
 })
 
 /**
- * 获取用户基本信息
+ * 获取用户可公开的信息
  */
-router.get("/getUserInfo",async(req,res)=>{
+router.get("/getUserPublicInfo",async(req,res)=>{
+    console.log("get User Public Info service start",req.query);
+
+    var output={
+        success:false,
+        status:'',
+        description:'',
+        userInfo:{}
+    }
+
+    let userId = req.userInfo.id;
+
+    {
+        //事务处理
+        const t = await sqldb.sequelize.transaction();
+        try {
+            const userBasicInfo = await sqldb.User.findOne(
+                {
+                    attributes: ['id',['nickname','nickName'],['head_pic','headPic'],'level'],
+                    where: {
+                        id:userId,
+                        status:1
+                    }
+                }
+            );
+
+            var curDate = new Date().toLocaleString();
+            //记录用户登录日志
+            const userLog = await sqldb.UserLog.create(
+                {
+                    desc:statusCode.EVENT_LIST.QUERY_USER_PUBLIC_INFO.desc,
+                    time:curDate,
+                    event:statusCode.EVENT_LIST.QUERY_USER_PUBLIC_INFO.code,
+                    u_id:userId
+                },
+                {
+                    //指定新增哪些字段
+                    fields:['desc','time','event','u_id'],
+                    transaction: t
+                }
+            );
+
+            await t.commit();
+
+            console.log("End of get user info")
+
+            output.success = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.description
+            output.userInfo = userBasicInfo;
+            res.send(output)
+        } catch (error) {
+            //出错处理
+            console.log("get user info error:",error)
+            await t.rollback();
+            output.success = statusCode.SERVICE_STATUS.GET_USERINFO_FAIL.success
+            output.status = statusCode.SERVICE_STATUS.GET_USERINFO_FAIL.status
+            output.description = statusCode.SERVICE_STATUS.GET_USERINFO_FAIL.description
+            res.send(output)
+        }
+    }
+})
+
+/**
+ * 获取用户非公开私密信息
+ */
+router.get("/getUserPrivacyInfo",async(req,res)=>{
     console.log("get User Info service start",req.query);
 
     var output={
@@ -408,9 +474,9 @@ router.get("/getUserInfo",async(req,res)=>{
             //记录用户登录日志
             const userLog = await sqldb.UserLog.create(
                 {
-                    desc:statusCode.EVENT_LIST.QUERY_USER_INFO.desc,
+                    desc:statusCode.EVENT_LIST.QUERY_USER_PRIVACY_INFO.desc,
                     time:curDate,
-                    event:statusCode.EVENT_LIST.QUERY_USER_INFO.code,
+                    event:statusCode.EVENT_LIST.QUERY_USER_PRIVACY_INFO.code,
                     u_id:userId
                 },
                 {

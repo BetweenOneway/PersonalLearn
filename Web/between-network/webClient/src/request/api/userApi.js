@@ -23,9 +23,17 @@ const userApi = {
         dataParam:false,
         successMessage:false
     },
-    getUserInfo:{
-        name:'获取用户基本信息',
-        url:'/user/getUserInfo',
+    getUserPublicInfo:{
+        name:'获取用户公开信息',
+        url:'/user/getUserPublicInfo',
+        method:'GET',
+        userAuth:true,
+        dataParam:false,
+        successMessage:false
+    },
+    getUserPrivacyInfo:{
+        name:'获取用户非公开信息',
+        url:'/user/getUserPrivacyInfo',
         method:'GET',
         userAuth:true,
         dataParam:false,

@@ -398,7 +398,11 @@ EVENT_LIST = {
         code:'13',
         desc:'恢复笔记本'
     },
-    QUERY_USER_INFO:{
+    QUERY_USER_PUBLIC_INFO:{
+        code:'13',
+        desc:'查询用户信息'
+    },
+    QUERY_USER_PRIVACY_INFO:{
         code:'13',
         desc:'查询用户信息'
     },

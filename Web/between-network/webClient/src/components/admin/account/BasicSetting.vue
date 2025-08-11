@@ -121,13 +121,13 @@
     });
 
     //获取用户基本信息
-    const getUserBasicInfo = ()=>{
-        noteServerRequest(userApi.getBasicInfo).then(responseData=>{
-            if(!responseData) throw "获取用户基本信息失败";
-            const userData = responseData.data;
-            setUserBasicInfo(userData);
-        });
-    }
+    // const getUserBasicInfo = ()=>{
+    //     noteServerRequest(userApi.getBasicInfo).then(responseData=>{
+    //         if(!responseData) throw "获取用户基本信息失败";
+    //         const userData = responseData.data;
+    //         setUserBasicInfo(userData);
+    //     });
+    // }
 
     //表单编辑控件的显示
     const updateFormItem = ref(false);
