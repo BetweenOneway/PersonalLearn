@@ -136,7 +136,9 @@
     const restoreFormValue = ()=>{
         formValue.value.nickname = nickName.value;
         formValue.value.sex = sex.value;
-        formValue.value.birthday = birthday.value
+        const date = new Date(birthday.value);
+        let birthDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        formValue.value.birthday = birthDate
     }
 
     /**
@@ -144,6 +146,7 @@
      * @param edit 
      */
     const clickEditBtn = (edit=true)=>{
+        console.log("Click Edit Btn=>",edit);
         //取消编辑 恢复表单值
         if(!edit)
         {
