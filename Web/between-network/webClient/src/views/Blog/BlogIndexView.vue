@@ -6,7 +6,7 @@
             </n-gi>
         </n-grid>
         <n-flex justify="center">
-            <n-button @click="GetOpenNoteList()">加载更多</n-button>
+            <n-button v-if="hasMore" @click="GetOpenNoteList()">加载更多</n-button>
         </n-flex>
     </div>
 </template>
@@ -20,6 +20,7 @@
 
     //公开笔记列表 也称为blog
     const blogList = ref([]);
+    let hasMore = ref(true);
     let pageIndex = 0;
     let pageSize = 50;
 
@@ -38,8 +39,23 @@
         noteServerRequest(API).then(responseData=>{
             if(responseData)
             {
-                blogList.value = responseData.data;
-                pageIndex++;
+                console.log("Get Open Note list response=>",responseData);
+                if(blogList.value.length > 0 )
+                {
+                    blogList.value = blogList.value.concat(responseData.data);
+                }
+                else{
+                    blogList.value = responseData.data;
+                }
+                if(responseData.data.length >= pageSize)
+                {
+                    pageIndex++;
+                    hasMore.value = true;
+                }
+                else{
+                    hasMore.value = false;
+                }
+                
             }
         })
     }
