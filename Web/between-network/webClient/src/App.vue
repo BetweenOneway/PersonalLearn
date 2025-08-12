@@ -73,6 +73,7 @@
             await noteServerRequest(API).then(responseData =>{
                 return new Promise(
                     function(suc,err){
+                        console.log("get user public info");
                         if(!responseData)
                         {
                             console.log("获取用户信息失败，清空本地存储");
@@ -90,6 +91,7 @@
                     return new Promise(
                         async function(suc,err)
                         {
+                            console.log("get user privacy info");
                             API = {...userApi.getUserPrivacyInfo};
                             //发送请求
                             await noteServerRequest(API).then(responseData =>{
