@@ -40,6 +40,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WebServer", "WebServer\WebS
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dump", "Dump\Dump.vcxproj", "{274ACC84-A8D6-4FE2-8A61-29F1E1C0F421}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Algorithm", "Algorithm\Algorithm.vcxproj", "{9C468C0A-0424-4239-BB2C-EA0BDD01BFD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -240,6 +242,16 @@ Global
 		{274ACC84-A8D6-4FE2-8A61-29F1E1C0F421}.Release|x64.Build.0 = Release|x64
 		{274ACC84-A8D6-4FE2-8A61-29F1E1C0F421}.Release|x86.ActiveCfg = Release|Win32
 		{274ACC84-A8D6-4FE2-8A61-29F1E1C0F421}.Release|x86.Build.0 = Release|Win32
+		{9C468C0A-0424-4239-BB2C-EA0BDD01BFD8}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{9C468C0A-0424-4239-BB2C-EA0BDD01BFD8}.Debug|x64.ActiveCfg = Debug|x64
+		{9C468C0A-0424-4239-BB2C-EA0BDD01BFD8}.Debug|x64.Build.0 = Debug|x64
+		{9C468C0A-0424-4239-BB2C-EA0BDD01BFD8}.Debug|x86.ActiveCfg = Debug|Win32
+		{9C468C0A-0424-4239-BB2C-EA0BDD01BFD8}.Debug|x86.Build.0 = Debug|Win32
+		{9C468C0A-0424-4239-BB2C-EA0BDD01BFD8}.Release|Any CPU.ActiveCfg = Release|Win32
+		{9C468C0A-0424-4239-BB2C-EA0BDD01BFD8}.Release|x64.ActiveCfg = Release|x64
+		{9C468C0A-0424-4239-BB2C-EA0BDD01BFD8}.Release|x64.Build.0 = Release|x64
+		{9C468C0A-0424-4239-BB2C-EA0BDD01BFD8}.Release|x86.ActiveCfg = Release|Win32
+		{9C468C0A-0424-4239-BB2C-EA0BDD01BFD8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
