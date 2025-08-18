@@ -130,6 +130,25 @@ const router = createRouter({
         component: () => import('@/views/CardsView.vue'),
     },
     {
+        path: '/Life',
+        name: '组件生命周期',
+        component: () => import('@/views/ComponentLife.vue'),
+        children:[
+            {
+                path:'Comp1',
+                props:true,
+                component:()=>import("@/components/life/Comp1.vue"),
+                meta:{title:'Life/Comp1'}
+            },
+            {
+                path:'Comp2',
+                props:true,
+                component:()=>import("@/components/life/Comp2.vue"),
+                meta:{title:'Life/Comp2'}
+            },
+        ]
+    },
+    {
         path: '/test',
         component: ()=>import("@/views/test/Index.vue"),
         children:[

@@ -51,6 +51,9 @@
         <n-card>
             <RouterLink to="/Cards">学习卡片组件</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/Life">学习组件生命周期</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 

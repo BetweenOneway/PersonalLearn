@@ -106,6 +106,8 @@
     import { ref } from 'vue';
     import { BookOpen } from '@vicons/fa';
 
+    import noteApi from '@/request/api/noteApi';
+    
     const propsData = defineProps({
         id:{type:String,required:true},//笔记编号
     })

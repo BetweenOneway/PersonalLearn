@@ -758,4 +758,69 @@ router.post("/saveNote",async (req,res)=>{
     return
 })
 
+/**
+ * 获取公开笔记信息
+ * noteId 笔记编号
+ * userToken 用户
+ */
+router.get("/getPublicNoteInfo",async (req,res)=>{
+    let output={
+        success:true,
+        status:'',
+        description:'',
+        data:{}
+    }
+    console.log("start Get public Note detail Info:",req.query);
+
+    let userInfo = req.userInfo;
+
+    let noteId = req.query.noteId;
+    let publicStatus = 2;
+    try {
+        console.log("get note info from db");
+        const noteInfo = await sqldb.Note.findOne(
+            {
+                attributes: ['update_time', 'content','title','u_id'],
+                where: {
+                    status:publicStatus,
+                    id: noteId
+                }
+            }
+        );
+        //console.log("retrived info from db:",noteInfo);
+        if(noteInfo == null)
+        {
+            console.log("公开笔记内容获取失败，请稍后再试");
+            output.success = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.success
+            output.status = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.status
+            output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
+        }
+        else{
+            console.log("公开笔记内容获取成功");
+            output.success = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.success
+            output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
+            output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
+            output.data = noteInfo;
+            if(!noteInfo.title)
+            {
+                output.data.title = "";
+            }
+
+            if(!noteInfo.content)
+            {
+                output.data.content = "";
+            }
+        }
+        res.send(output);
+    } catch (error) {
+        logger.info(`Get public note info error:${JSON.stringify(error)}`);
+        output.success = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.success
+        output.status = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.status
+        output.description = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.description
+        res.send(output);
+    }
+    logger.info("End Get Public Note Info");
+    return
+})
+
 module.exports=router;
