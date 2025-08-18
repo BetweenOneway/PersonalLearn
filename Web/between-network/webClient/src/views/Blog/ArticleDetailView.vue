@@ -8,43 +8,54 @@
         @collapse="collapsed = true"
         @expand="collapsed = false">
             <div class="shell">
-                <header>
-                    <div class="image-text">
-                        <span class="image">
-                            <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="">
-                        </span>
-                        <div class="text logo-text">
-                            <span class="name">王者伟业</span>
-                            <span class="software">Admin</span>
+                <div class="author">
+                    <header>
+                        <div class="image-text">
+                            <span class="image">
+                                <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="">
+                            </span>
+                            <div class="text logo-text">
+                                <span class="author-name">王者伟业</span>
+                                <n-flex class="author-bdage">
+                                    <n-icon-wrapper :size="20" :border-radius="10">
+                                        <n-icon :size="18" :component="BookOpen" />
+                                    </n-icon-wrapper>
+                                    <n-icon-wrapper :size="20" :border-radius="10">
+                                        <n-icon :size="18" :component="BookOpen" />
+                                    </n-icon-wrapper>
+                                    <n-icon-wrapper :size="20" :border-radius="10">
+                                        <n-icon :size="18" :component="BookOpen" />
+                                    </n-icon-wrapper>
+                                </n-flex>
+                            </div>
                         </div>
+                    </header>
+                    <div class="profile-intro-rank">
+                        <n-flex class="author-achievements">
+                            <dl>
+                                <dd>200</dd>
+                                <dt>原创</dt>
+                            </dl>
+                            <dl>
+                                <dd>2K</dd>
+                                <dt>点赞</dt>
+                            </dl>
+                            <dl>
+                                <dd>1W+</dd>
+                                <dt>收藏</dt>
+                            </dl>
+                            <dl>
+                                <dd>3K+</dd>
+                                <dt>粉丝</dt>
+                            </dl>
+                        </n-flex>
                     </div>
-                </header>
-                <div class="profile-intro-rank">
-                    <n-flex>
-                        <dl>
-                            <dd>200</dd>
-                            <dt>原创</dt>
-                        </dl>
-                        <dl>
-                            <dd>2K</dd>
-                            <dt>点赞</dt>
-                        </dl>
-                        <dl>
-                            <dd>1W+</dd>
-                            <dt>收藏</dt>
-                        </dl>
-                        <dl>
-                            <dd>3K+</dd>
-                            <dt>粉丝</dt>
-                        </dl>
-                    </n-flex>
+                    <div class="profile-intro-operation">
+                        <n-flex justify="center">
+                            <n-button>关注</n-button>
+                        </n-flex>
+                    </div>
                 </div>
-                <div class="profile-intro-operation">
-                    <n-flex justify="center">
-                        <n-button>关注</n-button>
-                    </n-flex>
-                </div>
-                <div></div>
             </div>
         </n-layout-sider>
         <n-layout>
@@ -93,6 +104,7 @@
 
 <script setup>
     import { ref } from 'vue';
+    import { BookOpen } from '@vicons/fa';
 
     const propsData = defineProps({
         id:{type:String,required:true},
@@ -103,6 +115,11 @@
 </script>
 
 <style scoped>
+    .author {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
     dl,dd,dt{
         margin:0;
         padding:0;
@@ -148,9 +165,9 @@
         flex-direction: column;
     }
 
-    .name {
+    .author-name {
         margin-top: 2px;
-        font:600 18px;
+        font-size:20px;
     }
 
     .software {
@@ -179,6 +196,11 @@
     .profile-intro-rank dl
     {
         text-align: center;
+    }
+
+    .author-achievements
+    {
+        background:#fafafa;
     }
 
     .profile-intro-operation
