@@ -107,7 +107,7 @@
     import { BookOpen } from '@vicons/fa';
 
     const propsData = defineProps({
-        id:{type:String,required:true},
+        id:{type:String,required:true},//笔记编号
     })
     
     let authorInfo = {};

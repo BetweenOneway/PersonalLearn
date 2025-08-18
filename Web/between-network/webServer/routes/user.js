@@ -388,7 +388,7 @@ router.get("/getUserPublicInfo",async(req,res)=>{
         userInfo:{}
     }
 
-    let userId = req.userInfo.id;
+    let userId = req.query.UserId;
 
     {
         //事务处理

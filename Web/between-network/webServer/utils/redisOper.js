@@ -4,9 +4,17 @@ const redis = require('redis');
 
 class RedisOper {
     constructor(){
-        this.redisClient = redis.createClient({port:'6379', host:'127.0.0.1',socket: {
-            family: 4
-        }});
+        this.redisClient = redis.createClient(
+            {
+                port:'6379', 
+                host:'127.0.0.1',
+                connectTimeout: 10000,//超时时间10s
+                socket: 
+                {
+                    family: 4
+                }
+            }
+        );
         
         // 配置redis的监听事件
         this.redisClient.on('ready', function() {
@@ -19,7 +27,7 @@ class RedisOper {
         });
         
         this.redisClient.on('reconnecting', function () {
-            console.log(new Date(), 'redis reconnecting', arguments);
+            //console.log(new Date(), 'redis reconnecting', arguments);
         });
         
         this.redisClient.on('end', function () {
@@ -31,7 +39,7 @@ class RedisOper {
         });
  
         this.redisClient.on('error', err => {
-            console.log('Redis Error ' + err);
+            //console.log('Redis Error ' + err);
         });
         
         // 判断redis是否连接

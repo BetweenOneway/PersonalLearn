@@ -32,7 +32,7 @@
     //用户的共享资源
     const userStore = useUserStore();
     const {SetUserPublicInfo,SetUserPrivacyInfo,resetUserInfo} = useUserStore()
-    const {token:userToken} = storeToRefs(userStore);
+    const {token:userToken,id:userId} = storeToRefs(userStore);
 
     //路由对象
     const router = useRouter()
@@ -64,11 +64,14 @@
     //初始化
     async function Init()
     {
-        console.log("usertoken=>",userToken);
+        console.log("Init usertoken=>",userToken.value);
         if(!!userToken.value)
         {
+            console.log("Start get user public info")
             //获取请求API
             let API = {...userApi.getUserPublicInfo}
+            //请求的URL参数
+            API.params = {UserId:userId.value}
             //发送请求
             await noteServerRequest(API).then(responseData =>{
                 return new Promise(
@@ -110,6 +113,7 @@
             )
             .catch(
                 ()=>{
+                    console.log("APP Init error happened");
                     resetUserInfo();
                 }
             )

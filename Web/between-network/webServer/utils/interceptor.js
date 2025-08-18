@@ -20,7 +20,7 @@ async function ValidateUserToken(req)
         console.log("用户登录状态无效"+validateInfo.isValidated)
         return false;
     }
-    //console.log("Interceptor userInfo:",validateInfo.userInfo);
+
     req.userInfo = validateInfo.userInfo;
     return true
 }
