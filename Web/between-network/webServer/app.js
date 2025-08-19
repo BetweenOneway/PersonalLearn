@@ -26,6 +26,7 @@ function Init()
     global.sqldb = require('./sqldb');
     global.redisOper =require("./utils/redisOper");
     global.statusCode = require("./routes/statusCode");
+    global.history = require('./utils/history');
 }
 
 const config = require('config')

@@ -13,9 +13,10 @@
 
 <script setup>
     import { onBeforeMount,onMounted,
-        onBeforeUnmount,onUnmounted,onUpdated } from 'vue'
+        onBeforeUnmount,onUnmounted,
+        onUpdated,onActivated } from 'vue'
     import { ref } from 'vue';
-
+    
     let value = ref(0);
     
     function add()
@@ -63,4 +64,17 @@
     onUpdated(()=>{
         console.log("Comp1.vue onUpdated");
     });
+
+    onActivated(()=>{
+        console.log("Comp1.vue onActivated");
+    });
+
+    function Init(){
+        setTimeout(()=>{
+            console.log("Comp1 Init...")
+        },5000);
+    }
+
+    Init();
+
 </script>
