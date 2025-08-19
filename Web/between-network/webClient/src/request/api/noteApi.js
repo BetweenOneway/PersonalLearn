@@ -71,7 +71,7 @@ const noteApi = {
         dataParam:true,
         successMessage:false
     },
-    getPublicNoteInfo:{
+    getNotePublicInfo:{
         name:'获取公开笔记信息',
         url:'/note/getPublicNoteInfo',
         method:'GET',

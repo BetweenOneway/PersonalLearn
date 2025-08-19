@@ -7,15 +7,15 @@
         :collapsed="collapsed"
         @collapse="collapsed = true"
         @expand="collapsed = false">
-            <div class="shell">
+            <div class="shell" v-show="!authorInfoLoading">
                 <div class="author">
                     <header>
                         <div class="image-text">
                             <span class="image">
-                                <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="">
+                                <img :src=authorInfo.headPic alt="">
                             </span>
                             <div class="text logo-text">
-                                <span class="author-name">王者伟业</span>
+                                <span class="author-name">{{authorInfo.nickName}}</span>
                                 <n-flex class="author-bdage">
                                     <n-icon-wrapper :size="20" :border-radius="10">
                                         <n-icon :size="18" :component="BookOpen" />
@@ -59,20 +59,12 @@
             </div>
         </n-layout-sider>
         <n-layout>
-            <div style="display: flex; flex-wrap: nowrap; padding: 32px 24px 56px 56px;">
+            <div v-show="!blogContentLoading" style="display: flex; flex-wrap: nowrap; padding: 32px 24px 56px 56px;">
                 <div style="width: calc(100% - 228px); margin-right: 36px;">
                     <n-scrollbar>
-                    <h1>文章内容</h1>
-                    <h1>文章内容</h1>
-                    <h1>文章内容</h1>
-                    <h1>文章内容</h1>
-                    <h1>文章内容</h1>
-                    <h1>文章内容</h1>
-                    <h1>文章内容</h1>
-                    <h1>文章内容</h1>
-                    <h1>文章内容</h1>
-                    <h1>文章内容</h1>
-                    <h1>文章内容</h1>
+                        <n-card :bordered="false" size="small" style="width: 100%;height: 100%;">
+                            <div ref="editorContainer"></div>
+                        </n-card>
                     </n-scrollbar>
                 </div>
                 <!--目录栏-->
@@ -103,17 +95,106 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { BookOpen } from '@vicons/fa';
 
+    import 'cherry-markdown/dist/cherry-markdown.css';
+    import Cherry from 'cherry-markdown';
+
     import noteApi from '@/request/api/noteApi';
-    
+    import userApi from '@/request/api/userApi';
+
     const propsData = defineProps({
         id:{type:String,required:true},//笔记编号
     })
     
+    const collapsed = ref(false);
+    //是否处于加载中
+    const blogContentLoading = ref(true);
+    const authorInfoLoading = ref(true);
+    //CherryMarkdown 实例
+    let cherryInstance = null;
+    const editorContainer = ref(null);
+
     let authorInfo = {};
-    const collapsed = ref(false)
+    let blogInfo = ref({});
+
+    function GetBlogInfo(params) {
+        let API = {...noteApi.getNotePublicInfo};
+        //请求的URL参数
+        API.params = {noteId:propsData.id}
+         //发送请求
+         noteServerRequest(API).then(
+            responseData=>{
+                if(!responseData) return;
+                console.log("get blog info:",responseData)
+                //笔记的信息
+                blogInfo.value.title = responseData.data.title;
+                blogInfo.value.update_time = responseData.data.update_time;
+                blogInfo.value.content = responseData.data.content;
+                authorInfo.value.id = responseData.data.u_id;
+
+                cherryInstance.setValue(note.value.content);
+
+                //加载已完毕
+                blogContentLoading.value = false;
+            }
+        )
+    }
+
+    function GetAuthorInfo(params) {
+        let API = {...userApi.getUserPublicInfo};
+        //请求的URL参数
+        API.params = {UserId:authorInfo.value.id}
+        //发送请求
+        noteServerRequest(API).then(
+            responseData=>{
+                if(!responseData) return;
+                console.log("get author info:",responseData)
+                //笔记的信息
+                authorInfo.value.nickName = responseData.data.nickName;
+                authorInfo.value.headPic = responseData.data.headPic;
+                authorInfo.value.level = responseData.data.level;
+
+                //加载已完毕
+                authorInfoLoading.value = false;
+            }
+        )
+    }
+    
+    onMounted(()=>{
+        //构造CherryMarkDown实例
+        cherryInstance = new Cherry(
+            {
+                el: editorContainer.value,
+                value: note.value.content,
+                editor: {
+                    defaultModel: 'previewOnly',
+                },
+                toolbars: {
+                    // 定义顶部工具栏
+                    toolbar: [],
+                    // 定义侧边栏，默认为空
+                    sidebar: [],
+                    // 定义顶部右侧工具栏，默认为空
+                    toolbarRight: [],
+                    // 定义选中文字时弹出的“悬浮工具栏”，默认为 ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', '|', 'size', 'color']
+                    bubble: false,
+                    // 定义光标出现在行首位置时出现的“提示工具栏”，默认为 ['h1', 'h2', 'h3', '|', 'checklist', 'quote', 'table', 'code']
+                    float: false,
+                    hiddenToolbar: ['panel', 'justify'],
+                },
+            }
+        );
+        
+        GetBlogInfo();
+        GetAuthorInfo();
+
+    })
+    onUnmounted(()=>{
+        cherryInstance.destroy();
+    })
+
 </script>
 
 <style scoped>

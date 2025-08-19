@@ -98,7 +98,8 @@ router.get("/getOpenNoteList",async (req,res)=>{
         const notes = await sqldb.Note.findAll(
             {
                 attributes: [
-                    'id', 'title','content','time'
+                    'id', 'title','time',
+                    [Sequelize.fn('SUBSTRING', Sequelize.col('content'), 1, 10), 'content'],
                 ],
                 include:[
                     {
