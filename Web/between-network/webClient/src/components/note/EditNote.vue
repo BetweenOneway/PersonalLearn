@@ -360,7 +360,8 @@
         //笔记主体内容（不含标题） 获取编辑器内容
         if(!useCkEditor.value)
         {
-            note.value.content = cherryInstance.getValue();
+            let noteContent = cherryInstance.getValue();
+            note.value.content = noteContent;//JSON.stringify({ noteContent });
             console.log("get CherryMarkDown内容=>",note.value.content);
         }
         

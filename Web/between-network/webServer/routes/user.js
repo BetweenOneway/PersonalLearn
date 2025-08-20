@@ -427,7 +427,7 @@ router.get("/getUserPublicInfo",async(req,res)=>{
             output.success = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.description
-            output.userInfo = userBasicInfo;
+            output.data = userBasicInfo;
             res.send(output)
         } catch (error) {
             //出错处理

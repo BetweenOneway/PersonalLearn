@@ -95,12 +95,13 @@
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { onMounted,onUnmounted, ref } from 'vue';
     import { BookOpen } from '@vicons/fa';
 
     import 'cherry-markdown/dist/cherry-markdown.css';
     import Cherry from 'cherry-markdown';
 
+    import noteServerRequest from '@/request';
     import noteApi from '@/request/api/noteApi';
     import userApi from '@/request/api/userApi';
 
@@ -116,15 +117,15 @@
     let cherryInstance = null;
     const editorContainer = ref(null);
 
-    let authorInfo = {};
+    let authorInfo = ref({});
     let blogInfo = ref({});
 
-    function GetBlogInfo(params) {
+    async function GetBlogInfo(params) {
         let API = {...noteApi.getNotePublicInfo};
         //请求的URL参数
         API.params = {noteId:propsData.id}
          //发送请求
-         noteServerRequest(API).then(
+        await noteServerRequest(API).then(
             responseData=>{
                 if(!responseData) return;
                 console.log("get blog info:",responseData)
@@ -134,7 +135,7 @@
                 blogInfo.value.content = responseData.data.content;
                 authorInfo.value.id = responseData.data.u_id;
 
-                cherryInstance.setValue(note.value.content);
+                cherryInstance.setValue(blogInfo.value.content);
 
                 //加载已完毕
                 blogContentLoading.value = false;
@@ -142,7 +143,9 @@
         )
     }
 
-    function GetAuthorInfo(params) {
+    async function GetAuthorInfo(params) {
+        console.log("authorInfo=>",authorInfo);
+
         let API = {...userApi.getUserPublicInfo};
         //请求的URL参数
         API.params = {UserId:authorInfo.value.id}
@@ -162,12 +165,12 @@
         )
     }
     
-    onMounted(()=>{
+    onMounted(async ()=>{
         //构造CherryMarkDown实例
         cherryInstance = new Cherry(
             {
                 el: editorContainer.value,
-                value: note.value.content,
+                value: blogInfo.value.content,
                 editor: {
                     defaultModel: 'previewOnly',
                 },
@@ -187,8 +190,8 @@
             }
         );
         
-        GetBlogInfo();
-        GetAuthorInfo();
+        await GetBlogInfo();
+        await GetAuthorInfo();
 
     })
     onUnmounted(()=>{

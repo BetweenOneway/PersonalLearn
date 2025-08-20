@@ -16,7 +16,7 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.STRING
         },
         content:{
-            type:DataTypes.STRING
+            type:DataTypes.TEXT
         },
         time:{
             type:DataTypes.DATE

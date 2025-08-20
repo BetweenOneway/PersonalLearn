@@ -84,7 +84,7 @@
                             return;
                         }
                         console.log("responseData=>",responseData)
-                        SetUserPublicInfo(responseData.userInfo)
+                        SetUserPublicInfo(responseData.data)
                         suc();
                     }
                 );

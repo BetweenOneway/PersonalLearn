@@ -691,6 +691,7 @@ router.post("/saveNote",async (req,res)=>{
 
     try {
         console.log("userInfo:",req.userInfo);
+        let exceptStatus = 0;
         let userInfo = req.userInfo;
         let curTime = new Date().toLocaleString()
 
@@ -699,7 +700,9 @@ router.post("/saveNote",async (req,res)=>{
                 where: {
                     id: inputInfo.noteId,
                     u_id:userInfo.id,
-                    status:1
+                    status: {
+                        [Op.ne]:exceptStatus,
+                    },
                 }
             }
         )
@@ -716,7 +719,9 @@ router.post("/saveNote",async (req,res)=>{
                     where:{
                         id: inputInfo.noteId,
                         u_id:userInfo.id,
-                        status:1
+                        status: {
+                            [Op.ne]:exceptStatus,
+                        },
                     },
                     transaction:t
                 }
