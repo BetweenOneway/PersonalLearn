@@ -50,6 +50,7 @@ namespace CLASS_TEST {
 
     void child::SayHi(){
         cout << "child say Hi" << endl;
+        //可以通过这种方式来调用父类的函数
         classBase::SayHi();
     }
     void child::SayHello()const
