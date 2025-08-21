@@ -1,4 +1,4 @@
-#include <Windows.h>
+﻿#include <Windows.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -38,7 +38,7 @@ typedef struct _st_Param
     int num;
 }ST_Param;
 
-int main()
+int Test()
 {
     g_hMutex = CreateMutex(NULL, FALSE, NULL);
 
