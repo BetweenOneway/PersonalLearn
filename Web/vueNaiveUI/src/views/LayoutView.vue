@@ -5,9 +5,13 @@
             <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
             <Sider />
             <NLayoutContent class="h-full">
-                <!-- <RouterView v-slot="{ Component, route }">
-                <component :is="Component" :key="route.fullPath" />
-                </RouterView> -->
+                <div>
+                    <h2 style="position: absolute;background-color: #fff;width: 100%;height: 50px;border: 1px solid black;">标题</h2>
+                    <div >
+                        <h2 >内容2</h2>
+                        <h2 v-for="i in 50">内容1</h2>
+                    </div>
+                </div>
             </NLayoutContent>
             </NLayout>
         </div>

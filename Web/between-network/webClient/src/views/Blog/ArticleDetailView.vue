@@ -1,5 +1,7 @@
 <template>
+    <!--文章内容页面-->
     <n-layout has-sider>
+        <!--侧边栏-->
         <n-layout-sider bordered
         collapse-mode="width"
         :collapsed-width="64"
@@ -7,8 +9,10 @@
         :collapsed="collapsed"
         @collapse="collapsed = true"
         @expand="collapsed = false">
+            <!--左侧作者信息栏目-->
             <div class="shell" v-show="!authorInfoLoading">
                 <div class="author">
+                    <!--作者信息区域-->
                     <header>
                         <div class="image-text">
                             <span class="image">
@@ -30,6 +34,7 @@
                             </div>
                         </div>
                     </header>
+                    <!--作者基本成就区域-->
                     <div class="profile-intro-rank">
                         <n-flex class="author-achievements">
                             <dl>
@@ -58,14 +63,21 @@
                 </div>
             </div>
         </n-layout-sider>
+        <!--文章相关区域-->
         <n-layout>
+            
             <div v-show="!blogContentLoading" style="display: flex; flex-wrap: nowrap; padding: 32px 24px 56px 56px;">
+                <!--文章内容区域-->
+                <div style="display: flex;flex-direction: column;">
+                <h2>{{ blogInfo.title }}</h2>
                 <div style="width: calc(100% - 228px); margin-right: 36px;">
                     <n-scrollbar>
                         <n-card :bordered="false" size="small" style="width: 100%;height: 100%;">
+                            <h2>{{ blogInfo.title }}</h2>
                             <div ref="editorContainer"></div>
                         </n-card>
                     </n-scrollbar>
+                </div>
                 </div>
                 <!--目录栏-->
                 <div style="width: 192px;">
@@ -90,6 +102,7 @@
                     </n-scrollbar>
                 </div>
             </div>
+            
         </n-layout>
     </n-layout>
 </template>

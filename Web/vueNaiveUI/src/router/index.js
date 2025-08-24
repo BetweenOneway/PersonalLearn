@@ -173,6 +173,16 @@ const router = createRouter({
         ]
     },
     {
+        path: '/Scrollbar',
+        name: '滚动条',
+        component: () => import('@/views/ScrollBarView.vue'),
+    },
+    {
+        path: '/Layout1',
+        name: '布局组件-1',
+        component: () => import('@/views/LayoutView1.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting

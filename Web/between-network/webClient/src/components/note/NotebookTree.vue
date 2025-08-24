@@ -518,8 +518,8 @@
         }
         else
         {
-            console.log("currentSelectNode.value.key=>",currentSelectNode.value.key);
-            console.log("prevSelectNode.value.key=>",prevSelectNode.value.key);
+            console.log("currentSelectNode.value.key=>",currentSelectNode.value?.key);
+            console.log("prevSelectNode.value.key=>",prevSelectNode.value?.key);
             let API = {...noteApi.getUserNoteList};
             //请求URL的参数
             API.params= {

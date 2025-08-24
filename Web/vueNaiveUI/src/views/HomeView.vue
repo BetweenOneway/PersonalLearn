@@ -31,6 +31,9 @@
             <RouterLink to="/layout">学习布局</RouterLink>
         </n-card>
         <n-card>
+            <RouterLink to="/layout1">学习布局-1</RouterLink>
+        </n-card>
+        <n-card>
             <RouterLink to="/Cropperjs1">学习VueCropperJs2.0-1</RouterLink>
         </n-card>
         <n-card>
@@ -53,6 +56,9 @@
         </n-card>
         <n-card>
             <RouterLink to="/Life">学习组件生命周期</RouterLink>
+        </n-card>
+        <n-card>
+            <RouterLink to="/scrollbar">学习滚动组件</RouterLink>
         </n-card>
     </n-flex>
 </template>

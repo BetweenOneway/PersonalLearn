@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-    import {NotificationsNoneOutlined, AccountBoxFilled,ManageAccountsFilled,LogOutRound} from "@vicons/material"
+    import {NotificationsNoneOutlined, AccountBoxFilled,LogOutRound} from "@vicons/material"
     import { useThemeStore } from "@/stores/themeStore";
     import { useUserStore } from "@/stores/userStore";
     import { useLoginModalStore } from "@/stores/loginModalStore";
