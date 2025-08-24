@@ -1,5 +1,5 @@
 <template>
-    <div style="height: 360px; position: relative">
+    <div style="height: 100vh; position: relative">
         <n-layout position="absolute">
             <n-layout-header style="height: 64px; padding: 24px" bordered>
                 颐和园路
@@ -9,6 +9,11 @@
                     海淀桥
                 </n-layout-sider>
                 <n-layout content-style="padding: 24px;">
+                    <n-h2>平山道</n-h2>
+                    <n-h2>平山道</n-h2>
+                    <n-h2>平山道</n-h2>
+                    <n-h2>平山道</n-h2>
+                    <n-h2>平山道</n-h2>
                     <n-h2>平山道</n-h2>
                     <n-h2>平山道</n-h2>
                     <n-h2>平山道</n-h2>
