@@ -183,6 +183,11 @@ const router = createRouter({
         component: () => import('@/views/LayoutView1.vue'),
     },
     {
+        path: '/Layout2',
+        name: '布局组件-2',
+        component: () => import('@/views/LayoutView2.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting

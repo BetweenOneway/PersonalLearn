@@ -34,6 +34,9 @@
             <RouterLink to="/layout1">学习布局-1</RouterLink>
         </n-card>
         <n-card>
+            <RouterLink to="/layout2">学习布局-2</RouterLink>
+        </n-card>
+        <n-card>
             <RouterLink to="/Cropperjs1">学习VueCropperJs2.0-1</RouterLink>
         </n-card>
         <n-card>
