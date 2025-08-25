@@ -1,110 +1,87 @@
 <template>
-    <!--文章内容页面-->
-    <n-layout has-sider>
-        <!--侧边栏-->
-        <n-layout-sider bordered
-        collapse-mode="width"
-        :collapsed-width="64"
-        :width="240"
-        :collapsed="collapsed"
-        @collapse="collapsed = true"
-        @expand="collapsed = false">
-            <!--左侧作者信息栏目-->
-            <div class="shell" v-show="!authorInfoLoading">
-                <div class="author">
-                    <!--作者信息区域-->
-                    <header>
-                        <div class="image-text">
-                            <span class="image">
-                                <img :src=authorInfo.headPic alt="">
-                            </span>
-                            <div class="text logo-text">
-                                <span class="author-name">{{authorInfo.nickName}}</span>
-                                <n-flex class="author-bdage">
-                                    <n-icon-wrapper :size="20" :border-radius="10">
-                                        <n-icon :size="18" :component="BookOpen" />
-                                    </n-icon-wrapper>
-                                    <n-icon-wrapper :size="20" :border-radius="10">
-                                        <n-icon :size="18" :component="BookOpen" />
-                                    </n-icon-wrapper>
-                                    <n-icon-wrapper :size="20" :border-radius="10">
-                                        <n-icon :size="18" :component="BookOpen" />
-                                    </n-icon-wrapper>
-                                </n-flex>
+    <div style="width: 100%;">
+        <n-layout has-sider style="height: 100%;">
+            <!--笔记列表及编辑器容器-->
+            <n-layout has-sider>
+                <!--作者信息区域-->
+                <n-layout-sider
+                    bordered
+                    :width="240"
+                >
+                    <n-scrollbar >
+                        <div class="shell" v-show="!authorInfoLoading">
+                            <div class="author">
+                                <!--作者信息区域-->
+                                <header>
+                                    <div class="image-text">
+                                        <span class="image">
+                                            <img :src=authorInfo.headPic alt="">
+                                        </span>
+                                        <div class="text logo-text">
+                                            <span class="author-name">{{authorInfo.nickName}}</span>
+                                            <n-flex class="author-bdage">
+                                                <n-icon-wrapper :size="20" :border-radius="10">
+                                                    <n-icon :size="18" :component="BookOpen" />
+                                                </n-icon-wrapper>
+                                                <n-icon-wrapper :size="20" :border-radius="10">
+                                                    <n-icon :size="18" :component="BookOpen" />
+                                                </n-icon-wrapper>
+                                                <n-icon-wrapper :size="20" :border-radius="10">
+                                                    <n-icon :size="18" :component="BookOpen" />
+                                                </n-icon-wrapper>
+                                            </n-flex>
+                                        </div>
+                                    </div>
+                                </header>
+                                <!--作者基本成就区域-->
+                                <div class="profile-intro-rank">
+                                    <n-flex class="author-achievements">
+                                        <dl>
+                                            <dd>200</dd>
+                                            <dt>原创</dt>
+                                        </dl>
+                                        <dl>
+                                            <dd>2K</dd>
+                                            <dt>点赞</dt>
+                                        </dl>
+                                        <dl>
+                                            <dd>1W+</dd>
+                                            <dt>收藏</dt>
+                                        </dl>
+                                        <dl>
+                                            <dd>3K+</dd>
+                                            <dt>粉丝</dt>
+                                        </dl>
+                                    </n-flex>
+                                </div>
+                                <div class="profile-intro-operation">
+                                    <n-flex justify="center">
+                                        <n-button>关注</n-button>
+                                    </n-flex>
+                                </div>
                             </div>
                         </div>
-                    </header>
-                    <!--作者基本成就区域-->
-                    <div class="profile-intro-rank">
-                        <n-flex class="author-achievements">
-                            <dl>
-                                <dd>200</dd>
-                                <dt>原创</dt>
-                            </dl>
-                            <dl>
-                                <dd>2K</dd>
-                                <dt>点赞</dt>
-                            </dl>
-                            <dl>
-                                <dd>1W+</dd>
-                                <dt>收藏</dt>
-                            </dl>
-                            <dl>
-                                <dd>3K+</dd>
-                                <dt>粉丝</dt>
-                            </dl>
-                        </n-flex>
-                    </div>
-                    <div class="profile-intro-operation">
-                        <n-flex justify="center">
-                            <n-button>关注</n-button>
-                        </n-flex>
-                    </div>
-                </div>
-            </div>
-        </n-layout-sider>
-        <!--文章相关区域-->
-        <n-layout>
-            
-            <div v-show="!blogContentLoading" style="display: flex; flex-wrap: nowrap; padding: 32px 24px 56px 56px;">
-                <!--文章内容区域-->
-                <div style="display: flex;flex-direction: column;">
-                <h2>{{ blogInfo.title }}</h2>
-                <div style="width: calc(100% - 228px); margin-right: 36px;">
-                    <n-scrollbar>
-                        <n-card :bordered="false" size="small" style="width: 100%;height: 100%;">
-                            <h2>{{ blogInfo.title }}</h2>
-                            <div ref="editorContainer"></div>
-                        </n-card>
                     </n-scrollbar>
-                </div>
-                </div>
-                <!--目录栏-->
-                <div style="width: 192px;">
-                    <n-scrollbar style="width: 192px; position: sticky; top: 32px; max-height: calc(100vh - 32px - 64px); height: auto;"
-                    >
-                        <n-anchor
-                        affix
-                        listen-to=".document-scroll-container"
-                        :trigger-top="24"
-                        :top="88"
-                        style="z-index: 1"
-                        :bound="24"
-                        >
-                            <n-anchor-link title="演示" href="#演示">
-                                <n-anchor-link title="基础用法" href="#basic.vue" />
-                                <n-anchor-link title="忽略间隔" href="#ignore-gap.vue" />
-                                <n-anchor-link title="固定" href="#affix.vue" />
-                                <n-anchor-link title="滚动到" href="#scrollto.vue" />
-                            </n-anchor-link>
-                            <n-anchor-link title="API" href="#API" />
-                        </n-anchor>
-                    </n-scrollbar>
-                </div>
-            </div>
-            
+                </n-layout-sider>
+
+                <!--博客内容区域-->
+                <n-layout-content embeded content-style="padding:20px;">
+                    <div style="width: 100%;height: 100%;">
+                        <n-layout style="width: 100%;height: 100%;">
+                            <n-layout-header style="margin-top:10px">
+                                <n-flex justify="center">
+                                    <h2>{{ blogInfo.title }}</h2>
+                                </n-flex>
+                            </n-layout-header>
+                            <n-layout-content style="height:calc(85% - 10px - 10px)">
+                                <div ref="editorContainer"></div>
+                            </n-layout-content>
+                        </n-layout>
+                    </div>
+                </n-layout-content>
+            </n-layout>
         </n-layout>
-    </n-layout>
+    </div>
 </template>
 
 <script setup>

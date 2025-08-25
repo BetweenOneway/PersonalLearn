@@ -129,7 +129,6 @@
         <!--删除提醒框-->
         <DeleteRemindDialog @deleteSuccess="deleteNoteSuccess"></DeleteRemindDialog>
     </div>
-    
 </template>
   
 <script setup>

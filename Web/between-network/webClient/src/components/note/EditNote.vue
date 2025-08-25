@@ -36,7 +36,6 @@
                                         </template>
                                         <n-menu :options="noteOperationMenu" :indent="18" :on-update:value="clickNoteOperationMenu" />
                                     </n-popover>
-
                                 </n-space>
                             </n-gi>
                         </n-grid>
