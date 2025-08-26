@@ -9,23 +9,7 @@
                     海淀桥
                 </n-layout-sider>
                 <n-layout content-style="padding: 24px;">
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
-                    <n-h2>平山道</n-h2>
+                    <n-h2 v-for="i in 50">平山道</n-h2>
                 </n-layout>
             </n-layout>
             <n-layout-footer
