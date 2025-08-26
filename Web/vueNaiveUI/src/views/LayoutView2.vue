@@ -5,9 +5,7 @@
             表头
         </div>
         <div class="box-body">
-            <div class="box-content">
-                <h2 v-for="i in 50">内容区域</h2>
-            </div>
+            <h2 v-for="i in 50">内容区域</h2>
         </div>
         <div class="box-footer">
             尾部区域
@@ -24,25 +22,32 @@
     .box-container{
         position:relative;
         height: 100vh;
+        width: 100vw;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     .box-title{
         position: fixed;
         z-index: 1000;
         height: 64px;
+        width: 100%;
         border: 1px solid red;
+        text-align: center;
+        background-color: white;
     }
     .box-body{
         position: relative;
-        top: 66px;
+        top: 64px;
         border: 1px solid black;
-        /* height:calc(100% - 64px); */
-        height:400px;
-        overflow: auto;
+        height:calc(100% - 64px);
+        width: 100%;
+        overflow:auto;
     }
     .box-footer{
         border: 1px solid blue;
         position: relative;
         top: 66px;
         height: 50px;
+        width: 100%;
     }
 </style>
