@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .header-style{
+                position: absolute;
+                top: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <!--header效果比div fixed width:100vw效果要好很多 不会遮挡右侧滚动条-->
+        <header class="header-style">
+            header 
+        </header>
+        <main>
+            <!--如果header元素偏离了文档main中的section也会上移补位-->
+            <section>section1</section>
+            <section>section2</section>
+            <section>section3</section>
+        </main>
+    </body>
+</html>
