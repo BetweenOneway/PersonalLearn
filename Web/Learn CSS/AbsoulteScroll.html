@@ -9,9 +9,8 @@
             width:400px;
             height:100px;
             overflow: auto;
-            background-color: #ccc;
+            background-color:blueviolet;
             position: relative;
-            top:200px;
         }
         .child1{
             width:200px;
@@ -27,12 +26,29 @@
             height:300px;
             background-color: red;
         }
+        .position-container{
+            position:relative;
+            top:200px;
+        }
+        .parent1{
+            width:400px;
+            height:100px;
+            overflow: auto;
+            background-color:blueviolet;
+        }
     </style>
 </head>
 <body>
     <div class="parent">
         <div class="child1">child1</div>
         <div class="child2">child2</div>
+    </div>
+
+    <div class="position-container">
+        <div class="parent1">
+            <div class="child1">child1</div>
+            <div class="child2">child2</div>
+        </div>
     </div>
 </body>
 </html>

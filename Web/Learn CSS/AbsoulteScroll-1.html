@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>用sticky实现子元素相对父元素的可视窗口固定</title>
+        <style>
+            /* 父元素：必须是滚动容器（overflow: auto/scroll），且高度有限（否则不会滚动） */
+            .parent {
+              width: 300px;
+              height: 200px; /* 有限高度，确保内容溢出时出现滚动条 */
+              border: 2px solid #333;
+              overflow: auto; /* 关键：让父元素成为滚动容器，sticky 会参考它的可视区域 */
+              padding: 10px;
+            }
+            
+            /* 子元素：用 sticky 固定在父元素可视区域 */
+            .child-sticky {
+              position: sticky;
+              top: 10px; /* 关键阈值：距离父元素可视区域顶部 10px 时固定 */
+              right: 10px; /* 额外控制水平位置，固定在可视区域右侧 */
+              width: 80px;
+              height: 40px;
+              background: #42b983; /* 绿色，便于观察 */
+              color: white;
+              text-align: center;
+              line-height: 40px;
+            }
+            
+            /* 冗余内容：让父元素出现滚动条，验证固定效果 */
+            .content {
+              height: 600px; /* 高度超过父元素，触发滚动 */
+              background: #f5f5f5;
+              margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="parent">
+            <!-- 子元素：会固定在父元素可视区域右上角 -->
+            <div class="child-sticky">固定区域</div>
+            <!-- 冗余内容：滚动时观察子元素是否固定 -->
+            <div class="content">
+              父元素滚动内容...<br>
+              滚动我，看右上角的绿色块是否固定在可视区域！<br>
+              （内容高度 600px，父元素高度 200px，会出现滚动条）
+            </div>
+        </div>
+    </body>
+</html>
+
+    
+    
