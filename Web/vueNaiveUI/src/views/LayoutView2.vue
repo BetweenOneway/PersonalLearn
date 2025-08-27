@@ -22,12 +22,13 @@
     .box-container{
         position:relative;
         height: 100vh;
-        width: 100vw;
+        width: 100%;
         overflow-y: auto;
         overflow-x: hidden;
     }
     .box-title{
-        position: fixed;
+        position: sticky;
+        top:0;
         z-index: 1000;
         height: 64px;
         width: 100%;
@@ -37,7 +38,6 @@
     }
     .box-body{
         position: relative;
-        top: 64px;
         border: 1px solid black;
         height:calc(100% - 64px);
         width: 100%;
@@ -46,7 +46,6 @@
     .box-footer{
         border: 1px solid blue;
         position: relative;
-        top: 66px;
         height: 50px;
         width: 100%;
     }

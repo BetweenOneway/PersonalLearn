@@ -23,6 +23,13 @@
                 top:0;
                 border: 1px solid red;
             }
+            .absolute-child{
+                position:absolute;
+                width: 100%;
+                height: 50px;
+                top:50;
+                border: 1px solid red;
+            }
             .sticky-child{
                 position:sticky;
                 width: 100%;
@@ -35,6 +42,7 @@
     <body>
         <div class="container">
             <div class="fixed-child">fixed子元素（覆盖<body>滚动条）</div>
+            <div class="absolute-child">absolute子元素（覆盖<body>滚动条）</div>
             <div class="sticky-child">sticky子元素（不覆盖滚动条）</div>
             <pre>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae minus similique porro repellendus asperiores nam vero, vel magni odio? Laboriosam velit incidunt eius magni quos animi ipsa deserunt facilis ducimus.
             Blanditiis ea debitis at. In, quam! Harum quia consectetur eaque, aperiam alias fugiat ad? Blanditiis accusantium ratione dicta aliquid maxime laborum doloribus aliquam, rem officiis omnis expedita eos vitae commodi.
