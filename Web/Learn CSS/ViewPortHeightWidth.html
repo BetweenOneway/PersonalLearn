@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>视口的宽度和高度</title>
+        <style>
+            div{
+                box-sizing: border-box;
+            }
+            .container{
+                position: relative;
+                width: 100vw;
+                height: 100vh;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+        </style>
+    </head>
+    <body >
+        <div class="container">
+            <pre>
+            .container 的高度是 100vh（视口高度），但浏览器默认会给 body 添加 8px 左右的 margin（不同浏览器略有差异）；
+            这个 margin 会导致 .container 实际占据的高度 = 100vh + 上下margin，超过了视口高度；
+            触发 overflow-y: auto 的条件，因此生成纵向滚动条。
+
+            100vw 是 “视口宽度”，不包含纵向滚动条的宽度（约 17px）；
+            当纵向滚动条出现后，它会占据视口右侧 17px 的空间，导致视口 “实际可用宽度” = 100vw - 17px；
+            而 .container 的宽度是 100vw，大于视口可用宽度，浏览器为了显示容器的完整宽度，会自动生成横向滚动条。
+            </pre>
+        </div>
+    </body>
+</html>
