@@ -30,7 +30,7 @@
         position: sticky;
         top:0;
         z-index: 1000;
-        height: 64px;
+        height: var(--nav-bar-height);
         width: 100%;
         border: 1px solid red;
         text-align: center;
@@ -39,7 +39,7 @@
     .box-body{
         position: relative;
         border: 1px solid black;
-        height:calc(100% - 64px);
+        height:calc(100% - var(--nav-bar-height));
         width: 100%;
         overflow:auto;
     }
