@@ -1,15 +1,15 @@
 <!--测试Naive UI组件和原生HTML标签的组合使用-->
 <template>
     <div class="box-container">
-        <div class="box-title">
+        <header class="box-title">
             表头
-        </div>
-        <div class="box-body">
+        </header>
+        <section class="box-body">
             <h2 v-for="i in 50">内容区域</h2>
-        </div>
-        <div class="box-footer">
+        </section>
+        <footer class="box-footer">
             尾部区域
-        </div>
+        </footer>
     </div>
 </template>
 
