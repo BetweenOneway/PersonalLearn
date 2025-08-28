@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 100%;height: 100%;">
+    <div style="position:relative;width: 100%;height: 100%;">
         <!--骨架屏-->
         <n-space v-show="loading" vertical :wrap-item="false" >
             <n-skeleton :height="36" width="100%"></n-skeleton>
@@ -52,7 +52,7 @@
                         :config="getEditorConfigs()"/>
                     </n-card>
                     <n-card v-else :bordered="false" size="small" style="width: 100%;height: 100%;">
-                        <div ref="editorContainer"></div>
+                        <div style="position: relative;width: 100%;height: 100%;" ref="editorContainer"></div>
                     </n-card>
                 </n-layout-content>
                 <n-layout-footer style="margin-bottom:10px">

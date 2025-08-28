@@ -1,4 +1,5 @@
 :root {
+    --nav-bar-height:70px;
     --highlight-blue-color: #3071f2;
     --layout-content-width: 1440px;
     --layout-content-gap: 36px;

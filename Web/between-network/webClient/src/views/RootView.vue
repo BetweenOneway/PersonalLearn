@@ -1,15 +1,16 @@
 <template>
     <!--布局-->
-    <n-layout position="absolute">
-        <!--应用头-->
-        <n-layout-header bordered style="height: 64px;padding:0 20px;">
+    <header>
+        <div class="nav-bar">
             <MainTopNavBar />
-        </n-layout-header>
-        <n-layout position="absolute" has-sider style="top:64px">
-            <!--主页面-->
-            <router-view/>
-        </n-layout>
-    </n-layout>
+        </div>
+    </header>
+
+    <section>
+        <router-view/>
+    </section>
+    
+    <footer></footer>
     <login-modal/>
 </template>
 
@@ -25,3 +26,19 @@
     window.$loadingBar = useLoadingBar();
 
 </script>
+
+<style scoped>
+    header{
+        position:sticky;
+        top:0;
+        width: 100%;
+        height: var(--nav-bar-height);
+        display: flex;
+    }
+    .nav-bar{
+        flex:1;
+        padding-left: 50px;
+        padding-right: 50px;
+        background-color: #f3f3f3;
+    }
+</style>

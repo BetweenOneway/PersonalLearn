@@ -4,7 +4,9 @@
             <n-notification-provider>
                 <n-dialog-provider>
                     <n-message-provider>
-                        <RootView />
+                        <div class="root-view-style">
+                            <RootView/>
+                        </div>
                     </n-message-provider>
                 </n-dialog-provider>
             </n-notification-provider>
@@ -156,3 +158,10 @@
         Init();
     })
 </script>
+
+<style scoped>
+    .root-view-style{
+        background-color: #f3f3f3;
+        position: relative;
+    }
+</style>

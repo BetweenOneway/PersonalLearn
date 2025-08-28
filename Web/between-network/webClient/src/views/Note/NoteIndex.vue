@@ -1,119 +1,120 @@
 <template>
-    <div style="width: 100%;">
+    <div style="position:relative;height:100%;width: 100%;">
         <n-layout has-sider style="height: 100%;">
             <!--笔记本列表及功能页-->
-            <n-flex vertical>
-                <!--新增按钮-->
-                <n-popover v-model:show = "createMenuShow" trigger="click">
-                    <template #trigger>
-                        <n-button type="primary" text size="large" style="margin-top: 20px;">
-                            <template #icon>
-                                <n-icon>
-                                    <AddBoxRound />
-                                </n-icon>
-                            </template>
-                            新建
-                        </n-button>
-                    </template>
-                    <n-menu :options="createMenu" :indent="18" :on-update:value="clickCreateMenu" />
-                </n-popover>
-                
-                <n-divider style="margin:15px auto"></n-divider>
+            <!--菜单列-->
+            <n-layout-sider
+            bordered
+            :width="180"
+            :native-scrollbar="false"
+            >
                 <n-flex vertical>
-                <n-space>
-                    <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="getRecentNoteList(false)" >
-                        最近文件
-                    </n-button>
-                </n-space>
-
-                <!--菜单列-->
-                <n-layout-sider
-                bordered
-                :width="180"
-                :native-scrollbar="false"
-                >
-                    <NotebookTree ref="notebookTree" @NotebookNumChange="NotebookNumChanged" @NotebookChanged="notebookChanged"/>
-                </n-layout-sider>
-                <!--底部菜单栏-->
-                <n-space>
-                    <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="showRecycleBin" >
-                        回收站
-                    </n-button>
-                </n-space>
+                    <!--新增按钮-->
+                    <n-popover v-model:show = "createMenuShow" trigger="click">
+                        <template #trigger>
+                            <n-button type="primary" text size="large" style="margin-top: 20px;">
+                                <template #icon>
+                                    <n-icon>
+                                        <AddBoxRound />
+                                    </n-icon>
+                                </template>
+                                新建
+                            </n-button>
+                        </template>
+                        <n-menu :options="createMenu" :indent="18" :on-update:value="clickCreateMenu" />
+                    </n-popover>
+                
+                    <n-divider style="margin:15px auto"></n-divider>
+                    <n-flex vertical>
+                    <n-space>
+                        <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="getRecentNoteList(false)" >
+                            最近文件
+                        </n-button>
+                    </n-space>
+                        <NotebookTree ref="notebookTree" @NotebookNumChange="NotebookNumChanged" @NotebookChanged="notebookChanged"/>
+                        <!--底部菜单栏-->
+                    <n-space>
+                        <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="showRecycleBin" >
+                            回收站
+                        </n-button>
+                    </n-space>
+                    </n-flex>
                 </n-flex>
-            </n-flex>
+            </n-layout-sider>
             <!--笔记列表及编辑器容器-->
-            <n-layout has-sider v-if="!isRecycleBinView">
-                <!--笔记列表容器-->
-                <n-layout-sider
-                    bordered
-                    :width="340"
-                    class="note-list"
-                >
-                    <n-scrollbar >
-                        <!--标题区 新增笔记按钮-->
-                        <n-card :bordered="false" style="position:sticky;top:0;z-index:1;width:calc(100%-1px)">
-                            <template #action>
-                                <n-space align="center" justify="space-between">
-                                    <h3 style="margin:0">笔记列表</h3>
-                                </n-space>
-                            </template>
-                        </n-card>
-
-                        <!--笔记列表骨架屏-->
-                        <n-space v-if="loading" vertical style="margin:12px">
-                            <n-card size="small" v-for="n in 3" :key="n">
-                                <n-space vertical>
-                                    <n-skeleton :height="26" :width="120"></n-skeleton>
-                                    <n-skeleton text :repeat=2></n-skeleton>
-                                    <n-skeleton :height="23" :width="200"></n-skeleton>
-                                </n-space>
+            <n-layout-content>
+                <n-layout has-sider v-if="!isRecycleBinView">
+                    <!--笔记列表容器-->
+                    <n-layout-sider
+                        bordered
+                        :width="340"
+                        class="note-list"
+                    >
+                        <n-scrollbar >
+                            <!--标题区 新增笔记按钮-->
+                            <n-card :bordered="false" style="position:sticky;top:0;z-index:1;width:calc(100%-1px)">
+                                <template #action>
+                                    <n-space align="center" justify="space-between">
+                                        <h3 style="margin:0">笔记列表</h3>
+                                    </n-space>
+                                </template>
                             </n-card>
-                        </n-space>
 
-                        <!--笔记列表-->
-                        <n-list hoverable clickable style="margin:12px">
-                            <template v-if="!loading && noteList.length > 0">
-                                <n-list-item 
-                                v-for="(note,index) in noteList" :key="note.id" 
-                                :data-index="index"
-                                @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
-                                :class="{'editing':(selectNoteId === note.id)}"
-                                @click="goEditNoteView(note.id)">
-                                    <NoteCard 
-                                        :id="note.id" 
-                                        :title="note.title??noteContent.defaultTitle" 
-                                        :desc="note.content" 
-                                        :top="!!note.top" 
-                                        :time="note.update_time"
-                                        :rename="note.rename"
-                                        @rename="renameNote"
-                                        @cancelRename="displayNoteRenameInput">
-                                    </NoteCard>
-                                </n-list-item>
-                            </template>
-                        </n-list>
+                            <!--笔记列表骨架屏-->
+                            <n-space v-if="loading" vertical style="margin:12px">
+                                <n-card size="small" v-for="n in 3" :key="n">
+                                    <n-space vertical>
+                                        <n-skeleton :height="26" :width="120"></n-skeleton>
+                                        <n-skeleton text :repeat=2></n-skeleton>
+                                        <n-skeleton :height="23" :width="200"></n-skeleton>
+                                    </n-space>
+                                </n-card>
+                            </n-space>
 
-                        <!--暂无笔记-->
-                        <n-empty v-if="!loading && noteList.length == 0"  style="width:max-content;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)" size="huge" description="笔记列表空无一物">
-                            <template #icon>
-                                <n-icon :component="SubtitlesOffOutlined"></n-icon>
-                            </template>
-                        </n-empty>
-                    </n-scrollbar>
-                </n-layout-sider>
+                            <!--笔记列表-->
+                            <n-list hoverable clickable style="margin:12px">
+                                <template v-if="!loading && noteList.length > 0">
+                                    <n-list-item 
+                                    v-for="(note,index) in noteList" :key="note.id" 
+                                    :data-index="index"
+                                    @contextmenu="showContentMenu($event,note.id,!!note.top,note.title)"
+                                    :class="{'editing':(selectNoteId === note.id)}"
+                                    @click="goEditNoteView(note.id)">
+                                        <NoteCard 
+                                            :id="note.id" 
+                                            :title="note.title??noteContent.defaultTitle" 
+                                            :desc="note.content" 
+                                            :top="!!note.top" 
+                                            :time="note.update_time"
+                                            :rename="note.rename"
+                                            @rename="renameNote"
+                                            @cancelRename="displayNoteRenameInput">
+                                        </NoteCard>
+                                    </n-list-item>
+                                </template>
+                            </n-list>
 
-                <!--笔记编辑容器-->
-                <n-layout-content embeded content-style="padding:20px;">
-                    <!--子路由-->
-                    <router-view @save="" 
-                    @deleteSuccess="deleteNoteSuccess" 
-                    :change-state="isChangeEditNote"/>
-                </n-layout-content>
-            </n-layout>
-            <n-layout has-sider v-else>
-                <Dumpster></Dumpster>
-            </n-layout>
+                            <!--暂无笔记-->
+                            <n-empty v-if="!loading && noteList.length == 0"  style="width:max-content;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)" size="huge" description="笔记列表空无一物">
+                                <template #icon>
+                                    <n-icon :component="SubtitlesOffOutlined"></n-icon>
+                                </template>
+                            </n-empty>
+                        </n-scrollbar>
+                    </n-layout-sider>
+
+                    <!--笔记编辑容器-->
+                    <n-layout-content content-style="padding:20px;">
+                        <!--子路由-->
+                        <router-view @save="" 
+                        @deleteSuccess="deleteNoteSuccess" 
+                        :change-state="isChangeEditNote"/>
+                    </n-layout-content>
+                </n-layout>
+                <n-layout has-sider v-else>
+                    <Dumpster></Dumpster>
+                </n-layout>
+            </n-layout-content>
         </n-layout>
 
         <n-dropdown

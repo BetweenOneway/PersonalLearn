@@ -9,6 +9,7 @@ import router from './router'
 
 import naive from 'naive-ui'
 
+import 'normalize.css'
 import "./style.css"
 
 const pinia = createPinia()
