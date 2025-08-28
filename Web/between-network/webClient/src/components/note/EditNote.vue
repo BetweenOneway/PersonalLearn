@@ -9,7 +9,10 @@
             <n-skeleton text width="80%"></n-skeleton>
         </n-space>
         <div v-show="!loading" style="width: 100%;height: 100%;">
-            <n-layout style="width: 100%;height: 100%;">
+            <header></header>
+            <main></main>
+            <footer></footer>
+            <n-layout position="absolute" style="width: 100%;height: 100%;">
                 <n-layout-header style="margin-top:10px">
                     <!--发布时间 分享 更多操作-->
                     <n-card size="small" :bordered="false">
@@ -42,7 +45,7 @@
                     </n-card>
                 </n-layout-header>
                 <!--编辑器-->
-                <n-layout-content style="height:calc(100vh -var(--nav-bar-height) - 10px - 10px)">
+                <n-layout-content position="absolute" style="top: 64px;height:calc(100% -var(--nav-bar-height) - 10px - 10px)">
                     <!--富文本编辑器-->
                     <n-card v-if="useCkEditor" :bordered="false" size="small">
                         <!--编辑器-->
@@ -56,7 +59,7 @@
                         <div style="position: relative;width: 100%;height: 100%;" ref="editorContainer"></div>
                     </n-card>
                 </n-layout-content>
-                <n-layout-footer style="margin-bottom:10px">
+                <n-layout-footer position="absolute" style="bottom:64px;margin-bottom:10px">
                     <!--底部状态栏-->
                     <n-card :bordered="false" size="small" >
                         <n-space justify-content="space-between" align="center">

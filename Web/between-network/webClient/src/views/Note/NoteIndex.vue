@@ -1,5 +1,5 @@
 <template>
-    <div style="position:relative;height:100%;width: 100%;">
+    <div class="note-container">
         <n-layout has-sider style="height: 100%;">
             <!--笔记本列表及功能页-->
             <!--菜单列-->
@@ -43,7 +43,7 @@
             </n-layout-sider>
             <!--笔记列表及编辑器容器-->
             <n-layout-content>
-                <n-layout has-sider v-if="!isRecycleBinView">
+                <n-layout position="absolute" has-sider v-if="!isRecycleBinView">
                     <!--笔记列表容器-->
                     <n-layout-sider
                         bordered
@@ -533,4 +533,12 @@
 .n-list .n-list-item.editing{
     box-shadow: 0 0 5px #18A058;
 }
+</style>
+
+<style scoped>
+    .note-container{
+        width: 100%;
+        height: calc(100vh - var(--nav-bar-height));
+        position: relative;
+    }
 </style>
