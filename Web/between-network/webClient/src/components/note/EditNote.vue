@@ -41,7 +41,8 @@
                         </n-grid>
                     </n-card>
                 </n-layout-header>
-                <n-layout-content style="height:calc(85% - 10px - 10px)">
+                <!--编辑器-->
+                <n-layout-content style="height:calc(100vh -var(--nav-bar-height) - 10px - 10px)">
                     <!--富文本编辑器-->
                     <n-card v-if="useCkEditor" :bordered="false" size="small">
                         <!--编辑器-->
