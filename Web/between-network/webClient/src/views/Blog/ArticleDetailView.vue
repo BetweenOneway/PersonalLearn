@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 100%;">
+    <div class="blog-container">
         <n-layout has-sider style="height: 100%;">
             <!--笔记列表及编辑器容器-->
             <n-layout has-sider>
@@ -191,6 +191,12 @@
 </script>
 
 <style scoped>
+    .blog-container{
+        width: 1180px;
+        margin:0 auto;
+        height: calc(100vh - var(--nav-bar-height));
+        position: relative;
+    }
     .author {
         display: flex;
         flex-direction: column;
