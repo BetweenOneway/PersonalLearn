@@ -9,23 +9,23 @@
             <n-skeleton text width="80%"></n-skeleton>
         </n-space>
         <div v-show="!loading" style="width: 100%;height: 100%;">
-            <header></header>
-            <main></main>
-            <footer></footer>
-            <n-layout position="absolute" style="width: 100%;height: 100%;">
-                <n-layout-header style="margin-top:10px">
+            <header>
+                <div>
                     <!--发布时间 分享 更多操作-->
                     <n-card size="small" :bordered="false">
                         <n-grid x-gap="20" cols="12" item-responsive responsive="screen">
                             <n-gi span="0 m:10 l:10">
-                                <n-input v-model:value="note.title" size="large" placeholder="笔记标题" 
+                                <n-input v-if="!isPreviewMode" v-model:value="note.title" size="large" placeholder="笔记标题" 
                                 style="--n-border:none;background-color: transparent"></n-input>
+                                <h3 v-else>{{ note.title }}</h3>
                             </n-gi>
                             <n-gi span="0 m:2 l:2">
                                 <n-space justify="space-between" align="center">
+                                    <!--编辑/预览 按钮-->
                                     <n-button v-if="!useCkEditor" type="primary" @click="SwitchMode()">
                                         {{editPreviewButtonContent}}
                                     </n-button>
+                                    <!--保存按钮-->
                                     <n-button type="primary" @click="saveNote()">
                                         保存
                                     </n-button>
@@ -43,10 +43,10 @@
                             </n-gi>
                         </n-grid>
                     </n-card>
-                </n-layout-header>
-                <!--编辑器-->
-                <n-layout-content position="absolute" style="top: 64px;height:calc(100% -var(--nav-bar-height) - 10px - 10px)">
-                    <!--富文本编辑器-->
+                </div>
+            </header>
+            <main>
+                <div>
                     <n-card v-if="useCkEditor" :bordered="false" size="small">
                         <!--编辑器-->
                         <Ckeditor
@@ -58,20 +58,20 @@
                     <n-card v-else :bordered="false" size="small" style="width: 100%;height: 100%;">
                         <div style="position: relative;width: 100%;height: 100%;" ref="editorContainer"></div>
                     </n-card>
-                </n-layout-content>
-                <n-layout-footer position="absolute" style="bottom:64px;margin-bottom:10px">
-                    <!--底部状态栏-->
-                    <n-card :bordered="false" size="small" >
-                        <n-space justify-content="space-between" align="center">
-                            <!--发布时间-->
-                            <n-space color="#18A058" align="center" :wrap-item="false">
-                                <n-icon :component="FiberManualRecordRound"></n-icon>
-                                <n-text depth="3">更新于:{{ note.update_time }}</n-text>
-                            </n-space>
+                </div>
+            </main>
+            <footer>
+                <!--底部状态栏-->
+                <n-card :bordered="false" size="small" >
+                    <n-space justify-content="space-between" align="center">
+                        <!--发布时间-->
+                        <n-space color="#18A058" align="center" :wrap-item="false">
+                            <n-icon :component="FiberManualRecordRound"></n-icon>
+                            <n-text depth="3">更新于:{{ note.update_time }}</n-text>
                         </n-space>
-                    </n-card>
-                </n-layout-footer>
-            </n-layout>
+                    </n-space>
+                </n-card>
+            </footer>
         </div>
     </div>
     
