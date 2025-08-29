@@ -10,7 +10,7 @@ module.exports = function(sequelize,DataTypes){
         },
         email:{
             type:DataTypes.STRING,
-            unique: true
+            unique: 'UK_USER_EMAIL'
         },
         password:{
             type:DataTypes.STRING
@@ -43,7 +43,13 @@ module.exports = function(sequelize,DataTypes){
         }
     },{
         freezeTableName: true,
-        timestamps: false
+        timestamps: false,
+        // indexes:[
+        //     {
+        //         fields:['email'],
+        //         // unique:true,
+        //     },
+        // ],
     });
 
     User.associate = models => {
