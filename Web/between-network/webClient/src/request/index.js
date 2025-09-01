@@ -9,8 +9,12 @@ import { toHerf } from '../router/go'
 const request = async config =>{
     //加载条开始
     window.$loadingBar.start();
-    
-    config.headers.userToken = await getUserToken();
+    console.log("start request=>",config.url);
+    //如果当前请求没有强制要求获取当前用户信息，则不获取
+    if(config.userAuth)
+    {
+        config.headers.userToken = await getUserToken();
+    }
     //是否需要将请求体中的参数转换成URL参数
     if(config.dataParam)
     {

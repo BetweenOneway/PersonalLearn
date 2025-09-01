@@ -161,7 +161,7 @@
 
 <style scoped>
     .root-view-style{
-        background-color: #f3f3f3;
+        /* background-color: #f3f3f3; */
         position: relative;
     }
 </style>

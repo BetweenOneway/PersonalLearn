@@ -27,7 +27,7 @@ const userApi = {
         name:'获取用户公开信息',
         url:'/user/getUserPublicInfo',
         method:'GET',
-        userAuth:true,
+        userAuth:false,
         dataParam:false,
         successMessage:false
     },

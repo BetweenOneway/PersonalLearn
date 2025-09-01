@@ -75,7 +75,7 @@ const noteApi = {
         name:'获取公开笔记信息',
         url:'/note/getPublicNoteInfo',
         method:'GET',
-        userAuth:true,
+        userAuth:false,
         dataParam:false,
         successMessage:false
     },

@@ -34,6 +34,7 @@
         width: 100%;
         height: var(--nav-bar-height);
         display: flex;
+        z-index: 100;
     }
     .nav-bar{
         flex:1;

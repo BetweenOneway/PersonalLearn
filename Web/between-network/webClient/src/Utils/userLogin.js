@@ -7,7 +7,7 @@ export const getUserToken =async ()=>{
     const {token} = useUserStore()
     if(token ===null)
     {
-        //window.$message.warning("登录失效，请重新登录！");
+        console.log("登录失效，请重新登录！");
         //未登录
         const {changeLoginModalShow} = useLoginModalStore()
 
