@@ -1,9 +1,19 @@
 <template>
-    <div style="width: 100%;">
-        <n-grid x-gap="12" :y-gap="8" :cols="4">
-            <n-gi v-for="(blogItem,index) in blogList" :key="blogItem.id" :data-index="index">
-                <blog-card :blog="blogItem"/>
-            </n-gi>
+    <div class="blog-container">
+        <n-grid x-gap="12" :y-gap="8" :cols="12" item-responsive>
+            <n-grid-item span="0 400:2">
+                <!--左侧侧边栏-->
+            </n-grid-item>
+            <n-grid-item span="0 400:8">
+                <n-grid :x-gap="12" :y-gap="8" :cols="4">
+                    <n-grid-item v-for="(blogItem,index) in blogList" :key="blogItem.id" :data-index="index">
+                        <blog-card :blog="blogItem"/>
+                    </n-grid-item>
+                </n-grid>
+            </n-grid-item>
+            <n-grid-item span="0 400:2">
+                    <!--左侧侧边栏-->
+            </n-grid-item>
         </n-grid>
         <n-flex justify="center">
             <n-button v-if="hasMore" @click="GetOpenNoteList()">加载更多</n-button>
@@ -68,3 +78,10 @@
 
     Init();
 </script>
+
+<style scoped>
+    .blog-container{
+        width: 100%;
+        padding-top: 15px;
+    }
+</style>
