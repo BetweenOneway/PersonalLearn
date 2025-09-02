@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+            .wrapper1,.wrapper2,.wrapper3{
+                margin: 0 auto;
+                width: 600px;
+                height: 40px;
+                border: black 1px solid;
+                display: flex;
+            }
+            .wrapper1 > .inner{
+                border: chartreuse 1px solid;
+                flex:1;
+            }
+
+            .wrapper2 > .inner{
+                border: chartreuse 1px solid;
+                flex:auto;
+            }
+
+            .wrapper3 > .inner{
+                border: chartreuse 1px solid;
+                flex:0;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1 style="text-align: center;">flex:1</h1>
+            <div class="wrapper1">
+                <item class="inner">一一一一一一一一一一一一一一一一</item>
+                <item class="inner">二二</item>
+                <item class="inner">三三</item>
+                <item class="inner">四四四四四四四四四四四四四四四四</item>
+            </div>
+        </div>
+
+        <div>
+            <h1 style="text-align: center;">flex:auto</h1>
+            <div class="wrapper2">
+                <item class="inner">一一一一一一一一一一一一一一一一</item>
+                <item class="inner">二二</item>
+                <item class="inner">三三</item>
+                <item class="inner">四四四四四四四四四四四四四四四四</item>
+            </div>
+        </div>
+
+        <div>
+            <h1 style="text-align: center;">flex:0</h1>
+            <div class="wrapper3">
+                <item class="inner">一一一一一一一一一一一一一一一一</item>
+                <item class="inner">二二</item>
+                <item class="inner">三三</item>
+                <item class="inner">四四四四四四四四四四四四四四四四</item>
+            </div>
+        </div>
+
+    </body>
+</html>
