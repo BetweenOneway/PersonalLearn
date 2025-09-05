@@ -188,6 +188,11 @@ const router = createRouter({
         component: () => import('@/views/LayoutView2.vue'),
     },
     {
+        path: '/ThreeJs',
+        name: 'Three.js',
+        component: () => import('@/views/ThreeJsView.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting

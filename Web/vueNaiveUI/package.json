@@ -11,6 +11,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.7",
     "@vicons/fa": "^0.13.0",
+    "@vicons/ionicons5": "^0.13.0",
     "@vicons/material": "^0.13.0",
     "cherry-markdown": "^0.8.22",
     "cropperjs": "^2.0.0",
@@ -20,6 +21,7 @@
     "normalize.css": "^8.0.1",
     "pinia": "^2.3.0",
     "tailwindcss": "^4.1.7",
+    "three": "^0.180.0",
     "vue": "^3.5.13",
     "vue-cropper": "^1.1.4",
     "vue-router": "^4.5.0"

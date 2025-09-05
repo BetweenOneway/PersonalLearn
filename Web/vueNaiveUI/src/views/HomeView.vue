@@ -63,6 +63,9 @@
         <n-card>
             <RouterLink to="/scrollbar">学习滚动组件</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/ThreeJs">学习Three.js</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 
