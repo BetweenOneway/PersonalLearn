@@ -47,17 +47,7 @@
         // scene.add(axesHelper)
     }
     
-    function initLight() {
-    //     hesLight = new THREE.HemisphereLight(0xffffff,0xffffff)
-    //     hesLight.intensity = 0.8
-    //     scene.add(hesLight)
-    //     dirLight = new THREE.DirectionalLight()
-    //     dirLight.position.set(5,5,5)
-    //     scene.add(dirLight)
-    //     sportLight = new THREE.SpotLight(0xffffff)
-    //     sportLight.position.set(0,10,10)
-    //      scene.add(sportLight)               
-
+    function initLight() {            
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
         scene.add(ambientLight);
         const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
