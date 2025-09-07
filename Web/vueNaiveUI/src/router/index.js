@@ -193,6 +193,11 @@ const router = createRouter({
         component: () => import('@/views/ThreeJsView.vue'),
     },
     {
+        path: '/ThreeJsLoadFile',
+        name: 'ThreeJsLoadfile',
+        component: () => import('@/views/ThreeJsLoadFileView.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting
