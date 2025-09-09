@@ -198,6 +198,11 @@ const router = createRouter({
         component: () => import('@/views/ThreeJsLoadFileView.vue'),
     },
     {
+        path: '/FileUpload',
+        name: 'FileSelect',
+        component: () => import('@/views/FileDragDropView.vue'),
+    },
+    {
       //path: '/about',
       //name: 'about',
       // route level code-splitting

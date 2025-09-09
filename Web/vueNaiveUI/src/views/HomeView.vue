@@ -69,6 +69,9 @@
         <n-card>
             <RouterLink to="/ThreeJsLoadFile">学习Three.js加载模型文件</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/FileUpload">文件拖拽上传</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 
