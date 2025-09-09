@@ -1,15 +1,12 @@
 <template>
-    <div class="bg-gray-50 font-inter text-dark min-h-screen flex flex-col">
-        <div id="app" class="flex flex-col h-screen">
-            <!-- Main Content -->
-            <main class="flex-1 flex flex-col md:flex-row">
-                <!-- Sidebar -->
-                <aside class="bg-white w-full md:w-80 shadow-lg p-4 md:h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300" :class="{ '-translate-x-full md:translate-x-0': !isSidebarOpen, 'translate-x-0': isSidebarOpen }">
+    <div class="m-0 p-0 w-full h-screen overflow-hidden">
+        <!-- flex容器确保两栏按比例分配宽度 -->
+        <div class="flex w-full h-full">
+            <!-- 左侧栏：占20% (1/5) -->
+            <div class="flex-[1] h-full bg-gray-100 border-r border-gray-200 p-4 flex flex-col">
+                <!-- <aside class="bg-white w-full shadow-lg p-4 overflow-y-auto transition-all duration-300"> -->
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-lg font-semibold">File Controls</h2>
-                        <button class="md:hidden text-gray-500 hover:text-gray-700" @click="isSidebarOpen = false">
-                            <i class="fa fa-times"></i>
-                        </button>
                     </div>
                     
                     <!-- File Upload Area -->
@@ -18,8 +15,8 @@
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors duration-200 cursor-pointer" @click="fileInput.click()">
                             <input type="file" ref="fileInput" accept=".stl,.obj" class="hidden" @change="handleFileUpload">
                             <i class="fa fa-cloud-upload text-3xl text-gray-400 mb-2"></i>
-                            <p class="text-gray-500">Click to upload or drag and drop</p>
-                            <p class="text-xs text-gray-400 mt-1">Supports .stl files</p>
+                            <p class="text-gray-500">Click to upload </p>
+                            <p class="text-xs text-gray-400 mt-1">Supports .stl .obj files</p>
                         </div>
                         
                         <div v-if="selectedFile" class="mt-4 p-3 bg-gray-50 rounded-lg flex items-center justify-between">
@@ -103,23 +100,18 @@
                             </li>
                         </ul>
                     </div>
-                </aside>
-                
-                <!-- Main Viewer Area -->
-                <div class="flex-1 relative bg-gray-100">
-                    <!-- Canvas Container -->
-                    <div ref="canvasContainer" id="canvas-container" class="w-full h-full absolute top-0 left-0"></div>
+                <!-- </aside> -->
+            </div>
+            
+            <!-- 右侧栏：占80% (4/5) -->
+            <div class="flex-[4] h-full bg-white p-1 flex flex-col" >
+                <div ref="rightContainer" style="width: 100%;height: 100%;">
+                    <div ref="canvasContainer" ></div>
                 </div>
-            </main>
-
-            <!-- Footer -->
-            <footer class="bg-dark text-white py-4">
-                <div class="container mx-auto px-4 text-center text-sm text-gray-400">
-                    <p>STL Viewer &copy; 2023 | Built with Vue and Three.js</p>
-                </div>
-            </footer>
+            </div>
         </div>
     </div>
+
 </template>
 
 <script setup>
@@ -129,11 +121,10 @@
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { STLLoader } from 'three/addons/loaders/STLLoader.js';
-    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-    let isSidebarOpen = ref(true)
     let isScrolled = ref(false)
     const fileInput = ref(null)
+    const rightContainer = ref(null)
     const canvasContainer = ref(null)
     let modelColor = ref('#42a5f5');
     let bgColor = ref('#f0f0f0')
@@ -158,6 +149,8 @@
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
+
+        console.log(`onWindowResize=>canvasContainer.value.clientWidth:${width},canvasContainer.value.clientHeight:${height}`)
     }
 
     // 初始化场景
@@ -179,8 +172,12 @@
     function initRenderer() {
         renderer = new THREE.WebGLRenderer({antialias:true})
         renderer.setPixelRatio(window.devicePixelRatio)
-        renderer.setSize(window.innerWidth,window.innerHeight) 
+        //renderer.setSize(window.innerWidth,window.innerHeight) 
+        const width = rightContainer.value.clientWidth;
+        const height = rightContainer.value.clientHeight;
+        renderer.setSize(width,height)
         canvasContainer.value.appendChild(renderer.domElement)
+        console.log(`InitRender=>window.innerWidth:${window.innerWidth},window.innerHeight:${window.innerHeight}`)
     }
 
     function initLight() {
@@ -327,18 +324,19 @@
                     });
                     var decoder = new TextDecoder("utf-8");
                     console.log("input obj data=>",event.target.result);
-                    model = loader.parse(decoder.decode(event.target.result));
+                    model = loader.parse(decoder.decode(event.target.result)).children[0];
+                    console.log("OBJ model=>",model);
                 }
                 else
                 {
                     const object = await loader.loadAsync( './attmesh_0.obj' );
                     model = object;
                 }
-
+                console.log("load OBJ file=>",model);
                 scene.add(model);
 
                 // Center the model
-                //centerModel();
+                centerModel();
                 
                 modelLoaded.value = true;
                 
