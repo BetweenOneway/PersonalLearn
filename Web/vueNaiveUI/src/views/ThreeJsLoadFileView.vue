@@ -1,16 +1,6 @@
 <template>
     <div class="bg-gray-50 font-inter text-dark min-h-screen flex flex-col">
         <div id="app" class="flex flex-col h-screen">
-            <!-- Header -->
-            <header class="bg-white shadow-md z-10 transition-all duration-300" :class="{ 'bg-opacity-90 backdrop-blur': isScrolled }">
-                <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-                    <div class="flex items-center space-x-2">
-                        <i class="fa fa-cube text-primary text-2xl"></i>
-                        <h1 class="text-xl font-bold text-primary">STL Viewer</h1>
-                    </div>
-                </div>
-            </header>
-
             <!-- Main Content -->
             <main class="flex-1 flex flex-col md:flex-row">
                 <!-- Sidebar -->
