@@ -143,9 +143,12 @@
     function onWindowResize() {
         if (!canvasContainer.value) return;
         
-        const width = canvasContainer.value.clientWidth;
-        const height = canvasContainer.value.clientHeight;
+        // const width = canvasContainer.value.clientWidth;
+        // const height = canvasContainer.value.clientHeight;
         
+        const width = rightContainer.value.clientWidth;
+        const height = rightContainer.value.clientHeight;
+
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
@@ -206,6 +209,41 @@
         
     }
 
+    // 使模型适应渲染区域的函数
+    function fitModelToRenderer() {
+        if (!model) return;
+        console.log("fit model to renderer")
+        // 计算模型的边界框
+        const box = new THREE.Box3().setFromObject(model);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        
+        // 将模型居中
+        model.position.x = -center.x;
+        model.position.y = -center.y;
+        model.position.z = -center.z;
+        
+        // 计算模型的最大尺寸
+        const maxDim = Math.max(size.x, size.y, size.z);
+        
+        // 计算相机到模型的距离（基于视场角）
+        const fov = camera.fov * (Math.PI / 180);
+        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+        
+        // 稍微增加距离，让模型不贴边
+        cameraZ *= 1.1;
+        
+        // 设置相机位置
+        camera.position.z = cameraZ;
+        
+        // 调整相机的近裁面和远裁面
+        const minZ = Math.min(0.1, cameraZ - maxDim * 0.5);
+        const maxZ = Math.max(cameraZ * 2, cameraZ + maxDim * 0.5);
+        camera.near = minZ;
+        camera.far = maxZ;
+        camera.updateProjectionMatrix();
+    }
+
     // Center model in view
     function centerModel() {
         if (!model) return;
@@ -221,6 +259,7 @@
         
         // Adjust camera to frame the model
         const size = box.getSize(new THREE.Vector3());
+        console.log("box size=>",size);
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = camera.fov * (Math.PI / 180);
         let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
@@ -286,6 +325,8 @@
                 // Center the model
                 centerModel();
                 
+                fitModelToRenderer();
+
                 modelLoaded.value = true;
                 
             } catch (error) {
@@ -338,6 +379,8 @@
                 // Center the model
                 centerModel();
                 
+                fitModelToRenderer()
+
                 modelLoaded.value = true;
                 
             } catch (error) {
