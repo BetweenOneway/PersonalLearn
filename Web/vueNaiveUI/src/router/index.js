@@ -5,6 +5,7 @@ import TreeView from '@/views/TreeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  debug: true,
   routes: [
     {
       path: '/',
@@ -188,9 +189,22 @@ const router = createRouter({
         component: () => import('@/views/LayoutView2.vue'),
     },
     {
-        path: '/ThreeJs',
-        name: 'Three.js',
+        path: '/threejs',  // 改为全小写
         component: () => import('@/views/ThreeJsView.vue'),
+        children:[
+            {
+                path:'',
+                props:true,
+                component:()=>import("@/components/ThreeJs/RouterIndex.vue"),
+                meta:{title:'Index'}
+            },
+            {
+                path:'basic-example',  // 推荐使用 kebab-case
+                props:true,
+                component:()=>import("@/components/ThreeJs/BasicExample.vue"),
+                meta:{title:'基础示例'}
+            },
+        ]
     },
     {
         path: '/ThreeJsLoadFile',
@@ -201,14 +215,6 @@ const router = createRouter({
         path: '/FileUpload',
         name: 'FileSelect',
         component: () => import('@/views/FileDragDropView.vue'),
-    },
-    {
-      //path: '/about',
-      //name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      //component: () => import('../views/AboutView.vue'),
     },
   ],
 })

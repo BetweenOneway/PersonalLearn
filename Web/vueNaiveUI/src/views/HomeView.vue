@@ -64,10 +64,10 @@
             <RouterLink to="/scrollbar">学习滚动组件</RouterLink>
         </n-card>
         <n-card>
-            <RouterLink to="/ThreeJs">学习Three.js</RouterLink>
+            <RouterLink to="threejs">学习Three.js</RouterLink>
         </n-card>
         <n-card>
-            <RouterLink to="/ThreeJsLoadFile">学习Three.js加载模型文件</RouterLink>
+            <RouterLink to="ThreeJsLoadFile">学习Three.js加载模型文件</RouterLink>
         </n-card>
         <n-card>
             <RouterLink to="/FileUpload">文件拖拽上传</RouterLink>

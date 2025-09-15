@@ -175,7 +175,6 @@
     function initRenderer() {
         renderer = new THREE.WebGLRenderer({antialias:true})
         renderer.setPixelRatio(window.devicePixelRatio)
-        //renderer.setSize(window.innerWidth,window.innerHeight) 
         const width = rightContainer.value.clientWidth;
         const height = rightContainer.value.clientHeight;
         renderer.setSize(width,height)
