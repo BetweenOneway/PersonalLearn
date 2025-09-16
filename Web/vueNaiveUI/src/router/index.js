@@ -194,22 +194,20 @@ const router = createRouter({
         children:[
             {
                 path:'',
-                props:true,
                 component:()=>import("@/components/ThreeJs/RouterIndex.vue"),
                 meta:{title:'Index'}
             },
             {
                 path:'basic-example',  // 推荐使用 kebab-case
-                props:true,
                 component:()=>import("@/components/ThreeJs/BasicExample.vue"),
                 meta:{title:'基础示例'}
             },
+            {
+                path: 'target-demo',
+                name: 'TargetDemo',
+                component: () => import('@/components/ThreeJs/TargetDemo.vue'),
+            },
         ]
-    },
-    {
-        path: '/ThreeJsLoadFile',
-        name: 'ThreeJsLoadfile',
-        component: () => import('@/views/ThreeJsLoadFileView.vue'),
     },
     {
         path: '/FileUpload',
