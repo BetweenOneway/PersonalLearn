@@ -9,6 +9,9 @@
             <n-card>
                 <RouterLink :to="gotoHerf('target-demo')">综合成果</RouterLink>
             </n-card>
+            <n-card>
+                <RouterLink :to="gotoHerf('camera')">相机</RouterLink>
+            </n-card>
         </n-flex>
     </div>
   </template>
