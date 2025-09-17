@@ -109,3 +109,16 @@ void testDir()
 
     WriteOBJFile(rayVerts, "./output/rayVerts1.obj");
 }
+
+void testRayProject()
+{
+    Ray ray({ 0.0f,0.0f,0.0f }, { 1.0f,0.0f,0.0f });
+    Vector3 vert1(3.0f, 4.0f, 0.0f);
+
+    Vector3 projectVert = ray.ProjectPoint(vert1);//(3,0,0)
+    cout << "("<<projectVert.getX()<<","<< projectVert.getY()<<","<< projectVert.getZ()<<")" << endl;
+
+    Vector3 verticalVert = ray.VerticalVector(vert1);////(0,4,0)
+
+    cout << "(" << verticalVert.getX() << "," << verticalVert.getY() << "," << verticalVert.getZ() << ")" << endl;
+}

@@ -42,6 +42,12 @@ float vectorMag(const Vector3& a)
 {
     return sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
 }
+
+float Vector3::SqrMagnitude() const  // 模的平方
+{
+    return x * x + y * y + z * z;
+}
+
 //2*v3
 Vector3 operator*(float k, const Vector3& v)
 {
@@ -105,6 +111,11 @@ float Vector3::AbsDot(const Vector3& v) const
     return fabs(x * v.x) + fabs(y * v.y) + fabs(z * v.z);
 }
 
+float Vector3::Dot(const Vector3& v) const
+{
+    return x * v.x + y * v.y + z * v.z;
+}
+
 //计算两点之间的距离
 float distance(const Vector3& start, const Vector3& end)
 {
@@ -132,5 +143,22 @@ bool Vector3::IsParallel(const Vector3& v) const
     return vf_equal_real(this->x * v.y, this->y * v.x)
         && vf_equal_real(this->y * v.z, this->z * v.y)
         && vf_equal_real(this->x * v.z, this->z * v.x);
+}
+
+bool Vector3::IsZero(float threshold) const
+{
+    return vf_appro_zero(SqrMagnitude(), threshold);
+}
+
+Vector3  Vector3::ProjectVector(const Vector3& vec) const
+{
+    Vector3 result(0.0f, 0.0f, 0.0f);
+    if (this->IsZero())
+        return result;
+    auto dotVal = this->Dot(vec);
+    auto projectModule = dotVal / Magnitude();
+    Vector3 temp = *this;
+    result = temp * projectModule;
+    return result;
 }
 

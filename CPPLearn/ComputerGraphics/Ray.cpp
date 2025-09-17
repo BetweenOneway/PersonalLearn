@@ -26,7 +26,17 @@ Vector3 Ray::GetPoint(float t) const
     return Vector3(origin + (direction * t));
 }
 
-constexpr float VF_EPS_2 = 0.000001f;
+Vector3 Ray::ProjectPoint(const Vector3& point) const
+{
+    auto offsetPoint = point - origin;
+    auto projectPoint = origin + direction.ProjectVector(offsetPoint);
+    return projectPoint;
+}
+
+Vector3 Ray::VerticalVector(const Vector3& point) const
+{
+    return point - ProjectPoint(point);
+}
 
 bool Ray::GetRayIntersect(const Triangle& triangle,
     std::vector<Vector3>* posiPoints, std::vector<unsigned>* posiSurfIdx,

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <vector>
 using namespace std;
+#include "common.h"
 
 class Vector3
 {
@@ -11,6 +12,7 @@ public:
     void Clear();
     float Magnitude() const;
     friend float vectorMag(const Vector3& a);
+    float SqrMagnitude() const;
     friend Vector3 operator*(float k, const Vector3& v);
 	friend float distance(const Vector3& start,const Vector3& end);
 	friend Vector3 crossProduct(const Vector3& loper, const Vector3& roper);
@@ -27,8 +29,12 @@ public:
     void normalize();
 	float operator*(const Vector3& roper) const;
     float AbsDot(const Vector3& v) const;
+    float Dot(const Vector3& v) const;
+    bool IsZero(float threshold = VF_EPS_2) const;
     bool operator==(const Vector3& roper) const;
     bool operator!=(const Vector3& roper) const;
+    
+    Vector3  ProjectVector(const Vector3& vec) const;
 
     bool IsParallel(const Vector3& v) const;
 	float getX() const { return x; }

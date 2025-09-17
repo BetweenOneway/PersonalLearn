@@ -10,3 +10,5 @@ void testRay2();
 void testRayIntersect();
 
 void testDir();
+
+void testRayProject();

@@ -28,7 +28,8 @@ void testLine()
 void Ray()
 {
     //testGetUnitLengthAndDistance();
-    testDir();
+    //testDir();
+    testRayProject();
 }
 
 void Quaternion()
@@ -162,12 +163,12 @@ void testOper3DFile()
 
 int main()
 {
-    testOper3DFile();
+    //testOper3DFile();
     //TestPlane();
     //testDot();
     //Vector();
     //Quaternion();
-    //Ray();
+    Ray();
     //testLine();
     //Plane();
     //Learn();

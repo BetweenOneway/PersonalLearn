@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "Vector3.h"
 
 constexpr float VF_EPS = 0.0001f;
 constexpr float VF_EPS_2 = 0.000001f;
