@@ -217,6 +217,11 @@ const router = createRouter({
                 name: 'lights',
                 component: () => import('@/components/ThreeJs/Lights.vue'),
             },
+            {
+                path: 'scene',
+                name: 'scene',
+                component: () => import('@/components/ThreeJs/Scene.vue'),
+            },
         ]
     },
     {

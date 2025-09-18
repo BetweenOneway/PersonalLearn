@@ -31,38 +31,26 @@
         const cameraHelper = new THREE.CameraHelper( camera );
 
         class MinMaxGUIHelper {
-
             constructor( obj, minProp, maxProp, minDif ) {
-
                 this.obj = obj;
                 this.minProp = minProp;
                 this.maxProp = maxProp;
                 this.minDif = minDif;
-
             }
             get min() {
-
                 return this.obj[ this.minProp ];
-
             }
             set min( v ) {
-
                 this.obj[ this.minProp ] = v;
                 this.obj[ this.maxProp ] = Math.max( this.obj[ this.maxProp ], v + this.minDif );
-
             }
             get max() {
-
                 return this.obj[ this.maxProp ];
-
             }
             set max( v ) {
-
                 this.obj[ this.maxProp ] = v;
                 this.min = this.min; // this will call the min setter
-
             }
-
         }
 
         const gui = new GUI();
@@ -93,7 +81,6 @@
         scene.add( cameraHelper );
 
         {
-
             const planeSize = 40;
 
             const loader = new THREE.TextureLoader();
@@ -113,22 +100,18 @@
             const mesh = new THREE.Mesh( planeGeo, planeMat );
             mesh.rotation.x = Math.PI * - .5;
             scene.add( mesh );
-
         }
 
         {
-
             const cubeSize = 4;
             const cubeGeo = new THREE.BoxGeometry( cubeSize, cubeSize, cubeSize );
             const cubeMat = new THREE.MeshPhongMaterial( { color: '#8AC' } );
             const mesh = new THREE.Mesh( cubeGeo, cubeMat );
             mesh.position.set( cubeSize + 1, cubeSize / 2, 0 );
             scene.add( mesh );
-
         }
 
         {
-
             const sphereRadius = 3;
             const sphereWidthDivisions = 32;
             const sphereHeightDivisions = 16;
@@ -137,11 +120,9 @@
             const mesh = new THREE.Mesh( sphereGeo, sphereMat );
             mesh.position.set( - sphereRadius - 1, sphereRadius + 2, 0 );
             scene.add( mesh );
-
         }
 
         {
-
             const color = 0xFFFFFF;
             const intensity = 3;
             const light = new THREE.DirectionalLight( color, intensity );
@@ -149,11 +130,9 @@
             light.target.position.set( - 5, 0, 0 );
             scene.add( light );
             scene.add( light.target );
-
         }
 
         function resizeRendererToDisplaySize( renderer ) {
-
             const canvas = renderer.domElement;
             const width = canvas.clientWidth;
             const height = canvas.clientHeight;
@@ -165,7 +144,6 @@
             }
 
             return needResize;
-
         }
 
         function setScissorForElement( elem ) {
@@ -189,11 +167,9 @@
 
             // return the aspect
             return width / height;
-
         }
 
         function render() {
-
             resizeRendererToDisplaySize( renderer );
 
             // turn on the scissor
@@ -201,7 +177,6 @@
 
             // render the original view
             {
-
                 const aspect = setScissorForElement( view1Elem );
 
                 // adjust the camera for this aspect
@@ -216,7 +191,6 @@
 
                 // render
                 renderer.render( scene, camera );
-
             }
 
             // render from the 2nd camera

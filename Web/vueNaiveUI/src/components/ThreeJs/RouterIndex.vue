@@ -6,6 +6,9 @@
             <n-button size="large" @click="gotoHerf('basic-example')">
                 基础示例
             </n-button>
+            <n-button size="large" @click="gotoHerf('scene')">
+                场景
+            </n-button>
             <n-button size="large" @click="gotoHerf('target-demo')">
                 综合成果
             </n-button>
