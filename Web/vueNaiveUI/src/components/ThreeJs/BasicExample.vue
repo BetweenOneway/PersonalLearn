@@ -8,9 +8,11 @@
 
     function main() {
 
+        //renderer
         const canvas = document.querySelector( '#c' );
         const renderer = new THREE.WebGLRenderer( { antialias: true, canvas } );
 
+        //camera
         const fov = 75;
         const aspect = 2; // the canvas default
         const near = 0.1;
@@ -18,18 +20,19 @@
         const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
         camera.position.z = 2;
 
+        //场景
         const scene = new THREE.Scene();
 
+        //灯光
         {
-
             const color = 0xFFFFFF;
             const intensity = 3;
             const light = new THREE.DirectionalLight( color, intensity );
             light.position.set( - 1, 2, 4 );
             scene.add( light );
-
         }
 
+        //网格
         const boxWidth = 1;
         const boxHeight = 1;
         const boxDepth = 1;
@@ -49,13 +52,13 @@
         }
 
         const cubes = [
-            makeInstance( geometry, 0x44aa88, 0 ),
-            makeInstance( geometry, 0x8844aa, - 2 ),
-            makeInstance( geometry, 0xaa8844, 2 ),
+            makeInstance( geometry, 0x44aa88, 0 ),//绿蓝色
+            makeInstance( geometry, 0x8844aa, - 2 ),//紫色
+            makeInstance( geometry, 0xaa8844, 2 ),//卢克索金色 泥土黄
         ];
 
+        //动画
         function render( time ) {
-
             time *= 0.001; // convert time to seconds
 
             cubes.forEach( ( cube, ndx ) => {
@@ -70,11 +73,9 @@
             renderer.render( scene, camera );
 
             requestAnimationFrame( render );
-
         }
 
         requestAnimationFrame( render );
-
     }
   
     onMounted(() => 
