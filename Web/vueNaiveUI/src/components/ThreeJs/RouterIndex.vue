@@ -18,6 +18,9 @@
             <n-button size="large" @click="gotoHerf('lights')">
                 光源
             </n-button>
+            <n-button size="large" @click="gotoHerf('demo')">
+                Demo
+            </n-button>
         </n-flex>
     </div>
   </template>
