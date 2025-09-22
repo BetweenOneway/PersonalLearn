@@ -21,6 +21,9 @@
             <n-button size="large" @click="gotoHerf('demo')">
                 Demo
             </n-button>
+            <n-button size="large" @click="gotoHerf('responsive')">
+                响应式
+            </n-button>
         </n-flex>
     </div>
   </template>

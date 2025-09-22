@@ -227,6 +227,11 @@ const router = createRouter({
                 name: 'demo',
                 component: () => import('@/components/ThreeJs/Demo.vue'),
             },
+            {
+                path: 'responsive',
+                name: 'Responsive',
+                component: () => import('@/components/ThreeJs/Responsive.vue'),
+            },
         ]
     },
     {
