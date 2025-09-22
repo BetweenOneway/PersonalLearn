@@ -10,6 +10,7 @@
 
     const vueWay = ref(true);
     const canvasContainer = ref(null);
+    const needAnimation = ref(true);
 
     let renderer,material;
     onMounted(()=>{
@@ -65,17 +66,21 @@
         //渲染器渲染场景
         renderer.render(scene,camera);
 
-        function render(time) {
-            time *= 0.001;  // 将时间单位变为秒
-            
-            cube.rotation.x = time;
-            cube.rotation.y = time;
-            
-            renderer.render(scene, camera);
-            
+        if(needAnimation)
+        {
+            //这里完成了动画效果
+            function render(time) {
+                time *= 0.001;  // 将时间单位变为秒
+                
+                cube.rotation.x = time;
+                cube.rotation.y = time;
+                
+                renderer.render(scene, camera);
+                
+                requestAnimationFrame(render);
+            }
             requestAnimationFrame(render);
         }
-        requestAnimationFrame(render);
     })
 </script>
 <style scoped>

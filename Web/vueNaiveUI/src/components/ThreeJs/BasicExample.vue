@@ -51,9 +51,10 @@
 
         }
 
+        //以下三个正方体分别从左到右排列
         const cubes = [
-            makeInstance( geometry, 0x44aa88, 0 ),//绿蓝色
             makeInstance( geometry, 0x8844aa, - 2 ),//紫色
+            makeInstance( geometry, 0x44aa88, 0 ),//绿蓝色
             makeInstance( geometry, 0xaa8844, 2 ),//卢克索金色 泥土黄
         ];
 
