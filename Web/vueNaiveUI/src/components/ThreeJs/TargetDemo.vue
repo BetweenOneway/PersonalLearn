@@ -217,14 +217,19 @@
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
         
+        console.log("model size=>",size);
         // 将模型居中
         model.position.x = -center.x;
         model.position.y = -center.y;
         model.position.z = -center.z;
         
+        console.log("model position=>",model.position);
+
         // 计算模型的最大尺寸
         const maxDim = Math.max(size.x, size.y, size.z);
         
+        console.log("maxDim=>",maxDim);
+
         // 计算相机到模型的距离（基于视场角）
         const fov = camera.fov * (Math.PI / 180);
         let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
@@ -232,9 +237,15 @@
         // 稍微增加距离，让模型不贴边
         cameraZ *= 1.1;
         
+        console.log("cameraZ=>",cameraZ);
+
         // 设置相机位置
         camera.position.z = cameraZ;
         
+        console.log("camera.position=>",camera.position);
+
+        camera.lookAt(0, 0, 0);
+
         // 调整相机的近裁面和远裁面
         const minZ = Math.min(0.1, cameraZ - maxDim * 0.5);
         const maxZ = Math.max(cameraZ * 2, cameraZ + maxDim * 0.5);
