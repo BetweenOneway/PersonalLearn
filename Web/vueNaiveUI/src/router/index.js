@@ -232,6 +232,11 @@ const router = createRouter({
                 name: 'Responsive',
                 component: () => import('@/components/ThreeJs/Responsive.vue'),
             },
+            {
+                path: 'helper',
+                name: 'helper',
+                component: () => import('@/components/ThreeJs/Helper.vue'),
+            },
         ]
     },
     {
