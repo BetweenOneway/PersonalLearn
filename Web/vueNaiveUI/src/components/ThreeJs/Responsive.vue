@@ -39,6 +39,7 @@ function main() {
         if (needResize) {
             console.log(`clientWidth=>${width},clientHeight=>${height}`);
             console.log(`canvas.width=>${canvas.width},canvas.height=>${canvas.height}`);
+            //设置canvas的绘图缓冲区 false表示禁止修改样式
             renderer.setSize(width, height, false);
         }
         return needResize;
@@ -51,6 +52,7 @@ function main() {
         //避免立方体变形
         if (resizeRendererToDisplaySize(renderer)) {
             const canvas = renderer.domElement;
+            //将相机的宽高比设置为canvas的宽高比 避免拉伸
             camera.aspect = canvas.clientWidth / canvas.clientHeight;
             camera.updateProjectionMatrix();
         }
