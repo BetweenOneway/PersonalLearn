@@ -12,7 +12,80 @@
     const vueWay = ref(true);
     const canvasContainer = ref(null);
 
-    let renderer,material,controls;
+    let scene,renderer,camera,material,controls,axesHelper,gridHelper;
+    let cube,axizLength = 5;
+
+    function GridHelper(){
+        // 2. 网格辅助器
+        gridHelper = new THREE.GridHelper(10, 10, 0xcccccc, 0x999999);
+        gridHelper.rotation.x = Math.PI / 2; // 沿XZ平面显示
+        scene.add(gridHelper);
+    }
+
+    function AxisHelper()
+    {
+        // 1. 坐标轴辅助器
+        axesHelper = new THREE.AxesHelper(axizLength);
+        scene.add(axesHelper);
+    }
+
+    function ArrowHelper()
+    {
+        // 3. 箭头辅助器
+        //X轴
+        const arrowX = new THREE.ArrowHelper(
+            new THREE.Vector3(1, 0, 0),
+            new THREE.Vector3(0, 0, 0),
+            axizLength,
+            0xff0000,
+            0.5,
+            0.3
+        );
+        scene.add(arrowX);
+
+        //Y轴
+        const arrowY = new THREE.ArrowHelper(
+            new THREE.Vector3(0, 1, 0),
+            new THREE.Vector3(0, 0, 0),
+            axizLength,
+            0x00ff00,
+            0.5,
+            0.3
+        );
+        scene.add(arrowY);
+
+        //Z轴
+        const arrowZ = new THREE.ArrowHelper(
+            new THREE.Vector3(0, 0, 1),
+            new THREE.Vector3(0, 0, 0),
+            axizLength,
+            0x0000ff,
+            0.5,
+            0.3
+        );
+        scene.add(arrowZ);
+    }
+
+    function BoxHelper()
+    {
+        // 4. 创建立方体并添加包围盒辅助器
+        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true });
+        cube = new THREE.Mesh(geometry, material);
+        cube.position.set(0, 1, 0);
+        scene.add(cube);
+
+        const boxHelper = new THREE.BoxHelper(cube, 0xff0000);
+        scene.add(boxHelper);
+    }
+
+    function CameraHelper()
+    {
+        // 5. 相机辅助器
+        const cameraHelper = new THREE.CameraHelper(camera);
+        scene.add(cameraHelper);
+    }
+
     onMounted(()=>{
         if(!vueWay.value)
         {
@@ -24,61 +97,27 @@
         else{
             renderer = new THREE.WebGLRenderer({antialias:true})
             //改动这个size需要同步改动camera.aspect
-            renderer.setSize(500,500);
+            const width = canvasContainer.value.clientWidth;
+            const height = canvasContainer.value.clientHeight;
+            renderer.setSize(width,height)
             canvasContainer.value.appendChild(renderer.domElement);
         }
 
         //创建相机
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
         //创建场景
-        const scene = new THREE.Scene();
+        scene = new THREE.Scene();
 
         controls = new OrbitControls(camera, renderer.domElement)
-        
-        // 1. 坐标轴辅助器
-        const axesHelper = new THREE.AxesHelper(5);
-        scene.add(axesHelper);
 
-        // 2. 网格辅助器
-        const gridHelper = new THREE.GridHelper(10, 10, 0xcccccc, 0x999999);
-        gridHelper.rotation.x = Math.PI / 2; // 沿XZ平面显示
-        scene.add(gridHelper);
+        GridHelper();
+        AxisHelper();
+        ArrowHelper();
 
-        // 3. 箭头辅助器
-        const arrowX = new THREE.ArrowHelper(
-            new THREE.Vector3(1, 0, 0),
-            new THREE.Vector3(0, 0, 0),
-            3,
-            0xff0000,
-            0.5,
-            0.3
-        );
-        scene.add(arrowX);
+        BoxHelper();
 
-        const arrowY = new THREE.ArrowHelper(
-            new THREE.Vector3(0, 1, 0),
-            new THREE.Vector3(2, 0, 0),
-            3,
-            0x00ff00,
-            0.5,
-            0.3
-        );
-        scene.add(arrowY);
-
-        // 4. 创建立方体并添加包围盒辅助器
-        const geometry = new THREE.BoxGeometry(2, 2, 2);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true });
-        const cube = new THREE.Mesh(geometry, material);
-        cube.position.set(0, 1, 0);
-        scene.add(cube);
-
-        const boxHelper = new THREE.BoxHelper(cube, 0xff0000);
-        scene.add(boxHelper);
-
-        // 5. 相机辅助器
-        const cameraHelper = new THREE.CameraHelper(camera);
-        scene.add(cameraHelper);
+        CameraHelper();
 
         // 相机位置
         camera.position.z = 15;
@@ -104,6 +143,10 @@
 </script>
 <style scoped>
     #c {
+        width: 100%;
+        height: 100vh;
+    }
+    #conatiner {
         width: 100%;
         height: 100vh;
     }
