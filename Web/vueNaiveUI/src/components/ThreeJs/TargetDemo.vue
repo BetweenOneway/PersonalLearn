@@ -153,7 +153,7 @@
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
 
-        console.log(`onWindowResize=>canvasContainer.value.clientWidth:${width},canvasContainer.value.clientHeight:${height}`)
+        //console.log(`onWindowResize=>canvasContainer.value.clientWidth:${width},canvasContainer.value.clientHeight:${height}`)
     }
 
     // 初始化场景
@@ -192,6 +192,23 @@
 
     function initControls() { 
         controls = new OrbitControls(camera, renderer.domElement)
+
+        // 如果使用animate方法时，将此函数删除
+        //controls.addEventListener( 'change', render );
+        // 使动画循环使用时阻尼或自转 意思是否有惯性
+        controls.enableDamping = true;
+        //动态阻尼系数 就是鼠标拖拽旋转灵敏度
+        //controls.dampingFactor = 0.25;
+        //是否可以缩放
+        controls.enableZoom = true;
+        //是否自动旋转
+        controls.autoRotate = false;
+        //设置相机距离原点的最远距离
+        controls.minDistance  = 20;
+        //设置相机距离原点的最远距离
+        controls.maxDistance  = 10000;
+        //是否开启右键拖拽
+        controls.enablePan = true;
     }
 
     // 动画循环
@@ -215,24 +232,41 @@
         // 计算模型的边界框
         const box = new THREE.Box3().setFromObject(model);
         const size = box.getSize(new THREE.Vector3());
-        const center = box.getCenter(new THREE.Vector3());
+        const center = new THREE.Vector3(0,0,0);//box.getCenter(new THREE.Vector3());
         
         console.log("model size=>",size);
+        console.log("model position=>",model.position);
         // 将模型居中
+        {
+            //测试计算模型边界
+            const tempBox = new THREE.Box3();
+            tempBox.expandByObject(model);
+            console.log("box=>",tempBox);
+        }
+
+        //这个position指的是模型原点相对于场景原点的位置
         model.position.x = -center.x;
         model.position.y = -center.y;
         model.position.z = -center.z;
         
         console.log("model position=>",model.position);
 
+        {
+            //测试计算模型边界
+            let geo = model.geometry;
+            geo.computeBoundingBox()
+            console.log("geo.boundingBox",geo.boundingBox);
+        }
         // 计算模型的最大尺寸
         const maxDim = Math.max(size.x, size.y, size.z);
         
         console.log("maxDim=>",maxDim);
 
         // 计算相机到模型的距离（基于视场角）
+        //角度转弧度
         const fov = camera.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+        //取中点 用三角函数计算相机距离模型的距离
+        let cameraZ = Math.abs((maxDim / 2) / Math.tan(fov / 2));
         
         // 稍微增加距离，让模型不贴边
         cameraZ *= 1.1;
@@ -256,6 +290,7 @@
 
     // Center model in view
     function centerModel() {
+        console.log("Call centerModel");
         if (!model) return;
         
         // Compute bounding box
