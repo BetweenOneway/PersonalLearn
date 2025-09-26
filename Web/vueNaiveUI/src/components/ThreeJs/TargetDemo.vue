@@ -11,7 +11,7 @@
                     
                     <!-- File Upload Area -->
                     <div class="mb-8">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Upload STL File</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Upload File</label>
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors duration-200 cursor-pointer" @click="fileInput.click()">
                             <input type="file" ref="fileInput" accept=".stl,.obj" class="hidden" @change="handleFileUpload">
                             <i class="fa fa-cloud-upload text-3xl text-gray-400 mb-2"></i>
@@ -131,7 +131,7 @@
     let isWireframe = ref(false)
 
     let scene, camera, renderer,controls, cube,model;
-
+    let axizLength = 15;
     let selectedFile = ref(null)
     let modelLoaded = ref(false)
 
@@ -165,6 +165,43 @@
     function initAxesHelper() {
         let axesHelper = new THREE.AxesHelper(5)
         scene.add(axesHelper)
+    }
+
+    function initArrowHelper()
+    {
+        // 3. 箭头辅助器
+        //X轴 红色
+        const arrowX = new THREE.ArrowHelper(
+            new THREE.Vector3(1, 0, 0),
+            new THREE.Vector3(0, 0, 0),
+            axizLength,
+            0xff0000,
+            0.5,
+            0.3
+        );
+        scene.add(arrowX);
+
+        //Y轴 绿色
+        const arrowY = new THREE.ArrowHelper(
+            new THREE.Vector3(0, 1, 0),
+            new THREE.Vector3(0, 0, 0),
+            axizLength,
+            0x00ff00,
+            0.5,
+            0.3
+        );
+        scene.add(arrowY);
+
+        //Z轴 蓝色
+        const arrowZ = new THREE.ArrowHelper(
+            new THREE.Vector3(0, 0, 1),
+            new THREE.Vector3(0, 0, 0),
+            axizLength,
+            0x0000ff,
+            0.5,
+            0.3
+        );
+        scene.add(arrowZ);
     }
 
     function initCamera() {
@@ -472,6 +509,8 @@
         initScene()
         // 初始化辅助轴
         initAxesHelper()
+        //
+        initArrowHelper()
         // 初始化灯光
         initLight()
         // 初始化mesh
