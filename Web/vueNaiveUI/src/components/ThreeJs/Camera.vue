@@ -80,6 +80,7 @@
         scene.background = new THREE.Color( 'black' );
         scene.add( cameraHelper );
 
+        //格子状平面
         {
             const planeSize = 40;
 
@@ -205,6 +206,7 @@
                 // draw the camera helper in the 2nd view
                 cameraHelper.visible = true;
 
+                //蓝色背景
                 scene.background.set( 0x000040 );
 
                 renderer.render( scene, camera2 );

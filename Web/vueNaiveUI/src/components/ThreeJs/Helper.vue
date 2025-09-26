@@ -32,7 +32,7 @@
     function ArrowHelper()
     {
         // 3. 箭头辅助器
-        //X轴
+        //X轴 红色
         const arrowX = new THREE.ArrowHelper(
             new THREE.Vector3(1, 0, 0),
             new THREE.Vector3(0, 0, 0),
@@ -43,7 +43,7 @@
         );
         scene.add(arrowX);
 
-        //Y轴
+        //Y轴 绿色
         const arrowY = new THREE.ArrowHelper(
             new THREE.Vector3(0, 1, 0),
             new THREE.Vector3(0, 0, 0),
@@ -54,7 +54,7 @@
         );
         scene.add(arrowY);
 
-        //Z轴
+        //Z轴 蓝色
         const arrowZ = new THREE.ArrowHelper(
             new THREE.Vector3(0, 0, 1),
             new THREE.Vector3(0, 0, 0),

@@ -127,7 +127,7 @@
     const rightContainer = ref(null)
     const canvasContainer = ref(null)
     let modelColor = ref('#42a5f5');
-    let bgColor = ref('#f0f0f0')
+    let bgColor = ref('#1B5050')
     let isWireframe = ref(false)
 
     let scene, camera, renderer,controls, cube,model;
@@ -159,7 +159,7 @@
     // 初始化场景
     function initScene() {
         scene = new THREE.Scene()
-        scene.background = new THREE.Color(0x1B5050)
+        scene.background = new THREE.Color(bgColor.value)
     }
     
     function initAxesHelper() {
@@ -350,7 +350,7 @@
                 
                     // Create material
                     const material = new THREE.MeshPhongMaterial({
-                        color: modelColor,
+                        color: modelColor.value,
                         wireframe: isWireframe,
                         side: THREE.DoubleSide
                     });
@@ -397,20 +397,21 @@
                 }
                 
                 console.log("reader on load");
-                // Load STL data
+                // Load OBJ data
                 const loader = new OBJLoader();
 
                 if(true)
                 {
                     // Create material
                     const material = new THREE.MeshPhongMaterial({
-                        color: modelColor,
+                        color: modelColor.value,
                         wireframe: isWireframe,
                         side: THREE.DoubleSide
                     });
                     var decoder = new TextDecoder("utf-8");
                     console.log("input obj data=>",event.target.result);
                     model = loader.parse(decoder.decode(event.target.result)).children[0];
+                    model.material = material;
                     console.log("OBJ model=>",model);
                 }
                 else
@@ -452,6 +453,18 @@
             loadOBJFile(file);
         }
         
+    }
+
+    function updateBackgroundColor()
+    {
+        scene.background.set(bgColor.value);
+    }
+
+    function updateModelColor()
+    {
+        if (model) {
+            model.material.color.set(modelColor.value);
+        }
     }
 
     onMounted(() => {
