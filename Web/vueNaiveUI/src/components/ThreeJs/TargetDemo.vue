@@ -163,8 +163,8 @@
     }
     
     function initAxesHelper() {
-        let axesHelper = new THREE.AxesHelper(5)
-        scene.add(axesHelper)
+        //let axesHelper = new THREE.AxesHelper(5)
+        //scene.add(axesHelper)
     }
 
     function initArrowHelper()
