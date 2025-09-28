@@ -69,6 +69,9 @@
         <n-card>
             <RouterLink to="/FileUpload">文件拖拽上传</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/file-process">文件处理集成</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 

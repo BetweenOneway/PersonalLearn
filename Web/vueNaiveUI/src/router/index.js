@@ -240,6 +240,11 @@ const router = createRouter({
         ]
     },
     {
+        path: '/file-process',
+        name: '文件处理集成',
+        component: () => import('@/views/FileProcessView.vue'),
+    },
+    {
         path: '/FileUpload',
         name: 'FileSelect',
         component: () => import('@/views/FileDragDropView.vue'),

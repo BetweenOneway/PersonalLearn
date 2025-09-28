@@ -1,4 +1,6 @@
 @import "tailwindcss";
+
 :root{
     --nav-bar-height:64px;
 }
+

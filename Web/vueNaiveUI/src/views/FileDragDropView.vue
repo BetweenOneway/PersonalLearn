@@ -1,7 +1,7 @@
 <template>
     <FileUpload 
     :multiple="true" 
-    accept="image/*,.pdf,.doc,.docx" 
+    accept="image/*,.pdf,.doc,.docx,text/plain" 
     :maxSize="20"
     />
 </template>
