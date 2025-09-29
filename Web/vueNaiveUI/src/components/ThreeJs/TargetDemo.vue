@@ -6,14 +6,13 @@
             <div class="flex-[1] h-full bg-gray-100 border-r border-gray-200 p-4 flex flex-col">
                 <!-- <aside class="bg-white w-full shadow-lg p-4 overflow-y-auto transition-all duration-300"> -->
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-lg font-semibold">File Controls</h2>
+                        <h2 class="text-lg font-semibold">3D模型在线查看</h2>
                     </div>
                     
                     <!-- File Upload Area -->
                     <div class="mb-8">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Upload File</label>
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors duration-200 cursor-pointer" @click="fileInput.click()">
-                            <input type="file" ref="fileInput" accept=".stl,.obj" class="hidden" @change="handleFileUpload">
+                            <input type="file" ref="fileInput" accept=".stl,.obj,.verts" class="hidden" @change="handleFileUpload">
                             <i class="fa fa-cloud-upload text-3xl text-gray-400 mb-2"></i>
                             <p class="text-gray-500">Click to upload </p>
                             <p class="text-xs text-gray-400 mt-1">Supports .stl .obj files</p>
@@ -69,8 +68,16 @@
                                     </div>
                                 </div>
                                 
+                                <!-- Wireframe Toggle -->
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm">显示坐标轴</label>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <n-switch v-model:value="isShowAxis" @update:value="showAxis" />
+                                    </label>
+                                </div>
+
                                 <!-- Reset Camera -->
-                                <button class="w-full py-2 px-3 bg-gray-100 hover:bg-gray-200 rounded-md text-sm transition-colors duration-200 flex items-center justify-center space-x-1" @click="resetCamera">
+                                <button class="w-full py-2 px-3 bg-gray-200 rounded-md text-sm transition-colors duration-200 flex items-center justify-center space-x-1" @click="resetCamera">
                                     <i class="fa fa-refresh"></i>
                                     <span>Reset View</span>
                                 </button>
@@ -122,6 +129,9 @@
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { STLLoader } from 'three/addons/loaders/STLLoader.js';
 
+    import { useMessage } from "naive-ui";
+    const message = useMessage();
+
     let isScrolled = ref(false)
     const fileInput = ref(null)
     const rightContainer = ref(null)
@@ -167,11 +177,30 @@
         //scene.add(axesHelper)
     }
 
+    let arrowX,arrowY,arrowZ;
+
+    const isShowAxis = ref(true);
+    //是否显示坐标轴
+    function showAxis(isShow) {
+        //message.info(`Update value: ${value}`);
+        if(isShow)
+        {
+            scene.add(arrowX);
+            scene.add(arrowY);
+            scene.add(arrowZ);
+        }
+        else{
+            scene.remove(arrowX);
+            scene.remove(arrowY);
+            scene.remove(arrowZ);
+        }
+    }
+
     function initArrowHelper()
     {
         // 3. 箭头辅助器
         //X轴 红色
-        const arrowX = new THREE.ArrowHelper(
+        arrowX = new THREE.ArrowHelper(
             new THREE.Vector3(1, 0, 0),
             new THREE.Vector3(0, 0, 0),
             axizLength,
@@ -179,10 +208,10 @@
             0.5,
             0.3
         );
-        scene.add(arrowX);
+        
 
         //Y轴 绿色
-        const arrowY = new THREE.ArrowHelper(
+        arrowY = new THREE.ArrowHelper(
             new THREE.Vector3(0, 1, 0),
             new THREE.Vector3(0, 0, 0),
             axizLength,
@@ -190,10 +219,10 @@
             0.5,
             0.3
         );
-        scene.add(arrowY);
+        
 
         //Z轴 蓝色
-        const arrowZ = new THREE.ArrowHelper(
+        arrowZ = new THREE.ArrowHelper(
             new THREE.Vector3(0, 0, 1),
             new THREE.Vector3(0, 0, 0),
             axizLength,
@@ -201,7 +230,14 @@
             0.5,
             0.3
         );
-        scene.add(arrowZ);
+        
+
+        if(isShowAxis.value)
+        {
+            scene.add(arrowX);
+            scene.add(arrowY);
+            scene.add(arrowZ);
+        }
     }
 
     function initCamera() {
@@ -475,6 +511,26 @@
         reader.readAsArrayBuffer(file);
     }
 
+    function loadVertsFile(file){
+        console.log("load OBJ file");
+        if (!model) {
+            console.log("model not exist");
+            message.warning("请先选择模型文件 加载模型");
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            try {
+                
+            } catch (error) {
+                console.error('Error loading Verts file:', error);
+                alert('Failed to load Verts file. Please try another file.');
+            }
+        };
+        
+        reader.readAsText(file);
+    }
+
     function handleFileUpload(event) {
         const file = event.target.files[0];
         console.log("call handle file upload=>",event.target.files[0]);
@@ -488,6 +544,10 @@
         else if (file.name.toLowerCase().endsWith('.obj')) {
             selectedFile.value = file;
             loadOBJFile(file);
+        }
+        else if (file.name.toLowerCase().endsWith('.verts')) {
+            selectedFile.value = file;
+            loadVertsFile(file);
         }
         
     }
