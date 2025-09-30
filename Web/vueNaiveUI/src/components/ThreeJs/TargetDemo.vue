@@ -132,7 +132,6 @@
     import { useMessage } from "naive-ui";
     const message = useMessage();
 
-    let isScrolled = ref(false)
     const fileInput = ref(null)
     const rightContainer = ref(null)
     const canvasContainer = ref(null)
@@ -144,10 +143,6 @@
     let axizLength = 15;
     let selectedFile = ref(null)
     let modelLoaded = ref(false)
-
-    function handleScroll() {
-        isScrolled.value = window.scrollY > 10;
-    }
 
     // 窗口大小变化处理
     function onWindowResize() {
@@ -196,6 +191,7 @@
         }
     }
 
+    //箭头辅助器
     function initArrowHelper()
     {
         // 3. 箭头辅助器
@@ -511,17 +507,69 @@
         reader.readAsArrayBuffer(file);
     }
 
+    let loadedNormals = {
+        verts :[],
+        normals:[]
+    }
+
+    /*
+    * 解析法线数据
+    * lines Array
+    */
+    function loadNormals(fileContent)
+    {
+        loadedNormals.verts = [];
+        loadedNormals.normals = [];
+        console.log("load verts file=>",event);
+
+        const lines = fileContent.trim().split(/[\r\n]+/);
+
+        //逐行解析
+        lines.forEach(
+            function(line){
+                const lineElem = line.trim().split(" ")
+                console.log("lineElem.length=>",lineElem.length)
+                if(lineElem.length >= 4)
+                {
+                    if(lineElem[0] == 'v' || lineElem[0] == 'V')
+                    {
+                        loadedNormals.verts.push(
+                            new THREE.Vector3(
+                                parseFloat(lineElem[1]),
+                                parseFloat(lineElem[2]),
+                                parseFloat(lineElem[3])
+                            )
+                        )
+                    }
+                    if(lineElem[0] == 'vn')
+                    {
+                        loadedNormals.normals.push(
+                            new THREE.Vector3(
+                                parseFloat(lineElem[1]),
+                                parseFloat(lineElem[2]),
+                                parseFloat(lineElem[3])
+                            )
+                        )
+                    }
+                }
+            }
+        )
+        console.log("loadedNormals=>",loadedNormals);
+    }
+
     function loadVertsFile(file){
-        console.log("load OBJ file");
+        console.log("load Verts file");
         if (!model) {
             console.log("model not exist");
             message.warning("请先选择模型文件 加载模型");
             return;
         }
+
         const reader = new FileReader();
         reader.onload = async (event) => {
             try {
-                
+                //读取成功 解析法线数据
+                loadNormals(event.target.result);
             } catch (error) {
                 console.error('Error loading Verts file:', error);
                 alert('Failed to load Verts file. Please try another file.');
@@ -531,6 +579,7 @@
         reader.readAsText(file);
     }
 
+    //文件上传
     function handleFileUpload(event) {
         const file = event.target.files[0];
         console.log("call handle file upload=>",event.target.files[0]);
@@ -552,11 +601,13 @@
         
     }
 
+    //更改场景颜色
     function updateBackgroundColor()
     {
         scene.background.set(bgColor.value);
     }
 
+    //更改模型颜色
     function updateModelColor()
     {
         if (model) {
