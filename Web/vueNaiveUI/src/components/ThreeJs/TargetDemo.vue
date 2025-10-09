@@ -48,8 +48,7 @@
                                 <div class="flex items-center justify-between">
                                     <label class="text-sm">Wireframe</label>
                                     <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" v-model="isWireframe" class="sr-only peer" @change="toggleWireframe">
-                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                        <n-switch v-model:value="isWireframe" @update:value="toggleWireframe" />
                                     </label>
                                 </div>
                             </div>
@@ -68,12 +67,20 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Wireframe Toggle -->
+                                <!-- Axis Toggle -->
                                 <div class="flex items-center justify-between">
                                     <label class="text-sm">显示坐标轴</label>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <n-switch v-model:value="isShowAxis" @update:value="showAxis" />
                                     </label>
+                                </div>
+
+                                <!-- Normal Length -->
+                                <div>
+                                    <label class="text-sm">法线长度</label>
+                                    <div class="flex items-center space-x-2">
+                                        <n-slider v-model:value="normalLength" :min="1" :max="20" @dragend="normalLengthUpdate"/>
+                                    </div>
                                 </div>
 
                                 <!-- Reset Camera -->
@@ -144,6 +151,14 @@
     let selectedFile = ref(null)
     let modelLoaded = ref(false)
 
+    //法线相关数据
+    let loadedNormals = {
+        verts :[],
+        normals:[]
+    }
+
+    let normalsModel = [];
+
     // 窗口大小变化处理
     function onWindowResize() {
         if (!canvasContainer.value) return;
@@ -159,6 +174,9 @@
         renderer.setSize(width, height);
 
         //console.log(`onWindowResize=>canvasContainer.value.clientWidth:${width},canvasContainer.value.clientHeight:${height}`)
+    }
+
+    function onCanvasClick(event) {
     }
 
     // 初始化场景
@@ -507,9 +525,38 @@
         reader.readAsArrayBuffer(file);
     }
 
-    let loadedNormals = {
-        verts :[],
-        normals:[]
+    let normalLength = ref(10.0)
+
+    //更改法线长度
+    function normalLengthUpdate()
+    {
+        for(let normal of normalsModel)
+        {
+            normal.setLength(normalLength.value);
+        }
+    }
+
+    //将法线显示到场景中
+    function addNormalsToScene(loadedNormals)
+    {
+        if(loadedNormals.verts.length != loadedNormals.normals.length)
+        {
+            return;
+        }
+
+        for (let i=0;i<loadedNormals.verts.length;i++) 
+        {
+            const arrow = new THREE.ArrowHelper(
+                loadedNormals.normals[i],
+                loadedNormals.verts[i],
+                normalLength.value,
+                0xff0000,
+                0.5,
+                0.3
+            );
+            scene.add(arrow);
+            normalsModel.push(arrow);
+        }
     }
 
     /*
@@ -520,7 +567,6 @@
     {
         loadedNormals.verts = [];
         loadedNormals.normals = [];
-        console.log("load verts file=>",event);
 
         const lines = fileContent.trim().split(/[\r\n]+/);
 
@@ -531,6 +577,7 @@
                 console.log("lineElem.length=>",lineElem.length)
                 if(lineElem.length >= 4)
                 {
+                    //解析点
                     if(lineElem[0] == 'v' || lineElem[0] == 'V')
                     {
                         loadedNormals.verts.push(
@@ -541,6 +588,7 @@
                             )
                         )
                     }
+                    //解析法线
                     if(lineElem[0] == 'vn')
                     {
                         loadedNormals.normals.push(
@@ -555,6 +603,7 @@
             }
         )
         console.log("loadedNormals=>",loadedNormals);
+        addNormalsToScene(loadedNormals);
     }
 
     function loadVertsFile(file){
@@ -636,11 +685,15 @@
         initControls()
 
         window.addEventListener('resize', onWindowResize);
+        // 射线交互事件
+        window.addEventListener('click', onCanvasClick);
     })
     
     // 组件卸载时清理资源
     onUnmounted(() => {
         window.removeEventListener('resize', onWindowResize);
+        // 射线交互事件
+        window.removeEventListener('click', onCanvasClick);
         if (renderer) {
             renderer.dispose()
         }
