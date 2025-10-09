@@ -249,6 +249,11 @@ const router = createRouter({
         name: 'FileSelect',
         component: () => import('@/views/FileDragDropView.vue'),
     },
+    {
+        path: '/slider',
+        name: 'Slider',
+        component: () => import('@/views/SliderView.vue'),
+    },
   ],
 })
 

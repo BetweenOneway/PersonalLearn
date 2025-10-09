@@ -64,13 +64,16 @@
             <RouterLink to="/scrollbar">学习滚动组件</RouterLink>
         </n-card>
         <n-card>
-            <RouterLink to="threejs">学习Three.js</RouterLink>
+            <RouterLink to="/threejs">学习Three.js</RouterLink>
         </n-card>
         <n-card>
             <RouterLink to="/FileUpload">文件拖拽上传</RouterLink>
         </n-card>
         <n-card>
             <RouterLink to="/file-process">文件处理集成</RouterLink>
+        </n-card>
+        <n-card>
+            <RouterLink to="/slider">滑动组件学习</RouterLink>
         </n-card>
     </n-flex>
 </template>
