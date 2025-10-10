@@ -146,10 +146,17 @@
     let bgColor = ref('#1B5050')
     let isWireframe = ref(false)
 
-    let scene, camera, renderer,controls, cube,model;
+    let scene, camera, renderer,controls,model;
+    let raycaster,mouse;
     let axizLength = 15;
     let selectedFile = ref(null)
     let modelLoaded = ref(false)
+    
+    const selectedRay = ref(null);
+
+    // 变换控制
+    const translate = ref({ x: 0, y: 0, z: 0 });
+    const rotate = ref({ x: 0, y: 0, z: 0 });
 
     //法线相关数据
     let loadedNormals = {
@@ -158,6 +165,8 @@
     }
 
     let normalsModel = [];
+    let normalColor = ref('#3B82F6')
+    let normalSelectedColor = ref('#8B5CF6')
 
     // 窗口大小变化处理
     function onWindowResize() {
@@ -176,7 +185,83 @@
         //console.log(`onWindowResize=>canvasContainer.value.clientWidth:${width},canvasContainer.value.clientHeight:${height}`)
     }
 
+    // 查找射线组（从子对象向上查找）
+    function findRayGroup(object) {
+        let current = object;
+        while (current && !normalsModel.includes(current)) {
+            current = current.parent;
+        }
+        return current;
+    }
+  
+    // 选择射线
+    function selectRay(rayGroup) {
+        // 如果已经选中了这条射线，不做处理
+        if (selectedRay.value === rayGroup) return;
+        
+        // 取消之前选中的射线
+        deselectRay();
+        
+        // 设置新的选中射线
+        selectedRay.value = rayGroup;
+        
+        // 更改选中射线的颜色
+        rayGroup.children.forEach(child => {
+            if (child.material) {
+                child.material.color.set(normalSelectedColor.value); // 紫色表示选中
+            }
+        });
+        
+        // 重置变换输入
+        resetTransformInputs();
+    }
+  
+    // 取消选择射线
+    function deselectRay() {
+        if (selectedRay.value) {
+            // 恢复射线原来的颜色
+            selectedRay.value.children.forEach(child => {
+                if (child.material) {
+                    child.material.color.set(normalColor.value); // 恢复蓝色
+                }
+            });
+            
+            selectedRay.value = null;
+        }
+    }
+
+    // 重置变换输入
+    function resetTransformInputs() {
+        translate.value = { x: 0, y: 0, z: 0 };
+        rotate.value = { x: 0, y: 0, z: 0 };
+    }
+
     function onCanvasClick(event) {
+        if (!raycaster || !camera) return;
+    
+        // 计算鼠标在标准化设备坐标中的位置 (-1 到 1)
+        const rect = rightContainer.value.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        
+        // 更新射线投射器
+        raycaster.setFromCamera(mouse, camera);
+        
+        // 检查与射线的交点
+        const intersects = raycaster.intersectObjects(normalsModel, true);
+        
+        if (intersects.length > 0) {
+        // 找到最接近的射线组
+        const closest = intersects[0].object;
+        const rayGroup = findRayGroup(closest);
+        
+        if (rayGroup) {
+            selectRay(rayGroup);
+        }
+        } else {
+            // 未点击任何射线，取消选择
+            deselectRay();
+        }
     }
 
     // 初始化场景
@@ -550,7 +635,7 @@
                 loadedNormals.normals[i],
                 loadedNormals.verts[i],
                 normalLength.value,
-                0xff0000,
+                normalColor.value,
                 0.5,
                 0.3
             );
@@ -683,6 +768,9 @@
         animate()
         // 初始化轨道控制器
         initControls()
+
+        raycaster = new THREE.Raycaster();
+        mouse = new THREE.Vector2();
 
         window.addEventListener('resize', onWindowResize);
         // 射线交互事件

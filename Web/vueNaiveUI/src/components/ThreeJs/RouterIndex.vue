@@ -27,6 +27,12 @@
             <n-button size="large" @click="gotoHerf('helper')">
                 辅助器
             </n-button>
+            <n-button size="large" @click="gotoHerf('ray-update')">
+                射线选择调整
+            </n-button>
+            <n-button size="large" @click="gotoHerf('ray-update-1')">
+                射线选择调整方法1
+            </n-button>
         </n-flex>
     </div>
   </template>

@@ -237,6 +237,16 @@ const router = createRouter({
                 name: 'helper',
                 component: () => import('@/components/ThreeJs/Helper.vue'),
             },
+            {
+                path: 'ray-update',
+                name: 'ray-update',
+                component: () => import('@/components/ThreeJs/RayUpdate.vue'),
+            },
+            {
+                path: 'ray-update-1',
+                name: 'ray-update',
+                component: () => import('@/components/ThreeJs/RayUpdate1.vue'),
+            },
         ]
     },
     {
