@@ -247,6 +247,11 @@ const router = createRouter({
                 name: 'ray-update',
                 component: () => import('@/components/ThreeJs/RayUpdate1.vue'),
             },
+            {
+                path: 'trackball',
+                name: 'Trackball',
+                component: () => import('@/components/ThreeJs/TrackballUsage.vue'),
+            },
         ]
     },
     {
