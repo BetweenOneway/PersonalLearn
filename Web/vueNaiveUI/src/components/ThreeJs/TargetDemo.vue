@@ -228,7 +228,6 @@
                         <li>右键拖动: 平移视图</li>
                         <li>滚轮: 缩放视图</li>
                         <li>点击射线: 选择射线</li>
-                        <li>ESC: 取消选择</li>
                         </ul>
                     </div>
                     
@@ -549,11 +548,8 @@
         else
         {
             console.log("Init trackball controls")
-            console.log("Init controls camera=>",camera)
-            console.log("Init controls renderer.domElement=>",renderer.domElement)
+
             controls = new TrackballControls(camera, renderer.domElement);
-  
-            console.log("Trackball controls=>",controls.value);
             
             // 配置控制器参数
             controls.rotateSpeed = 4.0    // 旋转速度
