@@ -180,15 +180,15 @@
                                 <div class="grid grid-cols-3 gap-2">
                                 <div class="flex flex-col">
                                     <label class="text-xs text-gray-500 mb-1">X轴</label>
-                                    <input type="number" v-model.number="rotate.x" step="5" class="text-sm border border-gray-300 rounded px-2 py-1">
+                                    <input type="number" v-model.number="rotate.x" step="1" class="text-sm border border-gray-300 rounded px-2 py-1">
                                 </div>
                                 <div class="flex flex-col">
                                     <label class="text-xs text-gray-500 mb-1">Y轴</label>
-                                    <input type="number" v-model.number="rotate.y" step="5" class="text-sm border border-gray-300 rounded px-2 py-1">
+                                    <input type="number" v-model.number="rotate.y" step="1" class="text-sm border border-gray-300 rounded px-2 py-1">
                                 </div>
                                 <div class="flex flex-col">
                                     <label class="text-xs text-gray-500 mb-1">Z轴</label>
-                                    <input type="number" v-model.number="rotate.z" step="5" class="text-sm border border-gray-300 rounded px-2 py-1">
+                                    <input type="number" v-model.number="rotate.z" step="1" class="text-sm border border-gray-300 rounded px-2 py-1">
                                 </div>
                                 </div>
                             </div>
