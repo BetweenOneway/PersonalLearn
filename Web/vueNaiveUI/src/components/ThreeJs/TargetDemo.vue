@@ -272,7 +272,7 @@
     const vertsFileInput = ref(null)
     const rightContainer = ref(null)
     const canvasContainer = ref(null)
-    let modelColor = ref('#42a5f5');
+    let modelColor = ref('#c0c0c0');
     let bgColor = ref('#1B5050')
     let isWireframe = ref(false)
 
@@ -516,7 +516,7 @@
     }
 
     function initControls() { 
-        let useOrbitControl = true;
+        let useOrbitControl = false;
         if(useOrbitControl)
         {
             controls = new OrbitControls(camera, renderer.domElement)
@@ -554,32 +554,22 @@
             controls = new TrackballControls(camera, renderer.domElement);
   
             console.log("Trackball controls=>",controls.value);
-
-            // 核心配置：仅允许旋转，禁用其他交互
-            // controls.noZoom = true       // 禁用缩放
-            // controls.noPan = true        // 禁用平移
-            // controls.noRotate = false    // 允许旋转
             
-            // 禁用自动旋转（默认就是禁用的，这里显式设置更清晰）
-            // controls.autoRotate = false
+            // 配置控制器参数
+            controls.rotateSpeed = 4.0    // 旋转速度
+            controls.zoomSpeed = 1.2      // 缩放速度
+            controls.panSpeed = 1.0       // 平移速度
             
-            // 旋转速度配置
-            controls.rotateSpeed = 1.2
+            controls.noZoom = false       // 允许缩放
+            controls.noPan = false        // 允许平移
+            controls.noRotate = false     // 允许旋转
             
-            // 禁用惯性，操作停止后立即停止旋转
-            controls.staticMoving = true
-            controls.dynamicDampingFactor = 0.0
-            
-            // 鼠标按键配置（只需要左键旋转）
-            controls.mouseButtons = {
-                LEFT: THREE.MOUSE.ROTATE,  // 左键旋转
-                MIDDLE: THREE.MOUSE.PAN,   // 中键功能（已被noPan禁用）
-                RIGHT: THREE.MOUSE.ZOOM    // 右键功能（已被noZoom禁用）
-            }
+            controls.staticMoving = true // 禁用静态移动（禁用惯性）
+            controls.dynamicDampingFactor = 0.05 // 动态阻尼系数
 
             // 调试用：监听控制器变化
             controls.addEventListener('change', () => {
-                console.log('控制器状态变化')
+                //console.log('控制器状态变化')
                 renderer.render(scene, camera)
             })
         }
@@ -591,7 +581,7 @@
         
         // cube.rotation.x += 0.01
         // cube.rotation.y += 0.01
-        
+        controls.update();
         renderer.render(scene, camera)
     }
     
@@ -1136,10 +1126,10 @@
         initCamera()
         // 初始化渲染器
         initRenderer()
-        // 循环动画
-        animate()
         // 初始化轨道控制器
         initControls()
+        // 循环动画
+        animate()
 
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector2();
