@@ -23,179 +23,179 @@
         </div>
       </header>
   
-      <!-- 主内容区 -->
-      <main class="flex flex-1 overflow-hidden">
-        <!-- 左侧控制面板 -->
-        <div id="control-panel" class="w-64 bg-white shadow-lg p-4 flex flex-col transition-all duration-300 transform z-10">
-          <!-- 文件上传区域 -->
-          <div class="mb-6 pb-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold mb-3">文件操作</h2>
-            
-            <!-- 未上传文件时显示的上传区域 -->
-            <div v-show="!uploadedFileName" class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors duration-200 cursor-pointer"
-                 @click="triggerFileInput"
-                 @dragover.prevent @dragenter.prevent @dragleave.prevent
-                 @drop.prevent="handleDrop">
-              <i class="fa fa-cloud-upload text-4xl text-gray-400 mb-3"></i>
-              <p class="text-sm text-gray-600 mb-2">点击或拖拽.verts文件到此处上传</p>
-              <p class="text-xs text-gray-400">支持的格式: .verts</p>
-              <input type="file" id="file-input" ref="fileInput" accept=".verts" class="hidden" @change="handleFileUpload">
-            </div>
-            
-            <!-- 已上传文件时显示的文件信息 -->
-            <div v-show="uploadedFileName" class="bg-gray-50 rounded-lg p-3">
-              <div class="flex items-start justify-between mb-2">
-                <div class="flex items-center">
-                  <i class="fa fa-file-text-o text-blue-500 mr-2 mt-0.5"></i>
-                  <span class="text-sm truncate max-w-[160px]" :title="uploadedFileName">{{ uploadedFileName }}</span>
+        <!-- 主内容区 -->
+        <main class="flex flex-1 overflow-hidden">
+            <!-- 左侧控制面板 -->
+            <div id="control-panel" class="w-64 bg-white shadow-lg p-4 flex flex-col transition-all duration-300 transform z-10">
+                <!-- 文件上传区域 -->
+                <div class="mb-6 pb-4 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold mb-3">文件操作</h2>
+                    
+                    <!-- 未上传文件时显示的上传区域 -->
+                    <div v-show="!uploadedFileName" class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors duration-200 cursor-pointer"
+                        @click="triggerFileInput"
+                        @dragover.prevent @dragenter.prevent @dragleave.prevent
+                        @drop.prevent="handleDrop">
+                        <i class="fa fa-cloud-upload text-4xl text-gray-400 mb-3"></i>
+                        <p class="text-sm text-gray-600 mb-2">点击或拖拽.verts文件到此处上传</p>
+                        <p class="text-xs text-gray-400">支持的格式: .verts</p>
+                        <input type="file" id="file-input" ref="fileInput" accept=".verts" class="hidden" @change="handleFileUpload">
+                    </div>
+                    
+                    <!-- 已上传文件时显示的文件信息 -->
+                    <div v-show="uploadedFileName" class="bg-gray-50 rounded-lg p-3">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center">
+                        <i class="fa fa-file-text-o text-blue-500 mr-2 mt-0.5"></i>
+                        <span class="text-sm truncate max-w-[160px]" :title="uploadedFileName">{{ uploadedFileName }}</span>
+                        </div>
+                        <button @click="clearUploadedFile" class="text-gray-400 hover:text-red-500 transition-colors">
+                        <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button @click="reloadFile" class="flex-1 bg-gray-200 text-gray-700 text-xs p-1.5 rounded transition-all hover:bg-gray-300">
+                        <i class="fa fa-refresh mr-1"></i>重新加载
+                        </button>
+                        <button @click="triggerFileInput" class="flex-1 bg-blue-500 text-white text-xs p-1.5 rounded transition-all hover:bg-blue-600">
+                        <i class="fa fa-exchange mr-1"></i>更换文件
+                        </button>
+                    </div>
+                    </div>
                 </div>
-                <button @click="clearUploadedFile" class="text-gray-400 hover:text-red-500 transition-colors">
-                  <i class="fa fa-times"></i>
-                </button>
-              </div>
-              <div class="flex space-x-2">
-                <button @click="reloadFile" class="flex-1 bg-gray-200 text-gray-700 text-xs p-1.5 rounded transition-all hover:bg-gray-300">
-                  <i class="fa fa-refresh mr-1"></i>重新加载
-                </button>
-                <button @click="triggerFileInput" class="flex-1 bg-blue-500 text-white text-xs p-1.5 rounded transition-all hover:bg-blue-600">
-                  <i class="fa fa-exchange mr-1"></i>更换文件
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <!-- 射线控制区域 -->
-          <div class="mb-6">
-            <h2 class="text-lg font-semibold mb-4 pb-2 border-b border-gray-200">射线控制</h2>
             
-            <!-- 工具选择 -->
-            <div class="mb-4">
-              <h3 class="font-medium mb-2 text-sm text-gray-600">操作工具</h3>
-              <div class="flex space-x-2">
-                <button 
-                  @click="setActiveTool('translate')" 
-                  :class="['flex-1 py-2 rounded-md text-sm transition-all duration-200', activeTool === 'translate' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700']"
-                >
-                  <i class="fa fa-arrows mr-1"></i>平移
-                </button>
-                <button 
-                  @click="setActiveTool('rotate')" 
-                  :class="['flex-1 py-2 rounded-md text-sm transition-all duration-200', activeTool === 'rotate' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700']"
-                >
-                  <i class="fa fa-repeat mr-1"></i>旋转
-                </button>
-              </div>
-            </div>
-            
-            <div v-if="!selectedRay && rays.length === 0" class="flex-1 flex flex-col items-center justify-center text-gray-500 py-6">
-              <i class="fa fa-file-o text-3xl mb-2"></i>
-              <p class="text-sm text-center">请上传.verts文件加载射线数据</p>
-            </div>
-            
-            <div v-else-if="!selectedRay && rays.length > 0" class="flex-1 flex flex-col items-center justify-center text-gray-500 py-6">
-              <i class="fa fa-hand-pointer-o text-3xl mb-2"></i>
-              <p class="text-sm text-center">请在场景中选择一条射线</p>
-            </div>
-            
-            <div v-else class="space-y-4">
-              <div>
-                <h3 class="font-medium mb-2 text-sm text-gray-600">射线信息</h3>
-                <div class="bg-gray-50 p-3 rounded-md text-sm">
-                  <p><span class="text-gray-500">ID:</span> {{ selectedRay.userData.id }}</p>
-                  <p><span class="text-gray-500">起点:</span> ({{ formatVector(selectedRay.position) }})</p>
-                  <p><span class="text-gray-500">方向:</span> ({{ formatDirection(selectedRay) }})</p>
+                <!-- 射线控制区域 -->
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold mb-4 pb-2 border-b border-gray-200">射线控制</h2>
+                    
+                    <!-- 工具选择 -->
+                    <div class="mb-4">
+                    <h3 class="font-medium mb-2 text-sm text-gray-600">操作工具</h3>
+                    <div class="flex space-x-2">
+                        <button 
+                        @click="setActiveTool('translate')" 
+                        :class="['flex-1 py-2 rounded-md text-sm transition-all duration-200', activeTool === 'translate' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700']"
+                        >
+                        <i class="fa fa-arrows mr-1"></i>平移
+                        </button>
+                        <button 
+                        @click="setActiveTool('rotate')" 
+                        :class="['flex-1 py-2 rounded-md text-sm transition-all duration-200', activeTool === 'rotate' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700']"
+                        >
+                        <i class="fa fa-repeat mr-1"></i>旋转
+                        </button>
+                    </div>
+                    </div>
+                    
+                    <div v-if="!selectedRay && rays.length === 0" class="flex-1 flex flex-col items-center justify-center text-gray-500 py-6">
+                        <i class="fa fa-file-o text-3xl mb-2"></i>
+                        <p class="text-sm text-center">请上传.verts文件加载射线数据</p>
+                    </div>
+                    
+                    <div v-else-if="!selectedRay && rays.length > 0" class="flex-1 flex flex-col items-center justify-center text-gray-500 py-6">
+                        <i class="fa fa-hand-pointer-o text-3xl mb-2"></i>
+                        <p class="text-sm text-center">请在场景中选择一条射线</p>
+                    </div>
+                    
+                    <div v-else class="space-y-4">
+                        <div>
+                            <h3 class="font-medium mb-2 text-sm text-gray-600">射线信息</h3>
+                            <div class="bg-gray-50 p-3 rounded-md text-sm">
+                            <p><span class="text-gray-500">ID:</span> {{ selectedRay.userData.id }}</p>
+                            <p><span class="text-gray-500">起点:</span> ({{ formatVector(selectedRay.position) }})</p>
+                            <p><span class="text-gray-500">方向:</span> ({{ formatDirection(selectedRay) }})</p>
+                            </div>
+                        </div>
+                    
+                        <div>
+                            <h3 class="font-medium mb-2 text-sm text-gray-600">偏移控制</h3>
+                            <div class="grid grid-cols-3 gap-2">
+                            <div class="flex flex-col">
+                                <label class="text-xs text-gray-500 mb-1">X</label>
+                                <input type="number" v-model.number="translate.x" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-xs text-gray-500 mb-1">Y</label>
+                                <input type="number" v-model.number="translate.y" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-xs text-gray-500 mb-1">Z</label>
+                                <input type="number" v-model.number="translate.z" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
+                            </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-medium mb-2 text-sm text-gray-600">旋转控制</h3>
+                            <div class="grid grid-cols-3 gap-2">
+                            <div class="flex flex-col">
+                                <label class="text-xs text-gray-500 mb-1">X轴</label>
+                                <input type="number" v-model.number="rotate.x" step="5" class="text-sm border border-gray-300 rounded px-2 py-1">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-xs text-gray-500 mb-1">Y轴</label>
+                                <input type="number" v-model.number="rotate.y" step="5" class="text-sm border border-gray-300 rounded px-2 py-1">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-xs text-gray-500 mb-1">Z轴</label>
+                                <input type="number" v-model.number="rotate.z" step="5" class="text-sm border border-gray-300 rounded px-2 py-1">
+                            </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-medium mb-2 text-sm text-gray-600">射线长度</h3>
+                            <input type="number" v-model.number="rayLength" step="0.1" min="0.1" class="text-sm border border-gray-300 rounded px-2 py-1 w-full">
+                        </div>
+                    
+                        <div class="flex space-x-2">
+                            <button @click="resetRayTransform" class="flex-1 bg-gray-200 text-gray-700 p-2 rounded-md text-sm transition-all duration-200 hover:shadow-lg transform hover:-translate-y-0.5">
+                            <i class="fa fa-refresh mr-1"></i>重置
+                            </button>
+                            <button @click="deleteSelectedRay" class="flex-1 bg-red-500 text-white p-2 rounded-md text-sm transition-all duration-200 hover:shadow-lg transform hover:-translate-y-0.5">
+                            <i class="fa fa-trash mr-1"></i>删除
+                            </button>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              
-              <div>
-                <h3 class="font-medium mb-2 text-sm text-gray-600">偏移控制</h3>
-                <div class="grid grid-cols-3 gap-2">
-                  <div class="flex flex-col">
-                    <label class="text-xs text-gray-500 mb-1">X</label>
-                    <input type="number" v-model.number="translate.x" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
-                  </div>
-                  <div class="flex flex-col">
-                    <label class="text-xs text-gray-500 mb-1">Y</label>
-                    <input type="number" v-model.number="translate.y" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
-                  </div>
-                  <div class="flex flex-col">
-                    <label class="text-xs text-gray-500 mb-1">Z</label>
-                    <input type="number" v-model.number="translate.z" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
-                  </div>
+                
+                <!-- 场景信息 -->
+                <div class="mt-auto pt-4 border-t border-gray-200">
+                    <h3 class="font-medium mb-2 text-sm text-gray-600">场景信息</h3>
+                    <div class="bg-gray-50 p-3 rounded-md text-sm">
+                    <p><span class="text-gray-500">射线总数:</span> {{ rays.length }}</p>
+                    <p><span class="text-gray-500">选中射线:</span> {{ selectedRay ? 1 : 0 }}</p>
+                    </div>
                 </div>
-              </div>
-              
-              <div>
-                <h3 class="font-medium mb-2 text-sm text-gray-600">旋转控制</h3>
-                <div class="grid grid-cols-3 gap-2">
-                  <div class="flex flex-col">
-                    <label class="text-xs text-gray-500 mb-1">X轴</label>
-                    <input type="number" v-model.number="rotate.x" step="5" class="text-sm border border-gray-300 rounded px-2 py-1">
-                  </div>
-                  <div class="flex flex-col">
-                    <label class="text-xs text-gray-500 mb-1">Y轴</label>
-                    <input type="number" v-model.number="rotate.y" step="5" class="text-sm border border-gray-300 rounded px-2 py-1">
-                  </div>
-                  <div class="flex flex-col">
-                    <label class="text-xs text-gray-500 mb-1">Z轴</label>
-                    <input type="number" v-model.number="rotate.z" step="5" class="text-sm border border-gray-300 rounded px-2 py-1">
-                  </div>
+            </div>
+            
+            <!-- Three.js渲染区域 -->
+            <div class="flex-1 relative">
+                <canvas ref="renderCanvas" class="w-full h-full"></canvas>
+                
+                <!-- 操作提示 -->
+                <div class="absolute bottom-4 left-4 bg-gray-800/80 text-white px-4 py-2 rounded-md text-sm backdrop-blur-sm">
+                    <p class="mb-1"><i class="fa fa-info-circle mr-1"></i>操作提示:</p>
+                    <ul class="list-disc list-inside text-xs space-y-0.5">
+                    <li>左键拖动: 旋转视图</li>
+                    <li>右键拖动: 平移视图</li>
+                    <li>滚轮: 缩放视图</li>
+                    <li>点击射线: 选择射线</li>
+                    <li>ESC: 取消选择</li>
+                    </ul>
                 </div>
-              </div>
-              
-              <div>
-                <h3 class="font-medium mb-2 text-sm text-gray-600">射线长度</h3>
-                <input type="number" v-model.number="rayLength" step="0.1" min="0.1" class="text-sm border border-gray-300 rounded px-2 py-1 w-full">
-              </div>
-              
-              <div class="flex space-x-2">
-                <button @click="resetRayTransform" class="flex-1 bg-gray-200 text-gray-700 p-2 rounded-md text-sm transition-all duration-200 hover:shadow-lg transform hover:-translate-y-0.5">
-                  <i class="fa fa-refresh mr-1"></i>重置
-                </button>
-                <button @click="deleteSelectedRay" class="flex-1 bg-red-500 text-white p-2 rounded-md text-sm transition-all duration-200 hover:shadow-lg transform hover:-translate-y-0.5">
-                  <i class="fa fa-trash mr-1"></i>删除
-                </button>
-              </div>
+                
+                <!-- 加载指示器 -->
+                <div v-if="isLoading" class="absolute inset-0 bg-gray-800/50 flex items-center justify-center">
+                    <div class="bg-white p-6 rounded-lg flex items-center">
+                    <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mr-3"></div>
+                    <p>加载中...</p>
+                    </div>
+                </div>
             </div>
-          </div>
-          
-          <!-- 场景信息 -->
-          <div class="mt-auto pt-4 border-t border-gray-200">
-            <h3 class="font-medium mb-2 text-sm text-gray-600">场景信息</h3>
-            <div class="bg-gray-50 p-3 rounded-md text-sm">
-              <p><span class="text-gray-500">射线总数:</span> {{ rays.length }}</p>
-              <p><span class="text-gray-500">选中射线:</span> {{ selectedRay ? 1 : 0 }}</p>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Three.js渲染区域 -->
-        <div class="flex-1 relative">
-          <canvas ref="renderCanvas" class="w-full h-full"></canvas>
-          
-          <!-- 操作提示 -->
-          <div class="absolute bottom-4 left-4 bg-gray-800/80 text-white px-4 py-2 rounded-md text-sm backdrop-blur-sm">
-            <p class="mb-1"><i class="fa fa-info-circle mr-1"></i>操作提示:</p>
-            <ul class="list-disc list-inside text-xs space-y-0.5">
-              <li>左键拖动: 旋转视图</li>
-              <li>右键拖动: 平移视图</li>
-              <li>滚轮: 缩放视图</li>
-              <li>点击射线: 选择射线</li>
-              <li>ESC: 取消选择</li>
-            </ul>
-          </div>
-          
-          <!-- 加载指示器 -->
-          <div v-if="isLoading" class="absolute inset-0 bg-gray-800/50 flex items-center justify-center">
-            <div class="bg-white p-6 rounded-lg flex items-center">
-              <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mr-3"></div>
-              <p>加载中...</p>
-            </div>
-          </div>
-        </div>
-      </main>
+        </main>
     </div>
-  </template>
+</template>
   
 <script setup>
   import { ref, onMounted, onUnmounted, watch } from 'vue';
@@ -303,34 +303,34 @@
     });
   }
   
-  // 处理画布点击事件
-  function onCanvasClick(event) {
-    if (!raycaster || !camera) return;
-    
-    // 计算鼠标在标准化设备坐标中的位置 (-1 到 1)
-    const rect = renderCanvas.value.getBoundingClientRect();
-    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-    
-    // 更新射线投射器
-    raycaster.setFromCamera(mouse, camera);
-    
-    // 检查与射线的交点
-    const intersects = raycaster.intersectObjects(rays.value, true);
-    
-    if (intersects.length > 0) {
-      // 找到最接近的射线组
-      const closest = intersects[0].object;
-      const rayGroup = findRayGroup(closest);
-      
-      if (rayGroup) {
-        selectRay(rayGroup);
-      }
-    } else {
-      // 未点击任何射线，取消选择
-      deselectRay();
+    // 处理画布点击事件
+    function onCanvasClick(event) {
+        if (!raycaster || !camera) return;
+        
+        // 计算鼠标在标准化设备坐标中的位置 (-1 到 1)
+        const rect = renderCanvas.value.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        
+        // 更新射线投射器
+        raycaster.setFromCamera(mouse, camera);
+        
+        // 检查与射线的交点
+        const intersects = raycaster.intersectObjects(rays.value, true);
+        
+        if (intersects.length > 0) {
+        // 找到最接近的射线组
+        const closest = intersects[0].object;
+        const rayGroup = findRayGroup(closest);
+        
+        if (rayGroup) {
+            selectRay(rayGroup);
+        }
+        } else {
+            // 未点击任何射线，取消选择
+            deselectRay();
+        }
     }
-  }
   
   // 查找射线组（从子对象向上查找）
   function findRayGroup(object) {
@@ -341,192 +341,192 @@
     return current;
   }
   
-  // 选择射线
-  function selectRay(rayGroup) {
-    // 如果已经选中了这条射线，不做处理
-    if (selectedRay.value === rayGroup) return;
-    
-    // 保存当前选中射线的变换状态
-    if (selectedRay.value) {
-      saveRayTransform(selectedRay.value);
-      // 恢复之前选中射线的颜色
-      const arrowHelper = selectedRay.value.children[0];
-      if (arrowHelper instanceof THREE.ArrowHelper) {
-        arrowHelper.setColor(new THREE.Color(0x3B82F6)); // 恢复蓝色
-      }
-      // 恢复起点标记的颜色
-      const point = selectedRay.value.children[1];
-      if (point.material) {
-        point.material.color.set(0x3B82F6);
-      }
-    }
-    
-    // 设置新的选中射线
-    selectedRay.value = rayGroup;
-    
-    // 更改选中射线的颜色
-    const arrowHelper = rayGroup.children[0];
-    if (arrowHelper instanceof THREE.ArrowHelper) {
-      arrowHelper.setColor(new THREE.Color(0x8B5CF6)); // 紫色表示选中
-    }
-    // 更改起点标记的颜色
-    const point = rayGroup.children[1];
-    if (point.material) {
-      point.material.color.set(0x8B5CF6);
-    }
-    
-    // 加载新选中射线的变换状态
-    loadRayTransform(rayGroup);
-  }
-  
-  // 取消选择射线
-  function deselectRay() {
-    if (selectedRay.value) {
-      // 保存当前选中射线的变换状态
-      saveRayTransform(selectedRay.value);
-      
-      // 恢复射线原来的颜色
-      const arrowHelper = selectedRay.value.children[0];
-      if (arrowHelper instanceof THREE.ArrowHelper) {
-        arrowHelper.setColor(new THREE.Color(0x3B82F6)); // 恢复蓝色
-      }
-      // 恢复起点标记的颜色
-      const point = selectedRay.value.children[1];
-      if (point.material) {
-        point.material.color.set(0x3B82F6);
-      }
-      
-      selectedRay.value = null;
-    }
-  }
-  
-  // 保存射线的变换状态
-  function saveRayTransform(rayGroup) {
-    // 保存当前旋转值（角度）
-    rayGroup.userData.currentRotation = {
-      x: rotate.value.x,
-      y: rotate.value.y,
-      z: rotate.value.z
-    };
-    
-    // 保存当前平移值
-    rayGroup.userData.currentTranslation = {
-      x: translate.value.x,
-      y: translate.value.y,
-      z: translate.value.z
-    };
-  }
-  
-  // 加载射线的变换状态
-  function loadRayTransform(rayGroup) {
-    // 加载保存的旋转值，如果没有则使用0
-    if (rayGroup.userData.currentRotation) {
-      rotate.value = { ...rayGroup.userData.currentRotation };
-    } else {
-      rotate.value = { x: 0, y: 0, z: 0 };
-    }
-    
-    // 加载保存的平移值，如果没有则使用0
-    if (rayGroup.userData.currentTranslation) {
-      translate.value = { ...rayGroup.userData.currentTranslation };
-    } else {
-      translate.value = { x: 0, y: 0, z: 0 };
-    }
-  }
-  
-  // 重置变换输入
-  function resetTransformInputs() {
-    translate.value = { x: 0, y: 0, z: 0 };
-    rotate.value = { x: 0, y: 0, z: 0 };
-  }
-  
-  // 触发文件选择对话框
-  function triggerFileInput() {
-    console.log("fileInput=>",fileInput);
-    fileInput.value.click();
-  }
-  
-  // 处理文件上传
-  function handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    processFile(file);
-  }
-  
-  // 处理拖放文件
-  function handleDrop(event) {
-    const file = event.dataTransfer.files[0];
-    if (!file) return;
-    
-    // 检查文件类型
-    if (file.name.endsWith('.verts')) {
-      processFile(file);
-    } else {
-      alert('请上传.verts格式的文件');
-    }
-  }
-  
-  // 处理并加载文件
-  function processFile(file) {
-    // 显示加载指示器
-    isLoading.value = true;
-    
-    // 保存文件名和文件对象
-    uploadedFileName.value = file.name;
-    currentFile.value = file;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        const content = e.target.result;
-        const newRays = parseVertsFile(content);
+    // 选择射线
+    function selectRay(rayGroup) {
+        // 如果已经选中了这条射线，不做处理
+        if (selectedRay.value === rayGroup) return;
         
-        // 清除现有射线
+        // 保存当前选中射线的变换状态
+        if (selectedRay.value) {
+            saveRayTransform(selectedRay.value);
+            // 恢复之前选中射线的颜色
+            const arrowHelper = selectedRay.value.children[0];
+            if (arrowHelper instanceof THREE.ArrowHelper) {
+                arrowHelper.setColor(new THREE.Color(0x3B82F6)); // 恢复蓝色
+            }
+            // 恢复起点标记的颜色
+            const point = selectedRay.value.children[1];
+            if (point.material) {
+                point.material.color.set(0x3B82F6);
+            }
+        }
+        
+        // 设置新的选中射线
+        selectedRay.value = rayGroup;
+        
+        // 更改选中射线的颜色
+        const arrowHelper = rayGroup.children[0];
+        if (arrowHelper instanceof THREE.ArrowHelper) {
+            arrowHelper.setColor(new THREE.Color(0x8B5CF6)); // 紫色表示选中
+        }
+        // 更改起点标记的颜色
+        const point = rayGroup.children[1];
+        if (point.material) {
+            point.material.color.set(0x8B5CF6);
+        }
+        
+        // 加载新选中射线的变换状态
+        loadRayTransform(rayGroup);
+    }
+  
+    // 取消选择射线
+    function deselectRay() {
+        if (selectedRay.value) {
+        // 保存当前选中射线的变换状态
+        saveRayTransform(selectedRay.value);
+        
+        // 恢复射线原来的颜色
+        const arrowHelper = selectedRay.value.children[0];
+        if (arrowHelper instanceof THREE.ArrowHelper) {
+            arrowHelper.setColor(new THREE.Color(0x3B82F6)); // 恢复蓝色
+        }
+        // 恢复起点标记的颜色
+        const point = selectedRay.value.children[1];
+        if (point.material) {
+            point.material.color.set(0x3B82F6);
+        }
+        
+        selectedRay.value = null;
+        }
+    }
+  
+    // 保存射线的变换状态
+    function saveRayTransform(rayGroup) {
+        // 保存当前旋转值（角度）
+        rayGroup.userData.currentRotation = {
+        x: rotate.value.x,
+        y: rotate.value.y,
+        z: rotate.value.z
+        };
+        
+        // 保存当前平移值
+        rayGroup.userData.currentTranslation = {
+        x: translate.value.x,
+        y: translate.value.y,
+        z: translate.value.z
+        };
+    }
+  
+    // 加载射线的变换状态
+    function loadRayTransform(rayGroup) {
+        // 加载保存的旋转值，如果没有则使用0
+        if (rayGroup.userData.currentRotation) {
+            rotate.value = { ...rayGroup.userData.currentRotation };
+        } else {
+            rotate.value = { x: 0, y: 0, z: 0 };
+        }
+        
+        // 加载保存的平移值，如果没有则使用0
+        if (rayGroup.userData.currentTranslation) {
+            translate.value = { ...rayGroup.userData.currentTranslation };
+        } else {
+            translate.value = { x: 0, y: 0, z: 0 };
+        }
+    }
+  
+    // 重置变换输入
+    function resetTransformInputs() {
+        translate.value = { x: 0, y: 0, z: 0 };
+        rotate.value = { x: 0, y: 0, z: 0 };
+    }
+  
+    // 触发文件选择对话框
+    function triggerFileInput() {
+        console.log("fileInput=>",fileInput);
+        fileInput.value.click();
+    }
+  
+    // 处理文件上传
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        processFile(file);
+    }
+  
+    // 处理拖放文件
+    function handleDrop(event) {
+        const file = event.dataTransfer.files[0];
+        if (!file) return;
+        
+        // 检查文件类型
+        if (file.name.endsWith('.verts')) {
+        processFile(file);
+        } else {
+        alert('请上传.verts格式的文件');
+        }
+    }
+    
+    // 处理并加载文件
+    function processFile(file) {
+        // 显示加载指示器
+        isLoading.value = true;
+        
+        // 保存文件名和文件对象
+        uploadedFileName.value = file.name;
+        currentFile.value = file;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+        try {
+            const content = e.target.result;
+            const newRays = parseVertsFile(content);
+            
+            // 清除现有射线
+            clearAllRays();
+            
+            // 添加新射线
+            newRays.forEach(rayData => {
+            addRay(rayData.origin, rayData.direction);
+            });
+            
+            // 自动调整视图以显示所有射线
+            fitCameraToRays();
+        } catch (error) {
+            console.error('Error parsing .verts file:', error);
+            alert('解析文件时出错: ' + error.message);
+        } finally {
+            // 隐藏加载指示器
+            isLoading.value = false;
+            // 重置文件输入，允许重复选择同一文件
+            //fileInput.value.value = '';
+        }
+        };
+        
+        reader.onerror = function() {
+            alert('读取文件时出错');
+            isLoading.value = false;
+        };
+        
+        reader.readAsText(file);
+    }
+  
+    // 重新加载当前文件
+    function reloadFile() {
+        if (currentFile.value) {
+        processFile(currentFile.value);
+        }
+    }
+  
+    // 清除已上传的文件
+    function clearUploadedFile() {
+        if (confirm('确定要清除当前文件并删除所有射线吗？')) {
+        uploadedFileName.value = '';
+        currentFile.value = null;
         clearAllRays();
-        
-        // 添加新射线
-        newRays.forEach(rayData => {
-          addRay(rayData.origin, rayData.direction);
-        });
-        
-        // 自动调整视图以显示所有射线
-        fitCameraToRays();
-      } catch (error) {
-        console.error('Error parsing .verts file:', error);
-        alert('解析文件时出错: ' + error.message);
-      } finally {
-        // 隐藏加载指示器
-        isLoading.value = false;
-        // 重置文件输入，允许重复选择同一文件
-        //fileInput.value.value = '';
-      }
-    };
-    
-    reader.onerror = function() {
-      alert('读取文件时出错');
-      isLoading.value = false;
-    };
-    
-    reader.readAsText(file);
-  }
-  
-  // 重新加载当前文件
-  function reloadFile() {
-    if (currentFile.value) {
-      processFile(currentFile.value);
+        selectedRay.value = null;
+        }
     }
-  }
-  
-  // 清除已上传的文件
-  function clearUploadedFile() {
-    if (confirm('确定要清除当前文件并删除所有射线吗？')) {
-      uploadedFileName.value = '';
-      currentFile.value = null;
-      clearAllRays();
-      selectedRay.value = null;
-    }
-  }
   
   // 解析.verts文件
   function parseVertsFile(content) {
@@ -650,20 +650,20 @@
     );
   }
   
-  // 更新射线旋转
-  function updateRayRotation() {
-    if (!selectedRay.value) return;
-    
-    const rx = THREE.MathUtils.degToRad(rotate.value.x || 0);
-    const ry = THREE.MathUtils.degToRad(rotate.value.y || 0);
-    const rz = THREE.MathUtils.degToRad(rotate.value.z || 0);
-    
-    // 应用旋转（基于原始旋转）
-    selectedRay.value.rotation.copy(selectedRay.value.userData.originalRotation);
-    selectedRay.value.rotation.x += rx;
-    selectedRay.value.rotation.y += ry;
-    selectedRay.value.rotation.z += rz;
-  }
+    // 更新射线旋转
+    function updateRayRotation() {
+        if (!selectedRay.value) return;
+        
+        const rx = THREE.MathUtils.degToRad(rotate.value.x || 0);
+        const ry = THREE.MathUtils.degToRad(rotate.value.y || 0);
+        const rz = THREE.MathUtils.degToRad(rotate.value.z || 0);
+        
+        // 应用旋转（基于原始旋转）
+        selectedRay.value.rotation.copy(selectedRay.value.userData.originalRotation);
+        selectedRay.value.rotation.x += rx;
+        selectedRay.value.rotation.y += ry;
+        selectedRay.value.rotation.z += rz;
+    }
   
   // 更新射线长度 - 针对ArrowHelper的实现
   function updateRayLength() {
