@@ -275,7 +275,7 @@
     let bgColor = ref('#1B5050')
     let isWireframe = ref(false)
 
-    let scene, camera, renderer,controls,model;
+    let scene, camera, renderer,controls,model,directionalLight;
     let raycaster,mouse;
     let axizLength = 15;
 
@@ -507,9 +507,9 @@
     }
 
     function initLight() {
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-        scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+        // const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+        // scene.add(ambientLight);
+        directionalLight = new THREE.DirectionalLight(0xffffff, 2);
         directionalLight.position.set(10, 10, 10)
         scene.add(directionalLight);
     }
@@ -578,6 +578,12 @@
         // cube.rotation.x += 0.01
         // cube.rotation.y += 0.01
         controls.update();
+
+        // 克隆相机位置
+        const vector = camera.position.clone();
+        // 将相机位置赋值给光源
+        directionalLight.position.set(vector.x, vector.y, vector.z);
+
         renderer.render(scene, camera)
     }
     
