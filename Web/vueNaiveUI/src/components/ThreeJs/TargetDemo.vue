@@ -416,6 +416,44 @@
             }
     }
 
+    // 重置射线变换
+  function resetRayTransform() {
+    if (!selectedRay.value) return;
+    
+    // 重置位置和旋转
+    selectedRay.value.position.copy(selectedRay.value.userData.originalPosition);
+    selectedRay.value.rotation.copy(selectedRay.value.userData.originalRotation);
+    
+    // 重置保存的变换状态
+    selectedRay.value.userData.currentRotation = { x: 0, y: 0, z: 0 };
+    selectedRay.value.userData.currentTranslation = { x: 0, y: 0, z: 0 };
+    
+    // 重置输入框
+    resetTransformInputs();
+  }
+  
+  // 删除选中的射线
+  function deleteSelectedRay() {
+    if (!selectedRay.value) return;
+    
+    if (confirm('确定要删除这条射线吗？')) {
+      const index = rays.value.indexOf(selectedRay.value);
+      if (index !== -1) {
+        // 从场景和数组中移除
+        scene.remove(selectedRay.value);
+        rays.value.splice(index, 1);
+        
+        // 重新编号
+        rays.value.forEach((ray, i) => {
+          ray.userData.id = i;
+        });
+        
+        // 取消选择
+        selectedRay.value = null;
+      }
+    }
+  }
+
     // 初始化场景
     function initScene() {
         scene = new THREE.Scene()
@@ -809,10 +847,27 @@
     //更改法线长度
     function normalLengthUpdate()
     {
-        for(let normal of rays.value)
-        {
-            normal.setLength(normalLength.value);
-        }
+        const length = normalLength.value || 1.0;
+        if (length <= 0) return;
+        
+        // 更新所有射线的长度
+        rays.value.forEach(ray => {
+            // ArrowHelper是组中的第一个子元素
+            const arrowHelper = ray.children[0];
+            if (arrowHelper instanceof THREE.ArrowHelper) {
+                // 更新箭头长度
+                arrowHelper.setLength(
+                    length, 
+                    length * 0.15, // 箭头长度（占总长度的15%）
+                    length * 0.08  // 箭头宽度（占总长度的8%）
+                );
+            }
+        });
+
+        // for(let normal of rays.value)
+        // {
+        //     normal.setLength(normalLength.value);
+        // }
     }
 
     // 更新射线位置
