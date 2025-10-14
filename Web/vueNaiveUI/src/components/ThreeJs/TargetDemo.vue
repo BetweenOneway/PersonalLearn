@@ -200,6 +200,9 @@
                                 <button @click="deleteSelectedRay" class="flex-1 bg-red-500 text-white p-2 rounded-md text-sm transition-all duration-200 hover:shadow-lg transform hover:-translate-y-0.5">
                                 <i class="fa fa-trash mr-1"></i>删除
                                 </button>
+                                <button @click="exportVertsFile" class="flex-1 bg-red-500 text-white p-2 rounded-md text-sm transition-all duration-200 hover:shadow-lg transform hover:-translate-y-0.5">
+                                <i class="fa fa-trash mr-1"></i>导出
+                                </button>
                             </div>
                         </div>
                     </n-collapse-item>
@@ -1170,11 +1173,11 @@
             // 获取变换后的起点（世界坐标系）
             const origin = new THREE.Vector3();
             rayGroup.getWorldPosition(origin);
-            
+
             // 获取变换后的方向向量
             const direction = new THREE.Vector3();
             if (rayGroup.children[0] instanceof THREE.ArrowHelper) {
-                rayGroup.children[0].getDirection(direction);
+                rayGroup.children[0].getWorldDirection(direction);
                 
                 // 将方向向量转换到世界坐标系
                 const directionMatrix = new THREE.Matrix4();
@@ -1195,8 +1198,8 @@
         const a = document.createElement('a');
         a.href = url;
         // 使用原始文件名加上"_modified"后缀，或者默认名称
-        const baseName = uploadedFileName.value ? 
-            uploadedFileName.value.replace('.verts', '_modified.verts') : 
+        const baseName = vertsFileName.value ? 
+        vertsFileName.value.replace('.verts', '_modified.verts') : 
             'modified_rays.verts';
         a.download = baseName;
         
