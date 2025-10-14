@@ -344,10 +344,31 @@
             }
         });
         
-        // 重置变换输入
-        resetTransformInputs();
+        // 加载新选中射线的变换状态
+        loadRayTransform(rayGroup);
     }
-  
+
+    // 取消选择射线
+    function deselectRay() {
+        if (selectedRay.value) {
+            // 保存当前选中射线的变换状态
+            saveRayTransform(selectedRay.value);
+
+            // 恢复射线原来的颜色
+            selectedRay.value.children.forEach(child => {
+                if (child.material) {
+                    child.material.color.set(normalColor.value); // 恢复蓝色
+                }
+                else{
+                    child.setColor(new THREE.Color(normalColor.value)); // 恢复蓝色
+                }
+            });
+            
+            selectedRay.value = null;
+            console.log("deselect ray")
+        }
+    }
+
     // 格式化向量显示
     function formatVector(vector) {
         return [vector.x, vector.y, vector.z].map(v => v.toFixed(2)).join(', ');
@@ -362,24 +383,6 @@
             return [direction.x, direction.y, direction.z].map(v => v.toFixed(2)).join(', ');
         }
         return "0.00, 0.00, 0.00";
-    }
-
-    // 取消选择射线
-    function deselectRay() {
-        if (selectedRay.value) {
-            // 恢复射线原来的颜色
-            selectedRay.value.children.forEach(child => {
-                if (child.material) {
-                    child.material.color.set(normalColor.value); // 恢复蓝色
-                }
-                else{
-                    child.setColor(new THREE.Color(normalColor.value)); // 恢复蓝色
-                }
-            });
-            
-            selectedRay.value = null;
-            console.log("deselect ray")
-        }
     }
 
     // 重置变换输入
@@ -417,42 +420,42 @@
     }
 
     // 重置射线变换
-  function resetRayTransform() {
-    if (!selectedRay.value) return;
-    
-    // 重置位置和旋转
-    selectedRay.value.position.copy(selectedRay.value.userData.originalPosition);
-    selectedRay.value.rotation.copy(selectedRay.value.userData.originalRotation);
-    
-    // 重置保存的变换状态
-    selectedRay.value.userData.currentRotation = { x: 0, y: 0, z: 0 };
-    selectedRay.value.userData.currentTranslation = { x: 0, y: 0, z: 0 };
-    
-    // 重置输入框
-    resetTransformInputs();
-  }
-  
-  // 删除选中的射线
-  function deleteSelectedRay() {
-    if (!selectedRay.value) return;
-    
-    if (confirm('确定要删除这条射线吗？')) {
-      const index = rays.value.indexOf(selectedRay.value);
-      if (index !== -1) {
-        // 从场景和数组中移除
-        scene.remove(selectedRay.value);
-        rays.value.splice(index, 1);
+    function resetRayTransform() {
+        if (!selectedRay.value) return;
         
-        // 重新编号
-        rays.value.forEach((ray, i) => {
-          ray.userData.id = i;
-        });
+        // 重置位置和旋转
+        selectedRay.value.position.copy(selectedRay.value.userData.originalPosition);
+        selectedRay.value.rotation.copy(selectedRay.value.userData.originalRotation);
         
-        // 取消选择
-        selectedRay.value = null;
-      }
+        // 重置保存的变换状态
+        selectedRay.value.userData.currentRotation = { x: 0, y: 0, z: 0 };
+        selectedRay.value.userData.currentTranslation = { x: 0, y: 0, z: 0 };
+        
+        // 重置输入框
+        resetTransformInputs();
     }
-  }
+  
+    // 删除选中的射线
+    function deleteSelectedRay() {
+        if (!selectedRay.value) return;
+        
+        if (confirm('确定要删除这条射线吗？')) {
+        const index = rays.value.indexOf(selectedRay.value);
+        if (index !== -1) {
+            // 从场景和数组中移除
+            scene.remove(selectedRay.value);
+            rays.value.splice(index, 1);
+            
+            // 重新编号
+            rays.value.forEach((ray, i) => {
+            ray.userData.id = i;
+            });
+            
+            // 取消选择
+            selectedRay.value = null;
+        }
+        }
+    }
 
     // 初始化场景
     function initScene() {
@@ -544,9 +547,8 @@
         console.log(`InitRender=>window.innerWidth:${window.innerWidth},window.innerHeight:${window.innerHeight}`)
     }
 
+    //初始化灯光
     function initLight() {
-        // const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-        // scene.add(ambientLight);
         directionalLight = new THREE.DirectionalLight(0xffffff, 2);
         directionalLight.position.set(10, 10, 10)
         scene.add(directionalLight);
@@ -722,6 +724,7 @@
         controls.reset();
     }
 
+    //是否显示面片
     function toggleWireframe() {
         if (model) {
             model.material.wireframe = isWireframe.value;
@@ -885,16 +888,59 @@
     // 更新射线旋转
     function updateRayRotation() {
         if (!selectedRay.value) return;
-        
+        console.log("updateRayRotation-1=>",rotate.value.z);
+        //角度转弧度
         const rx = THREE.MathUtils.degToRad(rotate.value.x || 0);
         const ry = THREE.MathUtils.degToRad(rotate.value.y || 0);
         const rz = THREE.MathUtils.degToRad(rotate.value.z || 0);
-        
+
+        console.log("updateRayRotation-2=>",rz);
+        console.log("selectedRay.value.rotation=>",selectedRay.value.rotation);
+        console.log("selectedRay.value.userData.originalRotation=>",selectedRay.value.userData.originalRotation)
+
         // 应用旋转（基于原始旋转）
         selectedRay.value.rotation.copy(selectedRay.value.userData.originalRotation);
         selectedRay.value.rotation.x += rx;
         selectedRay.value.rotation.y += ry;
         selectedRay.value.rotation.z += rz;
+    }
+
+    // 保存射线的变换状态
+    function saveRayTransform(rayGroup) {
+        console.log("saveRayTransform=>",rotate)
+        // 保存当前旋转值（角度）
+        rayGroup.userData.currentRotation = {
+            x: rotate.value.x,
+            y: rotate.value.y,
+            z: rotate.value.z
+        };
+        
+        // 保存当前平移值
+        rayGroup.userData.currentTranslation = {
+            x: translate.value.x,
+            y: translate.value.y,
+            z: translate.value.z
+        };
+    }
+  
+    // 加载射线的变换状态
+    function loadRayTransform(rayGroup) {
+        console.log("loadRayTransform=>",rayGroup.userData.currentRotation)
+        console.log("before loaded rotate.value=>",rotate.value)
+        // 加载保存的旋转值，如果没有则使用0
+        if (rayGroup.userData.currentRotation) {
+            rotate.value = { ...rayGroup.userData.currentRotation };
+        } else {
+            rotate.value = { x: 0, y: 0, z: 0 };
+        }
+        console.log("after loaded rotate.value=>",rotate.value)
+        // 加载保存的平移值，如果没有则使用0
+        if (rayGroup.userData.currentTranslation) {
+            translate.value = { ...rayGroup.userData.currentTranslation };
+        } else {
+            translate.value = { x: 0, y: 0, z: 0 };
+        }
+        console.log("loadRayTransform leave rotate.value=>",rotate.value)
     }
 
     //将法线显示到场景中
@@ -1128,13 +1174,13 @@
             // 获取变换后的方向向量
             const direction = new THREE.Vector3();
             if (rayGroup.children[0] instanceof THREE.ArrowHelper) {
-            rayGroup.children[0].getDirection(direction);
-            
-            // 将方向向量转换到世界坐标系
-            const directionMatrix = new THREE.Matrix4();
-            directionMatrix.extractRotation(rayGroup.matrixWorld);
-            direction.applyMatrix4(directionMatrix);
-            direction.normalize(); // 确保方向向量是单位向量
+                rayGroup.children[0].getDirection(direction);
+                
+                // 将方向向量转换到世界坐标系
+                const directionMatrix = new THREE.Matrix4();
+                directionMatrix.extractRotation(rayGroup.matrixWorld);
+                direction.applyMatrix4(directionMatrix);
+                direction.normalize(); // 确保方向向量是单位向量
             }
             
             // 按照.verts格式添加行，保留6位小数精度

@@ -382,21 +382,21 @@
     // 取消选择射线
     function deselectRay() {
         if (selectedRay.value) {
-        // 保存当前选中射线的变换状态
-        saveRayTransform(selectedRay.value);
-        
-        // 恢复射线原来的颜色
-        const arrowHelper = selectedRay.value.children[0];
-        if (arrowHelper instanceof THREE.ArrowHelper) {
-            arrowHelper.setColor(new THREE.Color(0x3B82F6)); // 恢复蓝色
-        }
-        // 恢复起点标记的颜色
-        const point = selectedRay.value.children[1];
-        if (point.material) {
-            point.material.color.set(0x3B82F6);
-        }
-        
-        selectedRay.value = null;
+            // 保存当前选中射线的变换状态
+            saveRayTransform(selectedRay.value);
+            
+            // 恢复射线原来的颜色
+            const arrowHelper = selectedRay.value.children[0];
+            if (arrowHelper instanceof THREE.ArrowHelper) {
+                arrowHelper.setColor(new THREE.Color(0x3B82F6)); // 恢复蓝色
+            }
+            // 恢复起点标记的颜色
+            const point = selectedRay.value.children[1];
+            if (point.material) {
+                point.material.color.set(0x3B82F6);
+            }
+            
+            selectedRay.value = null;
         }
     }
   
