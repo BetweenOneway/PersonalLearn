@@ -1168,6 +1168,9 @@
         
         let content = '';
         
+        let verts = [];
+        let normals = [];
+        
         // 遍历所有射线，收集变换后的起点和方向
         rays.value.forEach(rayGroup => {
             // 获取变换后的起点（世界坐标系）
@@ -1186,11 +1189,30 @@
                 direction.normalize(); // 确保方向向量是单位向量
             }
             
-            // 按照.verts格式添加行，保留6位小数精度
-            content += `v ${origin.x.toFixed(6)} ${origin.y.toFixed(6)} ${origin.z.toFixed(6)}\n`;
-            content += `vn ${direction.x.toFixed(6)} ${direction.y.toFixed(6)} ${direction.z.toFixed(6)}\n`;
+            verts.push(origin);
+            normals.push(direction);
+
+            //content += `v ${origin.x.toFixed(4)} ${origin.y.toFixed(4)} ${origin.z.toFixed(4)}\n`;
+            //content += `vn ${direction.x.toFixed(4)} ${direction.y.toFixed(4)} ${direction.z.toFixed(4)}\n`;
         });
-        
+
+        for(let i=0;i<verts.length;i++)
+        {
+            let origin = verts[i];
+            let direction = normals[i];
+
+            // 按照.verts格式添加行，保留4位小数精度
+            content += `v ${origin.x.toFixed(4)} ${origin.y.toFixed(4)} ${origin.z.toFixed(4)}\n`;
+        }
+
+        for(let i=0;i<normals.length;i++)
+        {
+            let direction = normals[i];
+
+            // 按照.verts格式添加行，保留6位小数精度
+            content += `vn ${direction.x.toFixed(6)} ${direction.y.toFixed(6)} ${direction.z.toFixed(6)}\n`;
+        }
+
         // 创建Blob并下载文件
         const blob = new Blob([content], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
