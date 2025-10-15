@@ -56,8 +56,8 @@
         gridHelper = new THREE.GridHelper(20, 20, 0xe2e8f0, 0xe2e8f0);
         scene.add(gridHelper);
         
-        // axesHelper = new THREE.AxesHelper(5);
-        // scene.add(axesHelper);
+        axesHelper = new THREE.AxesHelper(5);
+        scene.add(axesHelper);
         
         // 创建轨道控制器
         controls = new OrbitControls(camera, renderer.domElement);
@@ -67,8 +67,7 @@
         // 初始化射线投射器和鼠标位置
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector2();
-        
-        
+
         // 开始动画循环
         startAnimationLoop();
     }
@@ -125,7 +124,7 @@
         );
         scene.add(arrow);
     }
-    
+
     // 组件挂载时初始化
     onMounted(() => {
         initThreeJS();
