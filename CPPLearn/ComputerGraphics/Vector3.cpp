@@ -12,6 +12,24 @@ void Vector3::Clear()
     x = y = z = 0.0f;
 }
 
+bool  Vector3::operator <  (const Vector3& v) const
+{
+    return v.x < x&& v.y < y&& v.z < z;
+}
+
+bool  Vector3::operator <= (const Vector3& v) const
+{
+    return v.x <= x&& v.y <= y&& v.z <= z;
+}
+bool  Vector3::operator >  (const Vector3& v) const
+{
+    return v.x > x&& v.y > y&& v.z > z;
+}
+bool  Vector3::operator >= (const Vector3& v) const
+{
+    return v.x >= x&& v.y >= y&& v.z >= z;
+}
+
 const Vector3 Vector3::operator*(const float a)const
 {
     return Vector3(x * a, y * a, z * a);

@@ -159,12 +159,14 @@
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="Matrix3x3.cpp" />
     <ClCompile Include="Matrix4x3.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Oper3DFile.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RotationMatrix.cpp" />
     <ClCompile Include="Spline.cpp" />
+    <ClCompile Include="StlReader.cpp" />
     <ClCompile Include="testAlgo.cpp" />
     <ClCompile Include="testCommonFunctions.cpp" />
     <ClCompile Include="testLine.cpp" />
@@ -193,6 +195,8 @@
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Matrix3x3.h" />
     <ClInclude Include="Matrix4x3.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshDefined.h" />
     <ClInclude Include="Oper3DFile.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Point.h" />
@@ -200,6 +204,7 @@
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RotationMatrix.h" />
     <ClInclude Include="Spline.h" />
+    <ClInclude Include="StlReader.h" />
     <ClInclude Include="testAlgo.h" />
     <ClInclude Include="testCommonFunctions.h" />
     <ClInclude Include="testLine.h" />

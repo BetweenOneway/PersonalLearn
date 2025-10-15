@@ -3,6 +3,8 @@
 using namespace std;
 #include "common.h"
 
+
+
 class Vector3
 {
 public:
@@ -20,20 +22,26 @@ public:
 
     Vector3 operator-()const { return Vector3(-x, -y, -z); }
     const Vector3 operator*(const float a) const;
+    float operator*(const Vector3& roper) const;
     Vector3 operator*=(float a);
     const Vector3 operator/(const float a) const;
     const Vector3 operator+(const Vector3& loper) const;
     Vector3 operator+=(const Vector3& loper);
     const Vector3 operator-(const Vector3& roper) const;
     Vector3 operator-=(const Vector3& loper);
+    bool operator==(const Vector3& roper) const;
+    bool operator!=(const Vector3& roper) const;
+    bool  operator<(const Vector3& v) const;
+    bool  operator<=(const Vector3& v) const;
+    bool  operator>(const Vector3& v) const;
+    bool  operator>=(const Vector3& v) const;
+
     void normalize();
-	float operator*(const Vector3& roper) const;
+	
     float AbsDot(const Vector3& v) const;
     float Dot(const Vector3& v) const;
     bool IsZero(float threshold = VF_EPS_2) const;
-    bool operator==(const Vector3& roper) const;
-    bool operator!=(const Vector3& roper) const;
-    
+
     Vector3  ProjectVector(const Vector3& vec) const;
 
     bool IsParallel(const Vector3& v) const;
@@ -50,3 +58,18 @@ private:
 };
 
 //const Vector3 Vector3::ZERO = Vector3(0.0f, 0.0f, 0.0f);
+
+// 为Vector3特化std::hash模板
+namespace std {
+    template<> struct hash<Vector3> {
+        size_t operator()(const Vector3& v) const {
+            // 组合x, y, z的哈希值
+            size_t hash1 = hash<float>()(v.getX());
+            size_t hash2 = hash<float>()(v.getY());
+            size_t hash3 = hash<float>()(v.getZ());
+
+            // 组合哈希值的方法，这里使用一种简单的方式
+            return hash1 ^ (hash2 << 1) ^ (hash3 << 2);
+        }
+    };
+}

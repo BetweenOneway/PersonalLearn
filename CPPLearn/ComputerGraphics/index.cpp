@@ -115,50 +115,61 @@ void testLocation()
 
 void testOper3DFile()
 {
-    float num = 127.0f;
-    float num1 = 127.12344f;
-    cout << showpoint<< left << setw(7) << num << endl;
-    cout << fixed << setprecision(4) << num1 << endl;
-
-    //ofstream ofs;
-    //ofs.open("./output/output.txt", std::ios::out);
-    //
-    //{
-    //    float num2 = -12.34f;
-    //    ofs << fixed << setprecision(6) << num1 <<"f, "<<num2 << endl;
-
-    //    
-    //    //ofs << fixed << setprecision(6) << num2 <<"f" << endl;
-    //}
-    //ofs.close();
-
-    float a = 12.3;
-
-    double b = 45.56;
-
-    printf("%06.2f\n", b);
-    printf("%f %.3f %lf %.3lf\n", a, a, b, b);
-
-    std::vector<Point3D> verts;
-    std::vector<Surf> surfs;
-    //这里地址的.指的是该文件所在目录
-    ReadOBJFile(verts, surfs, "./input/4.18.obj");
-
-    ofstream ofs;
-    ofs.open("./output/output.txt", std::ios::out);
-
-    for (auto& vert : verts)
+    int way = 0;
+    if(way == 0)
     {
-        ofs << fixed << setprecision(6) << vert.getX() << "f, " << vert.getY()<< "f, " <<vert.getZ()<<"f)" << endl;
-    }
+        float num = 127.0f;
+        float num1 = 127.12344f;
+        cout << showpoint<< left << setw(7) << num << endl;
+        cout << fixed << setprecision(4) << num1 << endl;
 
-    ofs << endl;
-    for (auto& surf : surfs)
+        //ofstream ofs;
+        //ofs.open("./output/output.txt", std::ios::out);
+        //
+        //{
+        //    float num2 = -12.34f;
+        //    ofs << fixed << setprecision(6) << num1 <<"f, "<<num2 << endl;
+
+        //    
+        //    //ofs << fixed << setprecision(6) << num2 <<"f" << endl;
+        //}
+        //ofs.close();
+
+        float a = 12.3;
+
+        double b = 45.56;
+
+        printf("%06.2f\n", b);
+        printf("%f %.3f %lf %.3lf\n", a, a, b, b);
+
+        std::vector<Point3D> verts;
+        std::vector<Surf> surfs;
+        //这里地址的.指的是该文件所在目录
+        ReadOBJFile(verts, surfs, "./input/4.18.obj");
+
+        ofstream ofs;
+        ofs.open("./output/output.txt", std::ios::out);
+
+        for (auto& vert : verts)
+        {
+            ofs << fixed << setprecision(6) << vert.getX() << "f, " << vert.getY()<< "f, " <<vert.getZ()<<"f)" << endl;
+        }
+
+        ofs << endl;
+        for (auto& surf : surfs)
+        {
+            ofs <<surf.x << ", " << surf.y << ", " << surf.z << ")" << endl;
+        }
+
+        ofs.close();
+    }
+    else if (1 == way)
     {
-        ofs <<surf.x << ", " << surf.y << ", " << surf.z << ")" << endl;
+        std::vector<Point3D> verts;
+        std::vector<Surf> surfs;
+        //这里地址的.指的是该文件所在目录
+        ReadSTLFile(verts, surfs, "./input/4.18.obj");
     }
-
-    ofs.close();
 }
 
 int main()

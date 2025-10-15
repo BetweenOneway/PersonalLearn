@@ -1,5 +1,6 @@
 ﻿#include <sstream>
 #include "Oper3DFile.h"
+#include "StlReader.h"
 
 
 void WriteOBJFile(const vector<Point3D>& Vertices, const char* pszFileName)
@@ -52,4 +53,37 @@ bool ReadOBJFile(vector<Point3D>& Vertices, vector<Surf>& surfs, const char* psz
     }
     in.close();
     return true;
+}
+
+bool ReadSTLFile(vector<Point3D>& vertices, vector<Surf>& surfs, const char* pszFileName, const bool blIsAscii)
+{
+    std::string fileName(pszFileName);
+    StlReader reader(fileName, blIsAscii);
+    return reader.Process(vertices, surfs);
+}
+
+void WriteSimpleMesh(const char* pszFileName, const VSSimpleMeshF& mesh)
+{
+#ifdef WIN32
+    std::ofstream dstFile(pszFileName);
+
+    unsigned nSize = mesh.nVertCount;
+
+    for (unsigned j = 0; j < nSize; j++)
+    {
+        char szBuf[256] = { 0 };
+        Vector3 vert = mesh.pVertices[j];
+        snprintf(szBuf, 256, "v %.9f %.9f %.9f", vert.getX(), vert.getY(), vert.getZ());
+        dstFile << szBuf << "\n";
+    }
+
+    nSize = mesh.nTriangleCount;
+    for (unsigned j = 0; j < nSize; ++j)
+    {
+        char szBuf[256] = { 0 };
+        const Surf& tri = mesh.pTriangles[j];
+        snprintf(szBuf, 256, "f %d %d %d", tri.x + 1, tri.y + 1, tri.z + 1);
+        dstFile << szBuf << "\n";
+    }
+#endif
 }

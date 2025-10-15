@@ -111,6 +111,12 @@
     <ClCompile Include="testLocation.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="StlReader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MathUtil.h">
@@ -213,6 +219,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Type.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StlReader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshDefined.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

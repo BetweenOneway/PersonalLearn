@@ -5,6 +5,7 @@
 #include <deque>
 #include <queue>
 #include <array>
+#include <unordered_map>
 using namespace std;
 
 #include "container.h"
@@ -282,6 +283,7 @@ void testVectorPointer()
 
     cout << p << endl;
 }
+
 void testVectorAddress()
 {
     int i = 6 ,j=5;
@@ -292,7 +294,6 @@ void testVectorAddress()
     int* p = &(vec.front());
     cout << p << endl;
 }
-
 
 class testDemo
 {
@@ -434,6 +435,7 @@ void testVectorErase()
     }
     cout << endl;
 }
+
 /*
 * 测试vector访问越界
 * 测试结果都会报错，但根据cppreference []不会做下标检查 at会做
@@ -470,6 +472,7 @@ void testVectorConstruct()
     }
     std::cout << std::endl;
 }
+
 void CallFunc(std::pair<std::vector<int>, std::vector<int>>&& p)
 {
     std::pair<std::vector<int>, std::vector<int>> p1;
@@ -505,6 +508,29 @@ void compareVectorArray()
     vector<int> vec(10);
     cout << "vec.size = "<< vec.size() << ",vec.cap = " << vec.capacity() << endl;
     cout << "arr.size = "<<arr.size() <<",arr.max_size() = " << arr.max_size() << endl;
+}
+
+/*测试对于自定义变量 unordered_map是否必须自定义hash函数？
+* 如果自定义struct类型的变量呢？必须
+* 如果自定义class类型的变量呢？
+*/
+
+struct Vector1 {
+    float x, y, z;
+    bool operator==(Vector1& v) {
+        return true;
+    };
+};
+
+class Vector2 {
+public:
+    float x, y, z;
+};
+
+void testUnorderedMap()
+{
+    unordered_map<Vector1, int> map1;
+
 }
 
 }
