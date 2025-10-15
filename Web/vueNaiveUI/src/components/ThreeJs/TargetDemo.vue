@@ -1178,19 +1178,43 @@
             rayGroup.getWorldPosition(origin);
 
             // 获取变换后的方向向量
-            const direction = new THREE.Vector3();
+            const worldDir = new THREE.Vector3();
+            let localDir = new THREE.Vector3();
             if (rayGroup.children[0] instanceof THREE.ArrowHelper) {
-                rayGroup.children[0].getWorldDirection(direction);
+                console.log("rayGroup.children[0].position=>",rayGroup.children[0].position)
+                rayGroup.children[0].getWorldDirection(worldDir);
                 
-                // 将方向向量转换到世界坐标系
-                const directionMatrix = new THREE.Matrix4();
-                directionMatrix.extractRotation(rayGroup.matrixWorld);
-                direction.applyMatrix4(directionMatrix);
-                direction.normalize(); // 确保方向向量是单位向量
+                if(true)
+                {
+                    localDir = rayGroup.children[0].worldToLocal(localDir);
+                    //localDir.normalize(); // 确保方向向量是单位向量
+                }
+                if(false)
+                {
+                    // 2. 计算箭头的世界变换的逆矩阵
+                    const inverseMatrix = new THREE.Matrix4();
+                    // 获取箭头的世界矩阵，然后求逆
+                    //inverseMatrix.getInverse(rayGroup.matrixWorld);
+                    inverseMatrix.copy(rayGroup.matrixWorld).invert();
+                    // 3. 将世界方向向量转换回局部坐标系
+                    const localDir = new THREE.Vector3().copy(worldDir);
+                    // 使用逆矩阵转换方向向量（注意使用multiplyVector3方法）
+                    localDir.applyMatrix4(inverseMatrix);
+                    //inverseMatrix.transformDirection(localDir);
+                    //inverseMatrix.multiplyVector3(localDir);
+                    
+                    localDir.normalize(); // 确保方向向量是单位向量
+
+                    // 将方向向量转换到世界坐标系
+                    // const directionMatrix = new THREE.Matrix4();
+                    // directionMatrix.extractRotation(rayGroup.matrixWorld);
+                    // direction.applyMatrix4(directionMatrix);
+                    // direction.normalize(); // 确保方向向量是单位向量
+                }
             }
             
             verts.push(origin);
-            normals.push(direction);
+            normals.push(localDir);
 
             //content += `v ${origin.x.toFixed(4)} ${origin.y.toFixed(4)} ${origin.z.toFixed(4)}\n`;
             //content += `vn ${direction.x.toFixed(4)} ${direction.y.toFixed(4)} ${direction.z.toFixed(4)}\n`;
@@ -1199,7 +1223,6 @@
         for(let i=0;i<verts.length;i++)
         {
             let origin = verts[i];
-            let direction = normals[i];
 
             // 按照.verts格式添加行，保留4位小数精度
             content += `v ${origin.x.toFixed(4)} ${origin.y.toFixed(4)} ${origin.z.toFixed(4)}\n`;

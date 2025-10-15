@@ -244,13 +244,18 @@ const router = createRouter({
             },
             {
                 path: 'ray-update-1',
-                name: 'ray-update',
+                name: 'ray-update-1',
                 component: () => import('@/components/ThreeJs/RayUpdate1.vue'),
             },
             {
                 path: 'trackball',
                 name: 'Trackball',
                 component: () => import('@/components/ThreeJs/TrackballUsage.vue'),
+            },
+            {
+                path: 'rotation-translate',
+                name: 'Rotate-Translate',
+                component: () => import('@/components/ThreeJs/RotationTranslate.vue'),
             },
         ]
     },

@@ -36,6 +36,9 @@
             <n-button size="large" @click="gotoHerf('trackball')">
                 Trackball用法示例
             </n-button>
+            <n-button size="large" @click="gotoHerf('rotation-translate')">
+                旋转与偏移
+            </n-button>
         </n-flex>
     </div>
   </template>
