@@ -27,8 +27,6 @@
     let gridHelper, axesHelper;
     let animationId = null;
 
-    
-
     // 初始化Three.js场景
     function initThreeJS() {
         // 创建场景
@@ -107,23 +105,103 @@
     //轴向数据
     let src = ref(null);
     let direction = ref(null);
-    let arrowLength = ref(5);
+    let originDirection = ref(null);
+    let arrowLength = ref(2);
     let arrow;
 
     function addModelToScene()
     {
         src.value = new THREE.Vector3(0, 0, 0)
-        direction.value = new THREE.Vector3(1, 1, 0);
+        direction.value = new THREE.Vector3(1, 0, 0).normalize();
+        originDirection.value = direction.value;
+        console.log("origin direction=>",direction.value);
+
         arrow = new THREE.ArrowHelper(
-            src.value,
             direction.value,
+            src.value,
             arrowLength.value,
             0xff00ff,
             0.5,
             0.3
         );
+        console.log("arrow.matrix=>",arrow.matrix)
         scene.add(arrow);
     }
+
+    function RotateArrow(x,y,z)
+    {
+        console.log("Rotate arrow")
+        //角度转弧度
+        const rx = THREE.MathUtils.degToRad(x || 0);
+        const ry = THREE.MathUtils.degToRad(y || 0);
+        const rz = THREE.MathUtils.degToRad(z || 0);
+
+        arrow.rotation.x += rx;
+        arrow.rotation.y += ry;
+        arrow.rotation.z += rz;
+        
+        //console.log("arrow.matrixAutoUpdate=>",arrow.matrixAutoUpdate); 
+
+        if(true)
+        {
+            let vec = direction.value;
+            const axis = new THREE.Vector3(0, 0, 1); // 旋转轴（Z轴）
+            console.log("z=>",z);
+            console.log("rz=>",rz);
+            vec.applyAxisAngle(axis, rz); // 绕Y轴旋转90度
+            vec.normalize();
+            console.log("vec=>",vec)
+
+            let worldDir = new THREE.Vector3();
+            arrow.getWorldDirection(worldDir);
+            console.log("rotated worldDir=>",worldDir)
+        }
+        else{
+            // 2. 定义与 ArrowHelper.rotation 相同的欧拉角（旋转参数）
+            const rotation = new THREE.Euler(
+                arrow.rotation.x,  // 与箭头X轴旋转相同
+                arrow.rotation.y,  // 与箭头Y轴旋转相同
+                arrow.rotation.z,  // 与箭头Z轴旋转相同
+                arrow.rotation.order // 保持相同的旋转顺序（默认"XYZ"）
+            );
+
+            // 3. 将欧拉角转换为四元数（模拟Three.js内部处理）
+            const quaternion = new THREE.Quaternion().setFromEuler(rotation);
+
+            // 4. 应用旋转到向量（与箭头旋转效果一致）
+            direction.value = originDirection.value.clone().applyQuaternion(quaternion).normalize();
+        }
+    }
+
+    function GetDirection()
+    {
+        console.log("origin direction=>",direction.value)
+        console.log("get arrow.matrix=>",arrow.matrix)
+        console.log("get arrow.matrixWorld=>",arrow.matrixWorld)
+
+        let tempDir1 = direction.value;
+        let newDirection = tempDir1.applyMatrix4(arrow.matrixWorld).sub(arrow.position).normalize();
+        console.log("new direction=>",newDirection);
+
+        let worldDir = new THREE.Vector3();
+        arrow.getWorldDirection(worldDir);
+        console.log("worldDir=>",worldDir)
+
+        let tempDir2 = direction.value;
+        const dir = tempDir2.applyQuaternion(arrow.quaternion);
+        console.log("dir=>",dir)
+
+        const actualDir = direction.value; // 原始局部方向
+        actualDir.applyMatrix4(arrow.matrixWorld).normalize(); // 应用世界矩阵变换
+        console.log("实际指向方向1:", actualDir); // {x: 1, y: 0, z: 0}
+
+        const actualDir1 = direction.value; // 原始局部方向
+        actualDir1.applyMatrix4(arrow.matrix).normalize(); // 应用世界矩阵变换
+        console.log("实际指向方向2:", actualDir1); // {x: 1, y: 0, z: 0}
+    }
+
+    window.RotateArrow = RotateArrow;
+    window.GetDirection = GetDirection;
 
     // 组件挂载时初始化
     onMounted(() => {
