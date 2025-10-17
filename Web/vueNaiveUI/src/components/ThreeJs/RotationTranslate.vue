@@ -55,6 +55,8 @@
         scene.add(gridHelper);
         
         axesHelper = new THREE.AxesHelper(5);
+        //x轴 红色 y轴 绿色 z轴 蓝色
+        axesHelper.setColors(0xff0000,0x00ff00,0x0000ff)
         scene.add(axesHelper);
         
         // 创建轨道控制器
@@ -124,7 +126,6 @@
             0.5,
             0.3
         );
-        console.log("arrow.matrix=>",arrow.matrix)
         scene.add(arrow);
     }
 
@@ -136,22 +137,75 @@
         const ry = THREE.MathUtils.degToRad(y || 0);
         const rz = THREE.MathUtils.degToRad(z || 0);
 
+        console.log(`rx=>${rx},ry=>${ry},rz=>${rz}`)
+
+        //这个旋转有缺陷 当值是(45,45,0)时会出现结果错误
         arrow.rotation.x += rx;
         arrow.rotation.y += ry;
         arrow.rotation.z += rz;
+
+        const test1 = ()=>{
+            let vec = direction.value;
+            if(rx)
+            {
+                const axis = new THREE.Vector3(1, 0, 0); // 旋转轴（X轴）
+                console.log("rz=>",rx);
+                vec.applyAxisAngle(axis, rx);
+                vec.normalize();
+            }
+            
+            if(ry)
+            {
+                const axis = new THREE.Vector3(0, 1, 0); // 旋转轴（Y轴）
+                console.log("ry=>",ry);
+                vec.applyAxisAngle(axis, ry); 
+                vec.normalize();
+            }
+            if(rz)
+            {
+                const axis = new THREE.Vector3(0, 0, 1); // 旋转轴（Z轴）
+                console.log("rz=>",rz);
+                vec.applyAxisAngle(axis, rz); 
+                vec.normalize();
+            }
+            console.log("vec=>",vec)
+
+            let newArrow = new THREE.ArrowHelper(
+                vec,
+                src.value,
+                arrowLength.value,
+                0x000000,
+                0.5,
+                0.3
+            );
+            scene.add(newArrow);
+        }
+
+        test1();
         
-        //console.log("arrow.matrixAutoUpdate=>",arrow.matrixAutoUpdate); 
+        const test2 = ()=>{
+            let vec = direction.value.normalize();
+            console.log("test2 origin direction=>",vec);
+            var euler = new THREE.Euler(rx,ry,rz,'ZYX'); 
+            console.log("euler.order=>",euler.order);
+            vec.applyEuler(euler);
+            vec.normalize();
+            console.log("test2 vec=>",vec)
+
+            let newArrow = new THREE.ArrowHelper(
+                vec,
+                src.value,
+                arrowLength.value,
+                0x000000,
+                0.5,
+                0.3
+            );
+            scene.add(newArrow);
+        }
+        //test2();
 
         if(true)
         {
-            let vec = direction.value;
-            const axis = new THREE.Vector3(0, 0, 1); // 旋转轴（Z轴）
-            console.log("z=>",z);
-            console.log("rz=>",rz);
-            vec.applyAxisAngle(axis, rz); // 绕Y轴旋转90度
-            vec.normalize();
-            console.log("vec=>",vec)
-
             let worldDir = new THREE.Vector3();
             arrow.getWorldDirection(worldDir);
             console.log("rotated worldDir=>",worldDir)

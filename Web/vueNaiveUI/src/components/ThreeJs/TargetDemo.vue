@@ -259,6 +259,7 @@
     import { STLLoader } from 'three/addons/loaders/STLLoader.js';
 
     import { useMessage } from "naive-ui";
+import { SecurityRound } from '@vicons/material';
     const message = useMessage();
 
     const isLoading = ref(false);
@@ -289,9 +290,15 @@
     const rotate = ref({ x: 0, y: 0, z: 0 });
 
     //法线相关数据
-    let loadedNormals = {
+    let originNormals = {
         verts :[],
         normals:[]
+    }
+
+    let loadedNormals = {
+        position:[],
+        direction:[],
+        flags:[]//0 正常 1 已删除
     }
 
     let rays = ref([]);
@@ -447,12 +454,15 @@
         if (index !== -1) {
             // 从场景和数组中移除
             scene.remove(selectedRay.value);
+            //从ray数组中移除
             rays.value.splice(index, 1);
             
+            //标记某个法线已经被删除
+            loadedNormals.flags[selectedRay.value.userData.id] = 1;
             // 重新编号
-            rays.value.forEach((ray, i) => {
-            ray.userData.id = i;
-            });
+            // rays.value.forEach((ray, i) => {
+            //     ray.userData.id = i;
+            // });
             
             // 取消选择
             selectedRay.value = null;
@@ -886,20 +896,27 @@
             selectedRay.value.userData.originalPosition.y + translate.value.y,
             selectedRay.value.userData.originalPosition.z + translate.value.z
         );
+
+        loadedNormals.position[selectedRay.value.userData.id] = selectedRay.value.position;
     }
-    
+
     // 更新射线旋转
     function updateRayRotation() {
         if (!selectedRay.value) return;
-        console.log("updateRayRotation-1=>",rotate.value.z);
+        console.log("update ray rotation,rotate.value=>",rotate.value);
         //角度转弧度
         const rx = THREE.MathUtils.degToRad(rotate.value.x || 0);
         const ry = THREE.MathUtils.degToRad(rotate.value.y || 0);
         const rz = THREE.MathUtils.degToRad(rotate.value.z || 0);
 
-        console.log("updateRayRotation-2=>",rz);
-        console.log("selectedRay.value.rotation=>",selectedRay.value.rotation);
-        console.log("selectedRay.value.userData.originalRotation=>",selectedRay.value.userData.originalRotation)
+        let curIndex = selectedRay.value.userData.id
+        //必须clone，否则会影响原值
+        let vec = originNormals.normals[curIndex].clone();
+        vec.normalize();
+
+        var euler = new THREE.Euler(rx,ry,rz,'ZYX'); 
+        vec.applyEuler(euler).normalize();
+        loadedNormals.direction[curIndex] = vec;
 
         // 应用旋转（基于原始旋转）
         selectedRay.value.rotation.copy(selectedRay.value.userData.originalRotation);
@@ -947,17 +964,17 @@
     }
 
     //将法线显示到场景中
-    function addNormalsToScene(loadedNormals)
+    function addNormalsToScene(inputNormals)
     {
-        if(loadedNormals.verts.length != loadedNormals.normals.length)
+        if(inputNormals.verts.length != inputNormals.normals.length)
         {
             return;
         }
 
-        for (let i=0;i<loadedNormals.verts.length;i++) 
+        for (let i=0;i<inputNormals.verts.length;i++) 
         {
             const arrow = new THREE.ArrowHelper(
-                loadedNormals.normals[i],// 方向
+                inputNormals.normals[i],// 方向
                 new THREE.Vector3(0, 0, 0), // 起点（相对于组）
                 normalLength.value,// 长度
                 normalColor.value,// 颜色
@@ -974,12 +991,16 @@
             rayGroup.add(arrow);
             rayGroup.add(point);
             // 设置射线的初始位置（箭头辅助器的位置由组控制）
-            rayGroup.position.copy(loadedNormals.verts[i]);
+            rayGroup.position.copy(inputNormals.verts[i]);
+
+            loadedNormals.position.push(new THREE.Vector3().copy(inputNormals.verts[i]));
+            loadedNormals.direction.push(new THREE.Vector3().copy(inputNormals.normals[i]));
+            loadedNormals.flags.push(1);
 
             // 存储射线的原始数据和当前变换状态
             rayGroup.userData = {
-                originalPosition: new THREE.Vector3().copy(loadedNormals.verts[i]),
-                originalDirection: new THREE.Vector3().copy(loadedNormals.normals[i]),
+                originalPosition: new THREE.Vector3().copy(inputNormals.verts[i]),
+                originalDirection: new THREE.Vector3().copy(inputNormals.normals[i]),
                 originalRotation: new THREE.Euler().copy(rayGroup.rotation),
                 currentRotation: { x: 0, y: 0, z: 0 }, // 保存当前旋转值
                 currentTranslation: { x: 0, y: 0, z: 0 }, // 保存当前平移值
@@ -998,8 +1019,8 @@
     */
     function loadNormals(fileContent)
     {
-        loadedNormals.verts = [];
-        loadedNormals.normals = [];
+        originNormals.verts = [];
+        originNormals.normals = [];
 
         const lines = fileContent.trim().split(/[\r\n]+/);
 
@@ -1013,7 +1034,7 @@
                     //解析点
                     if(lineElem[0] == 'v' || lineElem[0] == 'V')
                     {
-                        loadedNormals.verts.push(
+                        originNormals.verts.push(
                             new THREE.Vector3(
                                 parseFloat(lineElem[1]),
                                 parseFloat(lineElem[2]),
@@ -1024,7 +1045,7 @@
                     //解析法线
                     if(lineElem[0] == 'vn')
                     {
-                        loadedNormals.normals.push(
+                        originNormals.normals.push(
                             new THREE.Vector3(
                                 parseFloat(lineElem[1]),
                                 parseFloat(lineElem[2]),
@@ -1035,8 +1056,8 @@
                 }
             }
         )
-        console.log("loadedNormals=>",loadedNormals);
-        addNormalsToScene(loadedNormals);
+
+        addNormalsToScene(originNormals);
     }
 
     function loadVertsFile(file){
@@ -1173,48 +1194,9 @@
         
         // 遍历所有射线，收集变换后的起点和方向
         rays.value.forEach(rayGroup => {
-            // 获取变换后的起点（世界坐标系）
-            const origin = new THREE.Vector3();
-            rayGroup.getWorldPosition(origin);
-
-            // 获取变换后的方向向量
-            const worldDir = new THREE.Vector3();
-            let localDir = new THREE.Vector3();
-            if (rayGroup.children[0] instanceof THREE.ArrowHelper) {
-                console.log("rayGroup.children[0].position=>",rayGroup.children[0].position)
-                rayGroup.children[0].getWorldDirection(worldDir);
-                
-                if(true)
-                {
-                    localDir = rayGroup.children[0].worldToLocal(localDir);
-                    //localDir.normalize(); // 确保方向向量是单位向量
-                }
-                if(false)
-                {
-                    // 2. 计算箭头的世界变换的逆矩阵
-                    const inverseMatrix = new THREE.Matrix4();
-                    // 获取箭头的世界矩阵，然后求逆
-                    //inverseMatrix.getInverse(rayGroup.matrixWorld);
-                    inverseMatrix.copy(rayGroup.matrixWorld).invert();
-                    // 3. 将世界方向向量转换回局部坐标系
-                    const localDir = new THREE.Vector3().copy(worldDir);
-                    // 使用逆矩阵转换方向向量（注意使用multiplyVector3方法）
-                    localDir.applyMatrix4(inverseMatrix);
-                    //inverseMatrix.transformDirection(localDir);
-                    //inverseMatrix.multiplyVector3(localDir);
-                    
-                    localDir.normalize(); // 确保方向向量是单位向量
-
-                    // 将方向向量转换到世界坐标系
-                    // const directionMatrix = new THREE.Matrix4();
-                    // directionMatrix.extractRotation(rayGroup.matrixWorld);
-                    // direction.applyMatrix4(directionMatrix);
-                    // direction.normalize(); // 确保方向向量是单位向量
-                }
-            }
-            
-            verts.push(origin);
-            normals.push(localDir);
+            let curIndex = rayGroup.userData.id;
+            verts.push(loadedNormals.position[curIndex]);
+            normals.push(loadedNormals.direction[curIndex]);
 
             //content += `v ${origin.x.toFixed(4)} ${origin.y.toFixed(4)} ${origin.z.toFixed(4)}\n`;
             //content += `vn ${direction.x.toFixed(4)} ${direction.y.toFixed(4)} ${direction.z.toFixed(4)}\n`;
