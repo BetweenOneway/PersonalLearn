@@ -19,7 +19,7 @@
                         @dragover.prevent @dragenter.prevent @dragleave.prevent
                         @drop.prevent="handleDropModelFile">
                         <i class="fa fa-cloud-upload text-4xl text-gray-400 mb-3"></i>
-                        <p class="text-sm text-gray-600 mb-2">点击或拖拽模型文件到此处上传</p>
+                        <p class="text-sm text-gray-600 mb-2">点击或拖拽模型文件到此处</p>
                         <p class="text-xs text-gray-400">支持的格式: .stl .obj</p>
                         <input type="file" id="file-input" ref="modelFileInput" accept=".stl,.obj" class="hidden" @change="handleFileUpload">
                     </div>
@@ -53,7 +53,7 @@
                         @dragover.prevent @dragenter.prevent @dragleave.prevent
                         @drop.prevent="handleDropVertsFile">
                         <i class="fa fa-cloud-upload text-4xl text-gray-400 mb-3"></i>
-                        <p class="text-sm text-gray-600 mb-2">点击或拖拽.verts文件到此处上传</p>
+                        <p class="text-sm text-gray-600 mb-2">点击或拖拽.verts文件到此处</p>
                         <p class="text-xs text-gray-400">支持的格式: .verts</p>
                         <input type="file" id="file-input" ref="vertsFileInput" accept=".verts" class="hidden" @change="handleFileUpload">
                     </div>
@@ -154,44 +154,6 @@
                                 <p><span class="text-gray-500">方向:</span> ({{ formatDirection(selectedRay) }})</p>
                                 </div>
                             </div>
-                        
-                            <!--偏移控制-->
-                            <div>
-                                <h3 class="font-medium mb-2 text-sm text-gray-600">偏移控制</h3>
-                                <div class="grid grid-cols-3 gap-2">
-                                <div class="flex flex-col">
-                                    <label class="text-xs text-gray-500 mb-1">X</label>
-                                    <input type="number" v-model.number="translate.x" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
-                                </div>
-                                <div class="flex flex-col">
-                                    <label class="text-xs text-gray-500 mb-1">Y</label>
-                                    <input type="number" v-model.number="translate.y" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
-                                </div>
-                                <div class="flex flex-col">
-                                    <label class="text-xs text-gray-500 mb-1">Z</label>
-                                    <input type="number" v-model.number="translate.z" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
-                                </div>
-                                </div>
-                            </div>
-                            
-                            <!--旋转控制-->
-                            <div>
-                                <h3 class="font-medium mb-2 text-sm text-gray-600">旋转控制</h3>
-                                <div class="grid grid-cols-3 gap-2">
-                                <div class="flex flex-col">
-                                    <label class="text-xs text-gray-500 mb-1">X轴</label>
-                                    <input type="number" v-model.number="rotate.x" step="1" class="text-sm border border-gray-300 rounded px-2 py-1">
-                                </div>
-                                <div class="flex flex-col">
-                                    <label class="text-xs text-gray-500 mb-1">Y轴</label>
-                                    <input type="number" v-model.number="rotate.y" step="1" class="text-sm border border-gray-300 rounded px-2 py-1">
-                                </div>
-                                <div class="flex flex-col">
-                                    <label class="text-xs text-gray-500 mb-1">Z轴</label>
-                                    <input type="number" v-model.number="rotate.z" step="1" class="text-sm border border-gray-300 rounded px-2 py-1">
-                                </div>
-                                </div>
-                            </div>
 
                             <div class="flex space-x-2">
                                 <button @click="resetRayTransform" class="flex-1 bg-gray-200 text-gray-700 p-2 rounded-md text-sm transition-all duration-200 hover:shadow-lg transform hover:-translate-y-0.5">
@@ -223,14 +185,54 @@
             <div class="flex-1 relative" >
                 <div ref="rightContainer" style="width: 100%;height: 100%;">
                     <div ref="canvasContainer" ></div>
+                    <!-- 操作区域 -->
+                    <div v-if="selectedRay" class="absolute top-4 right-4 bg-gray-800/80 text-white px-4 py-2 rounded-md text-sm backdrop-blur-sm">
+                        <!--偏移控制-->
+                        <div>
+                            <h3 class="font-medium mb-2 text-sm">偏移控制</h3>
+                            <div>
+                                <div class="flex flex-col">
+                                    <label class="text-xs mb-1">X</label>
+                                    <input type="number" v-model.number="translate.x" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
+                                </div>
+                                <div class="flex flex-col">
+                                    <label class="text-xs mb-1">Y</label>
+                                    <input type="number" v-model.number="translate.y" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
+                                </div>
+                                <div class="flex flex-col">
+                                    <label class="text-xs mb-1">Z</label>
+                                    <input type="number" v-model.number="translate.z" step="0.1" class="text-sm border border-gray-300 rounded px-2 py-1">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!--旋转控制-->
+                        <div>
+                            <h3 class="font-medium mb-2 text-sm">旋转控制</h3>
+                            <div>
+                                <div class="flex flex-col">
+                                    <label class="text-xs mb-1">X轴</label>
+                                    <input type="number" v-model.number="rotate.x" step="1" class="text-sm border border-gray-300 rounded px-2 py-1">
+                                </div>
+                                <div class="flex flex-col">
+                                    <label class="text-xs mb-1">Y轴</label>
+                                    <input type="number" v-model.number="rotate.y" step="1" class="text-sm border border-gray-300 rounded px-2 py-1">
+                                </div>
+                                <div class="flex flex-col">
+                                    <label class="text-xs mb-1">Z轴</label>
+                                    <input type="number" v-model.number="rotate.z" step="1" class="text-sm border border-gray-300 rounded px-2 py-1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- 操作提示 -->
                     <div class="absolute bottom-4 left-4 bg-gray-800/80 text-white px-4 py-2 rounded-md text-sm backdrop-blur-sm">
                         <p class="mb-1"><i class="fa fa-info-circle mr-1"></i>操作提示:</p>
                         <ul class="list-disc list-inside text-xs space-y-0.5">
-                        <li>左键拖动: 旋转视图</li>
-                        <li>右键拖动: 平移视图</li>
-                        <li>滚轮: 缩放视图</li>
-                        <li>点击射线: 选择射线</li>
+                            <li>左键拖动: 旋转视图</li>
+                            <li>右键拖动: 平移视图</li>
+                            <li>滚轮: 缩放视图</li>
+                            <li>点击射线: 选择射线</li>
                         </ul>
                     </div>
                     
@@ -1092,19 +1094,22 @@ import { SecurityRound } from '@vicons/material';
         reader.readAsText(file);
     }
 
+    //重新加载模型文件
     function reloadModelFile()
     {
         if(modelFile.value)
         {
-            processFile(modelFile);
+            processFile(modelFile.value);
         }
     }
 
+    //重新加载verts文件
     function reloadVertsFile()
     {
         if(vertsFile.value)
         {
-            processFile(vertsFile)
+            selectedRay.value = null;
+            processFile(vertsFile.value)
         }
     }
 
@@ -1292,3 +1297,13 @@ import { SecurityRound } from '@vicons/material';
         }
     })
 </script>
+
+<style scoped>
+:deep(input::-webkit-outer-spin-button),
+:deep(input::-webkit-inner-spin-button) {
+  -webkit-appearance: none !important;
+}
+:deep(input[type="number"]) {
+  -moz-appearance: textfield;
+}
+</style>
