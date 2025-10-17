@@ -450,23 +450,33 @@ import { SecurityRound } from '@vicons/material';
         if (!selectedRay.value) return;
         
         if (confirm('确定要删除这条射线吗？')) {
-        const index = rays.value.indexOf(selectedRay.value);
-        if (index !== -1) {
-            // 从场景和数组中移除
-            scene.remove(selectedRay.value);
-            //从ray数组中移除
-            rays.value.splice(index, 1);
+            const index = rays.value.indexOf(selectedRay.value);
             
-            //标记某个法线已经被删除
-            loadedNormals.flags[selectedRay.value.userData.id] = 1;
-            // 重新编号
-            // rays.value.forEach((ray, i) => {
-            //     ray.userData.id = i;
-            // });
-            
-            // 取消选择
-            selectedRay.value = null;
-        }
+            if (index !== -1) {
+                console.log("remove ray index=>",index);
+                // 从场景和数组中移除
+                scene.remove(selectedRay.value);
+                //从ray数组中移除
+                rays.value.splice(index, 1);
+
+                // 递归移除组内所有子对象
+                while (selectedRay.value.children.length > 0) {
+                    const child = selectedRay.value.children[0];
+                    selectedRay.value.remove(child);
+                    // 若子对象是网格，可释放几何体和材质（根据需求）
+                    if (child.isMesh) {
+                        child.geometry.dispose();
+                        child.material.dispose();
+                    }
+                }
+
+                
+                //标记某个法线已经被删除
+                loadedNormals.flags[selectedRay.value.userData.id] = 1;
+                
+                // 取消选择
+                selectedRay.value = null;
+            }
         }
     }
 
