@@ -274,6 +274,11 @@ const router = createRouter({
         name: 'Slider',
         component: () => import('@/views/SliderView.vue'),
     },
+    {
+        path: '/component-scoped',
+        name: 'component scoped',
+        component: () => import('@/views/ComponentScoped.vue'),
+    },
   ],
 })
 

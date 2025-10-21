@@ -75,6 +75,9 @@
         <n-card>
             <RouterLink to="/slider">滑动组件学习</RouterLink>
         </n-card>
+        <n-card>
+            <RouterLink to="/component-scoped">子组件与Scoped</RouterLink>
+        </n-card>
     </n-flex>
 </template>
 

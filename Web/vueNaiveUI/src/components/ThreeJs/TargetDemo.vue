@@ -1302,11 +1302,12 @@ import { SecurityRound } from '@vicons/material';
     /*
     屏蔽input number上下箭头
     */
-    :deep(input::-webkit-outer-spin-button),
-    :deep(input::-webkit-inner-spin-button) {
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
         -webkit-appearance: none !important;
     }
-    :deep(input[type="number"]) {
+
+    input[type="number"] {
         -moz-appearance: textfield;
     }
 </style>
