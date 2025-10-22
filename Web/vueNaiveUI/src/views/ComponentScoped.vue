@@ -1,7 +1,7 @@
 <template>
     <h1 class="new-color">Hello Component</h1>
     <!-- <SubComponent class="new-border"></SubComponent> -->
-     <SubComponent class="new-color" />
+     <SubComponent />
 </template>
 
 <script setup>

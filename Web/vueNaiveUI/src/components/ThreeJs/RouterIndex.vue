@@ -39,6 +39,9 @@
             <n-button size="large" @click="gotoHerf('rotation-translate')">
                 旋转与偏移
             </n-button>
+            <n-button size="large" @click="gotoHerf('raycaster')">
+                Raycaster
+            </n-button>
         </n-flex>
     </div>
   </template>

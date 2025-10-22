@@ -1,8 +1,10 @@
 <template>
-    <div>
+    <!-- <div>
         <h1 class="sub-color">Hello sub component</h1>
         <input type="number" name="num" placeholder="input number here"/>
-    </div>
+    </div> -->
+    <h1 class="sub-color">Hello sub component</h1>
+    <input type="number" name="num" placeholder="input number here"/>
 </template>
 
 <script setup></script>

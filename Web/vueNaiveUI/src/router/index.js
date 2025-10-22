@@ -257,6 +257,11 @@ const router = createRouter({
                 name: 'Rotate-Translate',
                 component: () => import('@/components/ThreeJs/RotationTranslate.vue'),
             },
+            {
+                path: 'raycaster',
+                name: 'Raycaster',
+                component: () => import('@/components/ThreeJs/Raycaster.vue'),
+            },
         ]
     },
     {
