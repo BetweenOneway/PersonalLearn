@@ -76,11 +76,12 @@
             scene.add(cube)
         }
         else{
-            const geometry = new THREE.SphereGeometry(25, 100, 100);
+            const geometry = new THREE.SphereGeometry(25, 50, 50);
 
             //红
             const material1 = new THREE.MeshLambertMaterial({
                 color: 0xff0000,
+                side:THREE.DoubleSide, //重要，否则是单面的，射线求交会忽略从反面射入的点
             });
             mesh1 = new THREE.Mesh(geometry, material1);
             meshArray.push(mesh1);
@@ -88,6 +89,7 @@
             //绿
             const material2 = new THREE.MeshLambertMaterial({
                 color: 0x00ff00,
+                side:THREE.DoubleSide,//重要，否则是单面的，射线求交会忽略从反面射入的点
             });
             mesh2 = new THREE.Mesh(geometry, material2);
             mesh2.position.y = 100;
@@ -96,6 +98,7 @@
             //蓝
             const material3 = new THREE.MeshLambertMaterial({
                 color: 0x0000ff,
+                side:THREE.DoubleSide,//重要，否则是单面的，射线求交会忽略从反面射入的点
             });
             mesh3 = new THREE.Mesh(geometry, material3);
             mesh3.position.x = 75;
@@ -104,7 +107,7 @@
             const model = new THREE.Group();
             // 三个网格模型mesh1,mesh2,mesh3用于射线拾取测试
             model.add(mesh1, mesh2, mesh3);
-            //model.updateMatrixWorld(true);
+
             scene.add(model)
         }
 
@@ -133,7 +136,7 @@
     {
         const raycaster = new THREE.Raycaster();
         // 设置射线起点
-        raycaster.ray.origin = new THREE.Vector3(-50, 0, 0);
+        raycaster.ray.origin = new THREE.Vector3(0, 0, 0);
         // 设置射线方向射线方向沿着x轴
         raycaster.ray.direction = new THREE.Vector3(1, 0, 0);
 
@@ -144,6 +147,7 @@
         console.log("射线器返回的对象", intersects);
         for(let intersect of intersects)
         {
+            console.log(`第${intersects.indexOf(intersect)}个交叉点`)
             console.log("交叉点坐标", intersect.point);
             console.log("交叉对象",intersect.object);
             console.log("射线原点和交叉点距离",intersect.distance);
