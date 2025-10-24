@@ -408,7 +408,12 @@ import { SecurityRound } from '@vicons/material';
     
         // 计算鼠标在标准化设备坐标中的位置 (-1 到 1)
         const rect = rightContainer.value.getBoundingClientRect();
+        //clientX - rect.left：将浏览器坐标系的 clientX 转换为 canvas 内部的局部 X 坐标
+        //除以 rect.width：将 X 坐标归一化到 [0, 1] 范围（0 对应左边缘，1 对应右边缘）。
+        //乘以 2将 [0, 1] 映射到[0,2]
+        //映射到 [-1, 1]（0→-1，1→1），符合 NDC 的 X 轴范围。
         mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        //负号是因为NDC坐标系的Y轴方向和HTML坐标系的Y轴方向是相反的
         mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
         
         // 更新射线投射器
