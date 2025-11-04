@@ -23,6 +23,7 @@ struct st_containClass {
     //base* p;
     //int& ri;
 };
+
 void test()
 {
 	vector<st_test> vecTest;
@@ -60,6 +61,5 @@ int testStruct()
 	test1();
 	return 0;
 }
-
 
 }

@@ -529,7 +529,7 @@ public:
 
 void testUnorderedMap()
 {
-    unordered_map<Vector1, int> map1;
+    //unordered_map<Vector1, int> map1;
 
 }
 
