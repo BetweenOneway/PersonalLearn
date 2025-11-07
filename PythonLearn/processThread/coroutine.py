@@ -5,6 +5,9 @@ import urllib.request
 from gevent.pool import Pool
 import gevent
 
+from greenlet import greenlet
+import time
+
 global urls
 
 def run_task(url):
@@ -30,7 +33,27 @@ def simpleCoroutine():
     greenlets = [gevent.spawn(run_task,url) for url in urls]
     gevent.joinall(greenlets)
 
+def test1():
+    while True:
+        print("---A--")
+        gr2.switch()
+        time.sleep(0.5)
+
+def test2():
+    while True:
+        print("---B--")
+        gr1.switch()
+        time.sleep(0.5)
+
+def useGreenlet():
+    global gr1
+    gr1 = greenlet(test1)
+    global gr2
+    gr2 = greenlet(test2)
+    gr1.switch()
+
 if __name__=='__main__':
     urls=['https://cn.bing.com/','https://www.python.org','https://www.cnblogs.com/']
     # runWithPool()
-    simpleCoroutine()
+    # simpleCoroutine()
+    useGreenlet()
