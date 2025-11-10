@@ -25,5 +25,4 @@ if __name__=='__main__':
         sock,addr = s.accept()
         t = threading.Thread(target=dealClient,args=(sock,addr))
         t.start()
-        t.join()
         
