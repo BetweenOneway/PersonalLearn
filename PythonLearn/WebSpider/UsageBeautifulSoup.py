@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import unicodedata
 
 html_str = """
 <html><head><title>The Dormouse's story</title></head>
@@ -34,3 +35,6 @@ print(soup.p['class'])
 
 # 获取标签所有属性 返回对象
 print(soup.a.attrs)
+
+print(soup.p.string)
+print(type(soup.p.string))
