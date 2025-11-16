@@ -131,6 +131,7 @@ namespace STRINGOPER{
         {
             if (pos > prevPos)
             {
+                //[pos, pos + count) or [pos, size()).
                 subStrs.push_back(str.substr(prevPos, pos - prevPos));
             }
             prevPos = pos + 1;
@@ -145,4 +146,101 @@ namespace STRINGOPER{
             cout << elem.c_str() << endl;
         }
     }
+
+    void StringSplit(const char* path)
+    {
+        char newPath[] = "d:/testdata\\autocut\\path.obj";
+
+        size_t length = strlen(path);
+        if (length <= 0)
+        {
+            return;
+        }
+        std::unique_ptr<char[]> allocPath(new char[length+1]);
+
+        strcpy_s(allocPath.get(),length+1, path);
+
+        //两种写法都可以
+        //const char* delim = "\\/";
+        const char* delim = "/\\";
+        rsize_t strmax = sizeof path;
+        char* next_token = nullptr;
+
+        std::vector<std::string> results;
+        char* token = strtok_s(allocPath.get(), delim, &next_token);
+
+        while (token)
+        {
+            results.push_back(token);
+            std::cout << token << std::endl;
+            token = strtok_s(NULL, delim, &next_token);
+        }
+    }
+
+    void StringSplit(const wchar_t* path)
+    {
+        std::cout << "this is wchar_t string input" << std::endl;
+    }
+
+    // 按多个分隔符分割字符串（C++11+优化版）
+    // delimiters: 分隔符集合（如 ",; "）
+    std::vector<std::string> StringSplit(const std::string& str)
+    {
+        const std::string delimiters("/\\");
+        std::vector<std::string> result;
+        if (str.empty()) return result; // 空字符串直接返回
+
+        size_t start = 0;
+        // 遍历字符串，查找分隔符位置
+        for (size_t end = 0; end < str.size(); ++end) {
+            // 检查当前字符是否为分隔符（利用find，C++11起支持string_view优化，但此处保持兼容）
+            if (delimiters.find(str[end]) != std::string::npos)
+            {
+                // 截取非空片段（start到end前）
+                if (end > start)
+                {
+                    // emplace_back直接构造，避免临时字符串拷贝
+                    result.emplace_back(str.data() + start, end - start);
+                }
+                start = end + 1; // 移动起始位置
+            }
+        }
+
+        // 处理最后一个片段（若存在）
+        if (start < str.size()) {
+            result.emplace_back(str.data() + start, str.size() - start);
+        }
+        return result;
+    }
+
+    std::vector<std::wstring> StringSplit(const std::wstring& str)
+    {
+        const std::wstring delimiters(L"/\\");
+        std::vector<std::wstring> result;
+        if (str.empty()) return result; // 空字符串直接返回
+
+        size_t start = 0;
+        // 遍历字符串，查找分隔符位置
+        for (size_t end = 0; end < str.size(); ++end) {
+            // 检查当前字符是否为分隔符（利用find，C++11起支持string_view优化，但此处保持兼容）
+            if (delimiters.find(str[end]) != std::string::npos)
+            {
+                // 截取非空片段（start到end前）
+                if (end > start)
+                {
+                    // emplace_back直接构造，避免临时字符串拷贝
+                    result.emplace_back(str.data() + start, end - start);
+                }
+                start = end + 1; // 移动起始位置
+            }
+        }
+
+        // 处理最后一个片段（若存在）
+        if (start < str.size()) {
+            result.emplace_back(str.data() + start, str.size() - start);
+        }
+        return result;
+    }
+
+    
 }

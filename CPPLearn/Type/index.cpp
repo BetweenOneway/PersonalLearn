@@ -330,7 +330,12 @@ void testString()
 {
     //STRINGOPER::testStringOper();
     //STRINGOPER::testFind();
-    STRINGOPER::WStringSplit();
+    //STRINGOPER::WStringSplit();
+    //STRINGOPER::StringSplit(std::string("d:/testdata\\autocut\\path.obj"));
+    //STRINGOPER::StringSplit("d:/testdata\\autocut\\path.obj");
+    //STRINGOPER::StringSplit(L"d:/中国\\autocut\\path.obj");
+    auto result = STRINGOPER::process_string("d:/testdata\\autocut\\path.obj","/\\");
+    auto result1 = STRINGOPER::process_string(L"d:/中国\\autocut\\path.obj", L"/\\");
 }
 
 void testMacro()
@@ -395,7 +400,7 @@ void testException()
 
 int main()
 {
-    testClass();
+    //testClass();
     //testException();
     //testTypeOf();
     //testFileOper();
@@ -410,7 +415,7 @@ int main()
     //testClass();
     //testStruct();
     //testType();
-    //testString();
+    testString();
     //testMacro();
 
     //testFunction();
