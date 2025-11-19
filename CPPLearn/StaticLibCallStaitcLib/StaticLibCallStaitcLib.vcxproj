@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{b37bb2a4-0c37-4c9c-b21b-44b6d6994368}</ProjectGuid>
-    <RootNamespace>StaticLib</RootNamespace>
+    <ProjectGuid>{232d986f-8169-4678-a002-19c2f964cef5}</ProjectGuid>
+    <RootNamespace>StaticLibCallStaitcLib</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -151,10 +151,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="StaticLib.h" />
+    <ClInclude Include="StaticLibCallStaticLib.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="StaticLib.cpp" />
+    <ClCompile Include="StaticLibCallStaitcLib.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

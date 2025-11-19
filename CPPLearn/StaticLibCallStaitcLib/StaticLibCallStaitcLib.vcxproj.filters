@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="StaticLib.h">
+    <ClInclude Include="StaticLibCallStaticLib.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="StaticLib.cpp">
+    <ClCompile Include="StaticLibCallStaitcLib.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
