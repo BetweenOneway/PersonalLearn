@@ -3,8 +3,11 @@
 
 #include "StaticLibCallStaticLib.h"
 #include <iostream>
-// TODO: 这是一个库函数示例
+
+#include "StaticLib/StaticLib.h"
+// 在静态库中调用别的静态库中的函数，仅需设置所包含头文件路径即可
 void fnStaticLibCallStaitcLib()
 {
+    fnStaticLib();
     std::cout << "fnStaticLibCallStaticLib"<<std::endl;
 }

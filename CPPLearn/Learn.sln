@@ -46,7 +46,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StaticLib", "StaticLib\Stat
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UseStaticLib", "UseStaticLib\UseStaticLib.vcxproj", "{16776A8A-5B3A-4CDE-9C7C-170AC8208345}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StaticLibCallStaitcLib", "StaticLibCallStaitcLib\StaticLibCallStaitcLib.vcxproj", "{232D986F-8169-4678-A002-19C2F964CEF5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StaticLibCallStaticLib", "StaticLibCallStaticLib\StaticLibCallStaitcLib.vcxproj", "{232D986F-8169-4678-A002-19C2F964CEF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

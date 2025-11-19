@@ -4,6 +4,7 @@
 #include "StaticLib.h"
 #include <iostream>
 
+
 // TODO: 这是一个库函数示例
 void fnStaticLib(int i)
 {
