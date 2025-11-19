@@ -144,6 +144,9 @@
   <ItemGroup>
     <ClCompile Include="UseStaticLib.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="UseStaticLib.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

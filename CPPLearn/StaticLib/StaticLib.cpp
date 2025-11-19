@@ -10,3 +10,5 @@ void fnStaticLib(int i)
 {
     std::cout << "fnStaticLib-->" << i << std::endl;
 }
+
+
