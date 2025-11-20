@@ -280,7 +280,8 @@ void testContainer()
     //CONTAINER_TEST::testVectorErase();
     //CONTAINER_TEST::compareVectorArray();
     //CONTAINER_TEST::testVectorConstruct();
-    CONTAINER_TEST::testVectorEfficent();
+    //CONTAINER_TEST::testVectorEfficent();
+    CONTAINER_TEST::testTuple();
 }
 
 void testWired()
@@ -407,7 +408,7 @@ int main()
     //testStream();
     //testDist();
     //testBit();
-    //testContainer();
+    testContainer();
     //testWString();
     //testWired();
     //testScope();

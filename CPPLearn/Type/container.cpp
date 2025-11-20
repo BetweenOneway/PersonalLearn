@@ -6,6 +6,7 @@
 #include <queue>
 #include <array>
 #include <unordered_map>
+#include <tuple>
 using namespace std;
 
 #include "container.h"
@@ -533,4 +534,13 @@ void testUnorderedMap()
 
 }
 
+void testTuple()
+{
+    //测试tuple是否支持仅一个元素 支持
+    std::tuple<int> tup(666);
+    //输出666
+    std::cout << std::get<0>(tup) << std::endl;
+
+
+}
 }

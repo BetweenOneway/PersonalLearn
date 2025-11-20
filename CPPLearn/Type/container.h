@@ -11,5 +11,6 @@ namespace CONTAINER_TEST {
     void compareVectorArray();
     void testVectorConstruct();
     void testVectorEfficent();
+    void testTuple();
 }
 
