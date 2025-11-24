@@ -20,11 +20,13 @@ class SpiderMain(object):
                 new_urls,data = self.parser.parser(new_url,html)
                 self.manager.add_new_urls(new_urls)
                 self.output.store_data(data)
-                print("已经抓去了%s个链接"%self.manager.old_url_size())
+                print("已经抓取了%s个链接"%self.manager.old_url_size())
 
             except Exception as e:
                 print("crawl failed")
+                print(e)
 
 if __name__=="__main__":
+    print("Start run SpiderMan")
     spider_man = SpiderMain()
     spider_man.crawl("https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB")

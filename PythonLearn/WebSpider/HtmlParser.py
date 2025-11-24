@@ -1,6 +1,6 @@
 # coding:utf-8
 import re
-import urlparse
+from urllib import parse
 from bs4 import BeautifulSoup
 
 class HtmlParser(object):
@@ -17,7 +17,7 @@ class HtmlParser(object):
         links = soup.find_all('a',href=re.compile(r'/view/\d+\.htm'))
         for link in links:
             new_url = link['href']
-            new_full_url=urlparse.urljoin(page_url,new_url)
+            new_full_url=parse.urljoin(page_url,new_url)
             new_urls.add(new_full_url)
         return new_urls
     
