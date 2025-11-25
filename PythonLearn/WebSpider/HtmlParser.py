@@ -27,8 +27,16 @@ class HtmlParser(object):
     def _get_new_data(self,page_url,soup):
         data = {}
         data['url']=page_url
-        title=soup.find('a',class_='name').find('h2')
-        data['title']=title.get_text()
+        a_tag = soup.find('a', class_='name')
+        if a_tag:
+            h2_tag = a_tag.find('h2')
+            print(h2_tag)  # 找到则输出 h2 标签，否则输出 None
+            data['title']=h2_tag.get_text()
+        else:
+            print("not found title=>",a_tag)
+        # title=soup.find('a',class_='name').find('h2')
+        
         # summary = soup.find('div',class_='lemma-summary')
         # data['summary'] = summary.get_text()
+        print("parsed data=>",data)
         return data

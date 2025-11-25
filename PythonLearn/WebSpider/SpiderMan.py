@@ -26,10 +26,10 @@ class SpiderMain(object):
                     self.manager.add_new_urls(parseResult[0])
                     self.output.store_data(parseResult[1])
                 print("已经抓取了%s个链接"%self.manager.old_url_size())
-
             except Exception as e:
                 print("crawl failed:",e)
                 traceback.print_exc()
+        self.output.output_html("d:/baike.html")
 
 if __name__=="__main__":
     print("Start run SpiderMan")
