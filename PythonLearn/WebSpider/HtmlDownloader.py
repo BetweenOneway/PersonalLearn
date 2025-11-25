@@ -4,13 +4,15 @@ import requests
 class HtmlDownloader(object):
     def download(self,url):
         if url is None:
+            print("Download urls is none{%s}",url)
             return None
-        print("Start download URL")
+        print("Start download URL=>",url)
         user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0'
         headers={'User-Agent':user_agent}
         r = requests.get(url,headers=headers)
-
         if r.status_code == 200:
             r.encoding='utf-8'
             return r.text
+        else:
+            print("access error=>",r.status_code)
         return None

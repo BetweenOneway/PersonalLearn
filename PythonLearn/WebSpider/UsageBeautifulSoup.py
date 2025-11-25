@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-import unicodedata
 
 html_str = """
 <html><head><title>The Dormouse's story</title></head>
@@ -11,8 +10,11 @@ html_str = """
 <a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
 and they lived at the bottom of a well.</p>
 <p class="story">...</p>
+</body></html>
 """
 
+# 更换解析器为 html.parser（无需安装额外依赖）
+# soup = BeautifulSoup(html_str, 'html.parser')
 # python3默认编码就是unicode，所以from_encoding='utf-8'可以去掉
 soup = BeautifulSoup(html_str,'lxml')
 
@@ -30,11 +32,12 @@ print(soup.p)
 print(soup.p['class'])
 print(soup.p.get('class'))
 
-soup.p['class'] = "myClass"
-print(soup.p['class'])
+# soup.p['class'] = "myClass"
+# print(soup.p['class'])
 
 # 获取标签所有属性 返回对象
 print(soup.a.attrs)
 
 print(soup.p.string)
 print(type(soup.p.string))
+print("soup.find=>", soup.find('p', class_="title"))
