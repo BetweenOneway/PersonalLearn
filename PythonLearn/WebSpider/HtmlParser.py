@@ -34,6 +34,7 @@ class HtmlParser(object):
             data['title']=h2_tag.get_text()
         else:
             print("not found title=>",a_tag)
+            data['title'] = "Not found"
         # title=soup.find('a',class_='name').find('h2')
         
         # summary = soup.find('div',class_='lemma-summary')
