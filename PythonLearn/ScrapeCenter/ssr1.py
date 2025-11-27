@@ -8,7 +8,7 @@ BASE_URL='https://ssr1.scrape.center'
 TOTAL_PAGE=10
 
 def scrape_page(url):
-    logging.info('Scraping %s...',url)
+    logging.info('Scraping %s',url)
     try:
         response = requests.get(url)
         if response.status_code == 200:
@@ -24,9 +24,19 @@ def scrape_index(page):
 def parse_index(html):
     pattern = re.compile('<a.*?href="(.*?)".*?class="name">')
     items = re.findall(pattern,html)
+    logging.info(items)
     if not items:
         return []
     for item in items:
         detail_url = urljoin(BASE_URL,item)
         logging.info('get detail url %s',detail_url)
         yield detail_url
+
+def main():
+    for page in range(1,TOTAL_PAGE+1):
+        index_html=scrape_index(page)
+        detail_urls = parse_index(index_html)
+        logging.info('detail urls %s',list(detail_urls))
+
+if __name__=='__main__':
+    main()
