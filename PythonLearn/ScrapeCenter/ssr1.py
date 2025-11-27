@@ -22,6 +22,7 @@ def scrape_index(page):
     return scrape_page(index_url)
 
 def parse_index(html):
+    # 捕获组 实际获取的是href的内容
     pattern = re.compile('<a.*?href="(.*?)".*?class="name">')
     items = re.findall(pattern,html)
     logging.info(items)
@@ -30,6 +31,7 @@ def parse_index(html):
     for item in items:
         detail_url = urljoin(BASE_URL,item)
         logging.info('get detail url %s',detail_url)
+        # 生成器
         yield detail_url
 
 def main():
