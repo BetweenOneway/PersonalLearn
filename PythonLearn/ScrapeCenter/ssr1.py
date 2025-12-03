@@ -23,9 +23,10 @@ def scrape_index(page):
 
 def parse_index(html):
     # 捕获组 实际获取的是href的内容
+    # 这里的匹配模式是非贪婪模式匹配
     pattern = re.compile('<a.*?href="(.*?)".*?class="name">')
     items = re.findall(pattern,html)
-    logging.info(items)
+    logging.info("parse items %s",items)
     if not items:
         return []
     for item in items:
@@ -38,6 +39,7 @@ def main():
     for page in range(1,TOTAL_PAGE+1):
         index_html=scrape_index(page)
         detail_urls = parse_index(index_html)
+        # 这里list隐式迭代了生成器，取出了所有值
         logging.info('detail urls %s',list(detail_urls))
 
 if __name__=='__main__':
