@@ -2,10 +2,16 @@ import requests
 import logging
 import re
 from urllib.parse import urljoin
+import json
+from os import makedirs
+from os.path import exists
 
 logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(levelname)s:%(message)s')
 BASE_URL='https://ssr1.scrape.center'
-TOTAL_PAGE=10
+TOTAL_PAGE=1
+
+RESULTS_DIR = 'results'
+exists(RESULTS_DIR) or makedirs(RESULTS_DIR)
 
 def scrape_page(url):
     logging.info('Scraping %s',url)
@@ -35,12 +41,52 @@ def parse_index(html):
         # 生成器
         yield detail_url
 
+def scrape_detail(url):
+    return scrape_page(url)
+
+def parse_detail(html):
+    logging.info('parse details html')
+    cover_pattern = re.compile(r'class="item.*?<img.*?src="(.*?)".*? class="cover">',re.S)
+    name_pattern = re.compile(r'<h2.*?>(.*?)</h2>')
+    categories_pattern = re.compile(r'<button.*?category.*?<span>(.*?)</span>.*?</button>',re.S)
+    published_at_pattern = re.compile(r'(\d{4}-\d{2}-\d{2})\s?上映')
+    drama_pattern = re.compile(r'<div.*?drama.*?>.*?<p.*?>(.*?)</p>',re.S)
+    score_pattern = re.compile(r'<p.*?score.*?>(.*?)</p>',re.S)
+
+    cover = re.search(cover_pattern,html).group(1).strip() if re.search(cover_pattern,html) else None
+    name = re.search(name_pattern,html).group(1).strip() if re.search(name_pattern,html) else None
+    categories = re.findall(categories_pattern,html) if re.findall(categories_pattern,html) else []
+    published_at = re.search(published_at_pattern,html).group(1).strip() if re.search(published_at_pattern,html) else None
+    drama = re.search(drama_pattern,html).group(1).strip() if re.search(drama_pattern,html) else None
+    score = float(re.search(score_pattern,html).group(1).strip()) if re.search(score_pattern,html) else None
+
+    return {
+        'cover':cover,
+        'name':name,
+        'categories':categories,
+        'published_at':published_at,
+        'drama':drama,
+        'score':score
+    }
+
+def save_data(data):
+    name = data.get('name')
+    data_path = f'{RESULTS_DIR}/{name}.json'
+    json.dump(data,open(data_path,'w',encoding='utf-8'),ensure_ascii=False,indent=2)
+
 def main():
     for page in range(1,TOTAL_PAGE+1):
         index_html=scrape_index(page)
         detail_urls = parse_index(index_html)
         # 这里list隐式迭代了生成器，取出了所有值
-        logging.info('detail urls %s',list(detail_urls))
+        # logging.info('detail urls %s',list(detail_urls))
+        
+        for detail_url in detail_urls:
+            detail_html = scrape_detail(detail_url)
+            data = parse_detail(detail_html)
+            logging.info('get detail data %s',data)
+            save_data(data)
+            logging.info('data saved')
 
 if __name__=='__main__':
     main()
