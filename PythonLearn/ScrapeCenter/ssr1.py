@@ -8,7 +8,7 @@ from os.path import exists
 
 logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(levelname)s:%(message)s')
 BASE_URL='https://ssr1.scrape.center'
-TOTAL_PAGE=1
+TOTAL_PAGE=10
 
 RESULTS_DIR = 'results'
 exists(RESULTS_DIR) or makedirs(RESULTS_DIR)
@@ -74,19 +74,30 @@ def save_data(data):
     data_path = f'{RESULTS_DIR}/{name}.json'
     json.dump(data,open(data_path,'w',encoding='utf-8'),ensure_ascii=False,indent=2)
 
+def save_all_data(data):
+    name = 'ScrapeResult'
+    data_path = f'{RESULTS_DIR}/{name}.json'
+    json.dump(data,open(data_path,'w',encoding='utf-8'),ensure_ascii=False,indent=2)
+
 def main():
+    allData = []
     for page in range(1,TOTAL_PAGE+1):
         index_html=scrape_index(page)
         detail_urls = parse_index(index_html)
         # 这里list隐式迭代了生成器，取出了所有值
         # logging.info('detail urls %s',list(detail_urls))
         
+        
         for detail_url in detail_urls:
             detail_html = scrape_detail(detail_url)
             data = parse_detail(detail_html)
-            logging.info('get detail data %s',data)
-            save_data(data)
-            logging.info('data saved')
+            allData.append(data)
+            # logging.info('get detail data %s',data)
+            # save_data(data)
+            logging.info('data saved %d',len(allData))
+            
+    if allData:
+        save_all_data(allData)
 
 if __name__=='__main__':
     main()
