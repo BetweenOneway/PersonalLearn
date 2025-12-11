@@ -528,10 +528,25 @@ public:
     float x, y, z;
 };
 
-void testUnorderedMap()
-{
-    //unordered_map<Vector1, int> map1;
+// 自定义比较函数，按键排序
+bool compareByKeys(const std::pair<char, int>& a, const std::pair<char, int>& b) {
+    return a.first < b.first;
+}
 
+void testUnorderedMapSort()
+{
+    std::unordered_map<char, int> umap = { {'a', 3}, {'c', 1}, {'d', 4}, {'b', 5}, {'e', 1} };
+
+    // 将unordered_map的元素复制到vector中
+    std::vector<std::pair<char, int>> elems(umap.begin(), umap.end());
+
+    // 对vector中的元素按键排序
+    std::sort(elems.begin(), elems.end(), compareByKeys);
+
+    // 输出排序后的结果 a-b-c-d-e
+    for (const auto& elem : elems) {
+        std::cout << elem.first << ": " << elem.second << std::endl;
+    }
 }
 
 void testTuple()
@@ -540,7 +555,5 @@ void testTuple()
     std::tuple<int> tup(666);
     //输出666
     std::cout << std::get<0>(tup) << std::endl;
-
-
 }
 }

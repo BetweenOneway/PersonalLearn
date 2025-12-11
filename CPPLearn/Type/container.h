@@ -12,5 +12,6 @@ namespace CONTAINER_TEST {
     void testVectorConstruct();
     void testVectorEfficent();
     void testTuple();
+    void testUnorderedMapSort();
 }
 

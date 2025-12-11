@@ -281,7 +281,8 @@ void testContainer()
     //CONTAINER_TEST::compareVectorArray();
     //CONTAINER_TEST::testVectorConstruct();
     //CONTAINER_TEST::testVectorEfficent();
-    CONTAINER_TEST::testTuple();
+    //CONTAINER_TEST::testTuple();
+    CONTAINER_TEST::testUnorderedMapSort();
 }
 
 void testWired()
