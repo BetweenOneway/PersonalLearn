@@ -537,6 +537,11 @@ void testUnorderedMapSort()
 {
     std::unordered_map<char, int> umap = { {'a', 3}, {'c', 1}, {'d', 4}, {'b', 5}, {'e', 1} };
 
+    std::cout << "origin order:"<<std::endl;
+    for (auto it = umap.begin(); it != umap.end(); it++)
+    {
+        std::cout << it->first << ":" << it->second << std::endl;
+    }
     // 将unordered_map的元素复制到vector中
     std::vector<std::pair<char, int>> elems(umap.begin(), umap.end());
 
@@ -546,6 +551,17 @@ void testUnorderedMapSort()
     // 输出排序后的结果 a-b-c-d-e
     for (const auto& elem : elems) {
         std::cout << elem.first << ": " << elem.second << std::endl;
+    }
+
+    //umap的顺序就是插入顺序
+    umap.clear();
+    for (const auto& elem : elems) {
+        umap.try_emplace(elem.first, elem.second);
+    }
+    std::cout << "after order" << std::endl;
+    for (auto it = umap.begin(); it != umap.end(); it++)
+    {
+        std::cout << it->first << ":" << it->second << std::endl;
     }
 }
 
