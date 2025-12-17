@@ -305,7 +305,7 @@ void testScope()
 
 void testClass()
 {
-    CLASS_TEST::testFinalOvertide();
+    //CLASS_TEST::testFinalOvertide();
     //CLASS_TEST::testInherit();
     //CLASS_TEST::testClassPassPointer();
     //CLASS_TEST::testLozengeInherit();
@@ -313,6 +313,7 @@ void testClass()
     //CLASS_TEST::testRefMem();
     //CLASS_TEST::testClassScope();
     //CLASS_TEST::testFirendClass();
+    CLASS_TEST::testClassOverride();
 }
 
 void testStruct()
@@ -402,14 +403,14 @@ void testException()
 
 int main()
 {
-    //testClass();
+    testClass();
     //testException();
     //testTypeOf();
     //testFileOper();
     //testStream();
     //testDist();
     //testBit();
-    testContainer();
+    //testContainer();
     //testWString();
     //testWired();
     //testScope();
@@ -417,7 +418,7 @@ int main()
     //testClass();
     //testStruct();
     //testType();
-    testString();
+    //testString();
     //testMacro();
 
     //testFunction();

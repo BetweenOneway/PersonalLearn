@@ -158,4 +158,16 @@ namespace CLASS_TEST {
     void testRefMem();
     void testClassScope();
     void testFirendClass();
+
+    class OverrideBase {
+    public:
+        int BaseFunction(int num);
+        int BaseFunction();
+    };
+
+    class OverrideChild :public OverrideBase{
+    public:
+        int BaseFunction(float num);
+    };
+    void testClassOverride();
 }

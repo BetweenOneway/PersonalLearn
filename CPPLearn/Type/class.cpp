@@ -325,4 +325,34 @@ namespace CLASS_TEST {
         //int* pSecret = reinterpret_cast<int*>(static_cast<char*>(static_cast<void*>(&obj)) + offsetof(Class1, m_num));
 
     }
+
+    int OverrideBase::BaseFunction(int num)
+    {
+        std::cout << "OverrideBase BaseFunction with params int" << std::endl;
+        return 0;
+    }
+
+    int OverrideBase::BaseFunction()
+    {
+        std::cout << "OverrideBase BaseFunction No params" << std::endl;
+        return 0;
+    }
+
+    int OverrideChild::BaseFunction(float num)
+    {
+        std::cout << "OverrideChild BaseFunction" << std::endl;
+        return 0;
+    }
+
+    void testClassOverride()
+    {
+        OverrideChild oc;
+        //调用的child的函数
+        oc.BaseFunction(5);
+        //调用的child的函数
+        oc.BaseFunction(5.5f);
+        //下面这样不可以 会报语法错误
+        //oc.BaseFunction();
+        oc.OverrideBase::BaseFunction();
+    }
 }
