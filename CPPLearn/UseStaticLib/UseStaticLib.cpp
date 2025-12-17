@@ -9,6 +9,7 @@ int MyMathOper::MyAdd(int val1,int val2)
     return Add(val2);
 }
 
+//测试本地类继承来自静态库的类的使用
 void testClassInheritClassFromLibrary()
 {
     MyMathOper myMathOper(0);
