@@ -1,5 +1,6 @@
 import asyncio
 import requests
+import time
 
 async def execute(x):
     print('Number:',x)
@@ -66,5 +67,26 @@ def Impl4():
     for task in tasks:
         print("Task Result:",task.result())
 
+async def get(url):
+    # 也就是这里的get不支持异步操作
+    return requests.get(url)
+
+async def request():
+    url = "https://www.httpbin.org/delay/5"
+    print("waiting for ",url)
+    # 这里虽然用了await但是不会起作用 。只有使用支持异步操作的请求方式才可以实现真正的异步
+    response = await get(url)
+    print('get response from',url,'response',response)
+
+start = time.time()
+
+def Impl5():
+    tasks = [asyncio.ensure_future(request()) for _ in range(10)]
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.wait(tasks))
+
+    end = time.time()
+    print('Cost time:',end - start)
+
 if __name__=="__main__":
-    Impl4()
+    Impl5()
