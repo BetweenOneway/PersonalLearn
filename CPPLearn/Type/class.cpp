@@ -355,4 +355,38 @@ namespace CLASS_TEST {
         //oc.BaseFunction();
         oc.OverrideBase::BaseFunction();
     }
+
+    // 类A：声明Base为友元
+    class A {
+    private:
+        int secret = 123; // 私有成员
+        friend class Base; // 仅Base是友元
+    };
+
+    // 基类Base：可访问A的私有成员
+    class Base {
+    public:
+        void accessA(A& a) {
+            cout << "Base访问A的私有成员：" << a.secret << endl; // 合法
+        }
+    };
+
+    // 子类Derived：继承Base，但未被A声明为友元
+    class Derived : public Base {
+    public:
+        void accessA(A& a) {
+            // 错误：Derived不是A的友元，无法访问私有成员
+            cout << "Derived访问A的私有成员：" << a.secret << endl;
+        }
+    };
+
+    int testFriendClass() {
+        A a;
+        Base b;
+        b.accessA(a); // 正常输出：Base访问A的私有成员：123
+
+        Derived d;
+        // d.accessA(a); // 编译报错：'int A::secret' is private
+        return 0;
+    }
 }

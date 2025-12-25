@@ -101,16 +101,19 @@ namespace CLASS_TEST {
     protected:
         int m_num;
     };
+
     class InheritClass1 : virtual protected Base2 {
     public:
         InheritClass1();
         void Output1();
     };
+
     class InheritClass2 : virtual protected Base2 {
     public:
         InheritClass2();
         void Output2();
     };
+
     class ActClass : private InheritClass1, private InheritClass2
     {
     public:
@@ -170,4 +173,31 @@ namespace CLASS_TEST {
         int BaseFunction(float num);
     };
     void testClassOverride();
+
+    class SecretClass {
+    public:
+        SecretClass() = default;
+        friend class FriendBaseClass;
+    public:
+        int m_pubNum;
+    protected:
+        int m_proNum;
+    private:
+        int m_priNum;
+
+    };
+
+    class FriendBaseClass {
+    public:
+        FriendBaseClass() = default;
+        void FriendBaseClassFunction();
+        virtual void FriendFunction(SecretClass& sc);
+    };
+
+    class ChildClass : protected FriendBaseClass {
+    public:
+        ChildClass() = default;
+        void ChildFunction();
+        void FriendFunction(SecretClass& sc) override;
+    };
 }
