@@ -23,7 +23,7 @@ def Create():
         'age':20,
         'gender':'male'
     }
-
+    # 插入单条数据
     result = collection.insert_one(student1)
     print("insert one result=>",result)
 
@@ -40,7 +40,7 @@ def Create():
         'age':20,
         'gender':'male'
     }
-
+    # 插入多条数据
     result = collection.insert_many([student2,student3])
     print("insert many result=>",result)
     print(result.inserted_ids)
@@ -48,6 +48,7 @@ def Create():
 # 查询
 def Read():
     print('>>>>>Read<<<<<<<')
+    # 查找第一条满足条件的数据
     result = collection.find_one({'name':'Mike'})
     print(type(result))
     print(result)
@@ -70,7 +71,8 @@ def Update():
     student = collection.find_one(condition)
     student['age']=25
     newvalues = { "$set": student}
-    
+
+    # 更新第一条满足条件的数据
     result = collection.update_one(condition, newvalues)
     print(result)
     # 遍历所有记录
@@ -78,6 +80,7 @@ def Update():
         print(doc)
 
     newvalues = { "$set": { "age": "25" } }
+    # 更新所有满足条件的数据
     result = collection.update_many(condition, newvalues)
     print(result)
 
@@ -87,12 +90,14 @@ def Update():
 # 删除
 def Delete():
     print('>>>Delete<<<')
+    # 删除第一条满足条件的数据
     result = collection.delete_one({'name':'Kevin'})
     print(result)
     for doc in collection.find():
         print(doc)
 
     condition = {'name':'Kevin'}
+    # 删除所有满足条件的数据
     result = collection.delete_many(condition)
     print(result)
     for doc in collection.find():
