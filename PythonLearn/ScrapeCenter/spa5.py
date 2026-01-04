@@ -8,10 +8,10 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s:%(message)s')
 
 INDEX_URL='https://spa5.scrape.center/api/book/?limit=18&offset={offset}'
-DETAIL_URL='https://spa5.scrape.center/api/book/{ld}'
+DETAIL_URL='https://spa5.scrape.center/api/book/{id}'
 
 PAGE_SIZE = 18
-PAGE_NUMBER = 100
+PAGE_NUMBER = 2
 CONCURRENCY = 5
 
 semaphore = asyncio.Semaphore(CONCURRENCY)
@@ -30,7 +30,7 @@ async def scrape_index(page):
     url = INDEX_URL.format(offset=PAGE_SIZE * (page - 1))
     return await scrape_api(url)
 
-MONGO_CONNECTION_STRING = 'monggodb://localhost:27017'
+MONGO_CONNECTION_STRING = 'mongodb://localhost:27017'
 MONGO_DB_NAME='books'
 MONGO_COLLECTION_NAME='books'
 
@@ -44,7 +44,7 @@ async def save_data(data):
         return await collection.update_one({
             'id':data.get('id')
         },{
-            'set':data
+            '$set':data
         },upsert=True)
 
 async def scrape_detail(id):
