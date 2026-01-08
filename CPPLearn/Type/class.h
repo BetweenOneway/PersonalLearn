@@ -1,5 +1,26 @@
 ﻿#pragma once
 namespace CLASS_TEST {
+    class BaseClass {
+    public:
+        void BaseClassPublicFunction(int param);
+        virtual void PublicVirtualFunction(int param);
+    private:
+        int m_num;
+    };
+
+    class PublicInheritClassLevel1_1 :public BaseClass {
+    public:
+        virtual void PublicVirtualFunction(int param);
+    };
+    class PublicInheritClassLevel1_2 :public BaseClass {
+    public:
+        virtual void PublicVirtualFunction(int param);
+    };
+
+    class PublicInheritClassLevel2_1 :public PublicInheritClassLevel1_1 {
+    public:
+        virtual void PublicVirtualFunction(int param);
+    };
     void Call();
     class classBase {
     public:
@@ -130,21 +151,21 @@ namespace CLASS_TEST {
         int m_num;
     };
 
-    class A : virtual protected DB {
-    public:
-        void funcA() {};
-    };
+    //class A : virtual protected DB {
+    //public:
+    //    void funcA() {};
+    //};
 
-    class B :virtual private A, virtual protected DB {
+    //class B :virtual private A, virtual protected DB {
 
-    };
+    //};
 
-    class C :virtual  protected A, protected B {
-    public:
-        void CFunc() {
-            funcA();
-        }
-    };
+    //class C :virtual  protected A, protected B {
+    //public:
+    //    void CFunc() {
+    //        funcA();
+    //    }
+    //};
 
     class ClassWithRefMem {
     public:
@@ -200,4 +221,6 @@ namespace CLASS_TEST {
         void ChildFunction();
         void FriendFunction(SecretClass& sc) override;
     };
+
+    void TestPolymorphism();
 }

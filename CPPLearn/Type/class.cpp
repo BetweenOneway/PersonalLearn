@@ -4,6 +4,40 @@ using namespace std;
 
 namespace CLASS_TEST {
 
+    //类实现
+    void BaseClass::BaseClassPublicFunction(int param)
+    {
+        std::cout << "BaseClass" << __func__ << std::endl;
+    }
+
+    void BaseClass::PublicVirtualFunction(int param)
+    {
+        std::cout << "BaseClass" << __func__ << std::endl;
+    }
+
+    void PublicInheritClassLevel1_1::PublicVirtualFunction(int param)
+    {
+        std::cout << "PublicInheritClassLevel1_1" << __func__ << std::endl;
+    }
+    void PublicInheritClassLevel1_2::PublicVirtualFunction(int param)
+    {
+        std::cout << "PublicInheritClassLevel1_2" << __func__ << std::endl;
+    }
+
+    void PublicInheritClassLevel2_1::PublicVirtualFunction(int param)
+    {
+        //__func__只会打印函数名，不会打印类名
+        std::cout <<"PublicInheritClassLevel2_1"<< __func__ << std::endl;
+    }
+
+    //测试函数
+
+    void TestPolymorphism()
+    {
+        shared_ptr<BaseClass> ptr(new PublicInheritClassLevel2_1());
+        ptr->PublicVirtualFunction(6);
+
+    }
     class Oper
     {
     public:
@@ -376,7 +410,7 @@ namespace CLASS_TEST {
     public:
         void accessA(A& a) {
             // 错误：Derived不是A的友元，无法访问私有成员
-            cout << "Derived访问A的私有成员：" << a.secret << endl;
+            //cout << "Derived访问A的私有成员：" << a.secret << endl;
         }
     };
 
@@ -385,7 +419,7 @@ namespace CLASS_TEST {
         Base b;
         b.accessA(a); // 正常输出：Base访问A的私有成员：123
 
-        Derived d;
+        //Derived d;
         // d.accessA(a); // 编译报错：'int A::secret' is private
         return 0;
     }

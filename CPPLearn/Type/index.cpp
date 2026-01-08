@@ -313,7 +313,8 @@ void testClass()
     //CLASS_TEST::testRefMem();
     //CLASS_TEST::testClassScope();
     //CLASS_TEST::testFirendClass();
-    CLASS_TEST::testClassOverride();
+    //CLASS_TEST::testClassOverride();
+    CLASS_TEST::TestPolymorphism();
 }
 
 void testStruct()
