@@ -2,7 +2,7 @@ import asyncio
 from pyppeteer import launch
 from pyquery import PyQuery as pq
 
-async def main():
+async def asyncPyppeteerUsage1():
     browser = await launch()
     page = await browser.newPage()
     await page.goto('https://spa1.scrape.center')
@@ -13,4 +13,8 @@ async def main():
     print('Names:',names)
     await browser.close()
 
-asyncio.get_event_loop().run_until_complete(main())
+def PyppeteerUsage1():
+    asyncio.get_event_loop().run_until_complete(asyncPyppeteerUsage1())
+
+if __name__=="__main__":
+    PyppeteerUsage1()
