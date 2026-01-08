@@ -2,6 +2,7 @@
 namespace CLASS_TEST {
     class BaseClass {
     public:
+        void BaseClassProcess();
         void BaseClassPublicFunction(int param);
         virtual void PublicVirtualFunction(int param);
     private:
@@ -10,17 +11,20 @@ namespace CLASS_TEST {
 
     class PublicInheritClassLevel1_1 :public BaseClass {
     public:
-        virtual void PublicVirtualFunction(int param);
+        virtual void PublicVirtualFunction(int param) override;
     };
+
     class PublicInheritClassLevel1_2 :public BaseClass {
     public:
-        virtual void PublicVirtualFunction(int param);
+        virtual void PublicVirtualFunction(int param) override;
     };
 
     class PublicInheritClassLevel2_1 :public PublicInheritClassLevel1_1 {
     public:
         virtual void PublicVirtualFunction(int param);
     };
+
+
     void Call();
     class classBase {
     public:

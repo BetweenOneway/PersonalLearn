@@ -5,6 +5,11 @@ using namespace std;
 namespace CLASS_TEST {
 
     //类实现
+    void BaseClass::BaseClassProcess()
+    {
+        PublicVirtualFunction(1);
+    }
+
     void BaseClass::BaseClassPublicFunction(int param)
     {
         std::cout << "BaseClass" << __func__ << std::endl;
@@ -12,22 +17,22 @@ namespace CLASS_TEST {
 
     void BaseClass::PublicVirtualFunction(int param)
     {
-        std::cout << "BaseClass" << __func__ << std::endl;
+        std::cout << "BaseClass::" << __func__ << std::endl;
     }
 
     void PublicInheritClassLevel1_1::PublicVirtualFunction(int param)
     {
-        std::cout << "PublicInheritClassLevel1_1" << __func__ << std::endl;
+        std::cout << "PublicInheritClassLevel1_1::" << __func__ << std::endl;
     }
     void PublicInheritClassLevel1_2::PublicVirtualFunction(int param)
     {
-        std::cout << "PublicInheritClassLevel1_2" << __func__ << std::endl;
+        std::cout << "PublicInheritClassLevel1_2::" << __func__ << std::endl;
     }
 
     void PublicInheritClassLevel2_1::PublicVirtualFunction(int param)
     {
         //__func__只会打印函数名，不会打印类名
-        std::cout <<"PublicInheritClassLevel2_1"<< __func__ << std::endl;
+        std::cout <<"PublicInheritClassLevel2_1::"<< __func__ << std::endl;
     }
 
     //测试函数
@@ -36,6 +41,7 @@ namespace CLASS_TEST {
     {
         shared_ptr<BaseClass> ptr(new PublicInheritClassLevel2_1());
         ptr->PublicVirtualFunction(6);
+        ptr->BaseClassProcess();
 
     }
     class Oper
