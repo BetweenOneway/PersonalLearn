@@ -1,6 +1,8 @@
 import asyncio
 from playwright.sync_api import sync_playwright
 from playwright.async_api import async_playwright
+from datetime import datetime
+
 
 # 同步模式
 def launchPlaywright():
@@ -29,5 +31,19 @@ async def asyncPlayright():
 def TestAsyncPlayRight():
     asyncio.run(asyncPlayright())
 
+def TestPalyrightEdge():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(channel="msedge",headless=False)
+        # 使用 with 语句管理 Page 对象，自动释放资源
+        with browser.new_page() as page:
+            page.goto('https://www.baidu.com')
+            # 会在当前目录下创建屏幕截图
+            # 获取当前日期和时间
+            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+            page.screenshot(path=f'screenshot-{current_time}.png')
+            print(page.title())
+        # 浏览器会在 with 块结束后自动关闭，也可手动调用 browser.close() 确保关闭
+        browser.close()
+                                    
 if __name__=="__main__":
-    TestAsyncPlayRight()
+    TestPalyrightEdge()
