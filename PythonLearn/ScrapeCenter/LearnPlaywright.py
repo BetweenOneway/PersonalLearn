@@ -61,6 +61,7 @@ def RouteHijack():
         page.screenshot(path='no_picture.png')
         browser.close()
 
+# 演示路由劫持，并替换为自定义页面
 def RouteHijack2():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
@@ -89,5 +90,19 @@ def RouteHijack2():
         time.sleep(5)
         browser.close()
 
+
+def on_response(response):
+    print(f'Status {response.status}:{response.url}')
+
+# 事件监听
+def EventListener():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        page = browser.new_page()
+        page.on('response',on_response)
+        page.goto('https://spa6.scrape.center')
+        page.wait_for_load_state('networkidle')
+        browser.close()
+
 if __name__=="__main__":
-    RouteHijack2()
+    EventListener()
