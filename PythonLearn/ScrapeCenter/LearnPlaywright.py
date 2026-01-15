@@ -2,7 +2,8 @@ import asyncio
 from playwright.sync_api import sync_playwright
 from playwright.async_api import async_playwright
 from datetime import datetime
-
+import re
+import time
 
 # 同步模式
 def launchPlaywright():
@@ -44,6 +45,49 @@ def TestPalyrightEdge():
             print(page.title())
         # 浏览器会在 with 块结束后自动关闭，也可手动调用 browser.close() 确保关闭
         browser.close()
-                                    
+
+# 演示路由劫持，不下载图片
+def RouteHijack():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        page = browser.new_page()
+        def cancel_request(route,request):
+            route.abort()
+        
+        # 所有有.png .jpg的链接请求会调用cancel_request函数
+        page.route(re.compile(r"(\.png)|(\.jpg)"),cancel_request)
+        page.goto("https://spa6.scrape.center/")
+        page.wait_for_load_state('networkidle')
+        page.screenshot(path='no_picture.png')
+        browser.close()
+
+def RouteHijack2():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        page = browser.new_page()
+        def modify_response(route,request):
+            print('请求URL：', request.url)  # 打印实际请求的URL
+            print('请求方法：', request.method)  # 打印请求方法（GET/POST等）
+            print('请求类型：', request.resource_type)  # 打印请求资源类型
+            print('Hijack response --- 路由劫持成功')
+            # 向页面返回自定义的响应
+            # 以本地文件的方式相应
+            #route.fulfill(path='./custom_response.html')
+            # 自定义构造响应内容
+            route.fulfill(
+                status=200,
+                headers={"Content-Type": "text/html"},
+                body='<html><head><meta charset="UTF-8"></head><body><h1>全新构造的响应内容</h1></body></html>'
+            )
+
+        # 该写法仅匹配了 / 根路径精确请求， 而实际请求的是具体的URL，会导致拦截失败
+        #page.route('/',modify_response)
+        # 匹配该域名下所有请求（兜底，确保拦截生效，* 是通配符）
+        page.route('https://spa6.scrape.center/**', modify_response)
+    
+        page.goto('https://spa6.scrape.center')
+        time.sleep(5)
+        browser.close()
+
 if __name__=="__main__":
-    TestPalyrightEdge()
+    RouteHijack2()
