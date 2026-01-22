@@ -3,6 +3,7 @@ from pyquery import PyQuery as pq
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from playwright.sync_api import sync_playwright
 import re
 import requests
 
@@ -28,14 +29,15 @@ def ParseScore(item):
         icon_values.append(icon_value)
     return ''.join(icon_values)
 
-def SeleniumVersion():
+def SeleniumVersion(url):
     browser = webdriver.Chrome()
     # 源网址里 score字段是由字体文件生成的，无法直接获取
-    browser.get('https://antispider4.scrape.center')
+    browser.get(url)
     WebDriverWait(browser,10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR,'.item')))
     html = browser.page_source
     doc = pq(html)
     items = doc('.item')
+    # 解析CSS 应对评分是CSS控制的实现
     ParseCSS()
     for item in items.items():
         name = item('.name').text()
@@ -44,5 +46,23 @@ def SeleniumVersion():
         print(f'name:{name} categories:{categories},score:{score}')
     browser.close()
 
+def PlaywrightVersion(url):
+    ParseCSS()
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        with browser.new_page() as page:
+            page.goto(url)
+            page.wait_for_selector('.item',timeout=10000)
+            html = page.content()
+            doc = pq(html)
+            items = doc('.item')
+            for item in items.items():
+                name = item('.name').text()
+                categories = [o.text() for o in item('.categories button').items()]
+                score = ParseScore(item)
+                print(f'name:{name} categories:{categories},score:{score}')
+
 if __name__=='__main__':
-    SeleniumVersion()
+    target_url = 'https://antispider4.scrape.center'
+    #SeleniumVersion(target_url)
+    PlaywrightVersion(target_url)
