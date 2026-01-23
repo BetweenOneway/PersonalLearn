@@ -7,6 +7,8 @@ namespace CLASS_TEST {
         virtual void PublicVirtualFunction(int param);
         virtual void PublicVirtualFunction2();
     private:
+        void BaseClassPrivateFunction();
+    private:
         int m_num;
     };
 

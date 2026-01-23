@@ -9,7 +9,10 @@ namespace CLASS_TEST {
     {
         PublicVirtualFunction(1);
     }
-
+    void BaseClass::BaseClassPrivateFunction()
+    {
+        std::cout << "BaseClass" << __func__ << std::endl;
+    }
     void BaseClass::BaseClassPublicFunction(int param)
     {
         std::cout << "BaseClass" << __func__ << std::endl;
@@ -39,6 +42,7 @@ namespace CLASS_TEST {
         //__func__只会打印函数名，不会打印类名
         std::cout <<"PublicInheritClassLevel2_1::"<< __func__ << std::endl;
     }
+
    void PublicInheritClassLevel2_1::PublicVirtualFunction2()
     {
        std::cout << "PublicInheritClassLevel2_1::" << __func__ << std::endl;
