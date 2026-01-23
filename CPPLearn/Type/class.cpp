@@ -20,6 +20,11 @@ namespace CLASS_TEST {
         std::cout << "BaseClass::" << __func__ << std::endl;
     }
 
+   void BaseClass::PublicVirtualFunction2()
+    {
+       std::cout << "BaseClass::" << __func__ << std::endl;
+    }
+
     void PublicInheritClassLevel1_1::PublicVirtualFunction(int param)
     {
         std::cout << "PublicInheritClassLevel1_1::" << __func__ << std::endl;
@@ -34,6 +39,10 @@ namespace CLASS_TEST {
         //__func__只会打印函数名，不会打印类名
         std::cout <<"PublicInheritClassLevel2_1::"<< __func__ << std::endl;
     }
+   void PublicInheritClassLevel2_1::PublicVirtualFunction2()
+    {
+       std::cout << "PublicInheritClassLevel2_1::" << __func__ << std::endl;
+    }
 
     //测试函数
 
@@ -42,6 +51,7 @@ namespace CLASS_TEST {
         shared_ptr<BaseClass> ptr(new PublicInheritClassLevel2_1());
         ptr->PublicVirtualFunction(6);
         ptr->BaseClassProcess();
+        ptr->PublicVirtualFunction2();
 
     }
     class Oper

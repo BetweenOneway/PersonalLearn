@@ -5,6 +5,7 @@ namespace CLASS_TEST {
         void BaseClassProcess();
         void BaseClassPublicFunction(int param);
         virtual void PublicVirtualFunction(int param);
+        virtual void PublicVirtualFunction2();
     private:
         int m_num;
     };
@@ -22,6 +23,7 @@ namespace CLASS_TEST {
     class PublicInheritClassLevel2_1 :public PublicInheritClassLevel1_1 {
     public:
         virtual void PublicVirtualFunction(int param);
+        virtual void PublicVirtualFunction2();
     };
 
 
