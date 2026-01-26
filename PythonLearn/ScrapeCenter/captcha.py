@@ -6,10 +6,10 @@ def Captcha1():
     image = Image.open('captcha.png')
     result = tesserocr.image_to_text(image)
     print(result)
-    print(tesserocr.file_to_text('captcha.png'))
+    print(tesserocr.file_to_text('./material/captcha.png'))
 
 def Captcha2():
-    image = Image.open('captcha2.png')
+    image = Image.open('./material/captcha2.png')
     print(np.array(image).shape)
     print(image.mode)
 
