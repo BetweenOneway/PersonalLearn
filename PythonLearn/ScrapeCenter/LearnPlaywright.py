@@ -73,7 +73,7 @@ def RouteHijack2():
             print('Hijack response --- 路由劫持成功')
             # 向页面返回自定义的响应
             # 以本地文件的方式相应
-            #route.fulfill(path='./custom_response.html')
+            #route.fulfill(path='./material/custom_response.html')
             # 自定义构造响应内容
             route.fulfill(
                 status=200,
