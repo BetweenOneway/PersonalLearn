@@ -13,6 +13,7 @@ def Captcha2():
     print(np.array(image).shape)
     print(image.mode)
 
+    # 图片转为灰度图
     image = image.convert('L')
     # 灰度图阈值
     threshold = 100
