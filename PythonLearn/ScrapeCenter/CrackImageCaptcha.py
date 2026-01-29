@@ -8,28 +8,29 @@ from retrying import retry
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.common.exceprions import TimeoutException
+from selenium.common.exceptions import TimeoutException
 import numpy as np
 
 def preprocess(image):
     image = image.convert('L')
     array = np.array(image)
-    arr = np.where(array > 120,255,0)
+    arr = np.where(array > 50,255,0)
     image = Image.fromarray(array.astype('uint8'))
     return image
 
 @retry(stop_max_attempt_number=10,retry_on_result= lambda x: x is False)
 def login():
     browser.get('https://captcha7.scrape.center/')
-    browser.find_element(By.CSS,'.username input[type="text"]').send_keys('admin')
-    browser.find_element(By.CSS,'.password input[type="password"]').send_keys('admin')
-    captcha = browser.find_element(By.CSS,"#captcha")
+    browser.find_element(By.CSS_SELECTOR,'.username input[type="text"]').send_keys('admin')
+    browser.find_element(By.CSS_SELECTOR,'.password input[type="password"]').send_keys('admin')
+    captcha = browser.find_element(By.CSS_SELECTOR,"#captcha")
     image = Image.open(BytesIO(captcha.screenshot_as_png))
     image = preprocess(image)
     captcha = tesserocr.image_to_text(image)
     captcha = re.sub('[A-Za-z0-9]','',captcha)
-    browser.find_element(By.CSS,'.captcha input[type="text"]').send_keys(captcha)
-    browser.find_element(By.CSS,'.login').click()
+    print("captcha=>",captcha)
+    browser.find_element(By.CSS_SELECTOR,'.captcha input[type="text"]').send_keys(captcha)
+    browser.find_element(By.CSS_SELECTOR,'.login').click()
     try:
         WebDriverWait(browser,10).until(EC.presence_of_element_located((
             By.XPATH,'//h2[contains(.,"登录成功")]'

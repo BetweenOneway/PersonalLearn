@@ -9,14 +9,14 @@ def Captcha1():
     print(tesserocr.file_to_text('./material/captcha.png'))
 
 def Captcha2():
-    image = Image.open('./material/captcha2.png')
+    image = Image.open('./material/captcha3.png')
     print(np.array(image).shape)
     print(image.mode)
 
     # 图片转为灰度图
     image = image.convert('L')
     # 灰度图阈值
-    threshold = 100
+    threshold = 90
     # 将PIL图像转换为numpy数组，方便数值操作
     array = np.array(image)
     # 核心二值化逻辑：按阈值分割像素值
@@ -25,7 +25,7 @@ def Captcha2():
     image = Image.fromarray(array.astype('uint8'))
     image.show()
     result = tesserocr.image_to_text(image)
-    print(result)
+    print("result=>",result)
 
 if __name__=='__main__':
     Captcha2()
