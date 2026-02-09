@@ -19,6 +19,11 @@ const router = createRouter({
         path: '/LifeCycle',
         name: 'LifeCycle',
         component:  ()=>import("@/views/LifeCycle.vue"),
+    },
+    {
+        path: '/ClickSpan',
+        name: 'ClickSpan',
+        component:  ()=>import("@/views/ClickSpan.vue"),
     }
   ]
 })

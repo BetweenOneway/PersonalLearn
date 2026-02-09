@@ -2,7 +2,8 @@ import time
 from playwright.sync_api import sync_playwright
 
 def ClickSpan():
-    url = 'http://127.0.0.1:3000/PythonLearn/ScrapeCenter/TestSpanClick.html'
+    #url = 'http://127.0.0.1:3000/PythonLearn/ScrapeCenter/TestSpanClick.html'
+    url="http://localhost:5173/ClickSpan"
     extension_path="D:/repo/online/smarteeproj/Exe/JsLib/extension"
     user_data_dir = ""
 
@@ -11,6 +12,7 @@ def ClickSpan():
             user_data_dir,
             channel="chromium",
             headless=False,  # 必关：无头模式不支持扩展
+            slow_mo=500,
             ignore_default_args=["--enable-automation"],
             no_viewport=True,  # 核心：禁用默认视口，让浏览器原生最大化/自适应
             args=[
@@ -31,10 +33,9 @@ def ClickSpan():
         )
         page = context.pages[0]
         page.goto(url,timeout=0,wait_until="domcontentloaded")
-        # 会在当前目录下创建屏幕截图
-        # 获取当前日期和时间
-        page.locator("#clickSpan").click()
-        time.sleep(20)
+
+        page.locator("#app .display-btn").click()
+        time.sleep(5)
 
 if __name__=="__main__":
     ClickSpan()
