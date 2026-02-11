@@ -87,64 +87,40 @@ def Smartee():
             print("加载完成，加载页面消失")
             
             #原型下载页面处理
+            
+            #测试获取页面信息
+            caseNo = page1.locator('.table-list .tb-id').inner_text()
+            print('caseNo:',caseNo)
+
             # 勾选信息块Ⅱ
             page1.locator("#tableData .table-list .tb-blockTwo input").first.click()
+
             #点击生成按钮
-            #page1.locator('#tableData .table-list .tb-btn span.generate.btn').first.click(force=True)
-            #page1.locator(".generate").first.click(force=True)
-            # 先等待元素出现在DOM中，超时可自定义（比如10秒）
-            page1.wait_for_selector('#tableData .table-list .tb-btn span.generate.btn', timeout=10000)
-            # 再执行点击
-            # 执行页面端代码，返回结果到Node.js/Python端
-            result = page1.evaluate('''() => {
-                const ele = document.querySelector('#tableData .table-list .tb-btn span.generate.btn');
-                if (!ele) {
-                    return "click fail: 元素不存在";
-                }
-                // 步骤1：将元素滚动到可视区域（解决元素在页面外的问题）
-                ele.scrollIntoView({ behavior: 'instant', block: 'center' });
-                // 步骤2：创建并触发mousedown事件（鼠标按下，前端核心绑定事件）
-                const mousedown = new MouseEvent('mousedown', {
-                    bubbles: true,  // 事件冒泡（兼容父元素绑定的点击逻辑）
-                    cancelable: true,
-                    view: window
-                });
-                ele.dispatchEvent(mousedown);
-                // 步骤3：创建并触发mouseup事件（鼠标抬起）
-                const mouseup = new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window });
-                ele.dispatchEvent(mouseup);
-                // 步骤4：触发click事件（兜底）
-                const click = new MouseEvent('click', { bubbles: true, cancelable: true, view: window });
-                ele.dispatchEvent(click);
-                return "click success";
-            }''')
-            print(result)
-            #page.evaluate(lambda: document.querySelector("button").click())
-            # page1.evaluate('''() => {
-            #     const ele = document.querySelector('#tableData .table-list .tb-btn span.generate.btn');
-            #     if (ele) 
-            #     {
-            #         alert("no elem")
-            #         ele.click(); // 加个判断，避免元素不存在时报错
-            #     }
-            #     else{
-            #         alert("no elem")}
-            # }''')
-            # 1. 用Playwright定位元素，获取元素句柄
-            #ele_handle = page1.locator("#tableData .table-list .tb-btn .generate.btn").first.element_handle()
-            # 2. 执行原生JS点击（把元素句柄作为参数传入）
-            #page1.evaluate('(ele) => ele.click()', ele_handle)
-            # 1. 验证元素是否存在且可见（输出True/False）
-            #loc = page1.locator("#tableData .table-list .tb-btn .generate.btn").first
-            #loc.scroll_into_view_if_needed() # 滚动元素到视口（自动适配布局）
-            #loc.click()
-            #print("元素是否存在：", loc.count() > 0)
-            #print("元素是否可见：", loc.is_visible())
-            # 2. 高亮元素（运行时页面会标红该元素，确认定位的位置是否正确）
-            #loc.highlight()
-            #page1.wait_for_timeout(2000)  # 等待2秒，看标红的位置
-            #loc.click(force=True,delay=100)
-            #page.get_by_role("span", name="生成").click()
+            #BUTTON_SELECTOR = '#tableData .table-list .tb-btn span.generate.btn'
+            BUTTON_SELECTOR = f'span[data-cs="{caseNo}"].generate.btn'
+            gen = page1.locator(BUTTON_SELECTOR)
+            gen.wait_for(state='visible')
+            print('btn attached')
+            # 这个按钮不知道为什么要过一段时间才能点击成功 所以循环点击
+            # 持续点击按钮，直到按钮消失（触发加载状态）
+            click_count = 0
+            while True:
+                try:
+                    # 每次点击前先确认按钮仍可见（避免无效点击）
+                    if gen.is_visible():
+                        gen.click()
+                        click_count += 1
+                        print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] 第{click_count}次点击...")
+                        # 等待1秒
+                        time.sleep(1)
+                    else:
+                        # 按钮消失，说明触发了加载状态，退出点击循环
+                        print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] 生成按钮消失...")
+                        break
+                except Exception as e:
+                    # 点击失败（如按钮已消失），直接退出点击循环
+                    break
+
             print("点击生成按钮")
             
             #等待开始生成
