@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+# 模型训练程序
 import torch
 import torch.nn as nn
 from torch.autograd import Variable

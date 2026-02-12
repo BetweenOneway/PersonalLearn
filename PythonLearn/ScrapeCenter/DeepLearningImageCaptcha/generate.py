@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+# 训练数据生成程序
 from captcha.image import ImageCaptcha  # pip install captcha
 from PIL import Image
 import random
@@ -23,7 +24,9 @@ def generate_captcha_text_and_image():
 
 
 if __name__ == '__main__':
+    # 生成数量
     count = 3000
+    # 保存路径
     path = setting.EVAL_DATASET_PATH
     if not os.path.exists(path):
         os.makedirs(path)
