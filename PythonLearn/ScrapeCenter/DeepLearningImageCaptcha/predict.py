@@ -11,6 +11,7 @@ from model import CNN
 def main():
     cnn = CNN()
     cnn.eval()
+    # 加载模型文件
     cnn.load_state_dict(torch.load('best_model.pkl'))
     print("load cnn net.")
     
