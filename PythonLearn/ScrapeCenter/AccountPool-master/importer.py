@@ -1,3 +1,4 @@
+#往Redis数据库中导入数据
 from accountpool.storages.redis import RedisClient
 import argparse
 

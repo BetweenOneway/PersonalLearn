@@ -2,7 +2,9 @@ from accountpool.exceptions.init import InitException
 from accountpool.storages.redis import RedisClient
 from loguru import logger
 
+# 获取模块负责从存储模块中拿取各个账号信息并模拟登录，然后将登录成功后生成的 Cookie存到存储模块中
 
+# 基础获取类
 class BaseGenerator(object):
     def __init__(self, website=None):
         """
@@ -46,7 +48,7 @@ class BaseGenerator(object):
 
 import requests
 
-
+#具体的获取模块
 class Antispider6Generator(BaseGenerator):
     
     def init(self):

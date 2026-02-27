@@ -1,4 +1,5 @@
 import argparse
+# Asinoyx is a package which can simplify your multiprocessing implementation, also you can easily watch the progress of multiprocessing execution.
 from acinonyx import run
 import requests
 from loguru import logger

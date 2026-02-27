@@ -8,6 +8,10 @@ class RedisClient(object):
     redis client
     """
     
+    '''
+    如果这个 Hash 是用来存储账号的，那么 type account, website antispider6
+    如果是用来存储 Cookie 的，那么 type credential, website antispider6
+    '''
     def __init__(self, type, website, host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD):
         """
         init redis client
