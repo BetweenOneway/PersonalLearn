@@ -23,4 +23,15 @@ namespace FUNCTION {
         CallFunc(A);
         CallFunc(B);
     }
+
+    void C(const unsigned int num)
+    {
+        cout << num << endl;
+    }
+
+    void testImplicitConvention()
+    {
+        bool flag = true;
+        C(flag);
+    }
 }

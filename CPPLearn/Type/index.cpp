@@ -383,7 +383,8 @@ void testStream()
 
 void testFunction()
 {
-    FUNCTION::testFunction();
+    //FUNCTION::testFunction();
+    FUNCTION::testImplicitConvention();
 }
 
 void testFileOper()
@@ -404,7 +405,7 @@ void testException()
 
 int main()
 {
-    testClass();
+    //testClass();
     //testException();
     //testTypeOf();
     //testFileOper();
@@ -422,7 +423,7 @@ int main()
     //testString();
     //testMacro();
 
-    //testFunction();
+    testFunction();
     //cout << STATIC_TEST::num << endl;
     system("pause");
     return 0;
