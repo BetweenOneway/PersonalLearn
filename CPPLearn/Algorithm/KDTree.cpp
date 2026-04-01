@@ -7,6 +7,7 @@
 #include <queue>
 
 struct Point {
+    //依次对应 X轴,Y轴,Z轴......
     std::vector<double> coords;
     int index;  // 保存原始索引
 
@@ -65,7 +66,7 @@ void nearestNeighborSearch(Node* node, const Point& target,
                           Point& bestPoint, double& bestDist) {
     if (node == nullptr) return;
 
-    // 更新当前最佳点
+    // 计算点距离 更新当前最佳点
     double dist = squaredDistance(node->point, target);
     if (dist < bestDist) {
         bestDist = dist;
@@ -144,6 +145,7 @@ int TestKDTree() {
     }
 
     // 查找最近点索引
+    // 以group1构造KD树，然后用group2在group1中找最近的点
     std::vector<int> nearestIndices = findNearestIndicesWithKDTree(group1, group2);
 
     // 输出结果（这里只输出前10个作为示例）
