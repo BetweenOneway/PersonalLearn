@@ -1,5 +1,5 @@
 import scrapy
-
+from scrapyTutorial.items import QuoteItem
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
@@ -9,7 +9,14 @@ class QuotesSpider(scrapy.Spider):
     def parse(self, response):
         quotes = response.css('.quote')
         for quote in quotes:
+            item = QuoteItem()
             # 这里不是标准CSS写法，伪元素是Scrapy的扩展用法
-            text = quote.css('.text::text').extract_first()
-            author = quote.css('.author::text').extract_first()
-            tags = quote.css('.tags .tag::text').extract()
+            item['text'] = quote.css('.text::text').extract_first()
+            item['author'] = quote.css('.author::text').extract_first()
+            item['tags'] = quote.css('.tags .tag::text').extract()
+            yield item
+        
+        #下一页爬取
+        next = response.css('.pager .next a::attr("href")').extract_first()
+        url = response.urljoin(next)
+        yield scrapy.Request(url=url,callback=self.parse)
