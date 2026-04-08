@@ -2,10 +2,14 @@ import scrapy
 from scrapyTutorial.items import QuoteItem
 
 class QuotesSpider(scrapy.Spider):
+    # 爬虫名
     name = "quotes"
+    # 允许爬取的域名
     allowed_domains = ["quotes.toscrape.com"]
+    # 启动时爬取的URL列表
     start_urls = ["https://quotes.toscrape.com"]
 
+    # start_urls中的链接请求完成下载后，会调用parse方法
     def parse(self, response):
         quotes = response.css('.quote')
         for quote in quotes:

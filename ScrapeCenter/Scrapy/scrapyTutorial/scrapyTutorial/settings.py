@@ -85,3 +85,11 @@ DOWNLOAD_DELAY = 1
 
 # Set settings whose default value is deprecated to a future-proof value
 FEED_EXPORT_ENCODING = "utf-8"
+
+# 键值是调用优先级，数字越小的越先被调用
+ITEM_PIPELINES={
+    'scrapytutorial.pipelines.TextPipeline':300,
+    'scrapytutorial.pipelines.MongoDBPipeline':400,
+}
+MONGODB_CONNECTION_STRING = 'localhost'
+MONGODB_DATABASE = 'scrapytutorial'
