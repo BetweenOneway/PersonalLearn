@@ -87,9 +87,13 @@ DOWNLOAD_DELAY = 1
 FEED_EXPORT_ENCODING = "utf-8"
 
 # 键值是调用优先级，数字越小的越先被调用
+# 这里键名前面是项目名，注意大小写
 ITEM_PIPELINES={
-    'scrapytutorial.pipelines.TextPipeline':300,
-    'scrapytutorial.pipelines.MongoDBPipeline':400,
+    'scrapyTutorial.pipelines.TextPipeline':300,
+    'scrapyTutorial.pipelines.MongoDBPipeline':400,
 }
-MONGODB_CONNECTION_STRING = 'localhost'
+
+# MongoDB的Connection URI
+MONGODB_CONNECTION_STRING = 'mongodb://localhost:27017'
+# MongoDB的数据库名
 MONGODB_DATABASE = 'scrapytutorial'

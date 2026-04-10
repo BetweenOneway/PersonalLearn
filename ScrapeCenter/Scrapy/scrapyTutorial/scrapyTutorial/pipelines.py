@@ -38,7 +38,9 @@ class MongoDBPipeline(object):
 
     #数据处理
     def process_item(self,item,spider):
+        # 获取变量 item 所属类的名称并赋值给变量 name
         name = item.__class__.__name__
+        # 这里的name实际上就是mongodb collection名称
         self.db[name].insert_one(dict(item))
         return item
     
