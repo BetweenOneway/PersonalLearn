@@ -68,9 +68,9 @@ def load_and_sort_middlewares(base_mws, custom_mws):
     2. 过滤 None（禁用）
     3. 按优先级数字**升序排序**
     """
-    # 合并：用户配置覆盖 base
+    # 合并：同样的Key用户配置覆盖 base
     merged = {**base_mws, **custom_mws}
-    # 过滤掉 None，保留启用的中间件
+    # 列表推导式 过滤掉 None，保留启用的中间件
     enabled = [(mw, prio) for mw, prio in merged.items() if prio is not None]
     # 按优先级升序排列（核心！）
     enabled_sorted = sorted(enabled, key=lambda x: x[1])
