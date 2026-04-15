@@ -7,4 +7,4 @@ class HttpbinSpider(scrapy.Spider):
     start_urls = ["https://www.httpbin.org"]
 
     def parse(self, response):
-        pass
+        print(response.text)
