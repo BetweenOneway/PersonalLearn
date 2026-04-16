@@ -50,6 +50,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StaticLibCallStaticLib", "S
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DesignPattern", "DesignPattern\DesignPattern.vcxproj", "{FD2D8E37-D90C-4DD9-B71D-75298055CF0D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TraverseLocalDir", "TraverseLocalDir\TraverseLocalDir.vcxproj", "{59B246D9-0D71-426A-9113-3C27FEC9698C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -300,6 +302,16 @@ Global
 		{FD2D8E37-D90C-4DD9-B71D-75298055CF0D}.Release|x64.Build.0 = Release|x64
 		{FD2D8E37-D90C-4DD9-B71D-75298055CF0D}.Release|x86.ActiveCfg = Release|Win32
 		{FD2D8E37-D90C-4DD9-B71D-75298055CF0D}.Release|x86.Build.0 = Release|Win32
+		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Debug|x64.ActiveCfg = Debug|x64
+		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Debug|x64.Build.0 = Debug|x64
+		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Debug|x86.ActiveCfg = Debug|Win32
+		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Debug|x86.Build.0 = Debug|Win32
+		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Release|Any CPU.ActiveCfg = Release|Win32
+		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Release|x64.ActiveCfg = Release|x64
+		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Release|x64.Build.0 = Release|x64
+		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Release|x86.ActiveCfg = Release|Win32
+		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
