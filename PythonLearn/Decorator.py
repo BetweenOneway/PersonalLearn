@@ -1,3 +1,5 @@
+from functools import wraps
+
 class Student:
     # 类属性（所有学生共享）
     school = "第一中学"
@@ -55,7 +57,44 @@ class Person1:
     def age(self):
         return self._age
 
-if __name__=='__main__':
+def logNoWrap(func):
+    def wrapper(*args, **kwargs):
+        print(f"调用函数: {func.__name__}")
+        res = func(*args, **kwargs)
+        print(f"函数 {func.__name__} 执行完毕")
+        return res
+    return wrapper
+
+@logNoWrap
+def addNoWrap(a, b):
+    """两数相加"""
+    return a + b
+
+from functools import wraps
+
+def logWrap(func):
+    @wraps(func)  # 只加这一行
+    def wrapper(*args, **kwargs):
+        print(f"调用函数: {func.__name__}")
+        res = func(*args, **kwargs)
+        print(f"函数 {func.__name__} 执行完毕")
+        return res
+    return wrapper
+
+@logWrap
+def addWrap(a, b):
+    """两数相加"""
+    return a + b
+
+def functionDecorator():
+    # 关键在这里！打印函数名字
+    print("函数名：", addNoWrap.__name__)
+    print("文档字符串：", addNoWrap.__doc__)
+    
+    print("wrapped函数名：", addWrap.__name__)
+    print("wrapped文档字符串：", addWrap.__doc__)
+
+def classDecorator():
     s = Student("小明")
     print(s.show_name())  # 我是 小明，来自 第一中学
 
@@ -84,3 +123,65 @@ if __name__=='__main__':
     p1 = Person1(20)
     print(p1.age)   # 可以读
     p1.age = 30     # 报错：can't set attribute
+
+from functools import singledispatch
+
+# 1. 定义一个主函数，作为默认版本
+@singledispatch
+def process(x):
+    print(f"默认处理：{x}，类型：{type(x)}")
+
+
+# 2. 注册 int 类型的处理逻辑
+@process.register(int)
+def _(x):
+    print(f"处理整数：{x}")
+
+
+# 3. 注册 str 类型的处理逻辑
+@process.register(str)
+def _(x):
+    print(f"处理字符串：{x}")
+
+
+# 4. 注册 list 类型
+@process.register(list)
+def _(x):
+    print(f"处理列表，长度：{len(x)}")
+
+def testSingleDispatch():
+    process(123)        # 处理整数：123
+    process("hello")    # 处理字符串：hello
+    process([1,2,3])    # 处理列表，长度：3
+    process(3.14)       # 默认处理：3.14，类型：<class 'float'>
+
+from functools import total_ordering
+
+@total_ordering
+class StudentCmp:
+    def __init__(self, score):
+        self.score = score
+
+    # 必须实现相等
+    def __eq__(self, other):
+        return self.score == other.score
+
+    # 只需要再实现一个小于
+    def __lt__(self, other):
+        return self.score < other.score
+
+def testOrdering():
+    s1 = StudentCmp(60)
+    s2 = StudentCmp(80)
+    s3 = StudentCmp(80)
+
+    print(s1 < s2)   # True
+    print(s1 > s2)   # False
+    print(s1 <= s2)  # True
+    print(s2 >= s3)  # True
+    print(s2 == s3)  # True
+
+if __name__=='__main__':
+    #functionDecorator()
+    #testSingleDispatch()
+    testOrdering()
