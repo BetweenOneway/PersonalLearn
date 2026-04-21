@@ -36,6 +36,25 @@ class Student:
         # 完全不能访问 self 或 cls
         return age >= 18
 
+class Person:
+    @property
+    def age(self):
+        return self._age
+
+    @age.setter
+    def age(self, value):
+        if value < 0:
+            raise ValueError("年龄不能为负")
+        self._age = value
+
+class Person1:
+    def __init__(self, age):
+        self._age = age
+
+    @property
+    def age(self):
+        return self._age
+
 if __name__=='__main__':
     s = Student("小明")
     print(s.show_name())  # 我是 小明，来自 第一中学
@@ -50,3 +69,18 @@ if __name__=='__main__':
 
     print(Student.is_adult(20))  # True
     print(Student.is_adult(15))  # False
+
+    ##############################
+    # 使用
+    p = Person()
+
+    # 赋值 → 自动调用 @age.setter
+    p.age = 20
+    print(p.age)  # 20 → 调用 @property
+
+    # 赋值非法值 → 直接报错
+    #p.age = -5
+
+    p1 = Person1(20)
+    print(p1.age)   # 可以读
+    p1.age = 30     # 报错：can't set attribute
