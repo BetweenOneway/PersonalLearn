@@ -98,3 +98,29 @@ class ScrapydownloadermiddlewaredemoDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+import random
+
+# 随机选择一个User-Agent值替换原有默认值
+class RandomUserAgentMiddleware(object):
+    def __init__(self):
+        self.user_agents = [
+            'Mozilla/5.o (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)', 
+            'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Chron论／ 22.0.1216.0 Safari/537.2', 
+            'Mozilla/5.0 (Xll; Ubuntu; Linux i686; rv:15.0) Gecko/20100101 Firefox/15.0.1'
+        ]
+
+    def process_request(self,request,spider):
+        request.headers['User-Agent'] = random.choice(self.user_agents)
+        # 这里如果返回一个request，会导致无限递归调用
+        
+
+from scrapy.http import HtmlResponse 
+class ProxyMiddleware(object):
+    # 这里如果返回一个Response，，会直接被 process_response 处理完毕后发送给 Spider,而该 Request 就不会再经由 Downloader 执行下载了
+    def process_request(self,request,spider):
+        return HtmlResponse( 
+            url=request.url, 
+            status=200, 
+            encoding='utf-8', 
+            body='Test Downloader Middleware')

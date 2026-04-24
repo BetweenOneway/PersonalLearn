@@ -46,9 +46,11 @@ DOWNLOAD_DELAY = 1
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "scrapyDownloaderMiddlewareDemo.middlewares.ScrapydownloadermiddlewaredemoDownloaderMiddleware": 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   #"scrapyDownloaderMiddlewareDemo.middlewares.ScrapydownloadermiddlewaredemoDownloaderMiddleware": 543,
+   'scrapyDownloaderMiddlewareDemo.middlewares.RandomUserAgentMiddleware':543,
+   'scrapyDownloaderMiddlewareDemo.middlewares.ProxyMiddleware':544
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -85,3 +87,6 @@ DOWNLOAD_DELAY = 1
 
 # Set settings whose default value is deprecated to a future-proof value
 FEED_EXPORT_ENCODING = "utf-8"
+
+# 改变默认User-Agent值 方法一
+#USER_AGENT ='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6} AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0. 3071.115 Safari/537. 36'
