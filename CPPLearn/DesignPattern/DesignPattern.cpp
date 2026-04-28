@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 using namespace std;
+
+#include "DecoratorHeader.h"
+
 // 基础手机类
 class Phone {
 public:
@@ -66,8 +69,9 @@ private:
         cout << "屏幕贴膜" << endl;
     }
 };
+
 // 客户端代码
-int main() {
+int Decorator0() {
     Phone* ph = new NokiaPhone("16300");
     Phone* dpa = new DecoratePhoneA(ph); // 增加挂件
     Phone* dpb = new DecoratePhoneB(ph); // 增加贴膜
@@ -83,6 +87,12 @@ int main() {
     delete ph;
     delete dpa;
     delete dpb;
+    return 0;
+}
+
+int main()
+{
+    DecoratorChain();
     return 0;
 }
 
