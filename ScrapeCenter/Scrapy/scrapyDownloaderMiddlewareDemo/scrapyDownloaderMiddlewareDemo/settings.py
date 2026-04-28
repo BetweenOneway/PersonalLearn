@@ -49,7 +49,8 @@ DOWNLOAD_DELAY = 1
 DOWNLOADER_MIDDLEWARES = {
    #"scrapyDownloaderMiddlewareDemo.middlewares.ScrapydownloadermiddlewaredemoDownloaderMiddleware": 543,
    'scrapyDownloaderMiddlewareDemo.middlewares.RandomUserAgentMiddleware':543,
-   'scrapyDownloaderMiddlewareDemo.middlewares.ProxyMiddleware':544
+   'scrapyDownloaderMiddlewareDemo.middlewares.ChangeResponseMiddleware':544,
+   #'scrapyDownloaderMiddlewareDemo.middlewares.ProxyMiddleware':544
 }
 
 # Enable or disable extensions

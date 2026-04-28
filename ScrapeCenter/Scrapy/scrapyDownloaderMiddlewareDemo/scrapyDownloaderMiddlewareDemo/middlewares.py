@@ -124,3 +124,8 @@ class ProxyMiddleware(object):
             status=200, 
             encoding='utf-8', 
             body='Test Downloader Middleware')
+
+class ChangeResponseMiddleware(object):
+    def process_response(self,request,response,spider):
+        response.status = 201
+        return response

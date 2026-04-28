@@ -17,3 +17,4 @@ class HttpbinSpider(scrapy.Spider):
 
         print("\n===== 响应信息 =====")
         print("response.text=>",response.text)
+        print("Status Code:",response.status)
