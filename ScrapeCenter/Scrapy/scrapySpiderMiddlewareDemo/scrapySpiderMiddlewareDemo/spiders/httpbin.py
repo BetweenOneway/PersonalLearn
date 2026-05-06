@@ -1,5 +1,6 @@
 import scrapy
 from scrapy import Spider,Request
+from scrapySpiderMiddlewareDemo.items import DemoItem
 
 class HttpbinSpider(scrapy.Spider):
     name = "httpbin"
@@ -7,7 +8,9 @@ class HttpbinSpider(scrapy.Spider):
     start_url = "https://www.httpbin.org/get"
 
     def parse(self, response):
-        print(response.text)
+        print('Status:',response.status)
+        item = DemoItem(**response.json())
+        yield item
 
     def start_requests(self):
         for i in range(5):

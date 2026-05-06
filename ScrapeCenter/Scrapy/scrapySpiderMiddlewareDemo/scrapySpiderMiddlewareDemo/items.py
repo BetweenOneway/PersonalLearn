@@ -10,3 +10,10 @@ class ScrapyspidermiddlewaredemoItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
+
+
+class DemoItem(scrapy.Item):
+    origin = scrapy.Field()
+    headers = scrapy.Field()
+    args = scrapy.Field()
+    url = scrapy.Field()
