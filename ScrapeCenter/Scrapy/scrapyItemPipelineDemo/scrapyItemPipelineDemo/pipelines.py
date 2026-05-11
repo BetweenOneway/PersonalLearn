@@ -6,8 +6,36 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-
+import pymongo
+from scrapyItemPipelineDemo.items import MovieItem
 
 class ScrapyitempipelinedemoPipeline:
     def process_item(self, item, spider):
         return item
+
+class MongoDBPipeline(object):
+    @classmethod
+    def from_crawler(cls,crawler):
+        cls.connection_string = crawler.settings.get('MONGODB_CONNECTION_STRING')
+        cls.database = crawler.settings.get('MONGODB_DATABASE')
+        cls.collection = crawler.settings.get('MONGODB_COLLECTION')
+        return cls()
+    
+    def open_spider(self,spider):
+        self.client = pymongo.MongoClient(self.connection_string)
+        self.db = self.client[self.database]
+
+    def process_item(self,item,spider):
+        self.db[self.collection].update_one(
+            {
+                'name':item['name']
+            },
+            {
+                '$set':dict(item)
+            },
+            True # 不存在，更新变插入
+        )
+        return item
+    
+    def close_spider(self,spider):
+        self.client.close()

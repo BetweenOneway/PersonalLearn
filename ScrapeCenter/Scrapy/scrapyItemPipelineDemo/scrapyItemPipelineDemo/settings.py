@@ -85,3 +85,9 @@ DOWNLOAD_DELAY = 1
 
 # Set settings whose default value is deprecated to a future-proof value
 FEED_EXPORT_ENCODING = "utf-8"
+
+# MongoDB的Connection URI
+MONGODB_CONNECTION_STRING = 'mongodb://localhost:27017'
+# MongoDB的数据库名
+MONGODB_DATABASE = 'scrapypipeline'
+MONGODB_COLLECTION = 'MovieItems'
