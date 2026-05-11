@@ -95,4 +95,3 @@ int main()
     DecoratorChain();
     return 0;
 }
-

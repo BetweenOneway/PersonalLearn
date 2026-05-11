@@ -66,7 +66,9 @@ void testGetUnitLengthAndDistance()
     Vector3 point3(0.0f, 3.0f, 0.0f);
     Vector3 point4(3.0f, 4.0f, 0.0f);
 
+    //距离射线的距离
     cout << ray.GetDistance(point) << endl; //0
+    //点投影到射线上 然后计算距离射线原点的距离 有正反
     cout << ray.GetUnitsLenth(point) << endl;//2
 
     cout << ray.GetDistance(point1) << endl;//0
