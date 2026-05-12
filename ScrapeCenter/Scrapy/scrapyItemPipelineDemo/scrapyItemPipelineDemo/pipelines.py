@@ -60,3 +60,40 @@ class ElasticSearchPipeline(object):
     
     def close_spider(self,spider):
         self.conn.transport.close()
+
+from scrapy import Request
+from scrapy.exceptions import DropItem
+from scrapy.pipelines.images import ImagesPipeline
+
+class ImagePipeline(ImagesPipeline):
+    def file_path(self,request,response=None,info=None):
+        movie = request.meta['movie']
+        type = request.meta['type']
+        name = request.meta['name']
+        file_name = f'{movie}/{type}/{name}.jpg'
+        return file_name
+    
+    def item_completed(self,results,item,info):
+        image_paths=[x['path'] for ok,x in results if ok]
+        if not image_paths:
+            raise DropItem('Image Downloaded Failed')
+        return item
+    
+    def get_media_requests(self,item,info):
+        for director in item['directors']:
+            director_name = director['name']
+            director_image = director['image']
+            yield Request(director_image,meta={
+                'name':director_name,
+                'type':'director',
+                'movie':item['name']
+            })
+
+        for actor in item['actors']:
+            actor_name = actor['name']
+            actor_image = actor['image']
+            yield Request(actor_image,meta={
+                'name':actor_name,
+                'type':'acotr',
+                'movie':item['name']
+            })

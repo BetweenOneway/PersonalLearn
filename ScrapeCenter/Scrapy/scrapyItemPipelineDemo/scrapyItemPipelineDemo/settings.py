@@ -58,9 +58,11 @@ DOWNLOAD_DELAY = 1
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "scrapyItemPipelineDemo.pipelines.ScrapyitempipelinedemoPipeline": 300,
-#}
+ITEM_PIPELINES = {
+   "scrapyItemPipelineDemo.pipelines.ImagePipeline": 300,
+   "scrapyItemPipelineDemo.pipelines.MongoDBPipeline": 301,
+   "scrapyItemPipelineDemo.pipelines.ElasticsearchPipeline": 302,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -95,3 +97,6 @@ MONGODB_COLLECTION = 'MovieItems'
 # ELASTICSEARCH配置
 ELASTICSEARCH_CONNECTION_STRING = os.getenv('ELASTICSEARCH_CONNECTION_STRING')
 ELASTICSEARCH_INDEX = 'movies'
+
+# Image Pipeline配置
+IMAGES_STORE='./images'
