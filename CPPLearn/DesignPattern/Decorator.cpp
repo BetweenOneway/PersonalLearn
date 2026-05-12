@@ -93,6 +93,7 @@ public:
     }
 
     ~Decorator() override {
+        cout << "delete Decorator" << endl;
         delete m_component;
     }
 };

@@ -100,6 +100,8 @@ int Decorator0() {
 
 int main()
 {
+    Decorator1();
     Decorator2();
+
     return 0;
 }
