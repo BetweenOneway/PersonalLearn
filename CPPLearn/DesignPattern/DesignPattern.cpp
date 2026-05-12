@@ -13,6 +13,7 @@ public:
     virtual void showDecorate() = 0;
     virtual ~Phone() {}
 };
+
 // 具体的手机类
 class iPhone : public Phone {
 private:
@@ -23,6 +24,7 @@ public:
         cout << name << "的装饰" << endl;
     }
 };
+
 // 具体的手机类
 class NokiaPhone : public Phone {
 private:
@@ -33,6 +35,7 @@ public:
         cout << name << "的装饰" << endl;
     }
 };
+
 // 装饰器基类
 class DecoratorPhone : public Phone {
 protected:
@@ -43,6 +46,7 @@ public:
         m_phone->showDecorate();
     }
 };
+
 // 具体的装饰类A
 class DecoratePhoneA : public DecoratorPhone {
 public:
@@ -56,6 +60,7 @@ private:
         cout << "增加挂件" << endl;
     }
 };
+
 // 具体的装饰类B
 class DecoratePhoneB : public DecoratorPhone {
 public:
@@ -77,12 +82,15 @@ int Decorator0() {
     Phone* dpb = new DecoratePhoneB(ph); // 增加贴膜
     //16300的装饰
     ph->showDecorate();
+    cout << endl;
     //16300的装饰
     //增加挂件
     dpa->showDecorate();
+    cout << endl;
     //16300的装饰
     //屏幕贴膜
     dpb->showDecorate();
+    cout << endl;
 
     delete ph;
     delete dpa;
@@ -92,6 +100,6 @@ int Decorator0() {
 
 int main()
 {
-    DecoratorChain();
+    Decorator2();
     return 0;
 }

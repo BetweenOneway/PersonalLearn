@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Decorator.cpp" />
+    <ClCompile Include="Decorator1.cpp" />
     <ClCompile Include="DecoratorChain.cpp" />
     <ClCompile Include="DesignPattern.cpp" />
   </ItemGroup>

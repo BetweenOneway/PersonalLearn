@@ -24,6 +24,9 @@
     <ClCompile Include="DecoratorChain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Decorator1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DecoratorHeader.h">

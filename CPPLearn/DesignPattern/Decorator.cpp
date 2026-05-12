@@ -3,6 +3,8 @@
 #include <iomanip>
 #include <memory>
 
+using namespace std;
+
 // ====================== 1. 共享数据类 ======================
 struct SharedData {
     int value = 0;
