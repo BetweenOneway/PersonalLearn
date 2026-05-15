@@ -40,9 +40,9 @@ class MongoDBPipeline(object):
     def close_spider(self,spider):
         self.client.close()
 
-from elasticSearch import ElasticSearch
+from elasticsearch import Elasticsearch
 
-class ElasticSearchPipeline(object):
+class ElasticsearchPipeline(object):
     @classmethod
     def from_crawler(cls,crawler):
         cls.connection_string = crawler.settings.get('ELASTICSEARCH_CONNECTION_STRING')
@@ -50,8 +50,8 @@ class ElasticSearchPipeline(object):
         return cls()
     
     def open_spider(self,spider):
-        self.conn = ElasticSearch([self.connection_string])
-        if not self.conn.indices.exists(self.index):
+        self.conn = Elasticsearch([self.connection_string])
+        if not self.conn.indices.exists(index=self.index):
             self.conn.indices.create(index=self.index)
 
     def process_item(self,item,spider):
