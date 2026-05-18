@@ -11,6 +11,7 @@ class NotificationExtension(object):
         crawler.signals.connect(ext.spider_opened,signal=signals.spider_opened)
         crawler.signals.connect(ext.spider_closed,signal=signals.spider_closed)
         crawler.signals.connect(ext.item_scraped,signal=signals.item_scraped)
+        return ext
 
     def spider_opened(self,spider):
         requests.post(NOTIFICATION_URL,json={

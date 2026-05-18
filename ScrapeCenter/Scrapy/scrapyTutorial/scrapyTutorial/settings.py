@@ -52,9 +52,9 @@ DOWNLOAD_DELAY = 1
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    "scrapy.extensions.telnet.TelnetConsole": None,
-#}
+EXTENSIONS = {
+   "scrapyTutorial.extensions.NotificationExtension": 100,
+}
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
@@ -96,4 +96,4 @@ ITEM_PIPELINES={
 # MongoDB的Connection URI
 MONGODB_CONNECTION_STRING = 'mongodb://localhost:27017'
 # MongoDB的数据库名
-MONGODB_DATABASE = 'scrapytutorial'
+MONGODB_DATABASE = 'scrapyTutorial'
