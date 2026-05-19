@@ -1,5 +1,6 @@
 import scrapy
 from scrapy import Request,Spider
+from scrapyseleniumdemo.items import BookItem
 import re
 
 class BookSpider(scrapy.Spider):
@@ -34,6 +35,3 @@ class BookSpider(scrapy.Spider):
         score = score. strip() if score else None
         item = BookItem(name=name,tags=tags,score=score,price=price,cover=cover)
         yield item
-        
-    def parse(self, response):
-        pass
