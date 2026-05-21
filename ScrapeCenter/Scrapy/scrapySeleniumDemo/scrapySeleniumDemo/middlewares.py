@@ -101,16 +101,20 @@ class ScrapyseleniumdemoDownloaderMiddleware:
 
 from scrapy.http import HtmlResponse
 from selenium import webdriver
-import time
+from selenium.webdriver.edge.service import Service
+import asyncio
 
 class SeleniumMiddleware(object):
-    def parse_request(self,request,spider):
+    async def process_request(self,request):
         url =request.url
-        browser = webdriver().Chrome()
-        browser.get(url)
-        time.sleep(5)
-        html = browser.page_source
-        browser.close()
+        browser = webdriver.Edge(service=Service())
+        try:
+            browser.get(url)
+            # 用 asyncio.sleep 异步等待，不阻塞信号！
+            await asyncio.sleep(3)
+            html = browser.page_source
+        finally:
+            browser.quit()
         return HtmlResponse(url=request.url,
                             body = html,
                             request=request,
