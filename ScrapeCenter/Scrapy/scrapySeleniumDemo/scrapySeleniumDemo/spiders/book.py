@@ -1,6 +1,6 @@
 import scrapy
 from scrapy import Request,Spider
-from scrapyseleniumdemo.items import BookItem
+from scrapySeleniumDemo.items import BookItem
 import re
 
 class BookSpider(scrapy.Spider):
@@ -28,9 +28,9 @@ class BookSpider(scrapy.Spider):
     def parse_detail(self,response):
         name= response.css('.name::text').extract_first() 
         tags= response.css('.tags button span::text').extract() 
-        score = response.css('. score: :text').extract_ first() 
+        score = response.css('. score: :text').extract_first() 
         price= response.css('.price span::text').extract_first() 
-        cover = response.css('. cover:: attr(src)').extract_ first() 
+        cover = response.css('. cover:: attr(src)').extract_first() 
         tags= [tag.strip() for tag in tags] if tags else[] 
         score = score. strip() if score else None
         item = BookItem(name=name,tags=tags,score=score,price=price,cover=cover)
