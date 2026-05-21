@@ -8,7 +8,9 @@ from selenium.webdriver.edge.options import Options as EdgeOptions
 from time import sleep
 import time
 
-edgeBrowser = webdriver.Edge()
+from selenium.webdriver.edge.service import Service
+# 直接用 Selenium 4.6+ 自带的自动驱动管理，它会自动匹配浏览器版本
+edgeBrowser = webdriver.Edge(service=Service())
 
 def testSelenium():
     edgeBrowser.get('https://www.baidu.com')
@@ -81,4 +83,4 @@ def SeleniumAntiAntiSpider():
     time.sleep(5)
 
 if __name__=='__main__':
-    SeleniumAntiAntiSpider()
+    testSelenium()
