@@ -102,7 +102,7 @@ std::vector<Point3D> generateSmoothCurve(
     const Point3D& p1,
     const Point3D& p2,
     const Point3D& p3,
-    int totalPoints,       // 你想要的总点数（13/20/100 都行）
+    int totalPoints,
     float tension
 )
 {
