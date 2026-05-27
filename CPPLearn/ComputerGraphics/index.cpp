@@ -22,7 +22,8 @@ void testLine()
 {
     //testBezier();
     //testSpline();
-    testCurve();
+    //testCurve();
+    testCurve1();
 }
 
 void Ray()
@@ -179,8 +180,8 @@ int main()
     //testDot();
     //Vector();
     //Quaternion();
-    Ray();
-    //testLine();
+    //Ray();
+    testLine();
     //Plane();
     //Learn();
     //CalcBoundary();

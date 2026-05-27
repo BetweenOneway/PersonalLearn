@@ -70,17 +70,20 @@ void testSpline()
 
 void testBezier()
 {
-    //Point3D p1(-10, -10, 10);
-    //Point3D p2(-5,0, 3);
-    //Point3D p3(0, 0, 0);
+    Point3D p1(0, 0, 0);
+    Point3D p2(100,100, 100);
+    Point3D p3(200, 0, 0);
 
-    Point3D p1(1, 10, 0);
-    Point3D p2(10, 10, 0);
-    Point3D p3(10, 1, 0);
-    Point3D p4(20, 1, 0);
     vector<Point3D> result;
-    //Bezier2(p1, p2, p3, 100, result);
-    Bezier3(p1, p2, p3, p4, 100, result);
+    generateCatmullRomCurve(p1, p2, p3, result, 5);
+
+    //Bezier2(p1, p2, p3, 10, result);
+
+    //Point3D p1(1, 10, 0);
+    //Point3D p2(10, 10, 0);
+    //Point3D p3(10, 1, 0);
+    //Point3D p4(20, 1, 0);
+    //Bezier3(p1, p2, p3, p4, 100, result);
     WriteOBJFile(result, "./output/Bezier.obj");
 }
 
@@ -96,4 +99,19 @@ void testCurve()
     vector<Point3D> result;
     createCurve(originVerts, result);
     WriteOBJFile(result, "./output/curve.obj");
+}
+
+void testCurve1()
+{
+    Point3D p1(0, 0, 0);
+    Point3D p2(100, 100, 0);  // 最高点
+    Point3D p3(200, 0, 0);
+
+    int WANT_POINTS = 21;     
+    float tension = 1.0f;     // 0最弯，1最直
+    // ==========================================================
+
+    auto curve = generateSmoothCurve(p1, p2, p3, WANT_POINTS, tension);
+
+    WriteOBJFile(curve, "./output/curve.obj");
 }
