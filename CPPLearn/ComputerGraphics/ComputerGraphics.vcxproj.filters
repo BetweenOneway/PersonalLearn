@@ -13,109 +13,115 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\test">
+      <UniqueIdentifier>{aa30f471-4689-4527-8d57-9cb0ffee07cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\实现">
+      <UniqueIdentifier>{2fa1302c-9e6c-4119-9888-18caaac988e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="index.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="MathUtil.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix3x3.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix4x3.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Quaternion.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Ray.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="RotationMatrix.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Triangle.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector3.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Bezier.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="BSpine.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Spline.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="testLine.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="testVectorMatrix.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Oper3DFile.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="testRay.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="testQuaternion.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Lagrange.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="testPlane.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="LSM.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="LeastSquareMethod.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CalcBoundary.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="BallConcave.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CommonFunctions.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="testAlgo.cpp">
+      <Filter>源文件\test</Filter>
     </ClCompile>
     <ClCompile Include="testCommonFunctions.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\test</Filter>
     </ClCompile>
-    <ClCompile Include="Algo.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="testAlgo.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Curve.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Curvature.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Location.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="testLine.cpp">
+      <Filter>源文件\test</Filter>
     </ClCompile>
     <ClCompile Include="testLocation.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\test</Filter>
     </ClCompile>
-    <ClCompile Include="StlReader.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="testPlane.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
+    <ClCompile Include="testQuaternion.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
+    <ClCompile Include="testRay.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
+    <ClCompile Include="testVectorMatrix.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Algo.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="BallConcave.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Bezier.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="BSpine.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="CalcBoundary.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonFunctions.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Curvature.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Curve.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Lagrange.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="LeastSquareMethod.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Location.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="LSM.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="MathUtil.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix3x3.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix4x3.cpp">
+      <Filter>源文件\实现</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Oper3DFile.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="RotationMatrix.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Spline.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="StlReader.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>源文件\实现</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>源文件\实现</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
