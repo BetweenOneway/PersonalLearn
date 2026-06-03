@@ -16,7 +16,7 @@ def run():
     settings.update(config.get('settings'))
     process = CrawlerProcess(settings)
     process.crawl(spider,**{'name':name})
-    process.strart()
+    process.start()
 
 if __name__ == '__main__':
     run()
