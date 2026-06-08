@@ -32,6 +32,7 @@ public:
 private:
     int i;
 };
+
 typedef struct _st_Param
 {
     Base* base;

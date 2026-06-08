@@ -139,11 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClassThread.cpp" />
     <ClCompile Include="Index.cpp" />
     <ClCompile Include="MultiThread.cpp" />
     <ClCompile Include="PrintABC.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClassThread.h" />
     <ClInclude Include="MultiThread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -2,7 +2,8 @@
 
 int main()
 {
-    PrintABC();
+    //PrintABC();
+    ClassThread1();
 
     return 0;
 }
