@@ -1,5 +1,7 @@
+import json
 import scrapy
 from scrapy import Request,Spider
+from scrapyCompositeDemo.items import BookItem
 
 class BookSpider(scrapy.Spider):
     name = "book"
@@ -13,4 +15,16 @@ class BookSpider(scrapy.Spider):
             yield Request(url,callback=self.parse_index)
 
     def parse_index(self, response):
-        print("parse_index",response)
+        data = json.loads(response.text)
+        results = data.get('results',[])
+        for result in results:
+            id = result.get('id')
+            url = f'{self.base_url}/api/book/{id}'
+            yield Request(url,callback=self.parse_detail,priority=2)
+
+    def parse_detail(self,response):
+        data = json.loads(response.text)
+        item = BookItem()
+        for field in item.fields:
+            item[field] = data.get(field)
+        yield item

@@ -48,7 +48,10 @@ DOWNLOAD_DELAY = 1
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    "scrapyCompositeDemo.middlewares.AuthorizationMiddleware": 543,
+   "scrapyCompositeDemo.middlewares.ProxyMiddleware": 544,
 }
+
+TWISTED_REACTOR = 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
