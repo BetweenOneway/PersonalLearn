@@ -98,3 +98,9 @@ class ScrapycompositedemoDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+class AuthorizationMiddleware(object):
+    authorization='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNzgxMDE1MTQ1LCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsIm9yaWdfaWF0IjoxNzgwOTcxOTQ1fQ.JMZpuSZM7Js26Wk0jLXwDuiG1jvGiSvlsM1ndmdod94'
+
+    def process_request(self,request,spider):
+        request.headers['authorization'] = self.authorization
