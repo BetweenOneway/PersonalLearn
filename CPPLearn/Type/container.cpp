@@ -7,7 +7,6 @@
 #include <array>
 #include <unordered_map>
 #include <tuple>
-using namespace std;
 
 #include "container.h"
 namespace CONTAINER_TEST {
@@ -25,7 +24,7 @@ template <typename T>  struct ST {
 	}
 	ST(const ST& ref)
 	{
-		cout << "call copy constructor" << endl;
+		std::cout << "call copy constructor" << std::endl;
 		this->x = ref.x;
 		this->y = ref.y;
 		this->z = ref.z;
@@ -34,31 +33,31 @@ template <typename T>  struct ST {
 
 void test()
 {
-	vector<int> vec{ 1,2,3,4,5,6,7,8,9 };
-	auto result = minmax_element(vec.begin(), vec.end(), [](int l, int r) {return l < r; });
-	cout << *result.first << "," << *result.second << endl;
+	std::vector<int> vec{ 1,2,3,4,5,6,7,8,9 };
+	auto result = std::minmax_element(vec.begin(), vec.end(), [](int l, int r) {return l < r; });
+	std::cout << *result.first << "," << *result.second << std::endl;
 }
 
 void test1()
 {
 	for (int i = 0; i < 10 && i != 5; i++)
 	{
-		cout << i << endl;
+		std::cout << i << std::endl;
 	}
 }
 
 void test2()
 {
 	struct ST<int> sti { 1, 2, 3 };
-	cout << sti[0] << " " << sti[1] << " " << sti[2] << endl;
+	std::cout << sti[0] << " " << sti[1] << " " << sti[2] << std::endl;
 }
 
 void test3()
 {
 	ST<int> st1{ 1,2,3 };
 	ST<int> st2{ 4,5,6 };
-	vector<ST<int>> vecSt;
-	cout << "start push_back" << endl;
+	std::vector<ST<int>> vecSt;
+	std::cout << "start push_back" << std::endl;
 	vecSt.push_back(st1);
 	vecSt.push_back(st2);
 
@@ -66,11 +65,11 @@ void test3()
 
 void test4()
 {
-    vector<vector<int>> vecContainer;
+    std::vector<std::vector<int>> vecContainer;
     //是vecContainer有了30个容量
     vecContainer.resize(30);
 
-    vector<int> veci;
+    std::vector<int> veci;
     veci.insert(veci.end(),5);
     veci.insert(veci.end(), 10);
 
@@ -86,26 +85,26 @@ void test4()
 */
 void test5()
 {
-    vector<int> vint;
+    std::vector<int> vint;
     for (int i = 0; i < 10; i++)
     {
         vint.push_back(i);
     }
     for (auto i : vint)
     {
-        cout << i << "\t";
+        std::cout << i << "\t";
     }
-    cout << endl;
+    std::cout << std::endl;
 }
 
 void testClear()
 {
-    vector<int> vec{ 1,2,3,4 };
+    std::vector<int> vec{ 1,2,3,4 };
     int size = vec.size();
-    cout << "before clear size=" << size << endl;
+    std::cout << "before clear size=" << size << std::endl;
     vec.clear();
     size = vec.size();
-    cout << "after clear size=" << size << endl;
+    std::cout << "after clear size=" << size << std::endl;
 
 }
 
@@ -142,7 +141,7 @@ public:
     }
 private:
     unsigned int capacity;
-    stack<T1> container;
+    std::stack<T1> container;
 };
 
 //栈不支持固定大小
@@ -157,7 +156,7 @@ void testStack()
     int all = rs.size();
     for (int i = 0; i < all; i++)
     {
-        cout << rs.top() << endl;
+        std::cout << rs.top() << std::endl;
         rs.pop();
     }
 }
@@ -197,7 +196,7 @@ public:
 private:
     //对于基础类型 默认是大顶堆
     //等同于priority_queue<int, vector<int>, less<int> >
-    priority_queue<T1> container;
+    std::priority_queue<T1> container;
     unsigned int capacity;
 };
 
@@ -212,7 +211,7 @@ void testPriorityQueue()
     int all = rpq.size();
     for (int i = 0; i < all; i++)
     {
-        cout << rpq.top() << endl;
+        std::cout << rpq.top() << std::endl;
         rpq.pop();
     }
 }
@@ -255,7 +254,7 @@ public:
         return container.empty();
     }
 private:
-    queue<T1> container;
+    std::queue<T1> container;
     unsigned int capacity;
 };
 
@@ -272,7 +271,7 @@ void testQueue()
     int all = rq.size();
     while (!rq.empty())
     {
-        cout << rq.front() << endl;
+        std::cout << rq.front() << std::endl;
         rq.pop();
     }
 }
@@ -282,7 +281,7 @@ void testVectorPointer()
     std::vector<int> vi{ 1,2,3 };
     int* p = &(vi.front());
 
-    cout << p << endl;
+    std::cout << p << std::endl;
 }
 
 void testVectorAddress()
@@ -293,20 +292,20 @@ void testVectorAddress()
     vec.push_back(j);
 
     int* p = &(vec.front());
-    cout << p << endl;
+    std::cout << p << std::endl;
 }
 
 class testDemo
 {
 public:
     testDemo(int num) :num(num) {
-        std::cout << "调用构造函数" << endl;
+        std::cout << "调用构造函数" << std::endl;
     }
     testDemo(const testDemo& other) :num(other.num) {
-        std::cout << "调用拷贝构造函数" << endl;
+        std::cout << "调用拷贝构造函数" << std::endl;
     }
     testDemo(testDemo&& other) :num(other.num) {
-        std::cout << "调用移动构造函数" << endl;
+        std::cout << "调用移动构造函数" << std::endl;
     }
 
     testDemo& operator=(const testDemo& other);
@@ -320,14 +319,14 @@ testDemo& testDemo::operator=(const testDemo& other) {
 
 void testVectorEfficent()
 {
-    vector<testDemo> v1,v2;
+    std::vector<testDemo> v1,v2;
     v1.clear();
     v2.clear();
 
-    vector<testDemo> src{ 1,2,3,4 };
-    cout << "=======case 1========" << endl;
+    std::vector<testDemo> src{ 1,2,3,4 };
+    std::cout << "=======case 1========" << std::endl;
     v1.insert(v1.end(), src.begin(), src.end());
-    cout << "=====case 2======" << endl;
+    std::cout << "=====case 2======" << std::endl;
     for (auto& el : src)
     {
         v2.emplace_back(el);
@@ -339,48 +338,48 @@ void testVectorInsert()
     auto printVector = [&](const std::vector<int>& vec) {
         for (auto& el : vec)
         {
-            cout << el << " ";
+            std::cout << el << " ";
         }
-        cout << endl;
+        std::cout << std::endl;
     };
     //insert表示的意思是在指定位置之前插入 insertBefore
     //是否可以在空的vector前插入 可以
-    vector<int> ve;
+    std::vector<int> ve;
     for (int i = 0; i < 10; i++)
     {
         ve.insert(ve.begin(), i);
     }
     for (auto val : ve)
     {
-        cout << val << " ";
+        std::cout << val << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
 
     {
         //测试是否可以在空容器后插入 => 可以
-        vector<int> ve;
+        std::vector<int> ve;
         ve.clear();
 
-        vector<int> v1{ 1,2,3,4 };
+        std::vector<int> v1{ 1,2,3,4 };
 
         ve.insert(ve.end(), v1.begin(), v1.end());
 
         printVector(ve);
     }
 
-    vector<int> v(5, 5);
-    vector<int> v1{ 1,2,3,4 };
+    std::vector<int> v(5, 5);
+    std::vector<int> v1{ 1,2,3,4 };
     v.insert(v.begin(), v1.begin(), v1.begin() + 3);
 
     for (auto val : v)
     {
-        cout << val << " ";
+        std::cout << val << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
 
     //插入10个5
     //vector<int> vi(10,5);
-    vector<int> vi;
+    std::vector<int> vi;
     for (int i = 0; i < 10; i++)
     {
         vi.push_back(i);
@@ -388,9 +387,9 @@ void testVectorInsert()
 
     for (auto val : vi)
     {
-        cout << val << " ";
+        std::cout << val << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
     auto it = vi.begin();
     advance(it, 3);
     //在给定的位置前插入
@@ -398,25 +397,25 @@ void testVectorInsert()
     it = vi.begin();
     advance(it, 3);
     vi.insert(it, 5);
-    cout << vi.size() << ": ";
+    std::cout << vi.size() << ": ";
     for (auto val : vi)
     {
-        cout << val << " ";
+        std::cout << val << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
 
     //
-    vector<int> vi1(10, 1);
-    vector<int> vi2{ 11,22,33,44,55,66 };
+    std::vector<int> vi1(10, 1);
+    std::vector<int> vi2{ 11,22,33,44,55,66 };
     it = vi1.begin();
     advance(it, 3);
     //[)
     vi1.insert(it, vi2.begin() + 2, vi2.begin() + 4);
     for (auto& val : vi1)
     {
-        cout << val << " ";
+        std::cout << val << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
 
 }
 
@@ -432,9 +431,9 @@ void testVectorErase()
     vec.erase(vec.begin() + 2);
     for (auto& val : vec)
     {
-        cout << val << " ";
+        std::cout << val << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
 }
 
 /*
@@ -443,13 +442,13 @@ void testVectorErase()
 */
 void testVectorRange()
 {
-    vector<int> vi(10, 1);
+    std::vector<int> vi(10, 1);
     for (int i = 0; i < 20; i++)
     {
-        cout << vi[i] << endl;
+        std::cout << vi[i] << std::endl;
     }
-    //cout << vi[10] << endl;
-    //cout << vi.at(10) << endl;
+    //std::cout << vi[10] << std::endl;
+    //std::cout << vi.at(10) << std::endl;
 }
 
 void testVectorConstruct()
@@ -469,7 +468,7 @@ void testVectorConstruct()
 
     for (const auto& num : v2)
     {
-        cout << num << ' ';
+        std::cout << num << ' ';
     }
     std::cout << std::endl;
 }
@@ -481,12 +480,12 @@ void CallFunc(std::pair<std::vector<int>, std::vector<int>>&& p)
     p1.second = std::move(p.second);
     for (auto& val : p1.first)
     {
-        cout << val << endl;
+        std::cout << val << std::endl;
     }
 
     for (auto& val : p1.second)
     {
-        cout << val << endl;
+        std::cout << val << std::endl;
     }
 }
 
@@ -496,7 +495,7 @@ void testPair()
     CallFunc(std::move(p));
 
     std::pair<std::vector<int>, std::vector<int>> p1{};
-    cout << p1.first.size() << " " << p1.second.size() << endl;
+    std::cout << p1.first.size() << " " << p1.second.size() << std::endl;
 }
 
 /*
@@ -505,10 +504,10 @@ void testPair()
 */
 void compareVectorArray()
 {
-    array<int, 10> arr;
-    vector<int> vec(10);
-    cout << "vec.size = "<< vec.size() << ",vec.cap = " << vec.capacity() << endl;
-    cout << "arr.size = "<<arr.size() <<",arr.max_size() = " << arr.max_size() << endl;
+    std::array<int, 10> arr;
+    std::vector<int> vec(10);
+    std::cout << "vec.size = "<< vec.size() << ",vec.cap = " << vec.capacity() << std::endl;
+    std::cout << "arr.size = "<<arr.size() <<",arr.max_size() = " << arr.max_size() << std::endl;
 }
 
 /*测试对于自定义变量 unordered_map是否必须自定义hash函数？

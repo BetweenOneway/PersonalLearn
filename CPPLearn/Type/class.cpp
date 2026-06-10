@@ -1,5 +1,4 @@
 ﻿#include <iostream>
-using namespace std;
 #include "class.h"
 
 namespace CLASS_TEST {
@@ -52,7 +51,7 @@ namespace CLASS_TEST {
 
     void TestPolymorphism()
     {
-        shared_ptr<BaseClass> ptr(new PublicInheritClassLevel2_1());
+        std::shared_ptr<BaseClass> ptr(new PublicInheritClassLevel2_1());
         ptr->PublicVirtualFunction(6);
         ptr->BaseClassProcess();
         ptr->PublicVirtualFunction2();
@@ -81,45 +80,45 @@ namespace CLASS_TEST {
     {
 	    Oper op1(2);
 	    Oper op2(3);
-	    cout << (op1*op2).get_m() << endl;
+        std::cout << (op1*op2).get_m() << std::endl;
 	    op1 = op1*op2;
-	    cout << op1.get_m() << endl;
+        std::cout << op1.get_m() << std::endl;
 	    system("pause");
 
 	    return 0;
     }
     void Call()
     {
-        cout << "global Call" << endl;
+        std::cout << "global Call" << std::endl;
     }
 
     void classBase::SayHello(){
-            cout << "base say Hello" << endl;
+        std::cout << "base say Hello" << std::endl;
         }
 
     void classBase::SayHi()
     {
-        cout << "base say Hi" << endl;
+        std::cout << "base say Hi" << std::endl;
     }
 
     void child::SayHi(){
-        cout << "child say Hi" << endl;
+        std::cout << "child say Hi" << std::endl;
         //可以通过这种方式来调用父类的函数
         classBase::SayHi();
     }
     void child::SayHello()const
     {
-        cout << "child say Hello" << endl;
+        std::cout << "child say Hello" << std::endl;
     }
     void child::Call()
     {
-        cout << "child Call" << endl;
+        std::cout << "child Call" << std::endl;
     }
 
     void child::getNum()
     {
-        cout <<"m_num=" << m_num << endl;
-        cout << "m_num=" << classBase::m_num << endl;
+        std::cout <<"m_num=" << m_num << std::endl;
+        std::cout << "m_num=" << classBase::m_num << std::endl;
     }
 
     void testClassScope()
@@ -135,7 +134,7 @@ namespace CLASS_TEST {
         //newChild.SayHello();
         //newChild.test();
 
-        shared_ptr< classBase> ptr(new child);
+        std::shared_ptr< classBase> ptr(new child);
         //ptr->test();//global call
         //ptr->SayHello();//base say hello
         ptr->SayHi();//child say hi
@@ -159,13 +158,13 @@ namespace CLASS_TEST {
             //因为此时该地址已经被释放
             int* p = new(add) int[4]{6,7,8,9};
         }
-        catch (exception& ex)
+        catch (std::exception& ex)
         {
-            cout << ex.what() << endl;
+            std::cout << ex.what() << std::endl;
         }
 
-        cout << *add[0] << endl;
-        cout << *add[1] << endl;
+        std::cout << *add[0] << std::endl;
+        std::cout << *add[1] << std::endl;
 
     }
 
@@ -174,7 +173,7 @@ namespace CLASS_TEST {
         class Base {
         public:
             void BaseFunc() {
-                cout << __FUNCTION__ << endl;
+                std::cout << __FUNCTION__ << std::endl;
             }
         };
         class CommonBase :virtual public Base{
@@ -185,15 +184,15 @@ namespace CLASS_TEST {
             };
         protected:
             virtual void SubCall() {
-                cout << "Common Base SubCall" << endl;
-                cout << __FUNCTION__ << endl;
+                std::cout << "Common Base SubCall" << std::endl;
+                std::cout << __FUNCTION__ << std::endl;
             }
         };
         class CommonFunc :virtual public Base{
         public:
             void commonFunc()
             {
-                cout << __FUNCTION__ << endl;
+                std::cout << __FUNCTION__ << std::endl;
                 BaseFunc();
             }
         };
@@ -201,23 +200,23 @@ namespace CLASS_TEST {
         class Impl : public CommonBase, public CommonFunc {
         public:
             virtual void SubCall()override {
-                cout << __FUNCTION__ << endl;
+                std::cout << __FUNCTION__ << std::endl;
                 commonFunc();
             }
         };
 
-        shared_ptr<CommonBase> implPtr = std::make_shared<Impl>();
+        std::shared_ptr<CommonBase> implPtr = std::make_shared<Impl>();
         implPtr->Call();
     }
 
     void Child1::func()
     {
-        std::cout << "Child1 func" << endl;
+        std::cout << "Child1 func" << std::endl;
     }
 
     void Child2::func()
     {
-        std::cout << "Child2 func" << endl;
+        std::cout << "Child2 func" << std::endl;
     }
 
     void testFunc()
@@ -240,7 +239,7 @@ namespace CLASS_TEST {
 
     void Class1::func()
     {
-        cout << m_num << endl;
+        std::cout << m_num << std::endl;
     }
 
     void Class2::init(const std::shared_ptr<Class1> ptr)
@@ -293,11 +292,11 @@ namespace CLASS_TEST {
     void Version1::Init()
     {
         InitDataBase(30);
-        std::cout <<"num="<< num << endl;
+        std::cout <<"num="<< num << std::endl;
         InitAlgorithm();
-        std::cout << "num=" << num << endl;
+        std::cout << "num=" << num << std::endl;
         InitCommonFunction();
-        std::cout << "num=" << num << endl;
+        std::cout << "num=" << num << std::endl;
     }
 
     void testLozengeInherit()
@@ -322,7 +321,7 @@ namespace CLASS_TEST {
 
     void InheritClass1::Output1()
     {
-        cout <<"InheritClass1::Output1:"<< m_num << endl;
+        std::cout <<"InheritClass1::Output1:"<< m_num << std::endl;
     }
 
     InheritClass2::InheritClass2() :Base2(20)
@@ -332,12 +331,12 @@ namespace CLASS_TEST {
 
     void InheritClass2::Output2()
     {
-        cout << m_num << endl;
+        std::cout << m_num << std::endl;
     }
 
     void ActClass::Output()
     {
-        cout <<"ActClass:"<< m_num << endl;
+        std::cout <<"ActClass:"<< m_num << std::endl;
         Output1();
     }
 
@@ -349,7 +348,7 @@ namespace CLASS_TEST {
 
     void ClassWithRefMem::PrintNum()
     {
-        cout << "m_i=" << m_i << endl;
+        std::cout << "m_i=" << m_i << std::endl;
     }
 
     void ClassWithRefMem::SetNum(int num)
@@ -369,7 +368,7 @@ namespace CLASS_TEST {
         obj.PrintNum();
 
         obj.SetNum(30);
-        cout << a << endl;
+        std::cout << a << std::endl;
     }
 
     void testAccess()
@@ -421,7 +420,7 @@ namespace CLASS_TEST {
     class Base {
     public:
         void accessA(A& a) {
-            cout << "Base访问A的私有成员：" << a.secret << endl; // 合法
+            std::cout << "Base访问A的私有成员：" << a.secret << std::endl; // 合法
         }
     };
 

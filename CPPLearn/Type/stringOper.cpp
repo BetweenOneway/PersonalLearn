@@ -75,7 +75,7 @@ namespace STRINGOPER{
         cout << 7 << endl;
         std::wstring s = ss.str();
 
-        cout << s.c_str() << endl;
+        //std::cout << s.c_str() << endl;
     }
 
     int testStringOper()
@@ -143,7 +143,7 @@ namespace STRINGOPER{
         }
         for (auto& elem : subStrs)
         {
-            cout << elem.c_str() << endl;
+            //std::cout << elem.c_str() << endl;
         }
     }
 
