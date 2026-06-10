@@ -2,3 +2,5 @@
 int Decorator1();
 int DecoratorChain();
 int Decorator2();
+int Decorator3();
+int CompositeTest();

@@ -27,6 +27,9 @@
     <ClCompile Include="Decorator1.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Composite.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DecoratorHeader.h">

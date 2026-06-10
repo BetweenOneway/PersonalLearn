@@ -1,6 +1,6 @@
 ﻿#include <iostream>
 #include <string>
-
+#include <memory>
 using namespace std;
 
 namespace DECORATOR_1 {
@@ -72,6 +72,84 @@ namespace DECORATOR_1 {
         }
     };
 }
+
+namespace DECORATOR_2 {
+    class Component {
+    public:
+        virtual void Operation() = 0;
+        // 基类统一声明 SetComponent，支持链式
+        virtual Component* SetComponent(Component* comp) = 0;
+        virtual ~Component() = default;
+
+    protected:
+        Component* component = nullptr;
+    };
+
+    // 具体组件：实现 SetComponent，支持链式
+    class ConcreteComponent : public Component {
+    public:
+        void Operation() override {
+            if (component) component->Operation();
+            cout << "具体对象的操作" << endl;
+        }
+
+        Component* SetComponent(Component* comp) override {
+            component = comp;
+            return comp;
+        }
+
+        ~ConcreteComponent() override {
+            delete component;
+        }
+    };
+
+    // 抽象装饰器
+    class Decorator : public Component {
+    public:
+        void Operation() override {
+            if (component) component->Operation();
+        }
+
+        Component* SetComponent(Component* comp) override {
+            component = comp;
+            return comp;
+        }
+
+        ~Decorator() override {
+            delete component;
+        }
+    };
+
+    // 装饰A
+    class ConcreteDecoratorA : public Decorator {
+    private:
+        string addedState;
+    public:
+        ConcreteDecoratorA() {
+            addedState = "A";
+        }
+        void Operation() override {
+            Decorator::Operation();
+            addedState = "New State";
+            cout << "具体装饰对象A的操作" << endl;
+        }
+    };
+
+    // 装饰B
+    class ConcreteDecoratorB : public Decorator {
+    private:
+        string addedState;
+    public:
+        ConcreteDecoratorB() {
+            addedState = "B";
+        }
+        void Operation() override {
+            Decorator::Operation();
+            cout << "具体装饰对象B的操作" << endl;
+        }
+    };
+}
+
 // 客户端主函数
 int Decorator2() {
     // 创建对象（C++ 使用 new 创建堆对象）
@@ -80,6 +158,12 @@ int Decorator2() {
     DECORATOR_1::ConcreteDecoratorB* d2 = new DECORATOR_1::ConcreteDecoratorB();
 
     // 装饰链：d2 包装 d1，d1 包装 c
+    /*
+    * 输出内容
+    * 具体对象的操作
+    * 具体装饰对象A的操作
+    * 具体装饰对象B的操作
+    */
     d1->SetComponent(c);
     d2->SetComponent(d1);
     d2->Operation();
@@ -89,5 +173,22 @@ int Decorator2() {
     delete d1;
     delete c;
 
+    return 0;
+}
+
+int Decorator3() {
+    DECORATOR_2::ConcreteComponent* c = new DECORATOR_2::ConcreteComponent();
+    DECORATOR_2::ConcreteDecoratorA* d1 = new DECORATOR_2::ConcreteDecoratorA();
+    DECORATOR_2::ConcreteDecoratorB* d2 = new DECORATOR_2::ConcreteDecoratorB();
+
+    c->SetComponent(d1)->SetComponent(d2);
+    /*
+    * 具体装饰对象B的操作
+    * 具体装饰对象A的操作
+    * 具体对象的操作
+    */
+    c->Operation();
+
+    delete c;
     return 0;
 }

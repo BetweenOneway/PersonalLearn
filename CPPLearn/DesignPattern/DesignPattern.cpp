@@ -100,8 +100,9 @@ int Decorator0() {
 
 int main()
 {
-    Decorator1();
-    Decorator2();
-
+    //Decorator1();
+    //Decorator2();
+    //Decorator3();
+    CompositeTest();
     return 0;
 }
