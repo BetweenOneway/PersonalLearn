@@ -11,13 +11,13 @@ namespace STRINGOPER {
     template <typename T>
     std::vector<std::basic_string<T>> process_string(const std::basic_string<T>& str, const std::basic_string<T>& delimiters)
     {
-        if (is_same_v<char, T>)
+        if (std::is_same_v<char, T>)
         {
-            cout << "char type" << endl;
+            std::cout << "char type" << std::endl;
         }
-        else if (is_same_v<wchar_t, T>)
+        else if (std::is_same_v<wchar_t, T>)
         {
-            cout << "wchar type" << endl;
+            std::cout << "wchar type" << std::endl;
         }
         std::vector<std::basic_string<T>> result;
         if (str.empty()) return result; // 空字符串直接返回
