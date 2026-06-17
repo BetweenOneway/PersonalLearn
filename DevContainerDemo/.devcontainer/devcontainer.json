@@ -1,0 +1,45 @@
+{
+    // DevContainer 名称，显示在 VSCode 窗口标题中
+    "name": "Python Dev Demo",
+
+    // 使用自定义 Dockerfile 构建开发环境
+    // context 设为 ".."，让 Dockerfile 能访问项目根目录的 requirements.txt
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "..",
+        "args": {
+            "PYTHON_VERSION": "3.11"
+        }
+    },
+
+    // ==================== VSCode 定制 ====================
+    "customizations": {
+        "vscode": {
+            // 进入容器后自动安装的扩展
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance"
+            ],
+            // 容器内的编辑器设置
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "editor.formatOnSave": true,
+                "files.insertFinalNewline": true
+            }
+        }
+    },
+
+    // ==================== 端口转发 ====================
+    // 将容器内端口映射到主机，方便浏览器访问
+    "forwardPorts": [8000],
+
+    // ==================== 挂载与工作区 ====================
+    // 将宿主机项目目录挂载到容器内
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/DevContainerDemo,type=bind,consistency=cached",
+    "workspaceFolder": "/workspaces/DevContainerDemo",
+
+    // ==================== 其他配置 ====================
+    "runArgs": ["--name", "DevContainerDemo"],
+    "remoteUser": "vscode",
+    "shutdownAction": "stopContainer"
+}
