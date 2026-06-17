@@ -7,11 +7,13 @@ services:
     container_name: compose_web
     ports:
       - "8000:5000"
-    environment:
-      - FLASK_ENV=development
-      - REDIS_HOST=redis
+    env_file:
+      - dev.env
     depends_on:
-      - redis
+      redis:
+        condition: service_started
+      mysql:
+        condition: service_healthy
     volumes:
       - ./app:/app
 
@@ -24,5 +26,23 @@ services:
     volumes:
       - redis_data:/data
 
+  # ==================== MySQL 数据库 ====================
+  mysql:
+    image: mysql:8.0
+    container_name: compose_mysql
+    ports:
+      - "3306:3306"
+    env_file:
+      - dev.env
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${MYSQL_USER:-root}", "-p${MYSQL_ROOT_PASSWORD:-root123}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
 volumes:
   redis_data:
+  mysql_data:

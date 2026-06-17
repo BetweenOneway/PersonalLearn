@@ -4,3 +4,7 @@ __pycache__/
 
 # Docker
 redis_data/
+
+# 环境变量（含敏感信息，不提交）
+# .env
+# dev.env — 开发环境变量文件，当前为 Demo 用途，暂不忽略以便提交查看
