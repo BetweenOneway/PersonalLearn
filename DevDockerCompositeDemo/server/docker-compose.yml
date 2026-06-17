@@ -1,0 +1,75 @@
+version: "3.9"
+
+# =============================================================================
+# Server DevContainer — Node.js/Express 后端开发环境
+#
+# 使用方式：
+#   1. 先启动基础设施：cd .. && docker-compose -f docker-compose.infra.yml up -d
+#   2. 用 VSCode 打开 server/ 目录 → Reopen in Container
+#   3. 在容器终端执行 npm start 启动后端
+# =============================================================================
+
+services:
+  # ==================== 后端 — Node.js/Express（DevContainer 连接目标） ====================
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: devcompose_server
+    env_file:
+      - ../dev.env
+    depends_on:
+      redis:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+    volumes:
+      # 源码挂载，实现热重载
+      - .:/app:cached
+      # 持久化 VSCode 扩展
+      - vscode-extensions:/root/.vscode-server/extensions
+      - vscode-extensions-insiders:/root/.vscode-server-insiders
+    command: sleep infinity
+    networks:
+      - devcompose_net
+
+  # ==================== Redis 缓存（引用基础设施网络） ====================
+  redis:
+    image: redis:7-alpine
+    container_name: devcompose_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - devcompose_net
+
+  # ==================== MySQL 数据库（引用基础设施网络） ====================
+  mysql:
+    image: mysql:8.0
+    container_name: devcompose_mysql
+    ports:
+      - "3306:3306"
+    env_file:
+      - ../dev.env
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ../init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${MYSQL_USER:-root}", "-p${MYSQL_ROOT_PASSWORD:-root123}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - devcompose_net
+
+volumes:
+  redis_data:
+  mysql_data:
+  vscode-extensions:
+  vscode-extensions-insiders:
+
+networks:
+  devcompose_net:
+    name: devcompose_net
+    external: true

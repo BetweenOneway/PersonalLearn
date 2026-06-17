@@ -1,0 +1,19 @@
+# =============================================================================
+# Client Dockerfile.dev — Vue 3 + Vite 开发模式（热重载）
+#
+# 开发时使用此 Dockerfile，源码通过 volume 挂载，支持 HMR
+# 生产部署使用 Dockerfile（多阶段构建 + Nginx）
+# =============================================================================
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# 预装依赖
+COPY package.json .
+RUN npm install
+
+EXPOSE 5173
+
+# 启动 Vite 开发服务器
+CMD ["npm", "run", "dev"]

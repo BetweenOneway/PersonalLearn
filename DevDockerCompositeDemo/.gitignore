@@ -1,0 +1,16 @@
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Vue + Vite 构建产物
+client/dist/
+
+# Docker
+redis_data/
+mysql_data/
+
+# IDE
+.vscode/
+
+# 环境变量（含敏感信息）
+# dev.env 当前为 Demo 用途，暂不忽略以便查看

@@ -1,0 +1,54 @@
+{
+    "name": "Server — Node.js/Express 后端",
+
+    // ==================== 核心：dockerComposeFile 模式 ====================
+    // 指向 server 目录下的 docker-compose.yml
+    "dockerComposeFile": "docker-compose.yml",
+
+    // VSCode 连接到 server 容器进行后端开发
+    "service": "server",
+
+    // 容器内工作目录
+    "workspaceFolder": "/app",
+
+    // ==================== VSCode 定制 ====================
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "ms-azuretools.vscode-docker",
+                "cweijan.vscode-redis-client",
+                "cweijan.vscode-mysql-client2"
+            ],
+            "settings": {
+                "editor.formatOnSave": true,
+                "editor.rulers": [120],
+                "files.insertFinalNewline": true,
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "javascript.preferences.importModuleSpecifier": "relative"
+            }
+        }
+    },
+
+    // ==================== 端口转发 ====================
+    // server 运行在 3000 端口，转发到宿主机
+    "forwardPorts": [3000],
+
+    "portsAttributes": {
+        "3000": {
+            "label": "Node.js API",
+            "onAutoForward": "notify"
+        }
+    },
+
+    // ==================== 生命周期钩子 ====================
+    "postCreateCommand": "cd /app && npm install",
+
+    "postStartCommand": "echo '✅ Server DevContainer 就绪！' && echo '  Redis: redis:6379' && echo '  MySQL: mysql:3306' && echo '🚀 npm start 启动后端 Node.js 服务' && echo '📡 API: http://localhost:3000'",
+
+    // ==================== 其他配置 ====================
+    "remoteUser": "root",
+    "shutdownAction": "stopCompose",
+    "overrideCommand": false
+}
