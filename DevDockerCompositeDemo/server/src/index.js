@@ -60,6 +60,17 @@ const CACHE_TTL = 15 * 60; // 900 秒
  *
  * 请求体：{ username: string, password: string }
  */
+/**
+ * 查询用户的上次登录时间（排除最新的一条记录）
+ */
+async function getLastLoginTime(username) {
+  const [rows] = await mysqlPool.query(
+    "SELECT login_time FROM login_records WHERE username = ? ORDER BY login_time DESC LIMIT 1, 1",
+    [username]
+  );
+  return rows.length > 0 ? rows[0].login_time : null;
+}
+
 app.post("/api/login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -73,8 +84,12 @@ app.post("/api/login", async (req, res) => {
     }
 
     const cacheKey = CACHE_PREFIX + username;
+    const loginTime = new Date();
 
-    // ========== 第一步：检查 Redis 缓存 ==========
+    // ========== 第一步：查询上次登录时间（在写库之前查） ==========
+    const lastLoginTime = await getLastLoginTime(username);
+
+    // ========== 第二步：检查 Redis 缓存 ==========
     const cached = await redisClient.get(cacheKey);
 
     if (cached) {
@@ -86,13 +101,13 @@ app.post("/api/login", async (req, res) => {
         data: {
           username: cachedData.username,
           loginTime: cachedData.loginTime,
+          lastLoginTime: lastLoginTime ? lastLoginTime.toISOString() : loginTime.toISOString(),
           fromCache: true,
         },
       });
     }
 
-    // ========== 第二步：缓存未命中，写入 MySQL ==========
-    const loginTime = new Date();
+    // ========== 第三步：缓存未命中，写入 MySQL ==========
     const connection = await mysqlPool.getConnection();
 
     try {
@@ -101,7 +116,7 @@ app.post("/api/login", async (req, res) => {
         [username, password, loginTime]
       );
 
-      // ========== 第三步：写入 Redis 缓存（15 分钟 TTL） ==========
+      // ========== 第四步：写入 Redis 缓存（15 分钟 TTL） ==========
       const cacheData = {
         username,
         loginTime: loginTime.toISOString(),
@@ -115,6 +130,7 @@ app.post("/api/login", async (req, res) => {
         data: {
           username,
           loginTime: loginTime.toISOString(),
+          lastLoginTime: lastLoginTime ? lastLoginTime.toISOString() : loginTime.toISOString(),
           fromCache: false,
         },
       });

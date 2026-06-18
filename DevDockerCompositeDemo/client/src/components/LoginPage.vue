@@ -70,6 +70,7 @@ async function handleLogin() {
         query: {
           username: data.data.username,
           loginTime: data.data.loginTime,
+          lastLoginTime: data.data.lastLoginTime || "",
           fromCache: data.data.fromCache ? "1" : "0",
         },
       });

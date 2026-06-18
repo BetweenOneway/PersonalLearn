@@ -8,12 +8,12 @@
     </span>
 
     <div class="info-card">
-      <div class="label">登录时间</div>
+      <div class="label">本次登录时间</div>
       <div class="value">{{ formattedLoginTime }}</div>
     </div>
     <div class="info-card">
-      <div class="label">当前时间</div>
-      <div class="value">{{ currentTime }}</div>
+      <div class="label">上次登录时间</div>
+      <div class="value">{{ formattedLastLoginTime }}</div>
     </div>
     <div class="info-card" v-if="fromCache">
       <div class="label">缓存说明</div>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
@@ -36,12 +36,12 @@ const router = useRouter();
 const username = ref(route.query.username || "");
 const fromCache = ref(route.query.fromCache === "1");
 const loginTime = ref(route.query.loginTime || "");
-const currentTime = ref("");
-let timer = null;
+const lastLoginTime = ref(route.query.lastLoginTime || "");
 
 const initial = computed(() => username.value.charAt(0).toUpperCase());
 
 const formattedLoginTime = computed(() => formatTime(loginTime.value));
+const formattedLastLoginTime = computed(() => formatTime(lastLoginTime.value));
 
 function formatTime(isoStr) {
   if (!isoStr) return "";
@@ -50,26 +50,14 @@ function formatTime(isoStr) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
-function updateTime() {
-  currentTime.value = formatTime(new Date().toISOString());
-}
-
 function logout() {
   router.push({ name: "login" });
 }
 
 onMounted(() => {
-  // 如果没有用户名，跳回登录页
   if (!username.value) {
     router.push({ name: "login" });
-    return;
   }
-  updateTime();
-  timer = setInterval(updateTime, 1000);
-});
-
-onBeforeUnmount(() => {
-  if (timer) clearInterval(timer);
 });
 </script>
 
