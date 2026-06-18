@@ -72,4 +72,4 @@ volumes:
 networks:
   devcompose_net:
     name: devcompose_net
-    external: true
+    driver: bridge

@@ -3,7 +3,7 @@
 
     // ==================== 核心：dockerComposeFile 模式 ====================
     // 指向 client 目录下的 docker-compose.yml
-    "dockerComposeFile": "docker-compose.yml",
+    "dockerComposeFile": "../docker-compose.yml",
 
     // VSCode 连接到 client 容器进行前端开发
     "service": "client",
