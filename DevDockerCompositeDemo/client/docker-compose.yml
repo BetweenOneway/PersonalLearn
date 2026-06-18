@@ -4,9 +4,12 @@ version: "3.9"
 # Client DevContainer — Vue 3 + Vite 前端开发环境
 #
 # 使用方式：
-#   1. 先启动基础设施：cd .. && docker-compose -f docker-compose.infra.yml up -d
+#   1. 先启动 Server DevContainer（含 redis/mysql 基础设施）
 #   2. 用 VSCode 打开 client/ 目录 → Reopen in Container
 #   3. Vite 开发服务器自动启动，支持 HMR 热更新
+#
+# 注意：redis 和 mysql 由 server/docker-compose.yml 统一管理，
+#       client 通过共享网络 devcompose_net 访问即可。
 # =============================================================================
 
 services:
@@ -29,43 +32,10 @@ services:
     networks:
       - devcompose_net
 
-  # ==================== Redis 缓存（引用基础设施网络） ====================
-  redis:
-    image: redis:7-alpine
-    container_name: devcompose_redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - devcompose_net
-
-  # ==================== MySQL 数据库（引用基础设施网络） ====================
-  mysql:
-    image: mysql:8.0
-    container_name: devcompose_mysql
-    ports:
-      - "3306:3306"
-    env_file:
-      - ../dev.env
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ../init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${MYSQL_USER:-root}", "-p${MYSQL_ROOT_PASSWORD:-root123}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-    networks:
-      - devcompose_net
-
 volumes:
-  redis_data:
-  mysql_data:
   vscode-extensions-client:
   vscode-extensions-client-insiders:
 
 networks:
   devcompose_net:
-    name: devcompose_net
-    driver: bridge
+    external: true
