@@ -2,9 +2,9 @@
 # Server DevContainer — Node.js/Express 后端开发环境
 #
 # 使用方式：
-#   1. 先启动基础设施：cd .. && docker-compose -f docker-compose.infra.yml up -d
-#   2. 用 VSCode 打开 server/ 目录 → Reopen in Container
-#   3. 在容器终端执行 npm start 启动后端
+#   1. 用 VSCode 打开 server/ 目录 → Reopen in Container
+#   2. 在容器终端执行 npm start 启动后端
+#   3. Redis + MySQL 已包含在此 compose 中，无需单独启动
 # =============================================================================
 
 services:

@@ -82,7 +82,6 @@ Client DevContainer          Server DevContainer
 ```
 DevDockerCompositeDemo/
 ├── docker-compose.yml              # 全量启动（不使用 DevContainer 时用）
-├── docker-compose.infra.yml        # 基础设施（Redis + MySQL）独立定义
 ├── dev.env                         # 共享环境变量
 ├── init.sql                        # MySQL 初始化
 │
