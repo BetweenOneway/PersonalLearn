@@ -53,8 +53,12 @@ sqldb.sequelize.sync({alter: true}).then(function() {
 请求路径 http://127.0.0.1:5050/user/login?lid=30&pname=dell
 */
 
+const PORT = process.env.PORT || process.env.SERVER_PORT || 18081;
+
 var app = express();
-var server = app.listen(18081);//这里监听的是请求的端口
+var server = app.listen(PORT, () => {
+    logger.info(`Server running on port ${PORT}`);
+});//这里监听的是请求的端口
 app.use(cors({
   origin:["http://localhost:8080","http://127.0.0.1:8080"]//这里的端口是指网页端口，并非请求端口
 }));//从此所有响应，自动带Access-Control-Allow-Origin:http://127.0.0.1:5500

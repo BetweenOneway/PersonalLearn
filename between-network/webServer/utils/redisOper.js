@@ -2,12 +2,15 @@ const process = require('node:process');
 
 const redis = require('redis');
 
+const REDIS_HOST = process.env.REDIS_HOST || '127.0.0.1';
+const REDIS_PORT = process.env.REDIS_PORT || '6379';
+
 class RedisOper {
     constructor(){
         this.redisClient = redis.createClient(
             {
-                port:'6379', 
-                host:'127.0.0.1',
+                port: REDIS_PORT,
+                host: REDIS_HOST,
                 connectTimeout: 10000,//超时时间10s
                 socket: 
                 {
