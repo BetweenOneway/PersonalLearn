@@ -1,0 +1,41 @@
+# =============================================================================
+# webClient Docker Compose — Vue 3 + Vite 前端开发环境
+#
+# 使用方式：
+#   1. 用 VSCode 打开 webClient/ 目录 → Reopen in Container
+#   2. 在容器终端执行 npm run dev 启动前端开发服务器
+#   3. 后端服务（webServer）需已在 between_network_net 网络中运行
+# =============================================================================
+
+services:
+  # ==================== 前端 — Vue 3 + Vite（DevContainer 连接目标） ====================
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: between_network_client
+    environment:
+      # 容器内通过 Docker 服务名访问后端
+      VITE_API_TARGET: http://server:18081
+    volumes:
+      # 源码挂载，实现热重载
+      - .:/app:cached
+      # 排除 node_modules 避免与容器内不一致
+      - /app/node_modules
+      # 持久化 VSCode 扩展
+      - vscode-extensions:/root/.vscode-server/extensions
+      - vscode-extensions-insiders:/root/.vscode-server-insiders
+    ports:
+      - "18080:18080"
+    command: sleep infinity
+    networks:
+      - between_network_net
+
+volumes:
+  vscode-extensions:
+  vscode-extensions-insiders:
+
+networks:
+  between_network_net:
+    # 使用 webServer 创建的外部网络，与后端共享网络
+    external: true
