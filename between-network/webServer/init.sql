@@ -147,4 +147,11 @@ SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_note WHERE `STATUS` = 1;
 -- 密码为 123456 的 md5 值
 INSERT IGNORE INTO `z_user` VALUES (0, 'test@163.com', 'e10adc3949ba59abbe56e057f20f883e', '测试', 'https://cdn.vuetifyjs.com/images/john.jpg', 0, '2023-05-05 15:03:33', 1, 1, '');
 
+-- ----------------------------
+-- 创建业务用户，仅授予 CRUD 权限
+-- ----------------------------
+CREATE USER IF NOT EXISTS 'cloudnote'@'%' IDENTIFIED BY 'cloudnote123';
+GRANT SELECT, INSERT, UPDATE, DELETE ON cloudnote.* TO 'cloudnote'@'%';
+FLUSH PRIVILEGES;
+
 SET FOREIGN_KEY_CHECKS = 1;

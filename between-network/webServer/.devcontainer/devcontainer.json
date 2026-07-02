@@ -1,5 +1,5 @@
 {
-    "name": "CloudNoteServer — Node.js/Express 后端",
+    "name": "between-network-web-server",
 
     // ==================== 核心：dockerComposeFile 模式 ====================
     // 指向 webServer 目录下的 docker-compose.yml
@@ -18,8 +18,7 @@
                 "dbaeumer.vscode-eslint",
                 "esbenp.prettier-vscode",
                 "ms-azuretools.vscode-docker",
-                "cweijan.vscode-redis-client",
-                "cweijan.vscode-mysql-client2"
+                "cweijan.vscode-database-client2"
             ],
             "settings": {
                 "editor.formatOnSave": true,

@@ -1,5 +1,5 @@
 {
-    "name": "webClient — Vue 3 + Vite 前端",
+    "name": "between-network-web-client",
 
     // ==================== 核心：dockerComposeFile 模式 ====================
     // 指向 webClient 目录下的 docker-compose.yml
