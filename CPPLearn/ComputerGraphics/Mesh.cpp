@@ -33,9 +33,25 @@ void Mesh::GetSimpMesh(VSSimpleMeshF& out) const
     }
 }
 
+std::vector<Vector3>& Mesh::GetVertices()
+{
+    return vVertice;
+}
+
+std::vector<Surf>& Mesh::GetSurfs()
+{
+    return vSurface;
+}
+
 void Mesh::WriteToFile(const char* szPath, ...) const
 {
 
+}
+
+void Mesh::Clear()
+{
+    this->vVertice.clear();
+    this->vSurface.clear();
 }
 
 

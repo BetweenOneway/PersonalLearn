@@ -123,6 +123,9 @@
     <ClCompile Include="Vector3.cpp">
       <Filter>源文件\实现</Filter>
     </ClCompile>
+    <ClCompile Include="testMesh.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MathUtil.h">
@@ -234,6 +237,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="MeshDefined.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="testMesh.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

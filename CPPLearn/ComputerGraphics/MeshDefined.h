@@ -1,5 +1,7 @@
 ﻿#pragma once
+#include <vector>
 #include "Vector3.h"
+#include "Type.h"
 
 template< class T1, class T2 = void, class T3 = void, class T4 = void, class T5 = void, class T6 = void >
 struct VSConstBuffer
@@ -83,3 +85,18 @@ struct TVSimpleMesh : TVSimpleGraph< IT >
 };
 
 typedef TVSimpleMesh< Vector3 >    VSSimpleMeshF;
+
+namespace NM_PMMESH
+{
+    struct VSMesh
+    {
+        std::vector<VFVECTOR3>   vVertice;
+        std::vector<VNVECTOR3UI> vSurface;
+
+        void Clear()
+        {
+            vVertice.clear();
+            vSurface.clear();
+        }
+    };
+}

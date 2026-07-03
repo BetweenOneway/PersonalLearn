@@ -171,6 +171,7 @@
     <ClCompile Include="testCommonFunctions.cpp" />
     <ClCompile Include="testLine.cpp" />
     <ClCompile Include="testLocation.cpp" />
+    <ClCompile Include="testMesh.cpp" />
     <ClCompile Include="testPlane.cpp" />
     <ClCompile Include="testQuaternion.cpp" />
     <ClCompile Include="testRay.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="testCommonFunctions.h" />
     <ClInclude Include="testLine.h" />
     <ClInclude Include="testLocation.h" />
+    <ClInclude Include="testMesh.h" />
     <ClInclude Include="testPlane.h" />
     <ClInclude Include="testQuaternion.h" />
     <ClInclude Include="testRay.h" />

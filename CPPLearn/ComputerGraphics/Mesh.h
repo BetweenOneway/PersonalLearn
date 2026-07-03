@@ -12,6 +12,9 @@ public:
     VSSimpleMeshF GetSimpMesh() const;
     void WriteToFile(const char* szPath, ...) const;
     void GetSimpMesh(VSSimpleMeshF& out) const;
+    std::vector<Vector3>& GetVertices();
+    std::vector<Surf>& GetSurfs();
+    void Clear();
 private:
     // 成员数据
     std::vector<Vector3> vVertice;
