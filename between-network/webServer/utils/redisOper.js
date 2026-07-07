@@ -4,17 +4,20 @@ const redis = require('redis');
 
 const REDIS_HOST = process.env.REDIS_HOST || '127.0.0.1';
 const REDIS_PORT = process.env.REDIS_PORT || '6379';
+const COMMAND_TIMEOUT = 5000; // 单条命令超时 5 秒
 
 class RedisOper {
     constructor(){
+        console.log(`[Redis] Initializing client, host=${REDIS_HOST}:${REDIS_PORT}`);
         this.redisClient = redis.createClient(
             {
-                port: REDIS_PORT,
-                host: REDIS_HOST,
-                connectTimeout: 10000,//超时时间10s
                 socket: 
                 {
-                    family: 4
+                    host: REDIS_HOST,
+                    port: REDIS_PORT,
+                    connectTimeout: 10000,// TCP连接超时10s
+                    family: 4,
+                    reconnectStrategy: false // 禁用自动重连，由 ensureConnected 手动控制
                 }
             }
         );
@@ -44,80 +47,66 @@ class RedisOper {
         this.redisClient.on('error', err => {
             //console.log('Redis Error ' + err);
         });
-        
-        // 判断redis是否连接
-        if (this.redisClient.isOpen) {
-            console.log('rredis is now connected!')
-        } else {
-            this.redisClient.connect().catch(error => console.log(error));
+
+        // 初始化连接（异步）
+        this._connectPromise = this.redisClient.connect().then(() => {
+            console.log('[Redis] ✅ Connected successfully');
+        }).catch(error => {
+            console.log('[Redis] ❌ Connect FAILED:', error.message);
+        });
+    }
+
+    // 确保连接已就绪（未连接则主动重连）
+    async ensureConnected() {
+        if (!this.redisClient.isOpen) {
+            console.log('Redis not connected, reconnecting...');
+            await this.redisClient.connect();
+            console.log('Redis reconnected successfully');
         }
     }
 
-    async contect() {
-        await this.redisClient.connect().catch(error => console.log(error));
+    async connect() {
+        await this._connectPromise;
     }
 
     quit() {
         this.redisClient.quit();
     }
 
+    // 给 Redis 命令加超时保护（connectTimeout 只控制 TCP 握手，不控制命令执行）
+    async withTimeout(promise, operation) {
+        let timeoutId;
+        const timeout = new Promise((_, reject) => {
+            timeoutId = setTimeout(() => {
+                reject(new Error(`Redis ${operation} timeout after ${COMMAND_TIMEOUT}ms`));
+            }, COMMAND_TIMEOUT);
+        });
+        try {
+            const result = await Promise.race([promise, timeout]);
+            clearTimeout(timeoutId);
+            return result;
+        } catch (err) {
+            clearTimeout(timeoutId);
+            throw err;
+        }
+    }
+
     async RedisGet(key) {
-        return new Promise(async(resolve, reject) => {
-            try {
-                console.log("redis get,key:",key);
-                this.redisClient.get(key).then((val,err)=>{
-                    if(err)
-                    {
-                        reject(err);
-                    }
-                    else
-                    {
-                        resolve(val);
-                    }
-                })
-            } catch (error) {
-                console.log("redis Get error:",error);
-            }
-            
-        })
+        await this.ensureConnected();
+        console.log("redis get,key:", key);
+        return await this.withTimeout(this.redisClient.get(key), 'GET');
     }
 
     async RedisDel(key) {
-        return new Promise(async(resolve, reject) => {
-            this.redisClient.del(key).then((val,err)=>{
-                if(err)
-                {
-                    reject(err);
-                }
-                else
-                {
-                    resolve(val);
-                }
-            })
-        })
+        await this.ensureConnected();
+        return await this.withTimeout(this.redisClient.del(key), 'DEL');
     }
 
-    async RedisSet(key,value,expireSeconds) {
-        return new Promise(async(resolve, reject) => {
-            try
-            {
-                this.redisClient.setEx(key,expireSeconds,value).then((val,err)=>{
-                    if(err)
-                    {
-                        reject(err);
-                    }
-                    else
-                    {
-                        resolve(val);
-                    }
-                })
-            }
-            catch(e)
-            {
-                console.log("set redis error:key:["+key+"],value:["+value+"]")
-                reject()
-            }
-        })
+    async RedisSet(key, value, expireSeconds) {
+        await this.ensureConnected();
+        return await this.withTimeout(
+            this.redisClient.setEx(key, expireSeconds, value), 'SET'
+        );
     }
 }
 

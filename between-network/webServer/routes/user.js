@@ -102,30 +102,29 @@ router.post("/login",async(req,res)=>{
                 }
             );
             await t.commit();
-            //设置reddis缓存
-            (async function(){
-                try {
-                    logger.info("user login:set redis")
-                    const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
-                    await redisOper.RedisSet(userTokenKey,JSON.stringify(userInfo),24*60*60)
+            
+            //设置redis缓存
+            try {
+                logger.info("user login:set redis")
+                const userTokenKey = 'userToken:' + crypto.randomUUID({ disableEntropyCache: true })
+                await redisOper.RedisSet(userTokenKey, JSON.stringify(userInfo), 24 * 60 * 60)
 
-                    logger.info("user login:set redis success")
-                   
-                    output.userToken = userTokenKey
-                    output.userInfo = userInfo
-                    output.success = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.success
-                    output.status = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.status
-                    output.description = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.description
-                    res.send(output)
-                } catch (error) {
-                    logger.error(`user login:set redis error=>${error}`)
-                    console.log(error)
-                    output.success = statusCode.REDIS_STATUS.SET_FAIL.success
-                    output.status = statusCode.REDIS_STATUS.SET_FAIL.status
-                    output.description = statusCode.REDIS_STATUS.SET_FAIL.description
-                    res.send(output)
-                }
-            })()
+                logger.info("user login:set redis success")
+               
+                output.userToken = userTokenKey
+                output.userInfo = userInfo
+                output.success = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.success
+                output.status = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.status
+                output.description = statusCode.SERVICE_STATUS.LOGIN_SUCCESS.description
+                res.send(output)
+            } catch (error) {
+                logger.error(`user login:set redis error=>${error}`)
+                console.log(error)
+                output.success = statusCode.REDIS_STATUS.SET_FAIL.success
+                output.status = statusCode.REDIS_STATUS.SET_FAIL.status
+                output.description = statusCode.REDIS_STATUS.SET_FAIL.description
+                res.send(output)
+            }
         } catch (error) {
             //出错处理
             logger.error(`user login error=>${error}`)

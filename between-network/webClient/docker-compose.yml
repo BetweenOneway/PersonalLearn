@@ -22,6 +22,8 @@ services:
       - .:/app:cached
       # 排除 node_modules 避免与容器内不一致
       - /app/node_modules
+      # 排除 package-lock.json 避免跨平台原生模块冲突
+      - /app/package-lock.json
       # 持久化 VSCode 扩展
       - vscode-extensions:/root/.vscode-server/extensions
       - vscode-extensions-insiders:/root/.vscode-server-insiders
