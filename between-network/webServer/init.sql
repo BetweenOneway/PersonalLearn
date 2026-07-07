@@ -151,7 +151,7 @@ INSERT IGNORE INTO `z_user` VALUES (0, 'test@163.com', 'e10adc3949ba59abbe56e057
 -- 创建业务用户，仅授予 CRUD 权限
 -- ----------------------------
 CREATE USER IF NOT EXISTS 'cloudnote'@'%' IDENTIFIED BY 'cloudnote123';
-GRANT SELECT, INSERT, UPDATE, DELETE ON cloudnote.* TO 'cloudnote'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, INDEX ON cloudnote.* TO 'cloudnote'@'%';
 FLUSH PRIVILEGES;
 
 SET FOREIGN_KEY_CHECKS = 1;
