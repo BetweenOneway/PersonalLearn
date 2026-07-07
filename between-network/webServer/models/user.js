@@ -39,7 +39,8 @@ module.exports = function(sequelize,DataTypes){
             defaultValue:1
         },
         birthday:{
-            type:DataTypes.DATE
+            type:DataTypes.DATE,
+            defaultValue: '1949-10-01'
         }
     },{
         freezeTableName: true,

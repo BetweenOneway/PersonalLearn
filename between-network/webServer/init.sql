@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `z_user` (
   `time` datetime NOT NULL COMMENT '注册时间',
   `status` int(11) NOT NULL DEFAULT 1 COMMENT '状态【0：锁定，1：正常】',
   `sex` int(1) DEFAULT 1 COMMENT '0 女 1 男',
-  `birthday` date COMMENT '出生日期',
+  `birthday` date NOT NULL DEFAULT '1949-10-01' COMMENT '出生日期',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `email`(`email`) USING BTREE COMMENT '唯一不重复'
 ) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = COMPACT;
@@ -145,13 +145,13 @@ SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM z_note WHERE `STATUS` = 1;
 -- Test user data
 -- ----------------------------
 -- 密码为 123456 的 md5 值
-INSERT IGNORE INTO `z_user` VALUES (0, 'test@163.com', 'e10adc3949ba59abbe56e057f20f883e', '测试', 'https://cdn.vuetifyjs.com/images/john.jpg', 0, '2023-05-05 15:03:33', 1, 1, '');
+INSERT IGNORE INTO `z_user` VALUES (0, 'test@163.com', 'e10adc3949ba59abbe56e057f20f883e', '测试', 'https://cdn.vuetifyjs.com/images/john.jpg', 0, '2023-05-05 15:03:33', 1, 1, '1949-10-01');
 
 -- ----------------------------
 -- 创建业务用户，仅授予 CRUD 权限
 -- ----------------------------
 CREATE USER IF NOT EXISTS 'cloudnote'@'%' IDENTIFIED BY 'cloudnote123';
-GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, INDEX ON cloudnote.* TO 'cloudnote'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, INDEX, REFERENCES ON cloudnote.* TO 'cloudnote'@'%';
 FLUSH PRIVILEGES;
 
 SET FOREIGN_KEY_CHECKS = 1;
