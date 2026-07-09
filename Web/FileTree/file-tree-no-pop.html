@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>文件夹树形（无上传弹窗版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            padding: 30px;
+            background-color: #f5f7fa;
+        }
+        .container {max-width: 900px;}
+        #selectFolderBtn {
+            padding: 10px 24px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        #selectFolderBtn:hover {background: #1d4ed8;}
+        .root-path {margin: 12px 0; font-size: 14px; color: #444;}
+        .tree-wrap {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 1px 4px #e2e8f0;
+            min-height: 400px;
+        }
+        .tree-item {line-height: 2; user-select: none;}
+        .tree-children {padding-left: 22px;}
+        .tree-node {display: flex; align-items: center; gap: 6px; cursor: pointer;}
+        .toggle-icon {width: 18px; color: #666;}
+        .folder-icon {color: #f59e0b;}
+        .file-icon {color: #94a3b8;}
+        .hide {display: none !important;}
+        .empty-tip {color: #999; padding: 20px; text-align: center;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="operate-bar">
+            <button id="selectFolderBtn">选择本地文件夹（无上传弹窗）</button>
+        </div>
+        <div class="root-path" id="rootPath"></div>
+        <div class="tree-wrap" id="treeContainer">
+            <div class="empty-tip">点击按钮选择文件夹生成树形</div>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('selectFolderBtn');
+        const treeContainer = document.getElementById('treeContainer');
+        const rootPathDom = document.getElementById('rootPath');
+
+        // 递归读取目录
+        async function readDir(dirHandle) {
+            const children = [];
+            for await (const entry of dirHandle.values()) {
+                if (entry.kind === 'directory') {
+                    const subChildren = await readDir(entry);
+                    children.push({
+                        name: entry.name,
+                        isFolder: true,
+                        children: subChildren
+                    })
+                } else {
+                    children.push({
+                        name: entry.name,
+                        isFolder: false,
+                        children: null
+                    })
+                }
+            }
+            // 文件夹在前、文件在后排序
+            children.sort((a,b) => (b.isFolder ? 1 : 0) - (a.isFolder ? 1 : 0));
+            return children;
+        }
+
+        // 渲染树形DOM
+        function createTreeDom(node) {
+            const itemWrap = document.createElement('div');
+            itemWrap.className = 'tree-item';
+            const nodeLine = document.createElement('div');
+            nodeLine.className = 'tree-node';
+
+            const toggleIcon = document.createElement('span');
+            toggleIcon.className = 'toggle-icon';
+            if (node.isFolder) toggleIcon.textContent = '−';
+
+            const icon = document.createElement('span');
+            icon.className = node.isFolder ? 'folder-icon' : 'file-icon';
+            icon.textContent = node.isFolder ? '📁' : '📄';
+
+            const nameText = document.createElement('span');
+            nameText.textContent = node.name;
+            nodeLine.append(toggleIcon, icon, nameText);
+
+            const childrenWrap = document.createElement('div');
+            childrenWrap.className = 'tree-children';
+            if (node.children?.length) {
+                node.children.forEach(child => childrenWrap.appendChild(createTreeDom(child)));
+            }
+            itemWrap.append(nodeLine, childrenWrap);
+
+            // 折叠展开
+            if (node.isFolder) {
+                nodeLine.onclick = (e) => {
+                    e.stopPropagation();
+                    childrenWrap.classList.toggle('hide');
+                    toggleIcon.textContent = childrenWrap.classList.contains('hide') ? '+' : '−';
+                }
+            }
+            return itemWrap;
+        }
+
+        // 点击按钮打开文件夹选择（新标准API，无上传弹窗）
+        btn.addEventListener('click', async () => {
+            try {
+                const dirHandle = await window.showDirectoryPicker();
+                rootPathDom.textContent = `根目录：${dirHandle.name}`;
+                const treeData = {
+                    name: dirHandle.name,
+                    isFolder: true,
+                    children: await readDir(dirHandle)
+                };
+                treeContainer.innerHTML = '';
+                treeContainer.appendChild(createTreeDom(treeData));
+            } catch (err) {
+                // 用户点取消 / 浏览器不支持
+                if (err.name !== 'AbortError') {
+                    alert('当前浏览器不支持文件夹读取，请使用Chrome/Edge新版浏览器');
+                }
+            }
+        })
+    </script>
+</body>
+</html>

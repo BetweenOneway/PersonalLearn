@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>本地文件夹树形展示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            padding: 30px;
+            background-color: #f5f7fa;
+        }
+        .container {
+            max-width: 900px;
+        }
+        .operate-bar {
+            margin-bottom: 20px;
+        }
+        #selectFolderBtn {
+            padding: 10px 24px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #selectFolderBtn:hover {
+            background: #1d4ed8;
+        }
+        /* 隐藏原生文件输入 */
+        #folderInput {
+            display: none;
+        }
+        .root-path {
+            margin: 12px 0;
+            font-size: 14px;
+            color: #444;
+        }
+        /* 树形样式 */
+        .tree-wrap {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 1px 4px #e2e8f0;
+            min-height: 400px;
+        }
+        .tree-item {
+            line-height: 2;
+            user-select: none;
+        }
+        .tree-children {
+            padding-left: 22px;
+            overflow: hidden;
+        }
+        .tree-node {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .toggle-icon {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #666;
+        }
+        .file-icon {
+            color: #94a3b8;
+        }
+        .folder-icon {
+            color: #f59e0b;
+        }
+        .hide {
+            display: none !important;
+        }
+        .empty-tip {
+            color: #999;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="operate-bar">
+            <button id="selectFolderBtn">选择本地文件夹</button>
+            <!-- 原生文件夹选择控件 -->
+            <input type="file" id="folderInput" webkitdirectory multiple>
+        </div>
+        <div class="root-path" id="rootPath"></div>
+        <div class="tree-wrap" id="treeContainer">
+            <div class="empty-tip">请点击上方按钮选择文件夹，自动生成文件树</div>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('selectFolderBtn');
+        const folderInput = document.getElementById('folderInput');
+        const treeContainer = document.getElementById('treeContainer');
+        const rootPathDom = document.getElementById('rootPath');
+
+        // 点击按钮触发文件夹选择
+        btn.addEventListener('click', () => {
+            folderInput.click();
+        });
+
+        // 选中文件夹回调
+        folderInput.addEventListener('change', async (e) => {
+            const fileList = Array.from(e.target.files);
+            if (!fileList.length) return;
+
+            // 获取根文件夹名称
+            const rootFolderName = fileList[0].webkitRelativePath.split('/')[0];
+            rootPathDom.textContent = `根目录：${rootFolderName}`;
+
+            // 构建文件树形数据
+            const treeData = buildTreeData(fileList, rootFolderName);
+            // 渲染树形结构
+            renderTree(treeData);
+        });
+
+        /**
+         * 递归构建树形数据结构
+         * @param {File[]} files 文件列表
+         * @param {string} rootName 根文件夹名
+         * @returns 树形对象
+         */
+        function buildTreeData(files, rootName) {
+            const root = {
+                name: rootName,
+                isFolder: true,
+                children: []
+            };
+
+            // 遍历所有文件路径
+            files.forEach(file => {
+                const pathArr = file.webkitRelativePath.split('/');
+                // 跳过根目录，从子节点开始遍历
+                let currentNode = root;
+                for (let i = 1; i < pathArr.length; i++) {
+                    const name = pathArr[i];
+                    const isLast = i === pathArr.length - 1;
+                    // 查找子节点是否已存在
+                    let child = currentNode.children.find(item => item.name === name);
+                    if (!child) {
+                        child = {
+                            name,
+                            isFolder: !isLast,
+                            children: isLast ? null : []
+                        };
+                        currentNode.children.push(child);
+                    }
+                    currentNode = child;
+                }
+            });
+            return root;
+        }
+
+        /**
+         * 渲染树形DOM
+         * @param {Object} node 树形节点数据
+         */
+        function renderTree(rootNode) {
+            treeContainer.innerHTML = '';
+            const treeDom = createTreeDom(rootNode);
+            treeContainer.appendChild(treeDom);
+        }
+
+        /**
+         * 递归创建树形DOM元素
+         */
+        function createTreeDom(node) {
+            const itemWrap = document.createElement('div');
+            itemWrap.className = 'tree-item';
+
+            const nodeLine = document.createElement('div');
+            nodeLine.className = 'tree-node';
+
+            // 折叠展开图标
+            const toggleIcon = document.createElement('span');
+            toggleIcon.className = 'toggle-icon';
+            // 文件无折叠按钮
+            if (node.isFolder) {
+                toggleIcon.textContent = '−';
+            }
+
+            // 文件/文件夹图标
+            const icon = document.createElement('span');
+            icon.className = node.isFolder ? 'folder-icon' : 'file-icon';
+            icon.textContent = node.isFolder ? '📁' : '📄';
+
+            // 名称文本
+            const nameText = document.createElement('span');
+            nameText.textContent = node.name;
+
+            nodeLine.append(toggleIcon, icon, nameText);
+
+            // 子容器
+            const childrenWrap = document.createElement('div');
+            childrenWrap.className = 'tree-children';
+
+            // 递归渲染子节点
+            if (node.children && node.children.length) {
+                node.children.forEach(child => {
+                    childrenWrap.appendChild(createTreeDom(child));
+                });
+            }
+
+            itemWrap.append(nodeLine, childrenWrap);
+
+            // 文件夹绑定折叠点击事件
+            if (node.isFolder) {
+                nodeLine.addEventListener('click', (ev) => {
+                    ev.stopPropagation();
+                    childrenWrap.classList.toggle('hide');
+                    toggleIcon.textContent = childrenWrap.classList.contains('hide') ? '+' : '−';
+                });
+            }
+            return itemWrap;
+        }
+    </script>
+</body>
+</html>
