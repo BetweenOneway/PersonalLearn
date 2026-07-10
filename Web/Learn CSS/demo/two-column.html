@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            .two-column {
+                display: flex;
+                min-height: 400px;
+            }
+            .aside {
+                width: 240px;
+                flex-shrink: 0; /* 禁止侧边压缩 */
+                background: #eee;
+                padding: 20px;
+            }
+            .main {
+                flex: 1; /* 占剩余全部宽度 */
+                background: #f5f5f5;
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="two-column">
+            <aside class="aside">侧边栏 240px</aside>
+            <main class="main">主体内容自适应剩余宽度</main>
+          </div>
+    </body>
+</html>

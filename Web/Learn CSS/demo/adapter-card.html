@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            }
+            .card-grid {
+            display: grid;
+            /* 最小宽度240px，自动分配列数 */
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            }
+            .card {
+            height: 180px;
+            background: #66a8ff;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card-grid">
+            <div class="card">卡片1</div>
+            <div class="card">卡片2</div>
+            <div class="card">卡片3</div>
+            <div class="card">卡片4</div>
+            <div class="card">卡片5</div>
+          </div>
+    </body>
+</html>

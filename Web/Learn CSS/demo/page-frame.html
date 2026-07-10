@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            html, body {
+                height: 100%;
+            }
+            .page-wrap {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            .header {
+                height: 60px;
+                background: #222;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                padding: 0 20px;
+            }
+            .page-main {
+                flex: 1; /* 自动填充剩余高度，把footer压到底 */
+                padding: 30px;
+                background: #f8f8f8;
+            }
+            .footer {
+                height: 80px;
+                background: #222;
+                color: #fff;
+                display: grid;
+                place-items: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-wrap">
+            <header class="header">页面头部导航</header>
+            <main class="page-main">页面主体内容</main>
+            <footer class="footer">底部版权栏</footer>
+          </div>
+    </body>
+</html>
