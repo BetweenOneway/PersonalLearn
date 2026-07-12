@@ -85,7 +85,7 @@ router.get("/getOpenNoteList",async (req,res)=>{
         data:[]
     }
 
-    console.log("start getOpenNoteList")
+    logger.info(`start getOpenNoteList`)
     
     let openStatus = 2
     let pageIndex = parseInt(req.query.pageIndex);
@@ -149,7 +149,7 @@ router.get("/getOpenNoteList",async (req,res)=>{
         output.description = statusCode.SERVICE_STATUS.GET_OPEN_NOTE_FAIL.description
     }
     res.send(output);
-    console.log("End of getOpenNoteList")
+    logger.info(`End of getOpenNoteList`)
     return;
 })
 
@@ -165,7 +165,7 @@ router.get("/getUserNoteList",async (req,res)=>{
         data:[]
     }
 
-    console.log("start getUserNoteList=>",req.query)
+    logger.info(`start getUserNoteList=> ${req.query}`)
 
     let exceptStatus = 0
     let userInfo = req.userInfo;
@@ -174,7 +174,7 @@ router.get("/getUserNoteList",async (req,res)=>{
     if(!notebookId)
     {
         //参数错误
-        console.log("param error notebookId undefined=>",notebookId)
+        logger.info(`param error notebookId undefined=> ${notebookId}`)
         output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
         output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status
         output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description
@@ -182,7 +182,7 @@ router.get("/getUserNoteList",async (req,res)=>{
     else
     {
         try {
-            console.log("parsed userinfo=>",userInfo)
+            logger.info(`parsed userinfo=> ${userInfo}`)
 
             //查找所有未被删除的笔记
             const notes = await sqldb.Note.findAll(
@@ -214,7 +214,7 @@ router.get("/getUserNoteList",async (req,res)=>{
         }
     }
     res.send(output);
-    console.log("End of getUserNoteList")
+    logger.info(`End of getUserNoteList`)
     return;
 })
 
@@ -228,7 +228,8 @@ router.get("/setNoteTop",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start set Note Top:",req.query);
+
+    logger.info(`start set Note Top:${req.query}`)
     
     //目标状态
     let targetTop = req.query.targetTop
@@ -236,7 +237,7 @@ router.get("/setNoteTop",async (req,res)=>{
 
     if(!noteId || targetTop === undefined || (0!= targetTop && 1!= targetTop))
     {
-        console.log("note set top, noteId or targetTop empty")
+        logger.info(`note set top, noteId or targetTop empty`)
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
         output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
         output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
@@ -291,7 +292,7 @@ router.get("/setNoteTop",async (req,res)=>{
             res.send(output);
         }
         else{
-            console.log("set note top,updateNum=",updateNum);
+            logger.info(`set note top,updateNum=${updateNum}`)
             t.rollback()
             output.success = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.success
             output.status = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.status
@@ -307,7 +308,7 @@ router.get("/setNoteTop",async (req,res)=>{
         output.description = statusCode.SERVICE_STATUS.NOTE_SET_TOP_FAIL.description
         res.send(output);
     }
-    console.log("End of set note top or untop");
+    logger.info(`End of set note top or untop`)
     return
 })
 
@@ -321,7 +322,8 @@ router.get("/setNoteOpenStatus",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start set Note Open Status:",req.query);
+
+    logger.info(`start set Note Open Status:${req.query}`)
     
     //目标状态
     let targetOpenStatus = req.query.targetOpenStatus
@@ -329,7 +331,7 @@ router.get("/setNoteOpenStatus",async (req,res)=>{
 
     if(!noteId || targetOpenStatus === undefined || (1!= targetOpenStatus && 2!= targetOpenStatus))
     {
-        console.log("note set open status, noteId or targetOpenStatus empty")
+        logger.info(`note set open status, noteId or targetOpenStatus empty`)
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
         output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
         output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
@@ -392,7 +394,7 @@ router.get("/setNoteOpenStatus",async (req,res)=>{
             res.send(output);
         }
         else{
-            console.log("set note top,updateNum=",updateNum);
+            logger.info(`set note top,updateNum=${updateNum}`)
             t.rollback()
             output.success = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_FAIL.success
             output.status = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_FAIL.status
@@ -408,7 +410,7 @@ router.get("/setNoteOpenStatus",async (req,res)=>{
         output.description = statusCode.SERVICE_STATUS.NOTE_SET_OPEN_FAIL.description
         res.send(output);
     }
-    console.log("End of set note open or private");
+    logger.info(`End of set note open or private`)
     return
 })
 
@@ -422,7 +424,7 @@ router.post("/renameNote",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start rename note:",req.body);
+    logger.info(`start rename note:${req.body}`)
     
     //目标状态
     let newName = req.body.title
@@ -430,7 +432,7 @@ router.post("/renameNote",async (req,res)=>{
 
     if(!noteId || newName === undefined || 0 == newName.length)
     {
-        console.log("note rename, noteId or newName empty")
+        logger.info(`note rename, noteId or newName empty`)
         output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success
         output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status
         output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description
@@ -505,13 +507,14 @@ router.post("/renameNote",async (req,res)=>{
         
     }
     catch(e){
-        console.log(e)
+        logger.info(`error happened:${e}`)
         t.rollback()
         output.success = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.success
         output.status = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.status
         output.description = statusCode.SERVICE_STATUS.RENAME_NOTE_FAIL.description
         res.send(output);
     }
+    logger.info(`End of rename`)
     console.log("End of rename");
     return
 })
@@ -521,7 +524,7 @@ router.post("/renameNote",async (req,res)=>{
  * userToken 用户信息
  */
 router.put("/createNote",async (req,res)=>{
-    console.log("create note request info:",req);
+    logger.info(`create note request info:${req}`)
 
     let output={
         success:false,
@@ -537,7 +540,7 @@ router.put("/createNote",async (req,res)=>{
     if(!notebookId)
     {
         //参数错误
-        console.log("create note param error notebookId undefined=>",notebookId)
+        logger.info(`create note param error notebookId undefined=>${notebookId}`)
         output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
         output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status
         output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description
@@ -561,7 +564,7 @@ router.put("/createNote",async (req,res)=>{
                 transaction:t
             }
         );
-        console.log("new added note info:",newAddNote);
+        logger.info(`new added note info:${newAddNote}`)
         let event = statusCode.EVENT_LIST.ADD_NOTE;
         const addLog = await sqldb.operLog.create(
             {
@@ -578,7 +581,7 @@ router.put("/createNote",async (req,res)=>{
         );
 
         t.commit();
-        console.log("add note success,commit database success")
+        logger.info(`add note success,commit database success`)
         output.success = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.success
         output.status = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.ADD_NOTE_SUCCESS.description
@@ -593,7 +596,7 @@ router.put("/createNote",async (req,res)=>{
         res.send(output);
     }
 
-    console.log("End of add note")
+    logger.info(`End of add note`)
     return
 })
 
@@ -609,14 +612,15 @@ router.get("/getNoteInfo",async (req,res)=>{
         description:'',
         data:{}
     }
-    console.log("start Get Note detail Info:",req.query);
+
+    logger.info(`start Get Note detail Info:${req.query}`)
 
     let userInfo = req.userInfo;
 
     let noteId = req.query.noteId;
 
     try {
-        console.log("get note info from db");
+        logger.info(`get note info from db`)
         const noteInfo = await sqldb.Note.findOne(
             {
                 attributes: ['update_time', 'content','title','u_id','status'],
@@ -629,13 +633,13 @@ router.get("/getNoteInfo",async (req,res)=>{
         //console.log("retrived info from db:",noteInfo);
         if(noteInfo == null)
         {
-            console.log("笔记获取失败，请稍后再试");
+            logger.info(`笔记获取失败，请稍后再试`)
             output.success = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.success
             output.status = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.status
             output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
         }
         else{
-            console.log("笔记获取信息成功");
+            logger.info(`笔记获取信息成功`)
             output.success = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
@@ -652,13 +656,14 @@ router.get("/getNoteInfo",async (req,res)=>{
         }
         res.send(output);
     } catch (error) {
-        console.log("Get note info error:",error);
+        logger.info(`Get note info error:${error}`)
         output.success = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.success
         output.status = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.status
         output.description = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.description
         res.send(output);
     }
-    console.log("End Get Note Info");
+
+    logger.info(`End Get Note Info`)
     return
 })
 
@@ -671,7 +676,8 @@ router.get("/getNoteInfo",async (req,res)=>{
  * content 笔记内容（完整 包含title和body）
  */
 router.post("/saveNote",async (req,res)=>{
-    console.log("start update Note :",req.body);
+
+    logger.info(`start update Note :${req.body}`)
 
     let output={
         success:false,
@@ -690,7 +696,7 @@ router.post("/saveNote",async (req,res)=>{
     const t = await sqldb.sequelize.transaction();
 
     try {
-        console.log("userInfo:",req.userInfo);
+        logger.info(`userInfo:${req.userInfo}`)
         let exceptStatus = 0;
         let userInfo = req.userInfo;
         let curTime = new Date().toLocaleString()
@@ -743,7 +749,7 @@ router.post("/saveNote",async (req,res)=>{
             );
 
             t.commit();
-            console.log("update note success,commit database success")
+            logger.info(`update note success,commit database success`)
             output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.description;
@@ -753,14 +759,14 @@ router.post("/saveNote",async (req,res)=>{
 
         
     } catch (error) {
-        console.log("update note error:",error);
+        logger.info(`update note error:${error}`)
         t.rollback();
         output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.success
         output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.status
         output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.description
         res.send(output);
     }
-    console.log("End of Update note");
+    logger.info(`End of Update note`)
     return
 })
 
@@ -776,14 +782,15 @@ router.get("/getPublicNoteInfo",async (req,res)=>{
         description:'',
         data:{}
     }
-    console.log("start Get public Note detail Info:",req.query);
+
+    logger.info(`start Get public Note detail Info:${req.query}`)
 
     let userInfo = req.userInfo;
 
     let noteId = req.query.noteId;
     let publicStatus = 2;
     try {
-        console.log("get note info from db");
+        logger.info(`get note info from db`)
         const noteInfo = await sqldb.Note.findOne(
             {
                 attributes: ['update_time', 'content','title','u_id'],
@@ -796,13 +803,13 @@ router.get("/getPublicNoteInfo",async (req,res)=>{
         //console.log("retrived info from db:",noteInfo);
         if(noteInfo == null)
         {
-            console.log("公开笔记内容获取失败，请稍后再试");
+            logger.info(`公开笔记内容获取失败，请稍后再试`)
             output.success = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.success
             output.status = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.status
             output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
         }
         else{
-            console.log("公开笔记内容获取成功");
+            logger.info(`公开笔记内容获取成功`)
             output.success = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description

@@ -10,14 +10,14 @@ async function ValidateUserToken(req)
     if(!userToken)
     {
         //没有传递userToken参数 跳过校验
-        console.log(userToken,'interceptor user token invalid......');
+        logger.info(`${userToken} interceptor user token invalid......`)
         return true;
     }
     //验证用户是否登录
     let validateInfo = await validate.IsUserValidate(userToken);
     if(!validateInfo.isValidated)
     {
-        console.log("用户登录状态无效"+validateInfo.isValidated)
+        logger.info(`用户登录状态无效 ${validateInfo.isValidated}`)
         return false;
     }
 

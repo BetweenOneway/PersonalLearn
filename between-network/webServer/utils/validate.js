@@ -17,7 +17,7 @@ async function IsUserValidate(userToken)
         if(userTokenRedisValue == null)
         {
             //用户未登录
-            console.log("IsUserValidate:用户未登录")
+            logger.info(`IsUserValidate:用户未登录`)
             validateInfo.isValidated = false;
         }
         else
