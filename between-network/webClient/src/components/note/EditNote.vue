@@ -10,21 +10,19 @@
         </n-space>
         <div v-show="!loading" style="width: 100%;height: 100%;display: flex;flex-direction: column;">
             <header class="note-header">
-                <n-input v-if="!isPreviewMode" v-model:value="note.title" size="medium" placeholder="笔记标题" 
+                <n-input v-if="isEditing" v-model:value="note.title" size="medium" placeholder="笔记标题" 
                 style="--n-border:none;--n-padding-left:0;background-color: transparent;font-size: 18px;font-weight: 600;flex:1;"></n-input>
                 <h3 v-else class="note-title">{{ note.title }}</h3>
                 <div class="note-actions">
-                    <n-button-group size="tiny">
-                        <n-button v-if="!useCkEditor" @click="SwitchMode()">
-                            {{editPreviewButtonContent}}
-                        </n-button>
-                        <n-button type="primary" @click="saveNote()">
-                            保存
-                        </n-button>
-                    </n-button-group>
+                    <n-button v-if="!isEditing" size="small" @click="enterEditMode">
+                        编辑
+                    </n-button>
+                    <n-button v-else type="primary" size="small" @click="saveNote">
+                        保存
+                    </n-button>
                     <n-popover v-model:show = "noteOperationMenuShow" trigger="click">
                         <template #trigger>
-                            <n-button text size="tiny" class="more-btn">
+                            <n-button text size="small" class="more-btn">
                                 <template #icon>
                                     <n-icon size="16" :component="MoreHorizRound"/>
                                 </template>
@@ -86,8 +84,7 @@
     //是否使用CkEditor
     let useCkEditor = ref(false);
 
-    const isPreviewMode = ref(true);
-    const editPreviewButtonContent = ref("编辑");
+    const isEditing = ref(false);
     const editorContainer = ref(null);
     //自定义事件
     const emits = defineEmits(['save','deleteSuccess']);
@@ -233,6 +230,8 @@
                 //编辑笔记的用户编号
                 editNoteUID.value = note.value.u_id;
                 LoadOperationMenu();
+                //退出编辑模式
+                exitEditMode();
                 //加载已完毕
                 loading.value = false;
             }
@@ -243,6 +242,7 @@
     watch(
         ()=>propsData.id,
         ()=>{
+            isEditing.value = false;
             getNoteInfo();
         }
     )
@@ -311,20 +311,20 @@
         cherryInstance.destroy();
     })
 
-    function SwitchMode()
+    function enterEditMode()
     {
-        console.log("switch mode=>",isPreviewMode.value)
-        //预览=>编辑
-        if(isPreviewMode.value == true)
-        {
+        isEditing.value = true;
+        if (!useCkEditor.value) {
             cherryInstance.switchModel('edit&preview');
-            editPreviewButtonContent.value = "预览"
         }
-        else{
+    }
+
+    function exitEditMode()
+    {
+        isEditing.value = false;
+        if (!useCkEditor.value) {
             cherryInstance.switchModel('previewOnly');
-            editPreviewButtonContent.value = "编辑"
         }
-        isPreviewMode.value = !isPreviewMode.value
     }
 
     /**
