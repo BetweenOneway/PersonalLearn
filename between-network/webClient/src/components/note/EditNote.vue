@@ -60,17 +60,11 @@
                     </n-card>
                 </div>
             </main>
-            <footer style="flex-shrink: 0;">
-                <!--底部状态栏-->
-                <n-card :bordered="false" size="small" >
-                    <n-space justify-content="space-between" align="center">
-                        <!--发布时间-->
-                        <n-space color="#18A058" align="center" :wrap-item="false">
-                            <n-icon :component="FiberManualRecordRound"></n-icon>
-                            <n-text depth="3">更新于:{{ note.update_time }}</n-text>
-                        </n-space>
-                    </n-space>
-                </n-card>
+            <footer class="status-bar">
+                <span class="status-bar__item">
+                    <span class="status-bar__dot"></span>
+                    更新于:{{ note.update_time }}
+                </span>
             </footer>
         </div>
     </div>
@@ -442,5 +436,28 @@
 </script>
 
 <style scoped>
+.status-bar {
+    display: flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 10px;
+    font-size: 12px;
+    border-top: 1px solid #e0e0e0;
+    color: #666;
+    user-select: none;
+}
 
+.status-bar__item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-bar__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4ec946;
+    flex-shrink: 0;
+}
 </style>
