@@ -9,56 +9,40 @@
             <n-skeleton text width="80%"></n-skeleton>
         </n-space>
         <div v-show="!loading" style="width: 100%;height: 100%;display: flex;flex-direction: column;">
-            <header style="flex-shrink: 0;">
-                <div>
-                    <!--发布时间 分享 更多操作-->
-                    <n-card size="small" :bordered="false">
-                        <n-grid x-gap="20" cols="12" item-responsive responsive="screen">
-                            <n-gi span="0 m:10 l:10">
-                                <n-input v-if="!isPreviewMode" v-model:value="note.title" size="large" placeholder="笔记标题" 
-                                style="--n-border:none;background-color: transparent"></n-input>
-                                <h3 v-else>{{ note.title }}</h3>
-                            </n-gi>
-                            <n-gi span="0 m:2 l:2">
-                                <n-space justify="space-between" align="center">
-                                    <!--编辑/预览 按钮-->
-                                    <n-button v-if="!useCkEditor" type="primary" @click="SwitchMode()">
-                                        {{editPreviewButtonContent}}
-                                    </n-button>
-                                    <!--保存按钮-->
-                                    <n-button type="primary" @click="saveNote()">
-                                        保存
-                                    </n-button>
-                                    
-                                    <!--笔记操作菜单-->
-                                    <n-popover v-model:show = "noteOperationMenuShow" trigger="click">
-                                        <template #trigger>
-                                            <n-button quaternary circle>
-                                                <n-icon size="20" :component="MoreHorizRound"/>
-                                            </n-button>
-                                        </template>
-                                        <n-menu :options="noteOperationMenu" :indent="18" :on-update:value="clickNoteOperationMenu" />
-                                    </n-popover>
-                                </n-space>
-                            </n-gi>
-                        </n-grid>
-                    </n-card>
+            <header class="note-header">
+                <n-input v-if="!isPreviewMode" v-model:value="note.title" size="medium" placeholder="笔记标题" 
+                style="--n-border:none;--n-padding-left:0;background-color: transparent;font-size: 18px;font-weight: 600;flex:1;"></n-input>
+                <h3 v-else class="note-title">{{ note.title }}</h3>
+                <div class="note-actions">
+                    <n-button-group size="tiny">
+                        <n-button v-if="!useCkEditor" @click="SwitchMode()">
+                            {{editPreviewButtonContent}}
+                        </n-button>
+                        <n-button type="primary" @click="saveNote()">
+                            保存
+                        </n-button>
+                    </n-button-group>
+                    <n-popover v-model:show = "noteOperationMenuShow" trigger="click">
+                        <template #trigger>
+                            <n-button text size="tiny" class="more-btn">
+                                <template #icon>
+                                    <n-icon size="16" :component="MoreHorizRound"/>
+                                </template>
+                            </n-button>
+                        </template>
+                        <n-menu :options="noteOperationMenu" :indent="18" :on-update:value="clickNoteOperationMenu" />
+                    </n-popover>
                 </div>
             </header>
-            <main style="flex: 1;min-height: 0;overflow: hidden;">
-                <div style="height: 100%;">
-                    <n-card v-if="useCkEditor" :bordered="false" size="small" style="height: 100%;">
-                        <!--编辑器-->
-                        <Ckeditor
-                        :editor="EditorType" 
-                        @ready="editorReady" 
-                        v-model="note.content"
-                        :config="getEditorConfigs()"/>
-                    </n-card>
-                    <n-card v-else :bordered="false" size="small" style="width: 100%;height: 100%;">
-                        <div style="position: relative;width: 100%;height: 100%;" ref="editorContainer"></div>
-                    </n-card>
+            <main class="note-main">
+                <div v-if="useCkEditor" class="editor-wrapper">
+                    <Ckeditor
+                    :editor="EditorType" 
+                    @ready="editorReady" 
+                    v-model="note.content"
+                    :config="getEditorConfigs()"/>
                 </div>
+                <div v-else class="editor-wrapper" ref="editorContainer"></div>
             </main>
             <footer class="status-bar">
                 <span class="status-bar__item">
@@ -436,6 +420,48 @@
 </script>
 
 <style scoped>
+.note-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    flex-shrink: 0;
+}
+
+.note-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    flex: 1;
+    line-height: 1.4;
+}
+
+.note-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.more-btn {
+    min-width: 24px;
+    justify-content: center;
+}
+
+.note-main {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    padding: 16px 16px 0;
+}
+
+.editor-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
 .status-bar {
     display: flex;
     align-items: center;
