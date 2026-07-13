@@ -40,11 +40,12 @@
 
                     <!-- 底部：回收站 -->
                     <div class="sidebar-bottom">
-                        <div style="padding-left: 28px;">
-                            <n-button text size="large" style="height: 30px;" @click="showRecycleBin" >
-                                回收站
-                            </n-button>
-                        </div>
+                        <n-button size="small" quaternary @click="showRecycleBin" class="recycle-btn">
+                            <template #icon>
+                                <n-icon size="18" :component="DeleteOutlineRound"/>
+                            </template>
+                            回收站
+                        </n-button>
                     </div>
                 </div>
             </n-layout-sider>
@@ -591,7 +592,15 @@
 
     .sidebar-bottom {
         flex-shrink: 0;
-        padding: 8px 0 4px;
+        padding: 8px 0;
         border-top: 1px solid #e8e8e8;
+        display: flex;
+        justify-content: center;
+    }
+
+    .recycle-btn {
+        width: calc(100% - 24px);
+        justify-content: flex-start;
+        padding-left: 28px;
     }
 </style>
