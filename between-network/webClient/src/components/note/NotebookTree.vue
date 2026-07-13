@@ -396,12 +396,13 @@
         console.log("add new notebook,parentId=>",currentSelectNode.value.key)
         console.log("add new notebook,level=>",currentSelectNode.value.level)
         
-        let newLevel = level;
+        let newLevel = parseInt(level, 10);
+        if (isNaN(newLevel)) newLevel = 0;
         console.log("add new notebook, newLevel=>",newLevel);
         //如果指定新增最高级笔记本，先判断当前是否有选择的笔记本，如果有则加在选择的笔记本下
         if(newLevel == 0)
         {
-            if(!currentSelectNode?.value?.level)
+            if(currentSelectNode?.value?.level !== undefined)
             {
                 newLevel = currentSelectNode.value.level + 1;
             }
@@ -413,7 +414,7 @@
         //封装请求体中的参数
         API.data = {
             notebookName:newName,
-            parentId:currentSelectNode.value.key,
+            parentId:currentSelectNode.value.key || 1,
             index:(currentSelectNode.value?.children?.length)??0,
             level:newLevel,
         }

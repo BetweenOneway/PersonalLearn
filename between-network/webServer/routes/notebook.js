@@ -84,7 +84,10 @@ router.post("/addNotebook",async (req,res)=>{
         }
     }
 
-    const {notebookName,parentId,index,level} = req.body;
+    const notebookName = req.body.notebookName || '';
+    const parentId = parseInt(req.body.parentId, 10) || 1;
+    const index = parseInt(req.body.index, 10) || 0;
+    const level = parseInt(req.body.level, 10) || 0;
 
     const t = await sqldb.sequelize.transaction();
 
