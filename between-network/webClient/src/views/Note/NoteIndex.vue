@@ -111,7 +111,7 @@
                     </n-layout-sider>
 
                     <!--笔记编辑容器-->
-                    <n-layout-content content-style="padding:20px;">
+                    <n-layout-content content-style="padding:0;">
                         <!--子路由-->
                         <router-view @save="" 
                         @deleteSuccess="deleteNoteSuccess" 
@@ -549,6 +549,11 @@
         position: relative;
     }
 
+    /* 移除 n-layout-content 的默认内边距 */
+    :deep(.n-layout-content) {
+        padding: 0 !important;
+    }
+
     /* 让 n-layout-sider 的 n-scrollbar 撑满高度 */
     :deep(.n-scrollbar-container) {
         height: 100%;
@@ -575,6 +580,7 @@
     /* 新建按钮居中 */
     .sidebar-top > :first-child {
         align-self: center;
+        margin-top: 12px;
     }
 
     .sidebar-middle {

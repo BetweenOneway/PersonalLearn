@@ -424,7 +424,8 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 16px;
+    padding: 0 16px;
+    height: 48px;
     border-bottom: 1px solid #f0f0f0;
     flex-shrink: 0;
 }

@@ -38,6 +38,8 @@
         height: var(--nav-bar-height);
         display: flex;
         z-index: 100;
+        background-color: #f5f6f7;
+        border-bottom: 1px solid #e8e8e8;
     }
     .nav-bar{
         flex:1;
