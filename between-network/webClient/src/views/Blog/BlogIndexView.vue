@@ -38,7 +38,6 @@
     {
         console.log("Get open note list")
         let API = {...noteApi.getOpenNoteList};
-        API.name = API.name;
         //请求URL的参数
         API.params= {
             pageIndex:pageIndex,
