@@ -8,8 +8,8 @@
             <n-skeleton text width="40%"></n-skeleton>
             <n-skeleton text width="80%"></n-skeleton>
         </n-space>
-        <div v-show="!loading" style="width: 100%;height: 100%;">
-            <header>
+        <div v-show="!loading" style="width: 100%;height: 100%;display: flex;flex-direction: column;">
+            <header style="flex-shrink: 0;">
                 <div>
                     <!--发布时间 分享 更多操作-->
                     <n-card size="small" :bordered="false">
@@ -45,9 +45,9 @@
                     </n-card>
                 </div>
             </header>
-            <main>
-                <div>
-                    <n-card v-if="useCkEditor" :bordered="false" size="small">
+            <main style="flex: 1;min-height: 0;overflow: hidden;">
+                <div style="height: 100%;">
+                    <n-card v-if="useCkEditor" :bordered="false" size="small" style="height: 100%;">
                         <!--编辑器-->
                         <Ckeditor
                         :editor="EditorType" 
@@ -60,7 +60,7 @@
                     </n-card>
                 </div>
             </main>
-            <footer>
+            <footer style="flex-shrink: 0;">
                 <!--底部状态栏-->
                 <n-card :bordered="false" size="small" >
                     <n-space justify-content="space-between" align="center">

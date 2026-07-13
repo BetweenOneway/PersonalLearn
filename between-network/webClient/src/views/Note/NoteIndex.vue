@@ -8,38 +8,45 @@
             :width="180"
             :native-scrollbar="false"
             >
-                <n-flex vertical>
-                    <!--新增按钮-->
-                    <n-popover v-model:show = "createMenuShow" trigger="click">
-                        <template #trigger>
-                            <n-button type="primary" text size="large" style="margin-top: 20px;">
-                                <template #icon>
-                                    <n-icon>
-                                        <AddBoxRound />
-                                    </n-icon>
-                                </template>
-                                新建
+                <div class="sidebar-wrapper">
+                    <!-- 顶部：新建 + 最近文件 -->
+                    <div class="sidebar-top">
+                        <!--新增按钮-->
+                        <n-popover v-model:show = "createMenuShow" trigger="click">
+                            <template #trigger>
+                                <n-button type="primary" text size="large" style="margin-top: 20px;">
+                                    <template #icon>
+                                        <n-icon>
+                                            <AddBoxRound />
+                                        </n-icon>
+                                    </template>
+                                    新建
+                                </n-button>
+                            </template>
+                            <n-menu :options="createMenu" :indent="18" :on-update:value="clickCreateMenu" />
+                        </n-popover>
+                        <n-divider style="margin:15px auto"></n-divider>
+                        <div style="padding-left: 28px;">
+                            <n-button text size="large" style="height: 30px;" @click="getRecentNoteList(false)" >
+                                最近文件
                             </n-button>
-                        </template>
-                        <n-menu :options="createMenu" :indent="18" :on-update:value="clickCreateMenu" />
-                    </n-popover>
-                
-                    <n-divider style="margin:15px auto"></n-divider>
-                    <n-flex vertical>
-                    <n-space>
-                        <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="getRecentNoteList(false)" >
-                            最近文件
-                        </n-button>
-                    </n-space>
+                        </div>
+                    </div>
+
+                    <!-- 中间：笔记本树，自动撑满剩余空间 -->
+                    <div class="sidebar-middle">
                         <NotebookTree ref="notebookTree" @NotebookNumChange="NotebookNumChanged" @NotebookChanged="notebookChanged"/>
-                        <!--底部菜单栏-->
-                    <n-space>
-                        <n-button text size="large" style="margin-left: 28px;height: 30px;" @click="showRecycleBin" >
-                            回收站
-                        </n-button>
-                    </n-space>
-                    </n-flex>
-                </n-flex>
+                    </div>
+
+                    <!-- 底部：回收站 -->
+                    <div class="sidebar-bottom">
+                        <div style="padding-left: 28px;">
+                            <n-button text size="large" style="height: 30px;" @click="showRecycleBin" >
+                                回收站
+                            </n-button>
+                        </div>
+                    </div>
+                </div>
             </n-layout-sider>
             <!--笔记列表及编辑器容器-->
             <n-layout-content>
@@ -540,5 +547,45 @@
         width: 100%;
         height: calc(100vh - var(--nav-bar-height));
         position: relative;
+    }
+
+    /* 让 n-layout-sider 的 n-scrollbar 撑满高度 */
+    :deep(.n-scrollbar-container) {
+        height: 100%;
+    }
+
+    :deep(.n-scrollbar-content) {
+        height: 100%;
+    }
+
+    /* 左侧栏 flex 布局，回收站固定在底部 */
+    .sidebar-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 100%;
+    }
+
+    .sidebar-top {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* 新建按钮居中 */
+    .sidebar-top > :first-child {
+        align-self: center;
+    }
+
+    .sidebar-middle {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+    }
+
+    .sidebar-bottom {
+        flex-shrink: 0;
+        padding: 8px 0 4px;
+        border-top: 1px solid #e8e8e8;
     }
 </style>
