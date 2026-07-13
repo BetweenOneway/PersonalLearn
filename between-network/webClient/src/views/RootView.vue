@@ -1,16 +1,19 @@
 <template>
     <!--布局-->
-    <header>
-        <div class="nav-bar">
-            <MainTopNavBar />
-        </div>
-    </header>
+    <n-layout>
+        <n-layout-header class="nav-header">
+            <div class="nav-bar">
+                <MainTopNavBar />
+            </div>
+        </n-layout-header>
 
-    <section style="position: relative;">
-        <router-view/>
-    </section>
-    
-    <footer></footer>
+        <n-layout-content class="main-content">
+            <router-view/>
+        </n-layout-content>
+
+        <n-layout-footer>
+        </n-layout-footer>
+    </n-layout>
     <login-modal/>
 </template>
 
@@ -28,7 +31,7 @@
 </script>
 
 <style scoped>
-    header{
+    .nav-header{
         position:sticky;
         top:0;
         width: 100%;
@@ -40,6 +43,8 @@
         flex:1;
         padding-left: 50px;
         padding-right: 50px;
-        background-color: #f3f3f3;
+    }
+    .main-content{
+        position: relative;
     }
 </style>
