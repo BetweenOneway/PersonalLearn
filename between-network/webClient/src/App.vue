@@ -1,5 +1,6 @@
 <template>
     <n-config-provider :theme="theme.name" :locale="zhCN" :date-locale="dateZhCN">
+        <n-global-style />
         <n-loading-bar-provider>
             <n-notification-provider>
                 <n-dialog-provider>
