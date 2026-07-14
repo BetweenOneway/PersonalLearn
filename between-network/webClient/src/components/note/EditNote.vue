@@ -502,11 +502,41 @@
     gap: 5px;
 }
 
-.status-bar__dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #4ec946;
-    flex-shrink: 0;
+.editor-wrapper :deep(.cherry-toolbar) {
+    padding: 0 8px;
+    min-height: 34px;
+    line-height: 2;
+}
+
+.editor-wrapper :deep(.cherry-toolbar .toolbar-left) {
+    min-height: 34px;
+}
+
+.editor-wrapper :deep(.cherry-toolbar .toolbar-right) {
+    min-height: 0;
+}
+
+.editor-wrapper :deep(.cherry-toolbar-button) {
+    height: 28px;
+    padding: 0 6px;
+}
+
+.editor-wrapper :deep(.cherry-toolbar-button .ch-icon) {
+    font-size: 14px;
+}
+
+.editor-wrapper :deep(.cherry-toolbar-split) {
+    margin: 5px 2px;
+    height: 17px;
+}
+
+.editor-wrapper :deep(.cherry-dropdown-item) {
+    height: 30px;
+    line-height: 30px;
+}
+
+/* 隐藏 cherry-markdown 默认侧边栏竖条区域 */
+.editor-wrapper :deep(.cherry-sidebar) {
+    display: none !important;
 }
 </style>
