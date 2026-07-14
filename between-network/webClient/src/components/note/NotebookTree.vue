@@ -443,7 +443,7 @@
     /**
      * 新建笔记
      */
-    function addNewNote()
+    async function addNewNote()
     {
         console.log("create note=>",currentSelectNode.value);
         let API = {...noteApi.createNote};
@@ -452,14 +452,21 @@
             notebookId:currentSelectNode.value.key
         };
         console.log("API=>",API);
-        noteServerRequest(API).then(responseData=>{
-            console.log("create responseData=>",responseData);
-            if(responseData?.success)
+        const responseData = await noteServerRequest(API);
+        console.log("create responseData=>",responseData);
+        if(responseData?.success)
+        {
+            //直接获取更新后的笔记列表
+            let listAPI = {...noteApi.getUserNoteList};
+            listAPI.params = { notebookId: currentSelectNode.value.key };
+            const listResponse = await noteServerRequest(listAPI);
+            if(listResponse)
             {
-                //重新获取笔记列表
-                getNotesList();
+                emit("NotebookChanged", listResponse.data);
+                return listResponse.data;
             }
-        })
+        }
+        return null;
     }
 
     /**

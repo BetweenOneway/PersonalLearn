@@ -415,8 +415,21 @@
     /**
      * 创建笔记
      */
-    const createNote = ()=>{
-        notebookTree.value.addNewNote();
+    const createNote = async ()=>{
+        //保存创建前的笔记ID列表
+        const oldIds = new Set(noteList.value.map(n => n.id));
+        //新建笔记并获取更新后的列表
+        const newNoteList = await notebookTree.value.addNewNote();
+        if(newNoteList)
+        {
+            //通过diff找出新建的笔记
+            const newNote = newNoteList.find(n => !oldIds.has(n.id));
+            if(newNote)
+            {
+                //带标记跳转到编辑页，标记为新笔记以便自动进入编辑模式
+                toHerf(`/note/edit/${newNote.id}?new=true`);
+            }
+        }
     }
 
     /**

@@ -57,6 +57,7 @@
 
 <script setup>
     import { ref,inject,watch,onMounted,onUnmounted,h } from 'vue';
+    import { useRoute } from 'vue-router';
     import { NIcon } from "naive-ui";
     import { Ckeditor } from '@ckeditor/ckeditor5-vue';
     import {EditorType,getEditorConfigs} from "@/ckEditor"
@@ -136,6 +137,8 @@
     }
 
     //const ckeditor5 = CKEditor.component;
+
+    const route = useRoute();
 
     const propsData = defineProps({
         id:{type:String,required:true},
@@ -230,8 +233,15 @@
                 //编辑笔记的用户编号
                 editNoteUID.value = note.value.u_id;
                 LoadOperationMenu();
-                //退出编辑模式
-                exitEditMode();
+                //新笔记自动进入编辑模式，否则退出到预览模式
+                if(route.query.new === 'true')
+                {
+                    enterEditMode();
+                }
+                else
+                {
+                    exitEditMode();
+                }
                 //加载已完毕
                 loading.value = false;
             }
