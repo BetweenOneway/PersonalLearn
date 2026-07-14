@@ -10,6 +10,7 @@ var router=express.Router();
 
 const path = require('path')
 const fs = require('fs');
+const { logger } = require("sequelize/lib/utils/logger");
 
 //MD5加密
 function cryptPwd(password) {
@@ -34,7 +35,9 @@ function checkDirectory(dirPath) {
 
 //用户登录
 router.post("/login",async(req,res)=>{
+    
     logger.info("user login service start",req.body);
+
     var userEmail = req.body.userEmail
     var userPassword = req.body.userPassword
     var output={
@@ -119,7 +122,6 @@ router.post("/login",async(req,res)=>{
                 res.send(output)
             } catch (error) {
                 logger.error(`user login:set redis error=>${error}`)
-                console.log(error)
                 output.success = statusCode.REDIS_STATUS.SET_FAIL.success
                 output.status = statusCode.REDIS_STATUS.SET_FAIL.status
                 output.description = statusCode.REDIS_STATUS.SET_FAIL.description
@@ -144,7 +146,7 @@ router.get("/logout",(req,res)=>{
         status:'',
         description:''
     }
-    console.log("退出登录",req.query);
+    logger.info(`退出登录${req.query}`);
     var userToken = req.get('userToken')
     if(!userToken || userToken==="" )
     {
@@ -163,8 +165,7 @@ router.get("/logout",(req,res)=>{
                 output.description = statusCode.SERVICE_STATUS.LOGOUT_SUCCESS.description
                 res.send(output)
             } catch (error) {
-                console.log("退出登录，缓存删除失败")
-                console.log(error)
+                logger.error(`退出登录，缓存删除失败${error}`)
                 output.success = statusCode.REDIS_STATUS.DEL_FAIL.success
                 output.status = statusCode.REDIS_STATUS.DEL_FAIL.status
                 output.description = statusCode.REDIS_STATUS.DEL_FAIL.description
@@ -172,7 +173,7 @@ router.get("/logout",(req,res)=>{
             }
         })()
     } catch (error) {
-        console.log(error)
+        logger.error(`退出登录，缓存删除失败${error}`)
     }
 })
 
@@ -186,7 +187,7 @@ router.get("/SendVerifyCode",async(req,res)=>{
             userToken:''
         }
     }
-    console.log("获取验证码：",req.query);
+    logger.info(`get vc code：${req.query}`);
     var userEmail = req.query.userEmail
     try {
         //查询邮箱是否被占用
@@ -233,14 +234,14 @@ router.get("/SendVerifyCode",async(req,res)=>{
             }
             catch(e)
             {
-                console.log(e)
+                logger.error(`send vc mail fail=>${e}`)
                 output.success = statusCode.REDIS_STATUS.SET_FAIL.success
                 output.status = statusCode.REDIS_STATUS.SET_FAIL.status
                 output.description= statusCode.REDIS_STATUS.SET_FAIL.description
             }
         }
     } catch (error) {
-        console.log(error)
+        logger.error(`send vc mail fail=>${error}`)
         output.success = statusCode.SERVICE_STATUS.SEND_EMAIL_VC_FAIL.success
         output.status = statusCode.SERVICE_STATUS.SEND_EMAIL_VC_FAIL.status
         output.description= statusCode.SERVICE_STATUS.SEND_EMAIL_VC_FAIL.description
@@ -250,7 +251,7 @@ router.get("/SendVerifyCode",async(req,res)=>{
 
 //邮箱注册账号
 router.post("/register",async (req,res)=>{
-    console.log("用户注册",req.body);
+    logger.info(`用户注册=>${req.body}`);
     var userEmail = req.body?.userEmail??""
     let verifyCode = req.body?.verifyCode??""
     let verifyCodeKey = req.body?.verifyCodeKey??""
@@ -264,13 +265,13 @@ router.post("/register",async (req,res)=>{
     //参数校验
     if(userEmail.length == 0)
     {
-        console.log("mail length == 0")
+        logger.info("mail length == 0")
     }
     else if(verifyCode.length == 0 || verifyCodeKey.length == 0)
     {
         //接收验证码邮箱与注册邮箱是否相同
         //验证码是否相同
-        console.log("verifycode length == 0")
+        logger.info("verifycode length == 0")
     }
     else
     {
@@ -344,10 +345,12 @@ router.post("/register",async (req,res)=>{
                 +"<p>您已成功注册之间账号，其初始密码为：<b style='font-size:20px;color:blue;'>"
                 +notEncryptedPassword+"</b>。</p>"
                 +'<p color="red">请及时登录并修改登录密码！</p>'
+                
                 mailOper.SendEmail({email:userEmail,subject:"账号注册成功通知",text:"",html:mailContent},resultInfo)
+
                 if(0 != resultInfo.statusCode)
                 {
-                    console.log("mail send fail")
+                    logger.error("mail send fail")
                     output.success = statusCode.SERVICE_STATUS.MAIL_NOTIFICATION.success
                     output.status = statusCode.SERVICE_STATUS.MAIL_NOTIFICATION.status
                     output.description = statusCode.SERVICE_STATUS.MAIL_NOTIFICATION.description
@@ -355,7 +358,7 @@ router.post("/register",async (req,res)=>{
                 }
                 else
                 {
-                    console.log("mail send success,user account register success")
+                    logger.info("mail send success,user account register success")
                     output.success = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.success
                     output.status = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.status
                     output.description = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.description
@@ -363,7 +366,7 @@ router.post("/register",async (req,res)=>{
                 }
                 
             } catch (error) {
-                console.log("用户注册出错",error)
+                logger.error(`用户注册出错${error}`)
                 t.rollback();
                 output.success = statusCode.SERVICE_STATUS.REGISTER_FAIL.success
                 output.status = statusCode.SERVICE_STATUS.REGISTER_FAIL.status
@@ -378,7 +381,7 @@ router.post("/register",async (req,res)=>{
  * 获取用户可公开的信息
  */
 router.get("/getUserPublicInfo",async(req,res)=>{
-    console.log("get User Public Info service start",req.query);
+    logger.info(`get User Public Info service start${req.query}`);
 
     var output={
         success:false,
@@ -421,7 +424,7 @@ router.get("/getUserPublicInfo",async(req,res)=>{
 
             await t.commit();
 
-            console.log("End of get user info")
+            logger.info(`End of get user info`);
 
             output.success = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.status
@@ -430,7 +433,8 @@ router.get("/getUserPublicInfo",async(req,res)=>{
             res.send(output)
         } catch (error) {
             //出错处理
-            console.log("get user info error:",error)
+            logger.info(`get user info error:${error}`)
+
             await t.rollback();
             output.success = statusCode.SERVICE_STATUS.GET_USERINFO_FAIL.success
             output.status = statusCode.SERVICE_STATUS.GET_USERINFO_FAIL.status
@@ -444,7 +448,7 @@ router.get("/getUserPublicInfo",async(req,res)=>{
  * 获取用户非公开私密信息
  */
 router.get("/getUserPrivacyInfo",async(req,res)=>{
-    console.log("get User Info service start",req.query);
+    logger.info(`get User Info service start:${req.query}`)
 
     var output={
         success:false,
@@ -487,7 +491,7 @@ router.get("/getUserPrivacyInfo",async(req,res)=>{
 
             await t.commit();
 
-            console.log("End of get user info")
+            logger.info(`End of get user info`);
 
             output.success = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.GET_USERINFO_SUCCESS.status
@@ -496,6 +500,7 @@ router.get("/getUserPrivacyInfo",async(req,res)=>{
             res.send(output)
         } catch (error) {
             //出错处理
+            logger.error(`get user info error:${error}`);
             console.log("get user info error:",error)
             await t.rollback();
             output.success = statusCode.SERVICE_STATUS.GET_USERINFO_FAIL.success
@@ -516,7 +521,8 @@ router.post("/updateUserInfo",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start update user info,req.body:",req.body);
+
+    logger.info(`start update user info,req.body:${req.body}`);
 
     //{nickname,sex,birthday}
     let toUpdateInfo = req.body;
@@ -542,7 +548,7 @@ router.post("/updateUserInfo",async (req,res)=>{
         )
         if(matchedUserCount >=1)
         {
-            logger.info("update user info,same data, not update");
+            logger.info(`update user info,same data, not update`)
         }
         else{
             const affectedNum = await sqldb.User.update(
@@ -560,7 +566,8 @@ router.post("/updateUserInfo",async (req,res)=>{
                 }
             );
     
-            console.log("updateResult:",affectedNum)
+            logger.info(`updateResult:${affectedNum}`);
+
             if(affectedNum[0] !== 1)
             {
                 throw "更新用户信息失败"
@@ -581,11 +588,13 @@ router.post("/updateUserInfo",async (req,res)=>{
                         transaction: t
                     }
                 );
-                console.log("affectedNum:",affectedNum);
+                logger.info(`affectedNum:${affectedNum}`);
             }
             await t.commit();
         }
-        console.log("更新用户信息成功！")
+
+        logger.info("更新用户信息成功！")
+
         //再次查询用户信息
         const userBasicInfo = await sqldb.User.findOne(
             {
@@ -604,7 +613,7 @@ router.post("/updateUserInfo",async (req,res)=>{
         return;
     } catch (error) {
         //出错处理
-        console.log(error)
+        logger.error(`update user info error=>${error}`)
 
         t.rollback();
 
@@ -615,7 +624,8 @@ router.post("/updateUserInfo",async (req,res)=>{
         res.send(output);
     }
 
-    console.log("End of update user info")
+    logger.info(`End of update user info`)
+
     return
 })
 
@@ -629,7 +639,8 @@ router.post("/uploadHeadPic",async (req,res)=>{
         description:'',
         data:[]
     }
-    console.log("start upload head pic");
+
+    logger.info(`start upload head pic`);
 
     let files = req.files;
     let userInfo = req.userInfo;
@@ -640,25 +651,28 @@ router.post("/uploadHeadPic",async (req,res)=>{
         output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success
         output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status
         output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description
-        console.log("upload head pic,no files upload:",files);
+        logger.info(`upload head pic,no files upload:${files}`);
     }
     else{
         const t = await sqldb.sequelize.transaction();
         
         try {
             let file = files.avatar;
-            console.log("file Info:",file);
+
+            logger.info(`file Info:${file}`);
+            
             let fileName = file.name;
             let fileSuffixNameArr = fileName.split('.');
             let fileSuffixName = fileSuffixNameArr[fileSuffixNameArr.length - 1];
             
             //上传到哪个文件夹下
             let fileStorePath = path.join(path.dirname(__dirname),'public','imgs/avatar');
-            console.log("fileStorePath:",fileStorePath);
+
+            logger.info(`fileStorePath:${fileStorePath}`);
 
             //存储在网络上的文件名 时间戳+后缀
             let storageFileName = 'avatar' + '-' + userInfo.id + "."+ fileSuffixName;
-            console.log('storageFileName:',storageFileName);
+            logger.info(`storageFileName:${storageFileName}`);
 
             //判断存储路径是否存在 如果不存在则创建文件夹
             checkDirectory(fileStorePath);
@@ -668,17 +682,18 @@ router.post("/uploadHeadPic",async (req,res)=>{
                 if(err)
                 {
                     //上传失败错误处理
-                    console.log("upload fail:",err);
+                    logger.error(`upload fail:${err}`);
                 }
                 else
                 {
-                    console.log("file move success");
+                    logger.info(`file move success`);
                 }
             })
             
             //生成图片的虚拟地址 http://localhost:80/image/avatar/avatar-[id].jpg
             let imageURL = req.protocol + '://' + req.get('host') + '/imgs/avatar/' +storageFileName;
-            console.log('imageURL',imageURL);
+
+            logger.info(`imageURL:${imageURL}`);
 
             //先查询是否有同样的数据，如果有则不再更新
             const matchedUserCount = await sqldb.User.count(
@@ -729,18 +744,19 @@ router.post("/uploadHeadPic",async (req,res)=>{
                 }
             );
             
-            console.log("Add log:",addLog);
+            logger.info(`"Add log:${addLog}`);
+
             await t.commit();
 
             output.success = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_SUCCESS.description
 
-            console.log("Update user avatar success");
+            logger.info(`Update user avatar success`);
 
         } catch (error) {
             //出错处理
-            console.log("Update user avatar fail:",error);
+            logger.error(`Update user avatar fail:${error}`);
 
             t.rollback();
 
@@ -749,7 +765,7 @@ router.post("/uploadHeadPic",async (req,res)=>{
             output.description = statusCode.SERVICE_STATUS.UPDATE_USER_AVATAR_FAIL.description
         }
 
-        console.log("End of upload head pic")
+        logger.info(`End of upload head pic`);
     }
     res.send(output);
 
