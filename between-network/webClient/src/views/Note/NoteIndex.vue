@@ -114,7 +114,7 @@
                     <!--笔记编辑容器-->
                     <n-layout-content content-style="padding:0;">
                         <!--子路由-->
-                        <router-view @save="" 
+                        <router-view :key="selectNoteId" @save="handleSaveNote" 
                         @deleteSuccess="deleteNoteSuccess" 
                         :change-state="isChangeEditNote"/>
                     </n-layout-content>
@@ -163,6 +163,7 @@
     import NotebookTree from "@/components/note/NotebookTree.vue";
 
     import Dumpster from "@/components/dumpster/Dumpster.vue";
+    import DeleteRemindDialog from "@/components/remind/DeleteRemindDialog.vue";
 
     import { useDeleteRemindDialogStore } from "@/stores/deleteRemindDialogStore";
 
@@ -496,6 +497,20 @@
         changeEditNoteState(2)
     }
 
+    /**
+     * 保存笔记后实时更新列表中对应卡片
+     */
+    const handleSaveNote = (savedNote) => {
+        const noteId = Number(savedNote.id);
+        const idx = noteList.value.findIndex(n => n.id === noteId);
+        if (idx !== -1) {
+            const item = noteList.value[idx];
+            item.title = savedNote.title;
+            item.content = savedNote.content;
+            item.update_time = savedNote.update_time;
+        }
+    }
+
     async function getRecentNoteList(isInit = true)
     {
         if(!isInit)
@@ -532,11 +547,6 @@
 </script>
 
 <style>
-/*只有将笔记列表容器收起来时，切换按钮的位置才会向右偏移*/
-.n-layout-sider.n-layout-sider--collapsed.note-list .n-layout-toggle-button {
-    right: -30px;
-}
-
 /*选中效果*/
 .n-list .n-list-item.editing{
     box-shadow: 0 0 5px #18A058;
@@ -594,13 +604,10 @@
         flex-shrink: 0;
         padding: 8px 0;
         border-top: 1px solid #e8e8e8;
-        display: flex;
-        justify-content: center;
     }
 
     .recycle-btn {
         width: calc(100% - 24px);
-        justify-content: flex-start;
         padding-left: 28px;
     }
 </style>

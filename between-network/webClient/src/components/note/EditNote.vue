@@ -286,6 +286,13 @@
                 {
                     el: editorContainer.value,
                     value: note.value.content,
+                    engine: {
+                        syntax: {
+                            table: {
+                                enableChart: false,
+                            },
+                        },
+                    },
                     editor: {
                         defaultModel: 'previewOnly',
                     },
@@ -363,7 +370,12 @@
             //更新笔记最后一次操作时间
             note.value.update_time = responseData.data.update_time;
             //告诉父组件重新获取列表
-            emits('save');
+            emits('save', {
+                id: noteId,
+                title,
+                content,
+                update_time: responseData.data.update_time
+            });
         })
     }
 
