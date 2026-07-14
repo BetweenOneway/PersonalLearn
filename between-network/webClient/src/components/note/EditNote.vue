@@ -20,16 +20,12 @@
                     <n-button v-else type="primary" size="small" @click="saveNote">
                         保存
                     </n-button>
-                    <n-popover v-model:show = "noteOperationMenuShow" trigger="click">
-                        <template #trigger>
-                            <n-button text size="small" class="more-btn">
-                                <template #icon>
-                                    <n-icon size="16" :component="MoreHorizRound"/>
-                                </template>
-                            </n-button>
+                    <n-button text size="small" class="delete-btn" :focusable="false" @click="deleteNote">
+                        <template #icon>
+                            <n-icon size="16" :component="DeleteOutlined"/>
                         </template>
-                        <n-menu :options="noteOperationMenu" :indent="18" :on-update:value="clickNoteOperationMenu" />
-                    </n-popover>
+                        删除
+                    </n-button>
                 </div>
             </header>
             <main class="note-main">
@@ -47,6 +43,30 @@
                     <span class="status-bar__dot"></span>
                     更新于:{{ note.update_time }}
                 </span>
+                <n-button
+                    v-if="note.status == 2"
+                    text
+                    size="tiny"
+                    class="status-bar__btn"
+                    @click="PublicNote(false)"
+                >
+                    <template #icon>
+                        <n-icon size="14" :component="PublicOffFilled"/>
+                    </template>
+                    已公开笔记
+                </n-button>
+                <n-button
+                    v-else
+                    text
+                    size="tiny"
+                    class="status-bar__btn"
+                    @click="PublicNote(true)"
+                >
+                    <template #icon>
+                        <n-icon size="14" :component="PublicFilled"/>
+                    </template>
+                    未公开笔记
+                </n-button>
             </footer>
         </div>
     </div>
@@ -56,18 +76,15 @@
 </template>
 
 <script setup>
-    import { ref,inject,watch,onMounted,onUnmounted,h } from 'vue';
+    import { ref,inject,watch,onMounted,onUnmounted } from 'vue';
     import { useRoute } from 'vue-router';
-    import { NIcon } from "naive-ui";
     import { Ckeditor } from '@ckeditor/ckeditor5-vue';
     import {EditorType,getEditorConfigs} from "@/ckEditor"
     import 'ckeditor5/ckeditor5.css';
     import 'cherry-markdown/dist/cherry-markdown.css';
     import Cherry from 'cherry-markdown';
 
-    import {FiberManualRecordRound,
-        MoreHorizRound,
-        MinusRound,
+    import {DeleteOutlined,
         PublicFilled,
         PublicOffFilled
     } from'@vicons/material'
@@ -92,49 +109,6 @@
 
     //CherryMarkdown 实例
     let cherryInstance = null;
-
-    let noteOperationMenuShow = ref(false);
-    
-    function renderIcon(icon) {
-        return () => h(NIcon, null, { default: () => h(icon) });
-    }
-
-    //点击新建按钮的菜单
-    const noteOperationMenu = ref([
-        {
-            key:'delete-note',
-            icon:renderIcon(MinusRound),
-            label:'删除笔记'
-        },
-        {
-            key:'public-note',
-            icon:renderIcon(PublicFilled),
-            label:'公开笔记'
-        },
-        {
-            key:'unpublic-note',
-            icon:renderIcon(PublicOffFilled),
-            label:'取消公开笔记'
-        },
-    ]);
-
-    //新建菜单选项回调
-    const clickNoteOperationMenu = (key,value)=>{
-        //关闭用户菜单弹出信息
-        noteOperationMenuShow.value = false
-
-        switch(key){
-            case "delete-note":
-                deleteNote();
-                break;
-            case "public-note":
-                PublicNote(true);
-                break;
-            case "unpublic-note":
-                PublicNote(false);
-                break;
-        }
-    }
 
     //const ckeditor5 = CKEditor.component;
 
@@ -179,38 +153,6 @@
     //笔记信息
     const note = ref({})
     
-    function LoadOperationMenu()
-    {
-        noteOperationMenu.value = [];
-
-        noteOperationMenu.value.push(
-            {
-                key:'delete-note',
-                icon:renderIcon(MinusRound),
-                label:'删除笔记'
-            }
-        );
-        if(2 == note.value.status)
-        {
-            noteOperationMenu.value.push(
-                {
-                    key:'unpublic-note',
-                    icon:renderIcon(PublicOffFilled),
-                    label:'取消公开笔记'
-                }
-            );
-        }
-        else{
-            noteOperationMenu.value.push(
-                {
-                    key:'public-note',
-                    icon:renderIcon(PublicFilled),
-                    label:'公开笔记'
-                }
-            );
-        }
-    }
-
     /**
      * 获取编辑笔记信息
      */
@@ -232,7 +174,6 @@
                 cherryInstance.setValue(note.value.content);
                 //编辑笔记的用户编号
                 editNoteUID.value = note.value.u_id;
-                LoadOperationMenu();
                 //新笔记自动进入编辑模式，否则退出到预览模式
                 if(route.query.new === 'true')
                 {
@@ -430,7 +371,6 @@
             if(responseData)
             {
                 note.value.status = isPublic?2:1;
-                LoadOperationMenu();
             }
         })
     }
@@ -467,9 +407,13 @@
     flex-shrink: 0;
 }
 
-.more-btn {
+.delete-btn {
     min-width: 24px;
     justify-content: center;
+    color: #999;
+}
+.delete-btn:hover {
+    color: #d03050;
 }
 
 .note-main {
@@ -488,6 +432,7 @@
 .status-bar {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     height: 22px;
     padding: 0 10px;
     font-size: 12px;
@@ -500,6 +445,15 @@
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+.status-bar__btn {
+    font-size: 12px;
+    color: #666;
+    padding: 0;
+    margin: 0;
+    height: 18px;
+    line-height: 18px;
 }
 
 .editor-wrapper :deep(.cherry-toolbar) {
