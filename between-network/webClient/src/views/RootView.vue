@@ -1,7 +1,7 @@
 <template>
     <!--布局-->
     <n-layout>
-        <n-layout-header class="nav-header">
+        <n-layout-header :class="['nav-header', { 'nav-header--dark': isDarkTheme }]">
             <div class="nav-bar">
                 <MainTopNavBar />
             </div>
@@ -21,7 +21,14 @@
     import MainTopNavBar from '@/components/navbar/MainTopNavBar.vue';
     import LoginModal from '@/components/login/LoginModal.vue';
 
+    import { useThemeStore } from "@/stores/themeStore";
+    import { storeToRefs } from 'pinia';
+
     import {useLoadingBar, useMessage} from 'naive-ui'
+
+    // 主题信息
+    const themeStore = useThemeStore();
+    const { isDarkTheme } = storeToRefs(themeStore);
 
     //将消息对象挂在到window
     window.$message = useMessage();
@@ -40,6 +47,10 @@
         z-index: 100;
         background-color: #f5f6f7;
         border-bottom: 1px solid #e8e8e8;
+    }
+    .nav-header--dark {
+        background-color: #101014;
+        border-bottom-color: #ffffff1a;
     }
     .nav-bar{
         flex:1;
