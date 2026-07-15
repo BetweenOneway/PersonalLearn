@@ -7,6 +7,8 @@
                 <n-button text type="info" @click="emits('changeStep',2)">去注册</n-button>
             </n-text>
         </n-space>
+        <!--登录失败提示-->
+        <n-alert v-if="loginErrorMsg" type="error" :title="loginErrorMsg" closable @after-leave="loginErrorMsg = ''" style="margin-bottom: 12px;" />
         <!--登录表单-->
         <n-form :model="loginFormValue" :rules="loginFormRules" ref="loginFormRef">
             <n-form-item label="邮箱" path="email" first>
@@ -106,6 +108,8 @@
 
     //禁用登陆按钮
     const loginBtnDisabled = ref(false)
+    //登录错误提示信息
+    const loginErrorMsg = ref('')
 
     //去登陆
     const toLogin = async (e)=>{
@@ -114,6 +118,9 @@
         await loginFormRef.value?.validate(async (errors) => {
             if(errors) throw "表单验证失败"
         });
+
+        //清除之前的错误提示
+        loginErrorMsg.value = '';
 
         //禁用按钮
         disabledBtn(loginBtnDisabled,true);
@@ -128,21 +135,29 @@
             userEmail:loginFormValue.value.email,
             userPassword:encryptedPassword
         }
+        //设置请求超时，避免后端无响应时前端一直等待
+        API.timeout = 10000;
         //发送请求
-        await noteServerRequest(API).then(responseData =>{
-            if(!responseData)
-            {
-                return;
-            }
-            //关闭登陆对话框
-            changeLoginModalShow(false)
-            //将Redis中的用户token存储到本地
-            //localStorage.setItem("userToken",responseData.userToken)
-            
-            setUserInfo(responseData.userToken,responseData.userInfo)
-        })
-
-        //解除禁用按钮
-        disabledBtn(loginBtnDisabled,false,true,2.5);
+        try {
+            await noteServerRequest(API).then(responseData =>{
+                if(!responseData)
+                {
+                    return;
+                }
+                //关闭登陆对话框
+                changeLoginModalShow(false)
+                //将Redis中的用户token存储到本地
+                //localStorage.setItem("userToken",responseData.userToken)
+                
+                setUserInfo(responseData.userToken,responseData.userInfo)
+            })
+        } catch (error) {
+            //网络错误、超时等异常情况
+            console.log('登录请求异常:', error);
+            loginErrorMsg.value = '登录失败，请稍后重试';
+        } finally {
+            //无论成功或失败，解除禁用按钮
+            disabledBtn(loginBtnDisabled,false,true,2.5);
+        }
     }
 </script>
