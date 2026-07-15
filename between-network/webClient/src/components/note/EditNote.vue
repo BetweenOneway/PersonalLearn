@@ -11,7 +11,7 @@
         <div v-show="!loading" style="width: 100%;height: 100%;display: flex;flex-direction: column;">
             <header class="note-header">
                 <n-input v-if="isEditing" v-model:value="note.title" size="medium" placeholder="笔记标题" 
-                style="--n-border:none;--n-padding-left:0;background-color: transparent;font-size: 18px;font-weight: 600;flex:1;"></n-input>
+                class="note-title-input"></n-input>
                 <h3 v-else class="note-title">{{ note.title }}</h3>
                 <div class="note-actions">
                     <n-button v-if="!isEditing" size="small" @click="enterEditMode">
@@ -382,6 +382,15 @@
 </script>
 
 <style scoped>
+.note-title-input{
+    --n-border:none;
+    --n-padding-left:0;
+    background-color: transparent;
+    font-size: 18px;
+    font-weight: 600;
+    flex:1;
+}
+
 .note-header {
     display: flex;
     align-items: center;
