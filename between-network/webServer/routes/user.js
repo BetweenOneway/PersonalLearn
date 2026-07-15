@@ -10,7 +10,7 @@ var router=express.Router();
 
 const path = require('path')
 const fs = require('fs');
-const { logger } = require("sequelize/lib/utils/logger");
+// logger 通过 global.logger 在 app.js 中注册为全局 Winston logger
 
 //MD5加密
 function cryptPwd(password) {
@@ -36,7 +36,7 @@ function checkDirectory(dirPath) {
 //用户登录
 router.post("/login",async(req,res)=>{
     
-    logger.info("user login service start",req.body);
+    logger.info(`user login service start:${JSON.stringify(req.body)}`)
 
     var userEmail = req.body.userEmail
     var userPassword = req.body.userPassword
@@ -71,7 +71,7 @@ router.post("/login",async(req,res)=>{
                     }
                 }
             );
-            logger.info(`get userInfo:${userInfo}`);
+            logger.info(`get userInfo:${JSON.stringify(userInfo)}`);
             if(!userInfo)
             {
                 logger.error("account & password not matched")
@@ -146,7 +146,7 @@ router.get("/logout",(req,res)=>{
         status:'',
         description:''
     }
-    logger.info(`退出登录${req.query}`);
+    logger.info(`退出登录${JSON.stringify(req.query)}`);
     var userToken = req.get('userToken')
     if(!userToken || userToken==="" )
     {
@@ -187,7 +187,7 @@ router.get("/SendVerifyCode",async(req,res)=>{
             userToken:''
         }
     }
-    logger.info(`get vc code：${req.query}`);
+    logger.info(`get vc code：${JSON.stringify(req.query)}`);
     var userEmail = req.query.userEmail
     try {
         //查询邮箱是否被占用
@@ -251,7 +251,7 @@ router.get("/SendVerifyCode",async(req,res)=>{
 
 //邮箱注册账号
 router.post("/register",async (req,res)=>{
-    logger.info(`用户注册=>${req.body}`);
+    logger.info(`用户注册=>${JSON.stringify(req.body)}`);
     var userEmail = req.body?.userEmail??""
     let verifyCode = req.body?.verifyCode??""
     let verifyCodeKey = req.body?.verifyCodeKey??""
@@ -381,7 +381,7 @@ router.post("/register",async (req,res)=>{
  * 获取用户可公开的信息
  */
 router.get("/getUserPublicInfo",async(req,res)=>{
-    logger.info(`get User Public Info service start${req.query}`);
+    logger.info(`get User Public Info service start:${JSON.stringify(req.query)}`);
 
     var output={
         success:false,
@@ -448,7 +448,7 @@ router.get("/getUserPublicInfo",async(req,res)=>{
  * 获取用户非公开私密信息
  */
 router.get("/getUserPrivacyInfo",async(req,res)=>{
-    logger.info(`get User Info service start:${req.query}`)
+    logger.info(`get User Info service start:${JSON.stringify(req.query)}`)
 
     var output={
         success:false,
@@ -522,7 +522,7 @@ router.post("/updateUserInfo",async (req,res)=>{
         data:[]
     }
 
-    logger.info(`start update user info,req.body:${req.body}`);
+    logger.info(`start update user info,req.body:${JSON.stringify(req.body)}`);
 
     //{nickname,sex,birthday}
     let toUpdateInfo = req.body;
@@ -659,7 +659,7 @@ router.post("/uploadHeadPic",async (req,res)=>{
         try {
             let file = files.avatar;
 
-            logger.info(`file Info:${file}`);
+            logger.info(`file Info:${JSON.stringify(file)}`);
             
             let fileName = file.name;
             let fileSuffixNameArr = fileName.split('.');
@@ -744,7 +744,7 @@ router.post("/uploadHeadPic",async (req,res)=>{
                 }
             );
             
-            logger.info(`"Add log:${addLog}`);
+            logger.info(`"Add log:${JSON.stringify(addLog)}`);
 
             await t.commit();
 
