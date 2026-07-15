@@ -11,8 +11,6 @@
             <router-view/>
         </n-layout-content>
 
-        <n-layout-footer>
-        </n-layout-footer>
     </n-layout>
     <login-modal/>
 </template>

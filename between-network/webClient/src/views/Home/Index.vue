@@ -28,6 +28,9 @@
             </n-grid>
         </div>
     </div>
+
+    <!-- 底部区域 -->
+    <PageFooter />
 </template>
 
 <script setup>
@@ -36,6 +39,8 @@
     import { toHerf } from '@/router/go';
     import { loginInvalid,getUserToken } from "@/Utils/userLogin";
     import {KeyboardArrowRightFilled} from "@vicons/material"
+
+    import PageFooter from '@/components/home/PageFooter.vue';
 
     import BlogCard from '@/components/blog/BlogCard.vue';
     
@@ -177,4 +182,6 @@
         font-size: 16px;
         line-height: 16px
     }
+
+
 </style>
