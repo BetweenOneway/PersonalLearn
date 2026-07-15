@@ -66,6 +66,12 @@ const router = createRouter({
         component: ()=>import("@/views/Blog/ArticleDetailView.vue"),
         meta:{title:'博客页'},
     },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: ()=>import("@/views/NotFound/404.vue"),
+        meta:{title:'404'},
+    },
   ],
 })
 
