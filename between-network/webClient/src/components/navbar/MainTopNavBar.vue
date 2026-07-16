@@ -4,6 +4,7 @@
             <n-image :src="logoDarkImage"></n-image>
         </a>
         <n-space align="center" :wrap-item="false">
+            
             <!--头像-->
             <n-popover v-model:show = "userMenuShow" trigger="click" width="260px" content-style="padding:10px">
                 <template #trigger>
@@ -30,6 +31,10 @@
                     </template>
                 </n-thing>
             </n-popover>
+
+            <!--登录按钮-->
+            <n-button v-if="user_id === null" tertiary type="primary" @click="showLoginModal">登录</n-button>
+            
             <!--分割线-->
             <n-divider v-if="user_id !== null" vertical />
             <!--消息-->
@@ -43,8 +48,7 @@
             <n-button circle tertiary @click="changeTheme(!isDarkTheme)">
                 <n-icon size="18" :component="theme.icon" />
             </n-button>
-            <!--登录按钮-->
-            <n-button v-if="user_id === null" tertiary type="primary" @click="showLoginModal">登录</n-button>
+            
         </n-space>
     </n-space>
 </template>
