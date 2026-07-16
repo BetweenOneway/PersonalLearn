@@ -1,5 +1,5 @@
 <template>
-    <div class="blog-card" @click="GotoBlogView(blog.id)">
+    <div class="blog-card" :class="{ 'blog-card--dark': isDarkTheme }" @click="GotoBlogView(blog.id)">
         <n-card>
             <!-- 顶部：头像 + 标题/作者 -->
             <div class="card-head">
@@ -55,12 +55,17 @@
 
     import { FileAltRegular, ThumbsUpRegular, ThumbsDownRegular, HeartRegular } from '@vicons/fa';
     import { toHerf } from '@/router/go';
+    import { useThemeStore } from '@/stores/themeStore';
+    import { storeToRefs } from 'pinia';
 
     const props = defineProps(
         {
             blog:{type:Object,required:true},//博客对象
         }
     )
+
+    const themeStore = useThemeStore();
+    const { isDarkTheme } = storeToRefs(themeStore);
 
     const GotoBlogView = (id)=>{
         console.log("go to blog view =>",id);
@@ -166,5 +171,61 @@
 .card-actions :deep(.n-button:hover) {
     color: #2080f0;
     background-color: rgba(32, 128, 240, 0.06);
+}
+
+/* ===== 暗色主题 ===== */
+.blog-card--dark :deep(.n-card) {
+    background: #1a1a24;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.blog-card--dark:hover :deep(.n-card) {
+    box-shadow: 0 4px 16px rgba(32, 128, 240, 0.15), 0 0 0 1px rgba(32, 128, 240, 0.2);
+    background: #1f1f2a;
+}
+
+.blog-card--dark .blog-avatar {
+    background: #2a2a36 !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.blog-card--dark .card-title {
+    color: #e0e0e8;
+}
+
+.blog-card--dark:hover .card-title {
+    color: #63a4ff;
+}
+
+.blog-card--dark .card-meta {
+    color: #7a7a8c;
+}
+
+.blog-card--dark .card-content {
+    color: #8a8a9a;
+}
+
+.blog-card--dark .card-actions {
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.blog-card--dark:hover .card-actions {
+    border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.blog-card--dark .card-actions :deep(.n-button) {
+    color: #7a7a8c;
+}
+
+.blog-card--dark .card-actions :deep(.n-button:hover) {
+    color: #63a4ff;
+    background-color: rgba(99, 164, 255, 0.1);
+}
+</style>
+
+<!-- 非 scoped 样式：修复 n-ellipsis tooltip 中标题文字颜色 -->
+<style>
+.n-tooltip .card-title {
+    color: #fff !important;
 }
 </style>
