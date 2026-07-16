@@ -51,7 +51,7 @@
                     @click="PublicNote(false)"
                 >
                     <template #icon>
-                        <n-icon size="14" :component="PublicOffFilled"/>
+                        <n-icon size="14" :component="PublicFilled"/>
                     </template>
                     已公开笔记
                 </n-button>
@@ -63,7 +63,7 @@
                     @click="PublicNote(true)"
                 >
                     <template #icon>
-                        <n-icon size="14" :component="PublicFilled"/>
+                        <n-icon size="14" :component="PublicOffFilled"/>
                     </template>
                     未公开笔记
                 </n-button>
@@ -152,6 +152,10 @@
 
     //笔记信息
     const note = ref({})
+
+    //保存进入编辑模式时的原始标题和内容，用于判断是否有变动
+    const originalTitle = ref('')
+    const originalContent = ref('')
     
     /**
      * 获取编辑笔记信息
@@ -271,6 +275,16 @@
 
     function enterEditMode()
     {
+        // 记录进入编辑模式时的原始数据
+        originalTitle.value = note.value.title || ''
+        // 从编辑器获取当前内容作为快照，而非 note.value.content，
+        // 因为 cherry-markdown 的 setValue/getValue 会做内容规范化，
+        // 直接取原始数据会导致 saveNote 中永远判定为"有变化"
+        if (!useCkEditor.value) {
+            originalContent.value = cherryInstance.getValue() || ''
+        } else {
+            originalContent.value = note.value.content || ''
+        }
         isEditing.value = true;
         if (!useCkEditor.value) {
             cherryInstance.switchModel('edit&preview');
@@ -293,24 +307,30 @@
         const noteId = propsData.id;
         //标题
         const title = note.value.title;
-        //笔记主体内容(不含标题)
-        //const body = note.value.content;//ckEditor.plugins.get('Title').getBody();
         
         //笔记主体内容（不含标题） 获取编辑器内容
         if(!useCkEditor.value)
         {
             let noteContent = cherryInstance.getValue();
-            note.value.content = noteContent;//JSON.stringify({ noteContent });
-            console.log("get CherryMarkDown内容=>",note.value.content);
+            note.value.content = noteContent;
         }
         
         const content = note.value.content;
+
+        // 仅当标题或内容有变动时才向后端发送请求
+        if (title === originalTitle.value && content === originalContent.value) {
+            console.log("笔记标题或内容未发生改变，无需保存")
+            return
+        }
+
+        //更新快照
+        originalTitle.value = title
+        originalContent.value = content
 
         //表单
         let formData = new FormData();
         formData.append("noteId",noteId)
         formData.append("title",title)
-        //formData.append("body",body)
         formData.append("content",content)
 
         let API = {...noteApi.saveNote}
