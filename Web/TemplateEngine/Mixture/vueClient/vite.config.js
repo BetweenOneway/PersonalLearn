@@ -9,6 +9,12 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
+      },
+      // vueServer 的 EJS 模板渲染服务（404 页面等）
+      '/ssr': {
+        target: 'http://localhost:3002',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/ssr/, ''),
       }
     }
   }
