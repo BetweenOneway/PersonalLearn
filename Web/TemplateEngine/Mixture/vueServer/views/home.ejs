@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+
+  <div class="card" style="text-align:center;">
+    <h1>👋 欢迎来到 Vue3 Demo</h1>
+    <p>这是一个基于 Vue 3 + Vue Router 的单页应用示例项目</p>
+    <p style="color:#999;font-size:0.9rem;">
+      本首页由 <strong>EJS 服务端渲染</strong>，零白屏时间，其余页面为 <strong>Vue SPA</strong>。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>技术栈</h2>
+    <div class="features">
+      <% if (features && features.length > 0) { %>
+        <% features.forEach(function(item) { %>
+          <div class="feature-item">
+            <div class="icon"><%= item.icon %></div>
+            <h3><%= item.name %></h3>
+            <p><%= item.desc %></p>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="feature-item">
+          <div class="icon">⚡</div>
+          <h3>Vite</h3>
+          <p>极速开发构建工具</p>
+        </div>
+        <div class="feature-item">
+          <div class="icon">🎨</div>
+          <h3>Vue 3</h3>
+          <p>Composition API</p>
+        </div>
+        <div class="feature-item">
+          <div class="icon">🚦</div>
+          <h3>Vue Router</h3>
+          <p>客户端路由管理</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>架构说明</h2>
+    <p><strong>首页：</strong>EJS 服务端渲染（SSR），HTML 直接返回，即时可见，无白屏。</p>
+    <p><strong>关于页面：</strong>代理至 Vite 开发服务器，由 Vue SPA 接管，使用客户端路由。</p>
+    <p style="margin-top:1rem;color:#888;">
+      试试导航栏上的链接，或在地址栏输入不存在的路径看看 404 页面
+    </p>
+  </div>
+
+<%- include('partials/footer') %>

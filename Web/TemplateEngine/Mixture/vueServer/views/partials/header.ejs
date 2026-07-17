@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'Vue3 Demo' %></title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      min-height: 100vh;
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .navbar .brand {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: #fff; }
+    .main-content {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .card h1, .card h2 { margin-bottom: 1rem; }
+    .card p { color: #555; line-height: 1.8; margin-bottom: 0.75rem; }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .feature-item {
+      background: #f8f9ff;
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .feature-item .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .feature-item h3 { font-size: 1rem; margin-bottom: 0.3rem; color: #333; }
+    .feature-item p { font-size: 0.85rem; color: #777; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="brand">Vue3 Demo</a>
+    <div class="nav-links">
+      <a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a>
+      <a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a>
+    </div>
+  </nav>
+  <main class="main-content">

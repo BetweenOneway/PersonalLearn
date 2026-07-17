@@ -1,0 +1,119 @@
+<!-- EJS 渲染的 404 内容片段（不含 html/head/body，由 Vue 注入到布局中） -->
+<div class="ejs-404-container">
+  <div class="code">404</div>
+  <div class="divider"></div>
+  <div class="message">页面未找到</div>
+
+  <div class="path-display"><%= notFoundPath %></div>
+  <span class="timestamp">请求时间：<%= timestamp %></span>
+
+  <% if (suggestions && suggestions.length > 0) { %>
+  <div class="suggestions">
+    <div class="label">你可能想访问：</div>
+    <% suggestions.forEach(function(item) { %>
+      <a href="<%= item.url %>" class="btn <%= item.url === '/' ? 'btn-primary' : '' %>"><%= item.text %></a>
+    <% }); %>
+  </div>
+  <% } %>
+
+  <p class="footer-text">
+    本页面由 <span>Node.js + EJS 模板引擎</span> 服务端渲染
+  </p>
+</div>
+
+<style>
+  .ejs-404-container {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .ejs-404-container .code {
+    font-size: 6rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.9);
+    line-height: 1;
+    text-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+    margin-bottom: 0.5rem;
+  }
+
+  .ejs-404-container .divider {
+    width: 60px;
+    height: 4px;
+    background: rgba(255,255,255,0.6);
+    margin: 1rem auto;
+    border-radius: 2px;
+  }
+
+  .ejs-404-container .message {
+    font-size: 1.4rem;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+
+  .ejs-404-container .path-display {
+    display: inline-block;
+    background: rgba(0,0,0,0.2);
+    color: rgba(255,255,255,0.8);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    font-family: "Courier New", monospace;
+    word-break: break-all;
+  }
+
+  .ejs-404-container .timestamp {
+    display: block;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .ejs-404-container .suggestions {
+    margin-top: 1.5rem;
+  }
+
+  .ejs-404-container .suggestions .label {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .ejs-404-container .btn {
+    display: inline-block;
+    padding: 0.65rem 1.8rem;
+    margin: 0.3rem 0.4rem;
+    border: 2px solid rgba(255,255,255,0.4);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.25s;
+  }
+
+  .ejs-404-container .btn:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.8);
+  }
+
+  .ejs-404-container .btn-primary {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.6);
+  }
+
+  .ejs-404-container .footer-text {
+    margin-top: 2rem;
+    color: rgba(255,255,255,0.35);
+    font-size: 0.75rem;
+  }
+
+  .ejs-404-container .footer-text span {
+    color: rgba(255,255,255,0.55);
+  }
+</style>
