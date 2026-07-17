@@ -1,0 +1,66 @@
+<%- include('partials/header', { title }) %>
+
+<div class="page-header">
+  <h1><%= title %></h1>
+  <p>展示如何在 EJS 中渲染嵌套数组、对象等复杂数据结构</p>
+</div>
+
+<% articles.forEach(function(article, index) { %>
+  <div class="card" style="<%= index === 0 ? 'border-left:4px solid #e74c3c;' : '' %>">
+    <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:0.5rem;">
+      <h3 style="margin-bottom:0.5rem;">
+        <% if (index === 0) { %>
+          <span style="background:#e74c3c;color:#fff;padding:0.15rem 0.5rem;border-radius:4px;font-size:0.75rem;">HOT</span>
+        <% } %>
+        <%= article.title %>
+      </h3>
+      <span style="color:#888;font-size:0.85rem;"><%= article.date %></span>
+    </div>
+
+    <p style="color:#666;margin:0.5rem 0;">
+      作者：<strong><%= article.author %></strong>
+    </p>
+
+    <!-- 嵌套数组：标签渲染 -->
+    <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+      <% article.tags.forEach(function(tag) { %>
+        <span style="
+          background:#f0f4ff;color:#4a90d9;
+          padding:0.2rem 0.6rem;border-radius:4px;
+          font-size:0.8rem;
+        ">
+          #<%= tag %>
+        </span>
+      <% }); %>
+    </div>
+  </div>
+<% }); %>
+
+<!-- ===== 循环方式对比 ===== -->
+<div class="card" style="margin-top:2rem;">
+  <h3 style="margin-bottom:0.75rem;">💡 EJS 中几种循环写法对比</h3>
+  <table style="width:100%;border-collapse:collapse;">
+    <thead>
+      <tr style="background:#f8f9fa;">
+        <th style="padding:0.6rem;text-align:left;border-bottom:2px solid #dee2e6;">写法</th>
+        <th style="padding:0.6rem;text-align:left;border-bottom:2px solid #dee2e6;">示例</th>
+      </tr>
+    </thead>
+    <tbody style="font-family:monospace;font-size:0.85rem;">
+      <tr>
+        <td style="padding:0.6rem;border-bottom:1px solid #eee;">传统 for</td>
+        <td style="padding:0.6rem;border-bottom:1px solid #eee;">&lt;% for (let i=0; i&lt;arr.length; i++) { %&gt;...&lt;% } %&gt;</td>
+      </tr>
+      <tr>
+        <td style="padding:0.6rem;border-bottom:1px solid #eee;">forEach</td>
+        <td style="padding:0.6rem;border-bottom:1px solid #eee;">&lt;% arr.forEach(item => { %&gt;...&lt;% }); %&gt;</td>
+      </tr>
+      <tr>
+        <td style="padding:0.6rem;border-bottom:1px solid #eee;">for...of</td>
+        <td style="padding:0.6rem;border-bottom:1px solid #eee;">&lt;% for (const item of arr) { %&gt;...&lt;% } %&gt;</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,78 @@
+<%- include('partials/header', { title }) %>
+
+<div class="page-header">
+  <h1><%= title %></h1>
+  <p>演示表单数据回显与后端校验错误展示</p>
+</div>
+
+<!-- ===== 注册表单 ===== -->
+<div class="card" style="max-width:500px;margin:0 auto;">
+  <form method="POST" action="/form">
+
+    <!-- 用户名 -->
+    <div style="margin-bottom:1.25rem;">
+      <label style="display:block;font-weight:600;margin-bottom:0.3rem;">用户名 *</label>
+      <input type="text" name="username"
+             value="<%= typeof formData.username !== 'undefined' ? formData.username : '' %>"
+             style="width:100%;padding:0.6rem;border:1px solid <%= errors && errors.username ? '#e74c3c' : '#ddd' %>;border-radius:8px;font-size:1rem;"
+             placeholder="请输入用户名（≥ 2 个字符）">
+      <% if (errors && errors.username) { %>
+        <p style="color:#e74c3c;font-size:0.85rem;margin-top:0.3rem;">⚠ <%= errors.username %></p>
+      <% } %>
+    </div>
+
+    <!-- 邮箱 -->
+    <div style="margin-bottom:1.25rem;">
+      <label style="display:block;font-weight:600;margin-bottom:0.3rem;">邮箱 *</label>
+      <input type="email" name="email"
+             value="<%= typeof formData.email !== 'undefined' ? formData.email : '' %>"
+             style="width:100%;padding:0.6rem;border:1px solid <%= errors && errors.email ? '#e74c3c' : '#ddd' %>;border-radius:8px;font-size:1rem;"
+             placeholder="example@mail.com">
+      <% if (errors && errors.email) { %>
+        <p style="color:#e74c3c;font-size:0.85rem;margin-top:0.3rem;">⚠ <%= errors.email %></p>
+      <% } %>
+    </div>
+
+    <!-- 年龄 -->
+    <div style="margin-bottom:1.25rem;">
+      <label style="display:block;font-weight:600;margin-bottom:0.3rem;">年龄 *</label>
+      <input type="number" name="age"
+             value="<%= typeof formData.age !== 'undefined' ? formData.age : '' %>"
+             style="width:100%;padding:0.6rem;border:1px solid <%= errors && errors.age ? '#e74c3c' : '#ddd' %>;border-radius:8px;font-size:1rem;"
+             placeholder="必须 ≥ 18 岁">
+      <% if (errors && errors.age) { %>
+        <p style="color:#e74c3c;font-size:0.85rem;margin-top:0.3rem;">⚠ <%= errors.age %></p>
+      <% } %>
+    </div>
+
+    <!-- 角色下拉框 - 回显选中 -->
+    <div style="margin-bottom:1.5rem;">
+      <label style="display:block;font-weight:600;margin-bottom:0.3rem;">角色</label>
+      <select name="role" style="width:100%;padding:0.6rem;border:1px solid #ddd;border-radius:8px;font-size:1rem;">
+        <%
+          const roles = ['viewer', 'editor', 'admin'];
+          const selectedRole = formData.role || 'viewer';
+          roles.forEach(function(r) {
+            const sel = r === selectedRole ? 'selected' : '';
+        %>
+          <option value="<%= r %>" <%= sel %>><%= r.charAt(0).toUpperCase() + r.slice(1) %></option>
+        <% }); %>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-success" style="width:100%;">提交注册</button>
+  </form>
+</div>
+
+<!-- ===== 代码说明 ===== -->
+<div class="card" style="margin-top:1.5rem;">
+  <h3 style="margin-bottom:0.5rem;">🔍 本页演示的 EJS 技巧</h3>
+  <ul style="padding-left:1.5rem;color:#555;line-height:2;">
+    <li><strong>表单回显</strong>：通过 <code style="background:#f0f0f0;padding:0.15rem 0.4rem;border-radius:3px;">value="&lt;%= formData.xxx %&gt;"</code> 在提交失败后保留用户已填内容</li>
+    <li><strong>条件样式</strong>：校验失败的字段边框变红，通过 <code style="background:#f0f0f0;padding:0.15rem 0.4rem;border-radius:3px;">&lt;%= errors ? '#e74c3c' : '#ddd' %&gt;</code> 动态设置</li>
+    <li><strong>错误信息</strong>：使用 <code style="background:#f0f0f0;padding:0.15rem 0.4rem;border-radius:3px;">&lt;% if (errors && errors.xxx) { %&gt;</code> 条件渲染错误提示</li>
+    <li><strong>下拉框回显</strong>：遍历选项列表，用 <code style="background:#f0f0f0;padding:0.15rem 0.4rem;border-radius:3px;">selected</code> 属性标记当前选中项</li>
+  </ul>
+</div>
+
+<%- include('partials/footer') %>

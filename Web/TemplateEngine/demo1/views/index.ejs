@@ -1,0 +1,67 @@
+<%- include('partials/header', { title }) %>
+
+<!-- ===== 欢迎横幅 - 条件渲染 ===== -->
+<div class="card" style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center;padding:2.5rem;">
+  <h2 style="font-size:2rem;margin-bottom:0.5rem;"><%= title %></h2>
+  <p style="font-size:1.1rem;opacity:0.9;"><%= subtitle %></p>
+  <p style="margin-top:1rem;opacity:0.85;"><%- description %></p>
+</div>
+
+<!-- ===== 特性卡片 - 循环渲染 ===== -->
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; margin:1.5rem 0;">
+  <% features.forEach(function(f) { %>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:2.5rem;margin-bottom:0.5rem;"><%= f.icon %></div>
+      <h3 style="margin-bottom:0.5rem;"><%= f.title %></h3>
+      <p style="color:#666;font-size:0.9rem;"><%- f.desc %></p>
+    </div>
+  <% }); %>
+</div>
+
+<!-- ===== 快速导航 ===== -->
+<div class="card">
+  <h2 style="margin-bottom:1rem;">📋 示例导航</h2>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:0.75rem;">
+    <a href="/users" class="btn btn-primary">👥 用户列表（循环/条件）</a>
+    <a href="/articles" class="btn btn-primary">📄 文章列表（复杂数据）</a>
+    <a href="/form" class="btn btn-primary">📝 表单注册（回显/校验）</a>
+    <a href="/about" class="btn btn-outline">ℹ️ 关于本项目</a>
+  </div>
+</div>
+
+<!-- ===== EJS 语法速查 ===== -->
+<div class="card">
+  <h2 style="margin-bottom:1rem;">📖 EJS 核心语法速查</h2>
+  <table style="width:100%;border-collapse:collapse;">
+    <thead>
+      <tr style="background:#f8f9fa;">
+        <th style="padding:0.75rem;text-align:left;border-bottom:2px solid #dee2e6;">标签</th>
+        <th style="padding:0.75rem;text-align:left;border-bottom:2px solid #dee2e6;">用途</th>
+      </tr>
+    </thead>
+    <tbody style="font-family:monospace;font-size:0.9rem;">
+      <tr>
+        <td style="padding:0.75rem;border-bottom:1px solid #eee;color:#e74c3c;">&lt;%= variable %&gt;</td>
+        <td style="padding:0.75rem;border-bottom:1px solid #eee;">输出转义后的变量值（防 XSS）</td>
+      </tr>
+      <tr>
+        <td style="padding:0.75rem;border-bottom:1px solid #eee;color:#e74c3c;">&lt;%- html %&gt;</td>
+        <td style="padding:0.75rem;border-bottom:1px solid #eee;">输出原始 HTML（不转义）</td>
+      </tr>
+      <tr>
+        <td style="padding:0.75rem;border-bottom:1px solid #eee;color:#e74c3c;">&lt;% code %&gt;</td>
+        <td style="padding:0.75rem;border-bottom:1px solid #eee;">执行任意 JavaScript 代码（不输出）</td>
+      </tr>
+      <tr>
+        <td style="padding:0.75rem;border-bottom:1px solid #eee;color:#e74c3c;">&lt;%- include('file') %&gt;</td>
+        <td style="padding:0.75rem;border-bottom:1px solid #eee;">引入其他模板文件（组件复用）</td>
+      </tr>
+      <tr>
+        <td style="padding:0.75rem;color:#e74c3c;">&lt;%# 注释 %&gt;</td>
+        <td style="padding:0.75rem;">EJS 注释，不会输出到 HTML</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<%- include('partials/footer') %>

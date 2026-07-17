@@ -1,0 +1,53 @@
+<!--
+  邮件模板 - 独立于 HTTP 响应使用
+  通过 ejs.renderFile() 渲染为 HTML 字符串
+-->
+<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;border:1px solid #e0e0e0;border-radius:8px;overflow:hidden;">
+  
+  <!-- 邮件头部 -->
+  <div style="background:linear-gradient(135deg,#667eea,#764ba2);padding:2rem 1.5rem;text-align:center;">
+    <h1 style="color:#fff;margin:0;font-size:1.5rem;">🎉 欢迎加入 <%= companyName %></h1>
+  </div>
+
+  <!-- 正文 -->
+  <div style="padding:1.5rem;background:#fff;">
+    <p style="margin:0 0 1rem;font-size:1rem;color:#333;">
+      亲爱的 <strong><%= username %></strong>，你好！
+    </p>
+    <p style="margin:0 0 1rem;color:#555;line-height:1.8;">
+      感谢你注册 <strong><%= companyName %></strong>，你的账号已成功创建。以下是你的账号信息：
+    </p>
+
+    <!-- 账号信息卡片 -->
+    <table style="width:100%;background:#f8f9fa;border-radius:6px;border-collapse:collapse;margin-bottom:1.5rem;">
+      <% accountInfo.forEach(function(item) { %>
+        <tr>
+          <td style="padding:0.6rem 1rem;color:#888;font-size:0.9rem;border-bottom:1px solid #eee;"><%= item.label %></td>
+          <td style="padding:0.6rem 1rem;font-weight:600;border-bottom:1px solid #eee;"><%= item.value %></td>
+        </tr>
+      <% }); %>
+    </table>
+
+    <!-- 激活按钮 -->
+    <div style="text-align:center;margin-bottom:1.5rem;">
+      <a href="<%= activateUrl %>" style="
+        display:inline-block;background:#27ae60;color:#fff;
+        padding:0.75rem 2rem;text-decoration:none;border-radius:6px;
+        font-weight:600;font-size:1rem;
+      ">立即激活账号</a>
+    </div>
+
+    <p style="color:#999;font-size:0.85rem;text-align:center;">
+      如果按钮无法点击，请复制以下链接到浏览器：<br/>
+      <span style="color:#4a90d9;"><%= activateUrl %></span>
+    </p>
+  </div>
+
+  <!-- 页脚 -->
+  <div style="background:#f0f2f5;padding:1rem 1.5rem;text-align:center;">
+    <p style="margin:0;color:#999;font-size:0.8rem;">
+      此邮件由系统自动发送，请勿直接回复。<br/>
+      <%= companyName %> © <%= year %>
+    </p>
+  </div>
+</div>

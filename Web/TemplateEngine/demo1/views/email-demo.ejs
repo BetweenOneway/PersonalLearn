@@ -1,0 +1,87 @@
+<%- include('partials/header', { title }) %>
+
+<div class="page-header">
+  <h1><%= title %></h1>
+  <p>演示脱离 HTTP 响应，使用 ejs.renderFile() 将模板渲染为纯字符串（如发送邮件）</p>
+</div>
+
+<!-- ===== 参数表单 ===== -->
+<div class="card">
+  <h3 style="margin-bottom:1rem;">📧 自定义邮件参数</h3>
+  <form method="GET" action="/email-demo">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem;">
+      <div>
+        <label style="display:block;font-weight:600;margin-bottom:0.3rem;">用户名</label>
+        <input name="username" value="<%= typeof username !== 'undefined' ? username : '张三' %>"
+               style="width:100%;padding:0.5rem;border:1px solid #ddd;border-radius:6px;">
+      </div>
+      <div>
+        <label style="display:block;font-weight:600;margin-bottom:0.3rem;">公司名</label>
+        <input name="company" value="<%= typeof company !== 'undefined' ? company : '示例科技有限公司' %>"
+               style="width:100%;padding:0.5rem;border:1px solid #ddd;border-radius:6px;">
+      </div>
+      <div>
+        <label style="display:block;font-weight:600;margin-bottom:0.3rem;">角色</label>
+        <select name="role" style="width:100%;padding:0.5rem;border:1px solid #ddd;border-radius:6px;">
+          <option value="普通用户" <%= role === '普通用户' ? 'selected' : '' %>>普通用户</option>
+          <option value="高级会员" <%= role === '高级会员' ? 'selected' : '' %>>高级会员</option>
+          <option value="企业管理员" <%= role === '企业管理员' ? 'selected' : '' %>>企业管理员</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-weight:600;margin-bottom:0.3rem;">注册邮箱</label>
+        <input name="email" value="<%= typeof email !== 'undefined' ? email : 'zhangsan@example.com' %>"
+               style="width:100%;padding:0.5rem;border:1px solid #ddd;border-radius:6px;">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">生成邮件</button>
+  </form>
+</div>
+
+<!-- ===== 邮件预览 ===== -->
+<div class="card" style="margin-top:1rem;">
+  <h3 style="margin-bottom:1rem;">📬 邮件预览（渲染结果）</h3>
+  <div style="background:#e8ecf1;border-radius:8px;padding:1.5rem;">
+    <% if (typeof emailHtml !== 'undefined' && emailHtml) { %>
+      <%- emailHtml %>
+    <% } else { %>
+      <p style="text-align:center;color:#999;">请先点击「生成邮件」按钮</p>
+    <% } %>
+  </div>
+</div>
+
+<!-- ===== 原始 HTML 源码 ===== -->
+<% if (typeof emailSource !== 'undefined' && emailSource) { %>
+<div class="card" style="margin-top:1rem;">
+  <h3 style="margin-bottom:0.5rem;">🔍 渲染后的 HTML 字符串（前 800 字符）</h3>
+  <p style="color:#888;font-size:0.85rem;margin-bottom:0.75rem;">
+    这就是通过 <code style="background:#f0f0f0;padding:0.15rem 0.4rem;border-radius:3px;">ejs.renderFile()</code> 生成的字符串，可以直接作为邮件内容发送
+  </p>
+  <pre style="background:#1a1a2e;color:#0f0;padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.8rem;line-height:1.6;max-height:300px;overflow-y:auto;"><%= emailSource %></pre>
+</div>
+<% } %>
+
+<!-- ===== 核心代码说明 ===== -->
+<div class="card" style="margin-top:1rem;">
+  <h3 style="margin-bottom:0.5rem;">💡 server.js 中的关键代码</h3>
+  <pre style="background:#1a1a2e;color:#e0e0e0;padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;line-height:1.7;"><span style="color:#6a9955;">// 引入 ejs 模块</span>
+<span style="color:#569cd6;">const</span> ejs = <span style="color:#dcdcaa;">require</span>(<span style="color:#ce9178;">'ejs'</span>);
+
+app.<span style="color:#dcdcaa;">get</span>(<span style="color:#ce9178;">'/email-demo'</span>, (req, res) => {
+  <span style="color:#569cd6;">const</span> data = {
+    username: req.query.username || <span style="color:#ce9178;">'张三'</span>,
+    companyName: req.query.company || <span style="color:#ce9178;">'示例科技'</span>,
+    <span style="color:#6a9955;">// ...</span>
+  };
+
+  <span style="color:#6a9955;">// ejs.renderFile: 读取模板文件 → 渲染为字符串</span>
+  ejs.<span style="color:#dcdcaa;">renderFile</span>(<span style="color:#ce9178;">'views/emails/welcome.ejs'</span>, data, (err, htmlStr) => {
+    <span style="color:#6a9955;">// htmlStr 就是最终邮件内容</span>
+    <span style="color:#6a9955;">// sendEmail(htmlStr);  ← 实际发送邮件</span>
+    
+    res.<span style="color:#dcdcaa;">render</span>(<span style="color:#ce9178;">'email-demo'</span>, { emailHtml: htmlStr });
+  });
+});</pre>
+</div>
+
+<%- include('partials/footer') %>

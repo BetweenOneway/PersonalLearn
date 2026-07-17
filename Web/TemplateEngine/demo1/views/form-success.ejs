@@ -1,0 +1,28 @@
+<%- include('partials/header', { title }) %>
+
+<div class="page-header" style="border-left-color:#27ae60;">
+  <h1>✅ 注册成功！</h1>
+  <p>以下是你提交的信息：</p>
+</div>
+
+<div class="card" style="max-width:500px;margin:0 auto;">
+  <div style="margin-bottom:1rem;">
+    <span style="color:#888;">用户名：</span>
+    <strong><%= user.username %></strong>
+  </div>
+  <div style="margin-bottom:1rem;">
+    <span style="color:#888;">邮箱：</span>
+    <strong><%= user.email %></strong>
+  </div>
+  <div style="margin-bottom:1rem;">
+    <span style="color:#888;">年龄：</span>
+    <strong><%= user.age %></strong>
+  </div>
+  <div style="margin-bottom:1.5rem;">
+    <span style="color:#888;">角色：</span>
+    <strong><%= user.role.toUpperCase() %></strong>
+  </div>
+  <a href="/form" class="btn btn-outline" style="display:block;text-align:center;">← 返回注册页</a>
+</div>
+
+<%- include('partials/footer') %>

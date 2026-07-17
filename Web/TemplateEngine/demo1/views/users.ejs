@@ -1,0 +1,76 @@
+<%- include('partials/header', { title }) %>
+
+<!-- ===== 用户列表页 ===== -->
+<div class="page-header">
+  <h1><%= title %></h1>
+  <p>共 <%= users.length %> 条结果（总计 <%= totalUsers %> 名用户）</p>
+</div>
+
+<!-- ===== 角色筛选按钮 ===== -->
+<div class="card" style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+  <span style="font-weight:600;">筛选角色：</span>
+  <a href="/users" class="btn <%= roleFilter === 'all' ? 'btn-primary' : 'btn-outline' %>">全部</a>
+  <a href="/users?role=admin" class="btn <%= roleFilter === 'admin' ? 'btn-primary' : 'btn-outline' %>">管理员</a>
+  <a href="/users?role=editor" class="btn <%= roleFilter === 'editor' ? 'btn-primary' : 'btn-outline' %>">编辑者</a>
+  <a href="/users?role=viewer" class="btn <%= roleFilter === 'viewer' ? 'btn-primary' : 'btn-outline' %>">访客</a>
+</div>
+
+<!-- ===== 用户卡片列表 - for 循环 ===== -->
+<% if (users.length === 0) { %>
+  <!-- 条件渲染：无数据时的提示 -->
+  <div class="card" style="text-align:center;padding:3rem;color:#999;">
+    <div style="font-size:3rem;">📭</div>
+    <p style="margin-top:1rem;">暂无符合筛选条件的用户</p>
+  </div>
+<% } else { %>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:1rem;">
+    <% for (let i = 0; i < users.length; i++) { %>
+      <%
+        // JS 逻辑块：根据角色设置颜色
+        let roleColor = '#95a5a6';
+        if (users[i].role === 'admin') roleColor = '#e74c3c';
+        else if (users[i].role === 'editor') roleColor = '#4a90d9';
+      %>
+      <div class="card" style="<%= !users[i].active ? 'opacity:0.6;' : '' %>">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;">
+          <div style="
+            width:48px;height:48px;border-radius:50%;
+            background:linear-gradient(135deg,<%= roleColor %>,<%= roleColor %>88);
+            display:flex;align-items:center;justify-content:center;
+            color:#fff;font-weight:700;font-size:1.1rem;
+          ">
+            <%= users[i].name.charAt(0) %>
+          </div>
+          <div>
+            <strong><%= users[i].name %></strong>
+            <div style="font-size:0.85rem;color:#888;">ID: <%= users[i].id %></div>
+          </div>
+        </div>
+
+        <!-- 角色徽章 -->
+        <span style="
+          display:inline-block;padding:0.2rem 0.75rem;border-radius:20px;
+          font-size:0.8rem;background:<%= roleColor %>22;color:<%= roleColor %>;
+          font-weight:600;
+        ">
+          <%= users[i].role.toUpperCase() %>
+        </span>
+
+        <span style="margin-left:0.5rem;font-size:0.9rem;color:#888;">
+          年龄: <%= users[i].age %>
+        </span>
+
+        <!-- 条件渲染：激活状态 -->
+        <span style="float:right;font-size:0.85rem;">
+          <% if (users[i].active) { %>
+            <span style="color:#27ae60;">● 活跃</span>
+          <% } else { %>
+            <span style="color:#e74c3c;">● 已停用</span>
+          <% } %>
+        </span>
+      </div>
+    <% } %>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>
