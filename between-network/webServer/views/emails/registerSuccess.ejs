@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 2px solid #27ae60;
+    }
+    .header h2 {
+      color: #27ae60;
+      margin: 0;
+    }
+    .content {
+      padding: 30px 20px;
+      line-height: 1.8;
+    }
+    .pwd-box {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .password {
+      display: inline-block;
+      font-size: 24px;
+      font-weight: bold;
+      color: #27ae60;
+      letter-spacing: 3px;
+      padding: 15px 30px;
+      border: 2px dashed #27ae60;
+      border-radius: 8px;
+      background-color: #f0faf3;
+    }
+    .warning {
+      color: #e74c3c;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #999;
+      font-size: 12px;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>账号注册成功</h2>
+    </div>
+    <div class="content">
+      <p>尊敬的 <%= userEmail %>：</p>
+      <p>您已成功注册之间账号，您的初始密码为：</p>
+      <div class="pwd-box">
+        <span class="password"><%= password %></span>
+      </div>
+      <p class="warning">请及时登录并修改登录密码！</p>
+    </div>
+    <div class="footer">
+      <p>此邮件由系统自动发送，请勿回复。</p>
+    </div>
+  </div>
+</body>
+</html>

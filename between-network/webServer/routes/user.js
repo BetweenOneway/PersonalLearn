@@ -1,6 +1,7 @@
 const express=require("express");
 const crypto = require("crypto")
 const stringRandom = require("string-random");
+const ejs = require("ejs");
 
 //邮箱操作
 var mailOper =require("../utils/mail")
@@ -215,9 +216,15 @@ router.get("/SendVerifyCode",async(req,res)=>{
 
                 await redisOper.RedisSet(userTokenKey,verifyCode,15*60)
 
+                //使用Ejs模板渲染邮件内容
+                const verifyCodeHtml = await ejs.renderFile(
+                    path.join(__dirname, '../views/emails/verifyCode.ejs'),
+                    { userEmail: userEmail, verifyCode: verifyCode }
+                );
+
                 //发送邮件
                 let resultInfo = {};
-                mailOper.SendEmail({email:userEmail,subject:"注册验证码",text:verifyCode,html:""},resultInfo)
+                mailOper.SendEmail({email:userEmail,subject:"注册验证码",text:"",html:verifyCodeHtml},resultInfo)
                 if(0 != resultInfo.statusCode)
                 {
                     output.success = statusCode.REDIS_STATUS.SET_FAIL.success
@@ -339,14 +346,15 @@ router.post("/register",async (req,res)=>{
                     }
                 );
 
+                //使用Ejs模板渲染注册成功邮件内容
+                const registerHtml = await ejs.renderFile(
+                    path.join(__dirname, '../views/emails/registerSuccess.ejs'),
+                    { userEmail: userEmail, password: notEncryptedPassword }
+                );
+
                 //邮箱通知用户新注册账号的密码
                 let resultInfo = {};
-                let mailContent = "<p>尊敬的 "+userEmail+":</p>"
-                +"<p>您已成功注册之间账号，其初始密码为：<b style='font-size:20px;color:blue;'>"
-                +notEncryptedPassword+"</b>。</p>"
-                +'<p color="red">请及时登录并修改登录密码！</p>'
-                
-                mailOper.SendEmail({email:userEmail,subject:"账号注册成功通知",text:"",html:mailContent},resultInfo)
+                mailOper.SendEmail({email:userEmail,subject:"账号注册成功通知",text:"",html:registerHtml},resultInfo)
 
                 if(0 != resultInfo.statusCode)
                 {
