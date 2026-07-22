@@ -49,7 +49,7 @@ const router = createRouter({
             {
                 path:'forgetpassword',
                 props:true,
-                component:()=>import("@/components/admin/ForgetPassword.vue"),
+                component:()=>import("@/components/admin/ChangePassword.vue"),
                 meta:{title:'忘记密码'}
             },
             {

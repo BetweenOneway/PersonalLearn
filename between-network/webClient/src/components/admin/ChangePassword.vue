@@ -1,19 +1,16 @@
 <template>
     <n-layout-content embeded class="p-6">
         <n-flex vertical align="center">
-            <!--步骤条-->
             <n-steps :current="currentStep" status="process" class="w-10/12 p-3">
                 <n-step v-for="step in steps" :key="step.title"
                     :title= step.title
                     :description= step.description
                 />
             </n-steps>
-            <!--表单和操作区-->
             <n-flex align="start">
-                <!--表单-->
                 <n-card class="w-96 shadow-lg" v-if="currentStep !== 3">
                     <template #header>
-                        <n-h2 class="m-0 font-bold">忘记密码</n-h2>
+                        <n-h2 class="m-0 font-bold">修改密码</n-h2>
                     </template>
                     <n-form ref="formRef" :model="formValue" :rules="formRules">
                         <n-form-item label="邮箱账号" path="email">
@@ -38,7 +35,6 @@
                         </n-form-item>
                     </n-form>
                 </n-card>
-                <!--密码新规-->
                 <n-alert v-if="currentStep === 2" :show-icon="false" title="新密码规则如下：">
                     <n-flex vertical :size="5">
                         <n-text :type="passwordRule.textMatch? 'success':'default'">1：新密码由字母、数字、特殊字符任意两种组成</n-text>
@@ -52,7 +48,7 @@
 
 <script setup>
     import { ref,reactive, computed } from 'vue';
-    //当前步数
+
     const currentStep = ref(1);
 
     const steps = [
@@ -70,15 +66,13 @@
         },
     ];
 
-    //表单值
     const formValue = reactive({
-        email:'',//邮箱
-        vc:'',//验证码
-        password:'',//新密码
-        confirmPassword:''//确认密码
+        email:'',
+        vc:'',
+        password:'',
+        confirmPassword:''
     });
 
-    //表单数据验证规则
     const formRules={
         email:{
             key:'email',
@@ -124,10 +118,8 @@
         }
     });
 
-    //表单引用
     const formRef = ref(null);
 
-    //获取验证码的验证逻辑
     const getEmailVC = ()=>{
         formRef.value?.validate(
             error=>{},
