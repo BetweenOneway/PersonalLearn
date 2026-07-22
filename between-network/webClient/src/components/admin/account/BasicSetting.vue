@@ -1,6 +1,6 @@
 <template>
-    <n-grid x-gap="12" cols="2 s:2 m:2 l:3 xl:3 2xl:3" responsive="screen">
-        <n-grid-item>
+    <div class="basic-setting-wrap">
+        <div class="basic-form">
             <!--用户信息表单 邮箱，昵称 登记 注册时间 更新按钮-->
             <n-form ref="formRef" label-placement="left" label-width="auto" :show-require-mark="false" 
             :model="formValue" :rules="formRules" style="margin-top:16px">
@@ -38,20 +38,21 @@
                 <n-button v-show="updateFormItem" :disabled="!showUpdateBtn" type="success" @click="toUpdateBasicInfo">更新</n-button>
                 <n-button v-bind="editBtnObj.props" type="success" ghost @click="clickEditBtn(!updateFormItem)">{{editBtnObj.text}}</n-button>
             </n-space>
-        </n-grid-item>
-        <n-grid-item>
+        </div>
+        <div class="basic-avatar">
             <!--用户头像-->
-            <n-space justify="center">
-                <label>
+            <n-space vertical align="center">
+                <label class="avatar-label">
                     <n-avatar round :size="120" :src="head_image"></n-avatar>
                     <input ref="fileInputRef" :disabled="!updateFormItem" style="display:none" type="file" accept="image/jpeg,image/jpg,image/png,image/gif" @change="selectImageFile">
                 </label>
+                <n-text v-if="updateFormItem" depth="3" style="font-size:12px">点击头像可更换</n-text>
             </n-space>
 
             <!--裁剪图像窗口-->
             <CropperWindow ref="cropperRef"  title="头像上传" @cut="uploadHeadPic"/>
-        </n-grid-item>
-    </n-grid>
+        </div>
+    </div>
 </template>
   
 <script setup>
@@ -270,3 +271,37 @@
         Init();
     })
 </script>
+
+<style scoped>
+.basic-setting-wrap {
+    display: grid;
+    grid-template-columns: 480px 140px;
+    gap: 24px;
+    justify-content: center;
+    padding-top: 16px;
+}
+.basic-avatar {
+    padding-top: 32px;
+    display: flex;
+    justify-content: center;
+}
+.avatar-label {
+    cursor: pointer;
+    display: inline-block;
+    line-height: 0;
+}
+
+@media (max-width: 720px) {
+    .basic-setting-wrap {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+    .basic-form {
+        width: 100%;
+        max-width: 480px;
+    }
+    .basic-avatar {
+        padding-top: 0;
+    }
+}
+</style>
