@@ -57,7 +57,7 @@
 
     const steps = [
         {
-            title:'确认找回的账号',
+            title:'确认账号信息',
             description:'输入邮箱验证码，确认账号信息'
         },
         {

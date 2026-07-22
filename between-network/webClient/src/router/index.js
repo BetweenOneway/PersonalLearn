@@ -35,11 +35,16 @@ const router = createRouter({
                 meta:{title:'主控台'}
             },
             {
-                path:'updatepersonalinfo',
+                path:'basicsetting',
                 props:true,
-                //component:()=>import("@/components/admin/UpdatePersonalInfo.vue"),
-                component:()=>import("@/components/admin/account/AccountSetting.vue"),
-                meta:{title:'更新个人信息'}
+                component:()=>import("@/components/admin/account/BasicSetting.vue"),
+                meta:{title:'基本设置'}
+            },
+            {
+                path:'safetysetting',
+                props:true,
+                component:()=>import("@/components/admin/account/SafetySetting.vue"),
+                meta:{title:'安全设置'}
             },
             {
                 path:'forgetpassword',

@@ -64,15 +64,15 @@
             key: 'PersonalInfo',
             children:[
                 {
-                    label: '管理个人信息',
-                    key: 'manage-personal-info',
-                    path: '/admin/updatepersonalinfo',
+                    label: '基本设置',
+                    key: 'basic-setting',
+                    path: '/admin/basicsetting',
                 },
                 {
-                    label: '忘记密码',
-                    key: 'forget-password',
-                    path: '/admin/forgetpassword',
-                },
+                    label: '安全设置',
+                    key: 'safety-setting',
+                    path: '/admin/safetysetting',
+                }
             ],
         },
         {
