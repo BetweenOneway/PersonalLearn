@@ -168,10 +168,6 @@
             router.push(selectedMenu.path); // 路由跳转
             activeTab.value = key; // 更新激活的菜单项
             console.log("activeTab.value=>",activeTab.value);
-            if(activeTab.value==='Admin')
-            {
-                tabs.value = [{label: '首页',key: 'Admin',path:'/admin'}];
-            }
         }
     };
 
