@@ -3,28 +3,31 @@
       <n-grid-item>
         <n-list>
           <n-list-item>
-            <template #suffix>
-              <n-button type="primary" text>修改</n-button>
-            </template>
             <n-thing title="账户密码">
                 <template #description>
-                    <span class="text-gray-400">绑定手机和邮箱，并设置密码，帐号更安全</span>
+                    <span class="text-gray-400">定期更新密码，并适当提升强度，帐号更安全</span>
                 </template>
             </n-thing>
+            <template #suffix>
+              <n-button type="primary" text>修改密码</n-button>
+            </template>
           </n-list-item>
           <n-list-item>
-            <template #suffix>
-              <n-button type="primary" text>修改</n-button>
-            </template>
-            <n-thing title="绑定手机">
+            <n-thing title="修改邮箱">
                 <template #description>
-                    <span class="text-gray-400">已绑定手机号：+86189****4877</span>
+                    <span class="text-gray-400">已绑定邮箱：{{userEmail}}</span>
                 </template>
             </n-thing>
+            <template #suffix>
+              <n-button type="primary" text>修改邮箱</n-button>
+            </template>
           </n-list-item>
         </n-list>
       </n-grid-item>
     </n-grid>
   </template>
   
-  <script setup></script>
+<script setup>
+    import { ref } from 'vue'
+    const userEmail = ref("oneway2021@163.com")
+</script>

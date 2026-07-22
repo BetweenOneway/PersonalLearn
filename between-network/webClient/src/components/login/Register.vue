@@ -184,10 +184,11 @@
         //表单邮箱验证
         await registerFormRef.value?.validate(
             (errors) => {
-                if (!errors) {
+                if (errors) {
                     throw "表单验证失败"
                 }
             },
+            //规则过滤，仅校验key为mail的规则
             (rule)=>{
                 return rule?.key === 'mail';
             }

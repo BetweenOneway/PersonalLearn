@@ -289,7 +289,7 @@ router.post("/register",async (req,res)=>{
                 }
             }
         )
-        if(results.userCount == 1)
+        if(matchedUserCount == 1)
         {
             //邮箱被占用
             output.success = statusCode.SERVICE_STATUS.MAIL_USED.success
@@ -299,24 +299,28 @@ router.post("/register",async (req,res)=>{
         }
         else
         {
+            let t;
             //用户注册
             try {
+                t = await sqldb.sequelize.transaction();
                 let curDate = new Date().toLocaleString();
-                const t = await sqldb.sequelize.transaction();
                 //随机生成初始密码
                 let notEncryptedPassword = stringRandom(8, {letters:true,numbers: false,specials:true});
                 //密码加密
                 let encryptedPassword = cryptPwd(notEncryptedPassword);
+                //随机生成默认用户名
+                let defaultNickname = '用户' + stringRandom(8, {letters:true, numbers:true});
                 //新增用户信息
                 const user = await sqldb.User.create(
                     {
-                        email:email,
+                        email:userEmail,
                         password:encryptedPassword,
+                        nickname:defaultNickname,
                         time:curDate,
                     },
                     {
                         //指定新增哪些字段
-                        fields:['email','password','time'],
+                        fields:['email','password','nickname','time'],
                         transaction: t
                     }
                 );
@@ -326,7 +330,7 @@ router.post("/register",async (req,res)=>{
                     {
                         attributes: ['id'],
                         where: {
-                            email: email
+                            email: userEmail
                         },
                         transaction: t
                     }
@@ -375,7 +379,7 @@ router.post("/register",async (req,res)=>{
                 
             } catch (error) {
                 logger.error(`用户注册出错${error}`)
-                t.rollback();
+                if (t) t.rollback();
                 output.success = statusCode.SERVICE_STATUS.REGISTER_FAIL.success
                 output.status = statusCode.SERVICE_STATUS.REGISTER_FAIL.status
                 output.description = statusCode.SERVICE_STATUS.REGISTER_FAIL.description

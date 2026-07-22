@@ -4,12 +4,12 @@
             <!--用户信息表单 邮箱，昵称 登记 注册时间 更新按钮-->
             <n-form ref="formRef" label-placement="left" label-width="auto" :show-require-mark="false" 
             :model="formValue" :rules="formRules" style="margin-top:16px">
-                <n-form-item label="邮箱：">
-                    <n-text >{{email}}</n-text>
-                </n-form-item>
                 <n-form-item label="昵称：" path="nickname">
                     <n-text v-if="!updateFormItem" v-bind="nickNameText.props">{{ nickNameText.text }}</n-text>
                     <n-input v-else v-model:value="formValue.nickname" maxlength="6" showcount></n-input>
+                </n-form-item>
+                <n-form-item label="邮箱：">
+                    <n-text >{{email}}</n-text>
                 </n-form-item>
                 <n-form-item label="性别：">
                     <n-text v-if="!updateFormItem">{{ !!formValue.sex?'男':'女' }}</n-text>
