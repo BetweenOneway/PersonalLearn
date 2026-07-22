@@ -1,5 +1,5 @@
 <template>
-    <n-layout has-sider>
+    <n-layout has-sider class="admin-layout">
         <!-- 左侧菜单 -->
         <n-layout-sider :inverted="inverted" bordered>
             <n-menu
@@ -10,8 +10,9 @@
         </n-layout-sider>
   
         <!-- 右侧内容区域 -->
-        <n-layout-content :class="{ 'layout-default-background': theme.name != 'dark' }">
+        <n-layout-content class="admin-content" :class="{ 'layout-default-background': theme.name != 'dark' }">
             <n-tabs
+            class="admin-tabs"
             v-model:value="activeTab"
             type="card"
             closable
@@ -184,8 +185,33 @@
 </script>
 
 <style scoped>
+    .admin-layout {
+        height: 100vh;
+    }
     .layout-default-background {
         background: #f5f7f9;
+    }
+    .admin-content {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow: hidden;
+    }
+    .admin-tabs {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .admin-tabs :deep(.n-tabs-nav) {
+        flex-shrink: 0;
+    }
+    .admin-tabs :deep(.n-tabs-pane-wrapper) {
+        flex: 1;
+        overflow: auto;
+    }
+    .admin-tabs :deep(.n-tab-pane) {
+        height: 100%;
     }
 </style>
   
