@@ -34,7 +34,7 @@
   </template>
   
 <script setup>
-    import { onMounted, ref,watch } from 'vue';
+    import { onMounted, ref, watch, provide } from 'vue';
     import {storeToRefs} from 'pinia'
     import { useRouter } from 'vue-router';
     import { NLayout, NLayoutSider, NLayoutContent, NMenu } from 'naive-ui';
@@ -102,7 +102,11 @@
             tabs.value.push({ key, label, path });
         }
         activeTab.value = key; // 激活对应 Tab
+        router.push(path); // 路由跳转
     };
+
+    // 通过 provide 暴露 addTab，供子组件使用
+    provide('addTab', addTab);
 
     // 关闭 Tab 页
     const handleTabClose = (key) => {

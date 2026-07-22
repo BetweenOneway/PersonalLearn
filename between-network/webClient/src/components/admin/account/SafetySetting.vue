@@ -9,7 +9,7 @@
                 </template>
             </n-thing>
             <template #suffix>
-              <n-button type="primary" text>修改密码</n-button>
+              <n-button type="primary" text @click="handleChangePassword">修改密码</n-button>
             </template>
           </n-list-item>
           <n-list-item>
@@ -28,6 +28,12 @@
   </template>
   
 <script setup>
-    import { ref } from 'vue'
+    import { ref, inject } from 'vue'
+
+    const addTab = inject('addTab')
     const userEmail = ref("oneway2021@163.com")
+
+    const handleChangePassword = () => {
+        addTab('forget-password', '忘记密码', '/admin/forgetpassword')
+    }
 </script>
