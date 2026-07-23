@@ -27,7 +27,7 @@ module.exports = function(sequelize,DataTypes){
         },
         level:{
             type:DataTypes.INTEGER,
-            defaultValue:0
+            defaultValue:1
         },
         index:{
             type:DataTypes.INTEGER,
@@ -35,7 +35,7 @@ module.exports = function(sequelize,DataTypes){
         },
         parent_id:{
             type:DataTypes.INTEGER,
-            defaultValue:1
+            defaultValue:0
         },
         status:{
             type:DataTypes.INTEGER,

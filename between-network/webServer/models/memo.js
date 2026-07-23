@@ -15,14 +15,14 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.STRING
         },
         content:{
-            type:DataTypes.STRING
+            type:DataTypes.TEXT('long')
         },
         u_id:{
             type:DataTypes.INTEGER
         },
         finished:{
             type:DataTypes.INTEGER,
-            defaultValue:1
+            defaultValue:0
         },
         time:{
             type:DataTypes.DATE
