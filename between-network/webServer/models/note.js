@@ -13,10 +13,10 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.STRING
         },
         body:{
-            type:DataTypes.STRING
+            type:DataTypes.TEXT('long')
         },
         content:{
-            type:DataTypes.TEXT
+            type:DataTypes.TEXT('long')
         },
         time:{
             type:DataTypes.DATE
