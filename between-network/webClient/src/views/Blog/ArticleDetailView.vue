@@ -4,9 +4,8 @@
         <div class="article-layout">
             <!-- 左侧：作者信息栏 + 互动按钮 -->
             <aside class="author-sidebar">
-                <div class="left-sticky">
-                    <!-- 作者卡片 -->
-                    <div class="author-card" v-show="!authorInfoLoading">
+                <!-- 作者卡片 -->
+                <div class="author-card" v-show="!authorInfoLoading">
                         <div class="author-head">
                             <img class="author-avatar" :src="authorInfo.headPic" alt="" />
                             <span class="author-name">{{ authorInfo.nickName || '匿名作者' }}</span>
@@ -40,8 +39,8 @@
                         </div>
                     </div>
 
-                    <!-- 互动按钮区 -->
-                    <div class="action-bar">
+                <!-- 互动按钮区 -->
+                <div class="action-bar">
                         <div
                             class="action-item"
                             :class="{ active: liked }"
@@ -67,7 +66,6 @@
                             <span class="action-label">分享</span>
                         </div>
                     </div>
-                </div>
             </aside>
 
             <!-- 中间：博客内容 -->
@@ -285,15 +283,16 @@
     align-items: flex-start;
 }
 
+.author-sidebar,
+.promo-sidebar {
+    align-self: stretch;
+}
+
 /* ===== 左侧：作者信息栏 + 互动按钮 ===== */
 .author-sidebar {
     width: 220px;
     flex-shrink: 0;
-}
-
-.left-sticky {
-    position: sticky;
-    top: calc(var(--nav-bar-height) + 24px);
+    position: relative;
 }
 
 .author-card {
@@ -385,6 +384,8 @@
 
 /* 互动按钮区 */
 .action-bar {
+    position: sticky;
+    top: 12px;
     margin-top: 16px;
     background: #fff;
     border-radius: 8px;
