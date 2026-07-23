@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `z_note` (
   `body` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '笔记整个内容',
   `time` datetime NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '笔记初次创建时间',
   `update_time` datetime NOT NULL COMMENT '最后修改时间',
   `u_id` int NOT NULL COMMENT '用户编号',
   `notebook_id` int NOT NULL COMMENT '所属笔记本编号',

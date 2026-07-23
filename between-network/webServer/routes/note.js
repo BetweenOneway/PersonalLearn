@@ -556,6 +556,7 @@ router.put("/createNote",async (req,res)=>{
                 u_id:userInfo.id,
                 notebook_id:notebookId,
                 time:curTime,
+                create_time:curTime,
                 update_time:curTime,
                 status:1,
                 type:1
