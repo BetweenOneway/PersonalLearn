@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    /* 页面高度撑开，产生全局滚动（视口=浏览器窗口） */
+    body {
+      margin: 0;
+      height: 2000px;
+    }
+    .father {
+      /* 父盒子，sticky的活动边界 */
+      height: 800px;
+      background: #eee;
+      border:1px solid red;
+      margin-top: 10px;
+    }
+    .child-sticky {
+      position: sticky;
+      top: 0; /* 参照物：浏览器视口顶部 */
+      background: skyblue;
+      padding: 10px;
+      font-size: 20px;
+    }
+    .other-content {
+      height: 1000px;
+      background: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="other-content">上方空白内容</div>
+
+  <!-- 父容器 father -->
+  <div class="father">
+    <!-- sticky子元素 -->
+    <div class="child-sticky">我是sticky元素-1</div>
+    <p>父盒子里的内容，很长...</p>
+    <p>父盒子里的内容，很长...</p>
+    <p>父盒子里的内容，很长...</p>
+    <p>父盒子里的内容，很长...</p>
+    <p>父盒子里的内容，很长...</p>
+    <p>父盒子里的内容，很长...</p>
+    <p>父盒子里的内容，很长...</p>
+    <p>父盒子里的内容，很长...</p>
+  </div>
+
+  <div class="other-content">
+    <div class="child-sticky">我是sticky元素-2</div>
+    下方空白内容
+  </div>
+</body>
+</html>

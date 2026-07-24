@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body { height: 1500px; margin: 0; }
+/* 爷爷容器（祖先）设置 overflow:hidden */
+.grandpa {
+  overflow: hidden; /* 关键：祖先隐藏溢出 */
+  background: #eee;
+  margin-top: 50px;
+}
+/* 父盒子 */
+.father {
+  height: 600px;
+}
+.sticky-box {
+  position: sticky;
+  top: 0;
+  background: skyblue;
+  padding:10px;
+}
+</style>
+</head>
+<body>
+    <!-- 因为爷爷容器设置了溢出隐藏，粘性块失效-->
+<div class="grandpa">
+  <div class="father">
+    <div class="sticky-box">粘性块（失效）</div>
+    <p>很多内容...</p><p>很多内容...</p><p>很多内容...</p>
+  </div>
+</div>
+</body>
+</html>

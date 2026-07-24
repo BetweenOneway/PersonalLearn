@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* 页面整体隐藏溢出 */
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    /* 局部滚动容器 */
+    .scroll-box {
+      width: 300px;
+      height: 100px;
+      overflow: auto; /* 独立滚动上下文 */
+      border: 1px solid #333;
+    }
+    .sticky-item {
+      position: sticky;
+      top: 0;
+      background: #409eff;
+      color: #fff;
+    }
+    .inner-content {
+      height: 500px;
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-box">
+    <div class="sticky-item">我是粘性标题</div>
+    <div class="inner-content">很长滚动内容</div>
+  </div>
+</body>
+</html>
