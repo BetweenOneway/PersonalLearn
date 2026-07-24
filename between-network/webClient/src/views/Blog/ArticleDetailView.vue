@@ -41,8 +41,7 @@
 
                 <!-- 互动按钮区 -->
                 <div class="action-bar">
-                    <div
-                        class="action-item"
+                    <div class="action-item"
                         :class="{ active: liked }"
                         @click="handleLike"
                     >
