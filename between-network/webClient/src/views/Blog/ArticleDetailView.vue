@@ -133,6 +133,7 @@
 
     import 'cherry-markdown/dist/cherry-markdown.css';
     import Cherry from 'cherry-markdown';
+    import * as echarts from 'echarts';
 
     import PageFooter from '@/components/home/PageFooter.vue';
 
@@ -239,6 +240,9 @@
         cherryInstance = new Cherry({
             el: editorContainer.value,
             value: blogInfo.value.content,
+            externals: {
+                echarts: echarts,
+            },
             editor: {
                 defaultModel: 'previewOnly',
             },

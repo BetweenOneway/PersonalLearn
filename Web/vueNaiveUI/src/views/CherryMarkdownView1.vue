@@ -19,6 +19,7 @@
     import { onMounted, ref, watch } from 'vue';
     import 'cherry-markdown/dist/cherry-markdown.css';
     import Cherry from 'cherry-markdown';
+    import * as echarts from 'echarts';
     
     const editorContent = ref('## hello world');
     const isEditMode = ref(true);
@@ -37,6 +38,9 @@
             {
                 id: 'markdown-container',
                 value: editorContent.value,
+                externals: {
+                    echarts: echarts,
+                },
                 editor: {
                     defaultModel: 'previewOnly',
                 },

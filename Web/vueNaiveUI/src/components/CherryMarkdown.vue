@@ -93,6 +93,7 @@
 <script>
     import Axios from 'axios'
     import Cherry from 'cherry-markdown'
+    import * as echarts from 'echarts'
     import 'cherry-markdown/dist/cherry-markdown.min.css'
 
     export default {
@@ -261,6 +262,9 @@
                     id: mdId,
                     value: defaultValue,
                     fileUpload: fileUpload,
+                    externals: {
+                        echarts: echarts,
+                    },
                     callback: {
                         afterChange: afterChange,
                         afterInit: afterInit,
