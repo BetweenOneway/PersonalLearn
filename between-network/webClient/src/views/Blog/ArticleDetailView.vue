@@ -6,66 +6,66 @@
             <aside class="author-sidebar">
                 <!-- 作者卡片 -->
                 <div class="author-card" v-show="!authorInfoLoading">
-                        <div class="author-head">
-                            <img class="author-avatar" :src="authorInfo.headPic" alt="" />
-                            <span class="author-name">{{ authorInfo.nickName || '匿名作者' }}</span>
-                        </div>
-
-                        <div class="author-subscribe">
-                            <n-button
-                                size="small"
-                                type="warning"
-                                block
-                                :ghost="isSubscribed"
-                                @click="handleSubscribe"
-                            >
-                                {{ isSubscribed ? '已订阅' : '+ 订阅' }}
-                            </n-button>
-                        </div>
-
-                        <div class="author-stats">
-                            <dl>
-                                <dd>{{ authorArticleCount }}</dd>
-                                <dt>文章</dt>
-                            </dl>
-                            <dl>
-                                <dd>{{ authorReadCount }}</dd>
-                                <dt>阅读</dt>
-                            </dl>
-                        </div>
-
-                        <div class="author-link" @click="goAuthorHome">
-                            查看TA的文章 >
-                        </div>
+                    <div class="author-head">
+                        <img class="author-avatar" :src="authorInfo.headPic" alt="" />
+                        <span class="author-name">{{ authorInfo.nickName || '匿名作者' }}</span>
                     </div>
+
+                    <div class="author-subscribe">
+                        <n-button
+                            size="small"
+                            type="warning"
+                            block
+                            :ghost="isSubscribed"
+                            @click="handleSubscribe"
+                        >
+                            {{ isSubscribed ? '已订阅' : '+ 订阅' }}
+                        </n-button>
+                    </div>
+
+                    <div class="author-stats">
+                        <dl>
+                            <dd>{{ authorArticleCount }}</dd>
+                            <dt>文章</dt>
+                        </dl>
+                        <dl>
+                            <dd>{{ authorReadCount }}</dd>
+                            <dt>阅读</dt>
+                        </dl>
+                    </div>
+
+                    <div class="author-link" @click="goAuthorHome">
+                        查看TA的文章 >
+                    </div>
+                </div>
 
                 <!-- 互动按钮区 -->
                 <div class="action-bar">
-                        <div
-                            class="action-item"
-                            :class="{ active: liked }"
-                            @click="handleLike"
-                        >
-                            <n-icon size="22" :component="ThumbUpAltOutlined" />
-                            <span class="action-count">{{ likeCount }}</span>
-                        </div>
-                        <div class="action-item" @click="scrollToComment">
-                            <n-icon size="22" :component="CommentOutlined" />
-                            <span class="action-count">{{ commentCount }}</span>
-                        </div>
-                        <div
-                            class="action-item"
-                            :class="{ active: collected }"
-                            @click="handleCollect"
-                        >
-                            <n-icon size="22" :component="StarBorderRound" />
-                            <span class="action-label">收藏</span>
-                        </div>
-                        <div class="action-item" @click="handleShare">
-                            <n-icon size="22" :component="ShareOutlined" />
-                            <span class="action-label">分享</span>
-                        </div>
+                    <div
+                        class="action-item"
+                        :class="{ active: liked }"
+                        @click="handleLike"
+                    >
+                        <n-icon size="22" :component="ThumbUpAltOutlined" />
+                        <span class="action-count">{{ likeCount }}</span>
                     </div>
+                    <div class="action-item" @click="scrollToComment">
+                        <n-icon size="22" :component="CommentOutlined" />
+                        <span class="action-count">{{ commentCount }}</span>
+                    </div>
+                    <div
+                        class="action-item"
+                        :class="{ active: collected }"
+                        @click="handleCollect"
+                    >
+                        <n-icon size="22" :component="StarBorderRound" />
+                        <span class="action-label">收藏</span>
+                    </div>
+                    <div class="action-item" @click="handleShare">
+                        <n-icon size="22" :component="ShareOutlined" />
+                        <span class="action-label">分享</span>
+                    </div>
+                </div>
             </aside>
 
             <!-- 中间：博客内容 -->
