@@ -262,7 +262,7 @@
 </script>
 
 <style scoped>
-/* ===== 页面整体 ===== */
+/* ===== 页面整体 上下两栏===== */
 .article-page {
     min-height: 100vh;
     display: flex;
@@ -282,8 +282,7 @@
     align-items: flex-start;
 }
 
-.author-sidebar,
-.promo-sidebar {
+.author-sidebar {
     align-self: stretch;
 }
 
@@ -567,8 +566,6 @@
 }
 
 .right-sticky {
-    position: sticky;
-    top: calc(var(--nav-bar-height) + 24px);
     display: flex;
     flex-direction: column;
     gap: 16px;
