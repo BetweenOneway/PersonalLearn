@@ -21,7 +21,7 @@ module.exports = function(sequelize,DataTypes){
         u_id:{
             type:DataTypes.INTEGER,
             references: {
-                model: 'z_user',
+                model: 'user',
                 key: 'id'
             }
         },

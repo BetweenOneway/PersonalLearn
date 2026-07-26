@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 'use strict'
 const User = require('../models/user.js')
 module.exports = function(sequelize,DataTypes){
-    const Note = sequelize.define('z_note',{
+    const Note = sequelize.define('note',{
         id:{
             type:DataTypes.INTEGER,
             primaryKey:true,
@@ -30,7 +30,7 @@ module.exports = function(sequelize,DataTypes){
         u_id:{
             type:DataTypes.INTEGER,
             references: {
-                model: 'z_user',
+                model: 'user',
                 key: 'id'
             }
         },

@@ -11,6 +11,9 @@ const notebook = require('../models/notebook.js')
 const note = require('../models/note.js')
 const dumpsterFile = require('../models/dumpster.js')
 const recentAccessFiles = require('../models/recentFiles.js')
+const favorite = require('../models/favorite.js')
+const comment = require('../models/comment.js')
+const blacklist = require('../models/blacklist.js')
 
 var dbSettings = config.get("mysql");
 
@@ -26,6 +29,9 @@ db.Notebook = notebook(db.sequelize,Sequelize.DataTypes);
 db.operLog = operLog(db.sequelize,Sequelize.DataTypes);
 db.Dumpster = dumpsterFile(db.sequelize,Sequelize.DataTypes);
 db.RecentFiles = recentAccessFiles(db.sequelize,Sequelize.DataTypes);
+db.Favorite = favorite(db.sequelize,Sequelize.DataTypes);
+db.Comment = comment(db.sequelize,Sequelize.DataTypes);
+db.Blacklist = blacklist(db.sequelize,Sequelize.DataTypes);
 
 //建立表关联关系
 Object.keys(db).forEach((modelName) => {

@@ -15,6 +15,9 @@ const recent=require("./routes/recent")
 const fileOper=require("./routes/fileOper")
 const CKEditor=require("./routes/CKEditor");
 const notebook = require('./routes/notebook');
+const favorite = require('./routes/favorite');
+const comment = require('./routes/comment');
+const blacklist = require('./routes/blacklist');
 
 const sequelizeTest = require("./routes/sequelizeTest")
 
@@ -123,6 +126,12 @@ app.use("/memo",memo);
 app.use("/note",note);
 //笔记本
 app.use('/notebook',notebook);
+//收藏
+app.use('/favorite',favorite);
+//评论
+app.use('/comment',comment);
+//黑名单
+app.use('/blacklist',blacklist);
 //CKEditor编辑器
 app.use("/ckeditor",CKEditor)
 //回收站操作
