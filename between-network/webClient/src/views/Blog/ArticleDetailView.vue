@@ -45,7 +45,7 @@
                         :class="{ active: liked }"
                         @click="handleLike"
                     >
-                        <n-icon size="22" :component="ThumbUpAltOutlined" />
+                        <n-icon size="22" :component="liked ? ThumbUpAlt : ThumbUpAltOutlined" />
                         <span class="action-count">{{ likeCount }}</span>
                     </div>
                     <div class="action-item" @click="scrollToComment">
@@ -53,11 +53,11 @@
                         <span class="action-count">{{ commentCount }}</span>
                     </div>
                     <div
-                        class="action-item"
-                        :class="{ active: collected }"
+                        class="action-item collect-item"
+                        :class="{ active: collected, 'collect-active': collected }"
                         @click="handleCollect"
                     >
-                        <n-icon size="22" :component="StarBorderRound" />
+                        <n-icon size="22" :component="collected ? Star : StarBorderRound" />
                         <span class="action-label">收藏</span>
                     </div>
                     <div class="action-item" @click="handleShare">
@@ -124,8 +124,10 @@
     import {
         WhatshotRound,
         ThumbUpAltOutlined,
+        ThumbUpAlt,
         CommentOutlined,
         StarBorderRound,
+        Star,
         ShareOutlined
     } from '@vicons/material';
     import { useMessage } from 'naive-ui';
@@ -140,6 +142,7 @@
     import noteServerRequest from '@/request';
     import noteApi from '@/request/api/noteApi';
     import userApi from '@/request/api/userApi';
+    import { likeApi, collectApi, commentApi } from '@/request/api/interactionApi';
 
     const propsData = defineProps({
         id: { type: String, required: true },
@@ -200,15 +203,30 @@
         });
     }
 
-    const handleLike = () => {
-        liked.value = !liked.value;
-        likeCount.value += liked.value ? 1 : -1;
-        message.success(liked.value ? '点赞成功' : '取消点赞');
+    const handleLike = async () => {
+        let API = { ...likeApi.toggleLike };
+        API.data = { objectId: propsData.id, type: 1 };
+        await noteServerRequest(API).then((responseData) => {
+            if (!responseData) return;
+            liked.value = responseData.data.isLiked;
+            if (liked.value) {
+                likeCount.value += 1;
+                message.success('点赞成功');
+            } else {
+                likeCount.value = Math.max(0, likeCount.value - 1);
+                message.success('已取消点赞');
+            }
+        });
     };
 
-    const handleCollect = () => {
-        collected.value = !collected.value;
-        message.success(collected.value ? '收藏成功' : '取消收藏');
+    const handleCollect = async () => {
+        let API = { ...collectApi.toggleCollect };
+        API.data = { objectId: propsData.id, type: 1 };
+        await noteServerRequest(API).then((responseData) => {
+            if (!responseData) return;
+            collected.value = responseData.data.isFavorited;
+            message.success(collected.value ? '收藏成功' : '已取消收藏');
+        });
     };
 
     const handleShare = () => {
@@ -236,6 +254,24 @@
         }
     };
 
+    async function LoadInteractionStatus() {
+        let type = 1;
+        await Promise.all([
+            noteServerRequest({ ...likeApi.checkLike, params: { objectId: propsData.id, type } }).then((res) => {
+                if (res) liked.value = res.data.isLiked;
+            }),
+            noteServerRequest({ ...likeApi.getLikeCount, params: { objectId: propsData.id, type } }).then((res) => {
+                if (res) likeCount.value = res.data.likeCount;
+            }),
+            noteServerRequest({ ...collectApi.checkCollect, params: { objectId: propsData.id, type } }).then((res) => {
+                if (res) collected.value = res.data.isFavorited;
+            }),
+            noteServerRequest({ ...commentApi.getCommentCount, params: { objectId: propsData.id, type } }).then((res) => {
+                if (res) commentCount.value = res.data.commentCount;
+            })
+        ]);
+    }
+
     onMounted(async () => {
         cherryInstance = new Cherry({
             el: editorContainer.value,
@@ -258,6 +294,7 @@
 
         await GetBlogInfo();
         await GetAuthorInfo();
+        await LoadInteractionStatus();
     });
 
     onUnmounted(() => {
@@ -407,12 +444,21 @@
 }
 
 .action-item:hover {
-    color: #c88300;
-    background: #fff9e6;
+    color: #e74c3c;
+    background: #fff0f0;
+}
+
+.action-item.collect-item:hover {
+    color: #f0a020;
+    background: #fff8e6;
 }
 
 .action-item.active {
-    color: #c88300;
+    color: #e74c3c;
+}
+
+.action-item.active.collect-active {
+    color: #f0a020;
 }
 
 .action-count,

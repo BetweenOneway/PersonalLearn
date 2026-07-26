@@ -452,6 +452,41 @@ SERVICE_STATUS={
         status:'SERVICE_057',
         description:'查询黑名单状态失败'
     },
+    LIKE_SUCCESS:{
+        success:true,
+        status:'SERVICE_060',
+        description:'点赞成功'
+    },
+    LIKE_FAIL:{
+        success:false,
+        status:'SERVICE_061',
+        description:'点赞失败'
+    },
+    UNLIKE_SUCCESS:{
+        success:true,
+        status:'SERVICE_062',
+        description:'取消点赞成功'
+    },
+    CHECK_LIKE_SUCCESS:{
+        success:true,
+        status:'SERVICE_063',
+        description:'查询点赞状态成功'
+    },
+    CHECK_LIKE_FAIL:{
+        success:false,
+        status:'SERVICE_064',
+        description:'查询点赞状态失败'
+    },
+    GET_LIKE_COUNT_SUCCESS:{
+        success:true,
+        status:'SERVICE_065',
+        description:'获取点赞数成功'
+    },
+    GET_LIKE_COUNT_FAIL:{
+        success:false,
+        status:'SERVICE_066',
+        description:'获取点赞数失败'
+    },
 }
 
 EVENT_LIST = {

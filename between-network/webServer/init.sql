@@ -169,13 +169,32 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
   `u_id` int NOT NULL COMMENT '拉黑发起人用户编号',
   `target_u_id` int NOT NULL COMMENT '被拉黑用户编号',
+  `reason` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '拉黑原因',
   `time` datetime NOT NULL COMMENT '拉黑时间',
+  `status` int NOT NULL DEFAULT 1 COMMENT '状态【0：已解除，1：正常】',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_blacklist_user_target`(`u_id`, `target_u_id`) USING BTREE COMMENT '同一用户不能重复拉黑同一人',
   INDEX `idx_blacklist_target`(`target_u_id`) USING BTREE COMMENT '查询某用户被谁拉黑',
   CONSTRAINT `blacklist_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `blacklist_target_user_id_fk` FOREIGN KEY (`target_u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '黑名单表' ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Table structure for `like`
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `like` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `u_id` int NOT NULL COMMENT '点赞用户编号',
+  `object_id` int NOT NULL COMMENT '点赞对象编号',
+  `type` int NOT NULL DEFAULT 1 COMMENT '对象类型【1：笔记，2：便签】',
+  `time` datetime NOT NULL COMMENT '点赞时间',
+  `status` int NOT NULL DEFAULT 1 COMMENT '状态【0：已取消，1：正常】',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_like_user_object_type`(`u_id`, `object_id`, `type`) USING BTREE COMMENT '同一用户同一对象同一类型只能点赞一次',
+  INDEX `idx_like_object`(`object_id`, `type`) USING BTREE,
+  INDEX `idx_like_user_time`(`u_id`, `time`) USING BTREE,
+  CONSTRAINT `like_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '点赞表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Views
