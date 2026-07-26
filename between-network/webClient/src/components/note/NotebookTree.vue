@@ -198,6 +198,8 @@
 
     //节点内容渲染函数
     const inputRef = ref(null)
+    let shouldSaveOnBlur = true
+    let originalLabel = ''
 
     const notebookNode = ({ option }) => {
         //  console.log(option.key)
@@ -217,14 +219,26 @@
                     onUpdateValue: v => {
                         option.label = v
                     },
-                    onChange: () => {
-                        console.log("option change=>",option.key);
-                        option.isedit = false
-                        //更新笔记本名称
-                        renameNotebook(option.label,option.key)
+                    onKeydown: (e) => {
+                        e.stopPropagation()
+                        if (e.key === 'Enter') {
+                            e.preventDefault()
+                            shouldSaveOnBlur = false
+                            option.isedit = false
+                            renameNotebook(option.label, option.key)
+                        } else if (e.key === 'Escape') {
+                            e.preventDefault()
+                            shouldSaveOnBlur = false
+                            option.label = originalLabel
+                            option.isedit = false
+                        }
                     },
                     onBlur: () => {
                         console.log("option blur=>",option.key);
+                        if (shouldSaveOnBlur) {
+                            renameNotebook(option.label, option.key)
+                        }
+                        shouldSaveOnBlur = true
                         option.isedit = false
                     }
                 }
@@ -293,6 +307,7 @@
         {
             prevSelectNode.value = currentSelectNode;
             //双击事件
+            originalLabel = currentSelectNode.value.label
             currentSelectNode.value.isedit = true
             nextTick(() => {
                 console.log('ondblclick=>',inputRef);
@@ -365,6 +380,7 @@
                 currentSelectNode.value = option;
                 prevSelectNode.value = currentSelectNode.value;
                 //双击事件
+                originalLabel = option.label
                 option.isedit = true
                 nextTick(() => {
                     console.log('ondblclick=>',inputRef);
