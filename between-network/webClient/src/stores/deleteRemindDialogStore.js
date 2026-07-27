@@ -33,6 +33,8 @@ export const useDeleteRemindDialogStore = defineStore(
          */
         const DefaultDeleteRemind = (file)=>{
             files.value[0] = file;
+            scene.value = 1;
+            deletePer.value = 1;
             show.value = true;
         }
 
@@ -63,7 +65,6 @@ export const useDeleteRemindDialogStore = defineStore(
             showDetails.value = false;
             files.value=[];
             scene.value = 1;
-            deletePer.value = 3;
         }
 
         //
