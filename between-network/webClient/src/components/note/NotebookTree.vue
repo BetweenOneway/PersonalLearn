@@ -120,6 +120,7 @@
     */
     function getNotebookList(targetKey = -1)
     {
+        console.log("start getNotebookList targetKey=>",targetKey);
         noteServerRequest(notebookApi.getNotebookList).then(responseData=>{
             if(responseData)
             {

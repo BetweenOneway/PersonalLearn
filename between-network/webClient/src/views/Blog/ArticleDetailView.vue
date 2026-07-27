@@ -45,7 +45,7 @@
                         :class="{ active: liked }"
                         @click="handleLike"
                     >
-                        <n-icon size="22" :component="liked ? ThumbUpAlt : ThumbUpAltOutlined" />
+                        <n-icon size="22" :component="liked ? ThumbUpAltFilled : ThumbUpAltOutlined" />
                         <span class="action-count">{{ likeCount }}</span>
                     </div>
                     <div class="action-item" @click="scrollToComment">
@@ -57,7 +57,7 @@
                         :class="{ active: collected, 'collect-active': collected }"
                         @click="handleCollect"
                     >
-                        <n-icon size="22" :component="collected ? Star : StarBorderRound" />
+                        <n-icon size="22" :component="collected ? StarRound : StarBorderRound" />
                         <span class="action-label">收藏</span>
                     </div>
                     <div class="action-item" @click="handleShare">
@@ -124,10 +124,10 @@
     import {
         WhatshotRound,
         ThumbUpAltOutlined,
-        ThumbUpAlt,
+        ThumbUpAltFilled,
         CommentOutlined,
         StarBorderRound,
-        Star,
+        StarRound,
         ShareOutlined
     } from '@vicons/material';
     import { useMessage } from 'naive-ui';

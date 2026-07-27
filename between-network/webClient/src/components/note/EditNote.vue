@@ -17,8 +17,11 @@
                     <n-button v-if="!isEditing" size="small" @click="enterEditMode">
                         编辑
                     </n-button>
-                    <n-button v-else type="primary" size="small" @click="saveNote">
+                    <n-button v-if="isEditing" type="primary" size="small" @click="saveNote">
                         保存
+                    </n-button>
+                    <n-button v-if="isEditing" size="small" @click="saveAndExit">
+                        退出编辑
                     </n-button>
                     <n-button text size="small" class="delete-btn" :focusable="false" @click="deleteNote">
                         <template #icon>
@@ -299,6 +302,12 @@
         if (!useCkEditor.value) {
             cherryInstance.switchModel('previewOnly');
         }
+    }
+
+    function saveAndExit()
+    {
+        saveNote();
+        exitEditMode();
     }
 
     /**
