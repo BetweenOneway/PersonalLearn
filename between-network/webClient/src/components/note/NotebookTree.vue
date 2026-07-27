@@ -27,7 +27,7 @@
     />
 
     <!--删除提醒框-->
-    <DeleteRemindDialog @deleteSuccess="deleteNotebookSuccess"></DeleteRemindDialog>
+    <DeleteRemindDialog></DeleteRemindDialog>
 </template>
 
 <script setup>
@@ -42,6 +42,7 @@
     import { useDeleteRemindDialogStore } from "@/stores/deleteRemindDialogStore";
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
     const {DefaultDeleteRemind} = deleteRemindDialogStore;
+    const {deleteCallback} = storeToRefs(deleteRemindDialogStore);
 
     import noteServerRequest  from "@/request"
     import notebookApi from '@/request/api/notebookApi';
@@ -323,6 +324,8 @@
         {
             let toDeleteNotebook = currentSelectNode.value;
             currentSelectNode.value = {};
+            //设置删除成功回调（解决多个DeleteRemindDialog实例共享store的问题）
+            deleteCallback.value = deleteNotebookSuccess;
             //删除笔记本
             DefaultDeleteRemind({
                 id:toDeleteNotebook.key,

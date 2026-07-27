@@ -96,8 +96,10 @@
 
     import DeleteRemindDialog from "@/components/remind/DeleteRemindDialog.vue";
     import {useDeleteRemindDialogStore} from '@/stores/deleteRemindDialogStore'
+    import { storeToRefs } from 'pinia'
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
     const {DefaultDeleteRemind} = deleteRemindDialogStore;
+    const {deleteCallback} = storeToRefs(deleteRemindDialogStore);
 
     //是否使用CkEditor
     let useCkEditor = ref(false);
@@ -364,6 +366,9 @@
             title:title,
             type:1,
         };
+        //设置删除成功回调与来源（解决多个DeleteRemindDialog实例共享store的问题）
+        deleteCallback.value = deleteNoteSuccess;
+        source.value = 'editNote';
         DefaultDeleteRemind(noteInfo);
 
         //emits("deleteSuccess");

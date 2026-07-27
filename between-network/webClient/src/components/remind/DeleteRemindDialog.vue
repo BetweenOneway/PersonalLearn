@@ -61,6 +61,7 @@
         files,//删除的文件对象数组
         fileArr,//删除文件对象数组 files每一项多加了点属性
         deletePer,//删除权限
+        deleteCallback,//删除成功回调
     } = storeToRefs(deleteRemindDialogStore);
 
     //删除提醒框重置函数
@@ -147,7 +148,10 @@
             else
             {
                 console.log("delete file success============");
-                emits('deleteSuccess');
+                // 调用store中的回调（解决多个DeleteRemindDialog实例共享store导致事件错乱的问题）
+                if(deleteCallback.value){
+                    deleteCallback.value();
+                }
             }
         })
     }

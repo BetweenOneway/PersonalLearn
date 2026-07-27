@@ -25,7 +25,7 @@ services:
       # 源码挂载，实现热重载
       - .:/app:cached
       # 排除 node_modules 避免与容器内不一致
-      - /app/node_modules
+      - server_node_modules:/app/node_modules
       # 持久化 VSCode 扩展
       - vscode-extensions:/root/.vscode-server/extensions
       - vscode-extensions-insiders:/root/.vscode-server-insiders
@@ -70,6 +70,7 @@ volumes:
   mysql_data:
   vscode-extensions:
   vscode-extensions-insiders:
+  server_node_modules:
 
 networks:
   between_network_net:

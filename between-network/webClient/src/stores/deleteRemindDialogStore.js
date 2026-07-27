@@ -24,6 +24,8 @@ export const useDeleteRemindDialogStore = defineStore(
         const scene = ref(1)
         //删除权限 0 无权限 1删除权限 2 彻底删除权限 3 删除+彻底删除权限
         let deletePer = ref(3)
+        //删除成功后的回调函数，用于解决多个DeleteRemindDialog实例共享store时事件无法正确触发的问题
+        let deleteCallback = ref(null)
 
         /**
          * 默认窗口(scene)
@@ -87,7 +89,7 @@ export const useDeleteRemindDialogStore = defineStore(
         });
 
         return {
-            show,showDetails,files,scene,deletePer,fileArr,
+            show,showDetails,files,scene,deletePer,fileArr,deleteCallback,
             reset,DefaultDeleteRemind,
             showFromDumpsterSingle,showFromDumpsterMulti}
     }

@@ -136,7 +136,7 @@
         @select="selectContextMenu"
         />
         <!--删除提醒框-->
-        <DeleteRemindDialog @deleteSuccess="deleteNoteSuccess"></DeleteRemindDialog>
+        <DeleteRemindDialog></DeleteRemindDialog>
     </div>
 </template>
   
@@ -166,9 +166,11 @@
     import DeleteRemindDialog from "@/components/remind/DeleteRemindDialog.vue";
 
     import { useDeleteRemindDialogStore } from "@/stores/deleteRemindDialogStore";
+    import { storeToRefs } from 'pinia';
 
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
     const {DefaultDeleteRemind} = deleteRemindDialogStore;
+    const {deleteCallback} = storeToRefs(deleteRemindDialogStore);
 
     const {showFromDumpsterSingle} = deleteRemindDialogStore;
     
@@ -385,6 +387,8 @@
         else if(key == "delete")
         {
             console.log("NoteIndex delete note");
+            //设置删除成功回调（解决多个DeleteRemindDialog实例共享store的问题）
+            deleteCallback.value = deleteNoteSuccess;
             DefaultDeleteRemind({
                 id:contextMenu.value.id,
                 title:contextMenu.value.title,
