@@ -143,6 +143,7 @@
     import noteApi from '@/request/api/noteApi';
     import userApi from '@/request/api/userApi';
     import { likeApi, collectApi, commentApi } from '@/request/api/interactionApi';
+    import { useUserStore } from '@/stores/userStore';
 
     const propsData = defineProps({
         id: { type: String, required: true },
@@ -256,20 +257,39 @@
 
     async function LoadInteractionStatus() {
         let type = 1;
-        await Promise.all([
-            noteServerRequest({ ...likeApi.checkLike, params: { objectId: propsData.id, type } }).then((res) => {
-                if (res) liked.value = res.data.isLiked;
-            }),
+        const userStore = useUserStore();
+        const isLogin = !!userStore.token;
+
+        const requests = [];
+        // 未登录时不发送 checkLike / checkCollect，默认未点赞、未收藏
+        if (isLogin) {
+            requests.push(
+                noteServerRequest({ ...likeApi.checkLike, params: { objectId: propsData.id, type } }).then((res) => {
+                    if (res) liked.value = res.data.isLiked;
+                })
+            );
+            requests.push(
+                noteServerRequest({ ...collectApi.checkCollect, params: { objectId: propsData.id, type } }).then((res) => {
+                    if (res) collected.value = res.data.isFavorited;
+                })
+            );
+        } else {
+            liked.value = false;
+            collected.value = false;
+        }
+
+        requests.push(
             noteServerRequest({ ...likeApi.getLikeCount, params: { objectId: propsData.id, type } }).then((res) => {
                 if (res) likeCount.value = res.data.likeCount;
-            }),
-            noteServerRequest({ ...collectApi.checkCollect, params: { objectId: propsData.id, type } }).then((res) => {
-                if (res) collected.value = res.data.isFavorited;
-            }),
+            })
+        );
+        requests.push(
             noteServerRequest({ ...commentApi.getCommentCount, params: { objectId: propsData.id, type } }).then((res) => {
                 if (res) commentCount.value = res.data.commentCount;
             })
-        ]);
+        );
+
+        await Promise.all(requests);
     }
 
     onMounted(async () => {

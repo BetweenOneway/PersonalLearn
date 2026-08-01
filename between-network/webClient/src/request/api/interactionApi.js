@@ -11,7 +11,8 @@ const likeApi = {
         name: '检查是否已点赞',
         url: '/like/checkLike',
         method: 'GET',
-        userAuth: true,
+        //点赞不要求强制登录，未登录则默认显示未点赞
+        userAuth: false,
         dataParam: false,
         successMessage: false
     },
@@ -38,7 +39,7 @@ const collectApi = {
         name: '检查是否已收藏',
         url: '/favorite/checkFavorite',
         method: 'GET',
-        userAuth: true,
+        userAuth: false,
         dataParam: false,
         successMessage: false
     },
