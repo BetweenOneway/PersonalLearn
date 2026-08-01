@@ -24,25 +24,6 @@
                     {{ htmlToText(marked(blog.content)) }}
                 </span>
             </n-ellipsis>
-
-            <!-- 底部：操作按钮 -->
-            <div class="card-actions">
-                <n-button quaternary circle @click.stop :size="'small'">
-                    <template #icon>
-                        <n-icon :size="18"><HeartRegular /></n-icon>
-                    </template>
-                </n-button>
-                <n-button quaternary circle @click.stop :size="'small'">
-                    <template #icon>
-                        <n-icon :size="18"><ThumbsUpRegular /></n-icon>
-                    </template>
-                </n-button>
-                <n-button quaternary circle @click.stop :size="'small'">
-                    <template #icon>
-                        <n-icon :size="18"><ThumbsDownRegular /></n-icon>
-                    </template>
-                </n-button>
-            </div>
         </n-card>
     </div>
 </template>
@@ -53,7 +34,7 @@
     //Markdown渲染插件
     import { marked } from "marked";
 
-    import { FileAltRegular, ThumbsUpRegular, ThumbsDownRegular, HeartRegular } from '@vicons/fa';
+    import { FileAltRegular } from '@vicons/fa';
     import { toHerf } from '@/router/go';
     import { useThemeStore } from '@/stores/themeStore';
     import { storeToRefs } from 'pinia';
@@ -150,29 +131,6 @@
     color: #6b7280;
 }
 
-/* ===== 底部操作栏 ===== */
-.card-actions {
-    padding-top: 12px;
-    border-top: 1px solid #f0f0f2;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.blog-card:hover .card-actions {
-    border-top-color: #e0e5f0;
-}
-
-.card-actions :deep(.n-button) {
-    color: #9ca3af;
-    transition: color 0.2s ease, background-color 0.2s ease;
-}
-
-.card-actions :deep(.n-button:hover) {
-    color: #2080f0;
-    background-color: rgba(32, 128, 240, 0.06);
-}
-
 /* ===== 暗色主题 ===== */
 .blog-card--dark :deep(.n-card) {
     background: #1a1a24;
@@ -203,23 +161,6 @@
 
 .blog-card--dark .card-content {
     color: #8a8a9a;
-}
-
-.blog-card--dark .card-actions {
-    border-top-color: rgba(255, 255, 255, 0.08);
-}
-
-.blog-card--dark:hover .card-actions {
-    border-top-color: rgba(255, 255, 255, 0.12);
-}
-
-.blog-card--dark .card-actions :deep(.n-button) {
-    color: #7a7a8c;
-}
-
-.blog-card--dark .card-actions :deep(.n-button:hover) {
-    color: #63a4ff;
-    background-color: rgba(99, 164, 255, 0.1);
 }
 </style>
 

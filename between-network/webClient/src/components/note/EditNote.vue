@@ -375,9 +375,8 @@
             title:title,
             type:1,
         };
-        //设置删除成功回调与来源（解决多个DeleteRemindDialog实例共享store的问题）
+        //设置删除成功回调（解决多个DeleteRemindDialog实例共享store的问题）
         deleteCallback.value = deleteNoteSuccess;
-        source.value = 'editNote';
         DefaultDeleteRemind(noteInfo);
 
         //emits("deleteSuccess");
