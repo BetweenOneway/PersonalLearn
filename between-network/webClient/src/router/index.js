@@ -72,6 +72,12 @@ const router = createRouter({
         meta:{title:'博客页'},
     },
     {
+        path: '/zone/:id',
+        props: (route) => ({ id: route.params.id, author: route.query.author ? JSON.parse(route.query.author) : null }),
+        component: ()=>import("@/views/Zone/ZoneIndex.vue"),
+        meta:{title:'个人空间'},
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
         component: ()=>import("@/views/NotFound/404.vue"),

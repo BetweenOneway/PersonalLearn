@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="author-link" @click="goAuthorHome">
-                        查看TA的文章 >
+                        查看TA的空间 >
                     </div>
                 </div>
 
@@ -251,7 +251,10 @@
 
     const goAuthorHome = () => {
         if (authorInfo.value.id) {
-            router.push(`/user/${authorInfo.value.id}`);
+            router.push({
+                path: `/zone/${authorInfo.value.id}`,
+                query: { author: JSON.stringify(authorInfo.value) }
+            });
         }
     };
 
