@@ -168,6 +168,16 @@ router.get("/checkFavorite", async (req, res) => {
             return;
         }
 
+        // 未登录时静默处理，前端不提示，默认未收藏
+        if (!userInfo || !userInfo.id) {
+            output.success = statusCode.SERVICE_STATUS.CHECK_FAVORITE_SUCCESS.success;
+            output.status = statusCode.SERVICE_STATUS.CHECK_FAVORITE_SUCCESS.status;
+            output.description = statusCode.SERVICE_STATUS.CHECK_FAVORITE_SUCCESS.description;
+            output.data.isFavorited = false;
+            res.send(output);
+            return;
+        }
+
         const record = await sqldb.Favorite.findOne({
             where: {
                 u_id: userInfo.id,

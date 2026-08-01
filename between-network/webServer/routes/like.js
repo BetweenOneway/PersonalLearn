@@ -118,6 +118,16 @@ router.get("/checkLike", async (req, res) => {
             return;
         }
 
+        // 未登录时静默处理，前端不提示，默认未点赞
+        if (!userInfo || !userInfo.id) {
+            output.success = statusCode.SERVICE_STATUS.CHECK_LIKE_SUCCESS.success;
+            output.status = statusCode.SERVICE_STATUS.CHECK_LIKE_SUCCESS.status;
+            output.description = statusCode.SERVICE_STATUS.CHECK_LIKE_SUCCESS.description;
+            output.data.isLiked = false;
+            res.send(output);
+            return;
+        }
+
         const record = await sqldb.Like.findOne({
             where: {
                 u_id: userInfo.id,

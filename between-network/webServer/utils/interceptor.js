@@ -10,7 +10,7 @@ async function ValidateUserToken(req)
     if(!userToken)
     {
         //没有传递userToken参数 跳过校验
-        logger.info(`${userToken} interceptor user token invalid......`)
+        logger.info(`interceptor user token missing for ${req.originalUrl}......`)
         return true;
     }
     //验证用户是否登录
