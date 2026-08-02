@@ -1,14 +1,10 @@
 const express=require("express");
-const crypto = require("crypto")
-const redis = require('redis')
 const { Op } = require("sequelize");
 
 //数据库
 var sqldb = require('../sqldb');
 
 let statusCode = require("./statusCode")
-let validate = require("../utils/validate");
-const note = require("../models/note");
 
 var router=express.Router();
 
@@ -24,13 +20,13 @@ router.get("/getUserNotebookList",async (req,res)=>{
         data:[]
     }
 
-    console.log("start get user notebook list")
+    logger.info("start get user notebook list")
 
     //0 被删除
     let targetStatus = 0;
     try {
         let userInfo = req.userInfo
-        console.log("parsed userinfo=>",userInfo)
+        logger.info(`parsed userinfo=>${JSON.stringify(userInfo)}`)
 
         //查询属于当前用户的，未被删除的笔记本
         const notebooks = await sqldb.Notebook.findAll(
@@ -56,13 +52,13 @@ router.get("/getUserNotebookList",async (req,res)=>{
         output.data = notebooks
         res.send(output);
     } catch (error) {
-        console.log(error)
+        logger.error(error)
         output.success = statusCode.SERVICE_STATUS.GET_NOTEBOOK_FAIL.success
         output.status = statusCode.SERVICE_STATUS.GET_NOTEBOOK_FAIL.status
         output.description = statusCode.SERVICE_STATUS.GET_NOTEBOOK_FAIL.description
         res.send(output);
     }
-    console.log("End of get user notebook list")
+    logger.info("End of get user notebook list")
     return;
 })
 
@@ -73,7 +69,7 @@ router.get("/getUserNotebookList",async (req,res)=>{
  * notebookName 笔记本名称
  */
 router.post("/addNotebook",async (req,res)=>{
-    console.log("start add notebook:",req.body);
+    logger.info("start add notebook:");
 
     let output={
         success:false,
@@ -88,6 +84,11 @@ router.post("/addNotebook",async (req,res)=>{
     const parentId = parseInt(req.body.parentId, 10) || 1;
     const index = parseInt(req.body.index, 10) || 0;
     const level = parseInt(req.body.level, 10) || 0;
+
+    logger.info(`notebookName:${notebookName}`);
+    logger.info(`parentId:${parentId}`);
+    logger.info(`index:${index}`);
+    logger.info(`level:${level}`);
 
     const t = await sqldb.sequelize.transaction();
 
@@ -111,9 +112,9 @@ router.post("/addNotebook",async (req,res)=>{
             }
         );
         
-        console.log("new added notebook info:",newAddNotebook);
+        logger.info(`new added notebook info:${JSON.stringify(newAddNotebook)}`);
         let event = statusCode.EVENT_LIST.ADD_NOTEBOOK;
-        const addLog = await sqldb.operLog.create(
+        await sqldb.operLog.create(
             {
                 time:curTime,
                 event:event.code,
@@ -128,21 +129,21 @@ router.post("/addNotebook",async (req,res)=>{
         );
 
         t.commit();
-        console.log("add notebook success,commit database success")
+        logger.info("add notebook success,commit database success")
         output.success = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_SUCCESS.success
         output.status = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_SUCCESS.description
         output.data.noteId = newAddNotebook.id
         res.send(output);
     } catch (error) {
-        console.log("add notebook error:",error);
+        logger.error(`add notebook error:${error}`);
         t.rollback();
         output.success = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_FAIL.success
         output.status = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_FAIL.status
         output.description = statusCode.SERVICE_STATUS.ADD_NOTEBOOK_FAIL.description
         res.send(output);
     }
-    console.log("End of add notebook");
+    logger.info("End of add notebook");
     return
 })
 
@@ -153,7 +154,7 @@ router.post("/addNotebook",async (req,res)=>{
  * newName 笔记本新名称
  */
 router.post("/renameNotebook",async (req,res)=>{
-    console.log("start rename notebook :",req.body);
+    logger.info(`start rename notebook :${JSON.stringify(req.body)}`);
 
     let output={
         success:false,
@@ -171,7 +172,7 @@ router.post("/renameNotebook",async (req,res)=>{
     const t = await sqldb.sequelize.transaction();
 
     try {
-        console.log("userInfo:",req.userInfo);
+        logger.info(`userInfo:${JSON.stringify(req.userInfo)}`);
         let userInfo = req.userInfo;
         let curTime = new Date().toLocaleString()
 
@@ -187,7 +188,7 @@ router.post("/renameNotebook",async (req,res)=>{
         if(targetNote !== undefined)
         {
             //更新
-            const updateNum = await sqldb.Notebook.update(
+            await sqldb.Notebook.update(
                 {
                     name:inputInfo.newName,
                     update_time:curTime,
@@ -203,7 +204,7 @@ router.post("/renameNotebook",async (req,res)=>{
             );
             //记录日志
             let event = statusCode.EVENT_LIST.RENAME_NOTEBOOK;
-            const addLog = await sqldb.operLog.create(
+            await sqldb.operLog.create(
                 {
                     time:curTime,
                     event:event.code,
@@ -218,7 +219,7 @@ router.post("/renameNotebook",async (req,res)=>{
             );
 
             t.commit();
-            console.log("rename notebook success,commit database success")
+            logger.info("rename notebook success,commit database success")
             output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_SUCCESS.description;
@@ -226,14 +227,14 @@ router.post("/renameNotebook",async (req,res)=>{
             res.send(output);
         }
     } catch (error) {
-        console.log("rename notebook error:",error);
+        logger.error(`rename notebook error:${error}`);
         t.rollback();
         output.success = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.success
         output.status = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.status
         output.description = statusCode.SERVICE_STATUS.UPDATE_NOTE_FAIL.description
         res.send(output);
     }
-    console.log("End of rename notebook");
+    logger.info("End of rename notebook");
     return
 })
 
@@ -246,7 +247,7 @@ router.post("/updateNotebookRelation",async (req,res)=>{
         status:'',
         description:'',
     }
-    console.log("start update Notebook Relation:",req.body);
+    logger.info(`start update Notebook Relation:${JSON.stringify(req.body)}`);
     //[{id,level,parent_id,index}]
     let notebookList = req.body.notebookList;
     //目标状态
@@ -271,7 +272,7 @@ router.post("/updateNotebookRelation",async (req,res)=>{
         for(let notebook of notebookList)
         {
             //更新
-            const updateNum = await sqldb.Notebook.update(
+            await sqldb.Notebook.update(
                 {
                     level:notebook.level,
                     parent_id:notebook.parent_id,
@@ -291,7 +292,7 @@ router.post("/updateNotebookRelation",async (req,res)=>{
             );
             //记录日志
             let event = statusCode.EVENT_LIST.UPDATE_NOTEBOOK_RELATION;
-            const addLog = await sqldb.operLog.create(
+            await sqldb.operLog.create(
                 {
                     time:curTime,
                     event:event.code,

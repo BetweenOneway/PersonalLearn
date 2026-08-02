@@ -28,7 +28,6 @@ services:
       - server_node_modules:/app/node_modules
       # 持久化 VSCode 扩展
       - vscode-extensions:/root/.vscode-server/extensions
-      - vscode-extensions-insiders:/root/.vscode-server-insiders
     ports:
       - "18081:18081"
     command: sleep infinity
@@ -49,6 +48,7 @@ services:
   # ==================== MySQL 数据库 ====================
   mysql:
     image: mysql:8.0
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     container_name: between_network_mysql
     ports:
       - "3306:3306"
@@ -69,7 +69,6 @@ volumes:
   redis_data:
   mysql_data:
   vscode-extensions:
-  vscode-extensions-insiders:
   server_node_modules:
 
 networks:
