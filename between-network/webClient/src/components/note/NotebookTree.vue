@@ -151,7 +151,7 @@
                     })
                 }
                 console.log('notebookmap=>',notebookMap);
-                //将低级菜单对象并入高级菜单对象 保留顶级菜单
+                //将低级菜单对象并入其父级菜单对象
                 for(let notebook of allNotebook)
                 {
                     //获取当前菜单对象
@@ -167,17 +167,16 @@
                         else{
                             parentNotebook.children = [curNotebook]
                         }
-
-                        //移除当菜单对象
-                        notebookMap.delete(notebook.id);
-                        notebookMap.set(notebook.parent_id,parentNotebook)
                     }
                 }
 
-                //此时nootebookMap中应该只有一级菜单对象
-                for(let level1Notebook of notebookMap)
+                //notebookMap中保留全部节点，仅挑选父级不在集合中的节点作为顶级菜单
+                for(let notebook of allNotebook)
                 {
-                    notebookTreeMenu.value.push(level1Notebook[1]);
+                    if(!notebookMap.has(notebook.parent_id))
+                    {
+                        notebookTreeMenu.value.push(notebookMap.get(notebook.id));
+                    }
                 }
                 //如果有选择节点，则更新选择节点
                 if(!!currentSelectNode.value?.key)
@@ -301,6 +300,7 @@
         if(key =='createNotebook')
         {
             //新增笔记本
+            console.log("createNotebook current level=>",currentSelectNode.value.level)
             await addNewNoteBook(currentSelectNode.value.level + 1);
             //重新获取笔记本列表
             await getNotebookList();

@@ -441,6 +441,7 @@
      */
     function createNotebook()
     {
+        console.log("create notebook");
         notebookTree.value.addNewNoteBook();
     }
 
