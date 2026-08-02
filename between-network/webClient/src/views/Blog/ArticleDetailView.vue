@@ -111,9 +111,6 @@
                 </div>
             </aside>
         </div>
-
-        <!-- 底部 -->
-        <PageFooter />
     </div>
 </template>
 
@@ -136,8 +133,6 @@
     import 'cherry-markdown/dist/cherry-markdown.css';
     import Cherry from 'cherry-markdown';
     import * as echarts from 'echarts';
-
-    import PageFooter from '@/components/home/PageFooter.vue';
 
     import noteServerRequest from '@/request';
     import noteApi from '@/request/api/noteApi';

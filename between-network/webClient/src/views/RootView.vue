@@ -9,6 +9,8 @@
         <n-layout-content class="main-content">
             <div class="scroll-box">
                 <router-view />
+                <!-- 底部区域 -->
+                <PageFooter />
                 <n-back-top
                     :visibility-height="300"
                     :right="40"
@@ -23,6 +25,7 @@
 <script setup>
     import MainTopNavBar from '@/components/navbar/MainTopNavBar.vue';
     import LoginModal from '@/components/login/LoginModal.vue';
+    import PageFooter from '@/components/home/PageFooter.vue';
     import { useThemeStore } from '@/stores/themeStore';
     import { storeToRefs } from 'pinia';
     import { useLoadingBar, useMessage } from 'naive-ui';
