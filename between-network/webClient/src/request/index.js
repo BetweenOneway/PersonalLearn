@@ -59,11 +59,13 @@ const requestResponse = response =>{
         //判断是否登陆失败
         if(responseData.status ==='SERVICE_008' || responseData.status ==='SERVICE_012')
         {
+            console.log('[request interceptor]:login invalid')
             loginInvalid(true)
         }
         //判断是否资源未找到
         if(responseData.status ==='RESOURCE_NOT_FOUND')
         {
+            console.log('[request interceptor]:resource not found')
             toHerf('/404');
         }
         
