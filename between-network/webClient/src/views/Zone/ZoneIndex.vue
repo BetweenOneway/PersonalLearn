@@ -116,16 +116,13 @@
 
     import noteServerRequest from "@/request";
     import noteApi from "@/request/api/noteApi";
+    import userApi from "@/request/api/userApi";
     import { toHerf } from "@/router/go";
 
     const props = defineProps({
         id: {
             type: [String, Number],
             default: ''
-        },
-        author: {
-            type: Object,
-            default: null
         }
     });
 
@@ -137,10 +134,10 @@
     // 文章列表数据
     const articleList = ref([]);
 
-    // 作者信息由传入的整个 authorInfo 对象初始化，后续接入真实接口时可在 loadAuthor 中覆盖
+    // 作者信息，初始为兜底值，加载完成后由接口数据覆盖
     const userInfo = ref({
-        nickname: props.author?.nickName || 'Seal^A',
-        avatar: props.author?.headPic || 'https://cdn.vuetifyjs.com/images/john.jpg',
+        nickname: '加载中...',
+        avatar: 'https://cdn.vuetifyjs.com/images/john.jpg',
         location: '贵州省',
         joinDate: '2018-03-14',
         bio: '涉浅水者得鱼虾，入深水者得蛟龙。',
@@ -155,10 +152,20 @@
         forceMonth: 1228
     });
 
-    // 预留：根据 authorId 获取作者信息，后续接入真实接口时在此替换 userInfo
+    // 根据 authorId 调用接口获取作者信息，避免通过地址栏传递 author 对象
     async function loadAuthor() {
         if (!authorId.value) return;
-        // TODO: 调用接口获取作者信息并赋值给 userInfo
+        let API = { ...userApi.getUserPublicInfo };
+        API.params = { UserId: authorId.value };
+        await noteServerRequest(API).then(responseData => {
+            if (!responseData) return;
+            const data = responseData.data;
+            userInfo.value.nickname = data.nickName || userInfo.value.nickname;
+            userInfo.value.avatar = data.headPic || userInfo.value.avatar;
+            userInfo.value.location = data.location || userInfo.value.location;
+            userInfo.value.joinDate = data.joinDate || userInfo.value.joinDate;
+            userInfo.value.bio = data.bio || userInfo.value.bio;
+        });
     }
 
     // 获取当前空间作者的公开文章列表，传入的是作者 id 而非登录用户 id

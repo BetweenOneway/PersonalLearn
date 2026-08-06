@@ -246,10 +246,7 @@
 
     const goAuthorHome = () => {
         if (authorInfo.value.id) {
-            router.push({
-                path: `/zone/${authorInfo.value.id}`,
-                query: { author: JSON.stringify(authorInfo.value) }
-            });
+            router.push(`/zone/${authorInfo.value.id}`);
         }
     };
 
