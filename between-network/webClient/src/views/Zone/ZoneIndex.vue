@@ -74,7 +74,24 @@
                 <n-card class="zone-card">
                     <n-tabs v-model:value="activeTab" type="line" animated>
                         <n-tab-pane name="article" tab="文章">
-                            <n-empty description="暂无文章" />
+                            <div v-if="articleList.length" class="post-list">
+                                <div
+                                    v-for="post in articleList"
+                                    :key="post.id"
+                                    class="post-item"
+                                    @click="goToNote(post.id)"
+                                >
+                                    <div class="post-title">{{ post.title }}</div>
+                                    <p class="post-summary">{{ post.content }}</p>
+                                    <div class="post-meta">
+                                        <n-space :size="12" align="center">
+                                            <span class="meta-text">{{ post.author }}</span>
+                                            <span class="meta-text">{{ post.createDate }}</span>
+                                        </n-space>
+                                    </div>
+                                </div>
+                            </div>
+                            <n-empty v-else description="暂无文章" />
                         </n-tab-pane>
                         <n-tab-pane name="column" tab="说说">
                             <n-empty description="暂未说说" />
@@ -97,6 +114,10 @@
         NightsStayOutlined
     } from '@vicons/material';
 
+    import noteServerRequest from "@/request";
+    import noteApi from "@/request/api/noteApi";
+    import { toHerf } from "@/router/go";
+
     const props = defineProps({
         id: {
             type: [String, Number],
@@ -112,6 +133,9 @@
 
     // 当前访问的作者 id，来自路由 /zone/:id，由博客详情页"查看TA的空间"带入
     const authorId = ref(props.id);
+
+    // 文章列表数据
+    const articleList = ref([]);
 
     // 作者信息由传入的整个 authorInfo 对象初始化，后续接入真实接口时可在 loadAuthor 中覆盖
     const userInfo = ref({
@@ -137,11 +161,31 @@
         // TODO: 调用接口获取作者信息并赋值给 userInfo
     }
 
+    // 获取当前空间作者的公开文章列表，传入的是作者 id 而非登录用户 id
+    async function loadArticles() {
+        if (!authorId.value) return;
+        let API = { ...noteApi.getOpenNoteList };
+        API.params = {
+            pageIndex: 0,
+            pageSize: 20,
+            userId: authorId.value
+        };
+        await noteServerRequest(API).then(responseData => {
+            if (responseData) {
+                articleList.value = responseData.data;
+            }
+        });
+    }
+
+    // 跳转到笔记详情
+    function goToNote(noteId) {
+        toHerf(`/article/${noteId}`, true, false);
+    }
+
     onMounted(() => {
         loadAuthor();
+        loadArticles();
     });
-
-    const recentList = ref([]);
 </script>
 
 <style scoped>
@@ -370,6 +414,48 @@
 .meta-text {
     font-size: 13px;
     color: #999;
+}
+
+/* 文章列表 */
+.post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.post-item {
+    padding: 18px 20px;
+    background: #fff;
+    border: 1px solid #eef0f4;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.post-item:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.post-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.post-summary {
+    margin: 8px 0 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #666;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.post-meta {
+    margin-top: 10px;
 }
 
 /* 响应式 */

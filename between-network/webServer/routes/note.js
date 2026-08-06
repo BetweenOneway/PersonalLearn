@@ -94,6 +94,16 @@ router.get("/getOpenNoteList",async (req,res)=>{
 
     logger.info(`pageIndex:${pageIndex};pageSize:${pageSize};offset:${offset}`);
 
+    //可选参数：按用户编号过滤公开笔记
+    let userId = req.query.userId;
+    let whereCondition = {
+        status: openStatus,
+    };
+    if(userId)
+    {
+        whereCondition.u_id = userId;
+    }
+
     try {
         const notes = await sqldb.Note.findAll(
             {
@@ -108,9 +118,7 @@ router.get("/getOpenNoteList",async (req,res)=>{
                         attributes:['nickname'],
                     },
                 ],
-                where:{
-                    status: openStatus,
-                },
+                where:whereCondition,
                 order:[
                     ['time','DESC']
                 ],
