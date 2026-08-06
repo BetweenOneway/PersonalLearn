@@ -4,10 +4,9 @@ const User = require('../models/user.js')
 module.exports = function(sequelize,DataTypes){
     const Note = sequelize.define('note',{
         id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             primaryKey:true,
             allowNull:false,
-            autoIncrement:true
         },
         title:{
             type:DataTypes.STRING
@@ -28,14 +27,14 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.DATE
         },
         u_id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             references: {
                 model: 'user',
                 key: 'id'
             }
         },
         notebook_id:{
-            type:DataTypes.INTEGER, 
+            type:DataTypes.BIGINT, 
             // references: {
             //     model: 'notebook',
             //     key: 'id'

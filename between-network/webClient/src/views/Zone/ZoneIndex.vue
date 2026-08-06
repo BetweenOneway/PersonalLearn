@@ -121,7 +121,7 @@
 
     const props = defineProps({
         id: {
-            type: [String, Number],
+            type: String,
             default: ''
         }
     });

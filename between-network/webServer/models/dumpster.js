@@ -3,16 +3,16 @@
 module.exports = function(sequelize,DataTypes){
     var Dumpster = sequelize.define('dumpster',{
         id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             primaryKey:true,
             allowNull:false,
             autoIncrement:true
         },
         u_id:{
-            type:DataTypes.INTEGER
+            type:DataTypes.BIGINT
         },
         object_id:{
-            type:DataTypes.INTEGER
+            type:DataTypes.BIGINT
         },
         name:{
             type:DataTypes.STRING

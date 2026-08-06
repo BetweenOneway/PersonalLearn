@@ -519,8 +519,8 @@
      * 保存笔记后实时更新列表中对应卡片
      */
     const handleSaveNote = (savedNote) => {
-        const noteId = Number(savedNote.id);
-        const idx = noteList.value.findIndex(n => n.id === noteId);
+        const noteId = String(savedNote.id);
+        const idx = noteList.value.findIndex(n => String(n.id) === noteId);
         if (idx !== -1) {
             const item = noteList.value[idx];
             item.title = savedNote.title;

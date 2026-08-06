@@ -3,10 +3,9 @@ const Sequelize = require('sequelize')
 module.exports = function(sequelize,DataTypes){
     var User = sequelize.define('memo',{
         id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             primaryKey:true,
             allowNull:false,
-            autoIncrement:true
         },
         title:{
             type:DataTypes.STRING
@@ -18,7 +17,7 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.TEXT('long')
         },
         u_id:{
-            type:DataTypes.INTEGER
+            type:DataTypes.BIGINT
         },
         finished:{
             type:DataTypes.INTEGER,

@@ -313,6 +313,7 @@ router.post("/register",async (req,res)=>{
                 //新增用户信息
                 const user = await sqldb.User.create(
                     {
+                        id:nextId(),
                         email:userEmail,
                         password:encryptedPassword,
                         nickname:defaultNickname,

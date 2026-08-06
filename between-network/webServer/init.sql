@@ -1,6 +1,10 @@
 -- ============================================
 -- CloudNote 数据库初始化脚本
 -- 容器首次启动时自动执行
+--
+-- 变更说明：user.id / note.id 等主键由数据库自增 INT 改为
+-- 业务层（雪花算法）生成的 BIGINT，避免对外 URL 暴露连续自增 ID。
+-- 因此所有表去掉 AUTO_INCREMENT，外键/引用字段统一改为 BIGINT。
 -- ============================================
 
 SET NAMES utf8mb4;
@@ -10,7 +14,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table structure for user
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `user` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `id` bigint NOT NULL COMMENT '编号（雪花ID）',
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '邮箱',
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
   `nickname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
@@ -22,56 +26,56 @@ CREATE TABLE IF NOT EXISTS `user` (
   `birthday` date NOT NULL DEFAULT '1949-10-01' COMMENT '出生日期',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `email`(`email`) USING BTREE COMMENT '唯一不重复'
-) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for note
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `note` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `id` bigint NOT NULL COMMENT '编号（雪花ID）',
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标题',
   `body` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '笔记整个内容',
   `time` datetime NOT NULL COMMENT '创建时间',
   `create_time` datetime NOT NULL COMMENT '笔记初次创建时间',
   `update_time` datetime NOT NULL COMMENT '最后修改时间',
-  `u_id` int NOT NULL COMMENT '用户编号',
-  `notebook_id` int NOT NULL COMMENT '所属笔记本编号',
+  `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
+  `notebook_id` bigint NOT NULL COMMENT '所属笔记本编号（雪花ID）',
   `top` int NULL DEFAULT 0 COMMENT '置顶（1：置顶，0：不置顶）',
   `status` int NULL DEFAULT 1 COMMENT '状态【0：被删除，1：正常/私有 2:公开】',
   `type` int NULL DEFAULT 2 COMMENT '类型',
   UNIQUE INDEX `note_pk`(`id`) USING BTREE,
   INDEX `note_user_id_fk`(`u_id`) USING BTREE,
   CONSTRAINT `note_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文章表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文章表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for notebook
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `notebook` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '笔记本编号',
+  `id` bigint NOT NULL COMMENT '笔记本编号（雪花ID）',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '笔记本名称',
   `time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '最后修改时间',
-  `u_id` int NOT NULL COMMENT '用户编号',
+  `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
   `level` int NOT NULL DEFAULT 1 COMMENT '笔记本层级',
   `index_in_notebook` int  COMMENT '笔记本在当前级别内的排序序号',
-  `parent_id` int NOT NULL DEFAULT 0 COMMENT '上一级笔记本编号',
+  `parent_id` bigint NOT NULL DEFAULT 0 COMMENT '上一级笔记本编号（雪花ID）',
   `status` int NULL DEFAULT NULL COMMENT '状态【0：被删除，1：正常/私有】',
   UNIQUE INDEX `note_pk`(`id`) USING BTREE,
   INDEX `notebook_user_id_fk`(`u_id`) USING BTREE,
   CONSTRAINT `notebook_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '笔记本表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '笔记本表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for memo
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `memo` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `id` bigint NOT NULL COMMENT '编号（雪花ID）',
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标题',
   `tags` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标签',
   `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '内容',
-  `u_id` int NOT NULL COMMENT '用户编号',
+  `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
   `finished` int NOT NULL DEFAULT 0 COMMENT '是否已完成【0:未完成、1:已完成】',
   `time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '最近修改的时间',
@@ -81,45 +85,45 @@ CREATE TABLE IF NOT EXISTS `memo` (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `memo_user_id_fk`(`u_id`) USING BTREE,
   CONSTRAINT `memo_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '小记' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '小记' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for oper_log
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `oper_log` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
   `time` datetime NOT NULL COMMENT '时间',
   `event` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '事件',
   `desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '描述',
-  `u_id` int NOT NULL COMMENT '用户编号',
-  `o_id` int NULL DEFAULT NULL COMMENT '操作对象编号',
+  `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
+  `o_id` bigint NULL DEFAULT NULL COMMENT '操作对象编号（雪花ID）',
   `type` int NULL DEFAULT NULL COMMENT '对象类型 1:笔记 2:文件夹',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `oper_log_user_id_fk`(`u_id`) USING BTREE,
   CONSTRAINT `oper_log_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '笔记日志表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '笔记日志表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for user_log
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `user_log` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
   `desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '描述',
   `time` datetime NOT NULL COMMENT '时间',
   `event` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '事件',
-  `u_id` int NOT NULL COMMENT '用户编号',
+  `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_log_user_id_fk`(`u_id`) USING BTREE,
   CONSTRAINT `user_log_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户日志表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户日志表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for dumpster
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `dumpster` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `u_id` int NOT NULL COMMENT '用户编号',
-  `object_id` int NOT NULL COMMENT '目标编号',
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+  `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
+  `object_id` bigint NOT NULL COMMENT '目标编号（雪花ID）',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '目标名称',
   `type` int NOT NULL COMMENT '类型 1-文件 2-文件夹',
   `related` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '关联内容',
@@ -127,15 +131,15 @@ CREATE TABLE IF NOT EXISTS `dumpster` (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `dumpster_user_id_fk`(`u_id`) USING BTREE,
   CONSTRAINT `dumpster_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '回收站' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '回收站' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for collect
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `collect` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `u_id` int NOT NULL COMMENT '用户编号',
-  `object_id` int NOT NULL COMMENT '收藏对象编号',
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+  `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
+  `object_id` bigint NOT NULL COMMENT '收藏对象编号（雪花ID）',
   `type` int NOT NULL DEFAULT 1 COMMENT '对象类型【1：笔记，2：便签】',
   `time` datetime NOT NULL COMMENT '收藏时间',
   `status` int NOT NULL DEFAULT 1 COMMENT '状态【0：已取消，1：正常】',
@@ -144,15 +148,15 @@ CREATE TABLE IF NOT EXISTS `collect` (
   INDEX `idx_collect_user_time`(`u_id`, `time`) USING BTREE,
   INDEX `idx_collect_object`(`object_id`, `type`) USING BTREE,
   CONSTRAINT `collect_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收藏表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收藏表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for comment
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `comment` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `u_id` int NOT NULL COMMENT '谁评论了',
-  `object_id` int NOT NULL COMMENT '对什么做了评论',
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+  `u_id` bigint NOT NULL COMMENT '谁评论了（雪花ID）',
+  `object_id` bigint NOT NULL COMMENT '对什么做了评论（雪花ID）',
   `type` int NOT NULL DEFAULT 1 COMMENT '对象类型【1：笔记，2：便签】',
   `content` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评论内容',
   `time` datetime NOT NULL COMMENT '评论时间',
@@ -160,15 +164,15 @@ CREATE TABLE IF NOT EXISTS `comment` (
   INDEX `idx_comment_object_time`(`object_id`, `type`, `time`) USING BTREE COMMENT '按对象查询评论',
   INDEX `idx_comment_user_time`(`u_id`, `time`) USING BTREE COMMENT '按用户查询评论',
   CONSTRAINT `comment_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '评论表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '评论表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for blacklist
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `blacklist` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `u_id` int NOT NULL COMMENT '拉黑发起人用户编号',
-  `target_u_id` int NOT NULL COMMENT '被拉黑用户编号',
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+  `u_id` bigint NOT NULL COMMENT '拉黑发起人用户编号（雪花ID）',
+  `target_u_id` bigint NOT NULL COMMENT '被拉黑用户编号（雪花ID）',
   `reason` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '拉黑原因',
   `time` datetime NOT NULL COMMENT '拉黑时间',
   `status` int NOT NULL DEFAULT 1 COMMENT '状态【0：已解除，1：正常】',
@@ -177,15 +181,15 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
   INDEX `idx_blacklist_target`(`target_u_id`) USING BTREE COMMENT '查询某用户被谁拉黑',
   CONSTRAINT `blacklist_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `blacklist_target_user_id_fk` FOREIGN KEY (`target_u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '黑名单表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '黑名单表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for `like`
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `like` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `u_id` int NOT NULL COMMENT '点赞用户编号',
-  `object_id` int NOT NULL COMMENT '点赞对象编号',
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+  `u_id` bigint NOT NULL COMMENT '点赞用户编号（雪花ID）',
+  `object_id` bigint NOT NULL COMMENT '点赞对象编号（雪花ID）',
   `type` int NOT NULL DEFAULT 1 COMMENT '对象类型【1：笔记，2：便签】',
   `time` datetime NOT NULL COMMENT '点赞时间',
   `status` int NOT NULL DEFAULT 1 COMMENT '状态【0：已取消，1：正常】',
@@ -194,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `like` (
   INDEX `idx_like_object`(`object_id`, `type`) USING BTREE,
   INDEX `idx_like_user_time`(`u_id`, `time`) USING BTREE,
   CONSTRAINT `like_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '点赞表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '点赞表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Views
@@ -211,9 +215,11 @@ SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM note WHERE `STATUS` = 1;
 
 -- ----------------------------
 -- Test user data
+-- 注意：id 改为雪花ID，需与后续业务生成规则一致；此处示例值仅用于本地初始化
+-- 若通过注册接口创建用户，则无需手填 id（由后端 snowflake 生成）
 -- ----------------------------
 -- 密码为 123456 的 md5 值
-INSERT IGNORE INTO `user` VALUES (0, 'test@163.com', 'e10adc3949ba59abbe56e057f20f883e', '测试', 'https://cdn.vuetifyjs.com/images/john.jpg', 0, '2023-05-05 15:03:33', 1, 1, '1949-10-01');
+INSERT IGNORE INTO `user` (`id`,`email`, `password`, `nickname`, `head_pic`, `level`, `time`, `status`, `sex`, `birthday`) VALUES (1718348349012345678, 'test@163.com', 'e10adc3949ba59abbe56e057f20f883e', '测试', 'https://cdn.vuetifyjs.com/images/john.jpg', 0, '2023-05-05 15:03:33', 1, 1, '1949-10-01');
 
 -- ----------------------------
 -- 创建业务用户，仅授予 CRUD 权限

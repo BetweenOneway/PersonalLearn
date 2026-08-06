@@ -4,20 +4,20 @@ const Sequelize = require('sequelize')
 module.exports = function(sequelize,DataTypes){
     const Comment = sequelize.define('comment',{
         id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             primaryKey:true,
             allowNull:false,
             autoIncrement:true
         },
         u_id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             references: {
                 model: 'user',
                 key: 'id'
             }
         },
         object_id:{
-            type:DataTypes.INTEGER
+            type:DataTypes.BIGINT
         },
         type:{
             type:DataTypes.INTEGER,

@@ -9,6 +9,7 @@ const Sequelize = require('sequelize');
 let statusCode = require("./statusCode")
 let validate = require("../utils/validate");
 const note = require("../models/note");
+const { nextId } = require("../utils/snowflake");
 
 var router=express.Router();
 
@@ -560,6 +561,7 @@ router.put("/createNote",async (req,res)=>{
 
         const newAddNote = await sqldb.Note.create(
             {
+                id:nextId(),
                 title:'新笔记',
                 u_id:userInfo.id,
                 notebook_id:notebookId,
@@ -640,7 +642,7 @@ router.get("/getNoteInfo",async (req,res)=>{
         );
         //console.log("retrived info from db:",noteInfo);
         //笔记不存在或笔记未公开（status!=2）时，视为无权访问，前端据此跳转 404
-        if(noteInfo == null || noteInfo.status != 2)
+        if(noteInfo == null || (noteInfo.status != 2 && userInfo.id != noteInfo.u_id))
         {
             logger.info(`笔记获取失败，笔记不存在或未公开`)
             output.success = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.success

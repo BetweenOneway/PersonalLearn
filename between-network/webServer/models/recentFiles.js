@@ -3,10 +3,8 @@
 module.exports = function(sequelize,DataTypes){
     var Files = sequelize.define('recent_access_file',{
         id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             primaryKey:true,
-            // allowNull:false,
-            // autoIncrement:true
         },
         title:{
             type:DataTypes.STRING
@@ -20,7 +18,7 @@ module.exports = function(sequelize,DataTypes){
             defaultValue:2
         },
         u_id:{
-            type:DataTypes.INTEGER
+            type:DataTypes.BIGINT
         }
     },{
         freezeTableName: true,

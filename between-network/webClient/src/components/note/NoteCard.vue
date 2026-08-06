@@ -40,7 +40,7 @@
 
     const props = defineProps(
         {
-            id:{type:Number,required:true},//编号
+            id:{type:String,required:true},//编号
             title:{type:String,required:true},//标题
             desc:{type:String,default:()=>'暂无内容'},//简介
             top:{type:Boolean,required:false},//是否置顶

@@ -4,10 +4,9 @@ const Sequelize = require('sequelize')
 module.exports = function(sequelize,DataTypes){
     var Notebook = sequelize.define('notebook',{
         id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             primaryKey:true,
             allowNull:false,
-            autoIncrement:true
         },
         name:{
             type:DataTypes.STRING
@@ -19,7 +18,7 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.DATE
         },
         u_id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             references: {
                 model: 'user',
                 key: 'id'
@@ -34,7 +33,7 @@ module.exports = function(sequelize,DataTypes){
             field:'index_in_notebook',
         },
         parent_id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             defaultValue:0
         },
         status:{

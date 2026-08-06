@@ -4,20 +4,20 @@ const Sequelize = require('sequelize')
 module.exports = function(sequelize,DataTypes){
     const Blacklist = sequelize.define('blacklist',{
         id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             primaryKey:true,
             allowNull:false,
             autoIncrement:true
         },
         u_id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             references: {
                 model: 'user',
                 key: 'id'
             }
         },
         target_u_id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             references: {
                 model: 'user',
                 key: 'id'

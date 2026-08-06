@@ -5,6 +5,7 @@ const { Op } = require("sequelize");
 var sqldb = require('../sqldb');
 
 let statusCode = require("./statusCode")
+const { nextId } = require("../utils/snowflake")
 
 var router=express.Router();
 
@@ -81,7 +82,7 @@ router.post("/addNotebook",async (req,res)=>{
     }
 
     const notebookName = req.body.notebookName || '';
-    const parentId = parseInt(req.body.parentId, 10) || 1;
+    const parentId = req.body.parentId ? String(req.body.parentId) : '0';
     const index = parseInt(req.body.index, 10) || 0;
     const level = parseInt(req.body.level, 10) || 0;
 
@@ -98,6 +99,7 @@ router.post("/addNotebook",async (req,res)=>{
         
         const newAddNotebook = await sqldb.Notebook.create(
             {
+                id:nextId(),
                 name:notebookName,
                 parent_id:parentId,
                 index:index,

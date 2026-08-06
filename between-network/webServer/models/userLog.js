@@ -3,7 +3,7 @@ const Sequelize = require('sequelize')
 module.exports = function(sequelize,DataTypes){
     var User = sequelize.define('user_log',{
         id:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.BIGINT,
             primaryKey:true,
             allowNull:false,
             autoIncrement:true
@@ -18,7 +18,7 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.STRING
         },
         u_id:{
-            type:DataTypes.INTEGER
+            type:DataTypes.BIGINT
         }
     },{
         freezeTableName: true,

@@ -9,6 +9,7 @@ var sqldb = require('../sqldb');
 
 let statusCode = require("./statusCode")
 let validate = require("../utils/validate")
+const { nextId } = require("../utils/snowflake")
 
 var router=express.Router();
 
@@ -350,6 +351,7 @@ router.put("/addMemo",async (req,res)=>{
 
         const newAddMemo = await sqldb.Memo.create(
             {
+                id:nextId(),
                 title:inputInfo.title,
                 tags:inputInfo.tags,
                 content:inputInfo.content,

@@ -133,8 +133,8 @@
         ()=>propsData.changeState,
         newData=>{
             console.log("propsData.actionId=>",propsData.actionId);
-            console.log("Number.parseInt(propsData.id)=>",Number.parseInt(propsData.id));
-            //if(propsData.actionId == Number.parseInt(propsData.id))
+            console.log("propsData.id=>",propsData.id);
+            //if(propsData.actionId == propsData.id)
             {
                 console.log("new Data=>",newData);
                 switch(newData)
