@@ -175,28 +175,32 @@
     async function GetBlogInfo() {
         let API = { ...noteApi.getNotePublicInfo };
         API.params = { noteId: propsData.id };
-        await noteServerRequest(API).then((responseData) => {
-            if (!responseData) return;
-            blogInfo.value.title = responseData.data.title;
-            blogInfo.value.update_time = responseData.data.update_time;
-            blogInfo.value.content = responseData.data.content;
-            authorInfo.value.id = responseData.data.u_id;
+        let responseData = await noteServerRequest(API);
+        if (!responseData) return null;
+        blogInfo.value.title = responseData.data.title;
+        blogInfo.value.update_time = responseData.data.update_time;
+        blogInfo.value.content = responseData.data.content;
+        authorInfo.value.id = responseData.data.u_id;
 
-            cherryInstance.setValue(blogInfo.value.content);
-            blogContentLoading.value = false;
-        });
+        cherryInstance.setValue(blogInfo.value.content);
+        blogContentLoading.value = false;
+        return responseData;
     }
 
     async function GetAuthorInfo() {
+        //文章未取到作者 id 时，无需再查作者信息
+        if (!authorInfo.value.id) {
+            authorInfoLoading.value = false;
+            return;
+        }
         let API = { ...userApi.getUserPublicInfo };
         API.params = { UserId: authorInfo.value.id };
-        noteServerRequest(API).then((responseData) => {
-            if (!responseData) return;
-            authorInfo.value.nickName = responseData.data.nickName;
-            authorInfo.value.headPic = responseData.data.headPic;
-            authorInfo.value.level = responseData.data.level;
-            authorInfoLoading.value = false;
-        });
+        let responseData = await noteServerRequest(API);
+        if (!responseData) return;
+        authorInfo.value.nickName = responseData.data.nickName;
+        authorInfo.value.headPic = responseData.data.headPic;
+        authorInfo.value.level = responseData.data.level;
+        authorInfoLoading.value = false;
     }
 
     const handleLike = async () => {
@@ -307,7 +311,9 @@
             },
         });
 
-        await GetBlogInfo();
+        let blogRes = await GetBlogInfo();
+        //文章不存在或未公开时，响应拦截器已跳 404，此处直接中止后续加载
+        if (!blogRes) return;
         await GetAuthorInfo();
         await LoadInteractionStatus();
     });

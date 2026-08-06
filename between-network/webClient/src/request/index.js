@@ -55,7 +55,10 @@ const requestResponse = response =>{
     if(!responseData.success)
     {
         window.$loadingBar.error();
-        window.$message.error(responseData.description)
+        //已知的系统级状态码（资源不存在 / 登录失效）由专属逻辑处理，不弹业务失败提示
+        const systemStatus = responseData.status === 'RESOURCE_NOT_FOUND'
+            || responseData.status === 'SERVICE_008'
+            || responseData.status === 'SERVICE_012';
         //判断是否登陆失败
         if(responseData.status ==='SERVICE_008' || responseData.status ==='SERVICE_012')
         {
@@ -67,6 +70,11 @@ const requestResponse = response =>{
         {
             console.log('[request interceptor]:resource not found')
             toHerf('/404');
+        }
+        //其他业务失败才弹出提示（如"查询用户信息失败"）
+        if(!systemStatus)
+        {
+            window.$message.error(responseData.description)
         }
         
         return null;
