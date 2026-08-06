@@ -418,6 +418,17 @@ router.get("/getUserPublicInfo",async(req,res)=>{
                 }
             );
 
+            //用户不存在时返回资源未找到，前端据此跳转 404
+            if(!userBasicInfo)
+            {
+                await t.rollback();
+                output.success = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.success
+                output.status = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.status
+                output.description = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.description
+                res.send(output)
+                return;
+            }
+
             var curDate = new Date().toLocaleString();
             //记录用户登录日志
             const userLog = await sqldb.UserLog.create(

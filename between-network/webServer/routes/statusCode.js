@@ -57,6 +57,11 @@ DB_STATUS={
 }
 
 SERVICE_STATUS={
+    RESOURCE_NOT_FOUND:{
+        success:false,
+        status:'RESOURCE_NOT_FOUND',
+        description:'资源不存在或无权访问'
+    },
     COMMON_EXCEPTION:{
         success:false,
         status:'SERVICE_FFF',

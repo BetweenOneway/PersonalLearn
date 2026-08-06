@@ -634,18 +634,18 @@ router.get("/getNoteInfo",async (req,res)=>{
             {
                 attributes: ['update_time', 'content','title','u_id','status'],
                 where: {
-                    id: noteId,
-                    u_id:userInfo.id
+                    id: noteId
                 }
             }
         );
         //console.log("retrived info from db:",noteInfo);
-        if(noteInfo == null)
+        //笔记不存在或笔记未公开（status!=2）时，视为无权访问，前端据此跳转 404
+        if(noteInfo == null || noteInfo.status != 2)
         {
-            logger.info(`笔记获取失败，请稍后再试`)
-            output.success = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.success
-            output.status = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.status
-            output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
+            logger.info(`笔记获取失败，笔记不存在或未公开`)
+            output.success = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.success
+            output.status = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.status
+            output.description = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.description
         }
         else{
             logger.info(`笔记获取信息成功`)
@@ -794,8 +794,6 @@ router.get("/getPublicNoteInfo",async (req,res)=>{
 
     logger.info(`start Get public Note detail Info:${req.query}`)
 
-    let userInfo = req.userInfo;
-
     let noteId = req.query.noteId;
     let publicStatus = 2;
     try {
@@ -810,12 +808,13 @@ router.get("/getPublicNoteInfo",async (req,res)=>{
             }
         );
         //console.log("retrived info from db:",noteInfo);
+        //公开笔记不存在时返回资源未找到，前端据此跳转 404
         if(noteInfo == null)
         {
-            logger.info(`公开笔记内容获取失败，请稍后再试`)
-            output.success = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.success
-            output.status = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.status
-            output.description = statusCode.SERVICE_STATUS.GET_NOTE_FAIL.description
+            logger.info(`公开笔记内容获取失败，笔记不存在或未公开`)
+            output.success = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.success
+            output.status = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.status
+            output.description = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.description
         }
         else{
             logger.info(`公开笔记内容获取成功`)
