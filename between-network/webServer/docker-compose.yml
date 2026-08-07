@@ -23,11 +23,21 @@ services:
         condition: service_healthy
     volumes:
       # 源码挂载，实现热重载
-      - .:/app:cached
+      - type: bind
+        source: .
+        target: /app
+        consistency: cached
+        read_only: false
       # 排除 node_modules 避免与容器内不一致
-      - server_node_modules:/app/node_modules
+      - type: volume
+        source: server_node_modules
+        target: /app/node_modules
+        read_only: false
       # 持久化 VSCode 扩展
-      - vscode-extensions:/root/.vscode-server/extensions
+      - type: volume
+        source: vscode-extensions
+        target: /root/.vscode-server/extensions
+        read_only: false
     ports:
       - "18081:18081"
     command: sleep infinity
@@ -41,7 +51,10 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redis_data:/data
+      - type: volume
+        source: redis_data
+        target: /data
+        read_only: false
     networks:
       - between_network_net
 
@@ -55,8 +68,14 @@ services:
     env_file:
       - dev.env
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - type: volume
+        source: mysql_data
+        target: /var/lib/mysql
+        read_only: false
+      - type: bind
+        source: ./init.sql
+        target: /docker-entrypoint-initdb.d/init.sql
+        read_only: false
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD}"]
       interval: 5s

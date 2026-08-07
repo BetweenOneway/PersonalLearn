@@ -19,14 +19,28 @@ services:
       VITE_API_TARGET: http://server:18081
     volumes:
       # 源码挂载，实现热重载
-      - .:/app:cached
-      # 排除 node_modules 避免与容器内不一致
-      - /app/node_modules
-      # 排除 package-lock.json 避免跨平台原生模块冲突
-      - /app/package-lock.json
+      - type: bind
+        source: .
+        target: /app
+        consistency: cached
+        read_only: false
+      # 排除 node_modules 避免与容器内不一致（匿名卷）
+      - type: volume
+        target: /app/node_modules
+        read_only: false
+      # 排除 package-lock.json 避免跨平台原生模块冲突（匿名卷）
+      - type: volume
+        target: /app/package-lock.json
+        read_only: false
       # 持久化 VSCode 扩展
-      - vscode-extensions:/root/.vscode-server/extensions
-      - vscode-extensions-insiders:/root/.vscode-server-insiders
+      - type: volume
+        source: vscode-extensions
+        target: /root/.vscode-server/extensions
+        read_only: false
+      - type: volume
+        source: vscode-extensions-insiders
+        target: /root/.vscode-server-insiders
+        read_only: false
     ports:
       - "18080:18080"
     command: sleep infinity
