@@ -2,7 +2,7 @@
     <div class="zone-page">
         <!-- 顶部背景横幅（QQ空间风格） -->
         <div class="zone-banner">
-            <div class="weather-widget">
+            <div class="weather-widget" v-show="false">
                 <div class="weather-main">
                     <n-icon :size="32" :component="NightsStayOutlined" color="#f0c040" />
                     <span class="weather-temp">29°</span>
@@ -51,7 +51,7 @@
                     </n-space>
                 </n-card>
 
-                <n-card class="zone-card" title="原力等级">
+                <n-card class="zone-card" title="原力等级" v-show="false">
                     <n-space vertical :size="8">
                         <div class="force-row">
                             <span class="force-label">原力等级</span>

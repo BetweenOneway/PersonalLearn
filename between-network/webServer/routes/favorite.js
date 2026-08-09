@@ -3,6 +3,7 @@ const { Op } = require("sequelize");
 
 var sqldb = require('../sqldb');
 let statusCode = require("./statusCode");
+const logger = require("../utils/log");
 
 var router = express.Router();
 
@@ -19,6 +20,8 @@ router.post("/toggle", async (req, res) => {
         data: {}
     }
 
+    logger.info('start toggle trade')
+    
     try {
         let userInfo = req.userInfo;
         let objectId = req.body.objectId;
@@ -88,6 +91,9 @@ router.post("/toggle", async (req, res) => {
         output.status = statusCode.SERVICE_STATUS.FAVORITE_FAIL.status;
         output.description = statusCode.SERVICE_STATUS.FAVORITE_FAIL.description;
     }
+    
+    logger.info('end toggle trade')
+
     res.send(output);
     return;
 });
@@ -105,6 +111,8 @@ router.get("/getFavoriteList", async (req, res) => {
         description: '',
         data: []
     }
+
+    logger.info('start get favourite list')
 
     try {
         let userInfo = req.userInfo;
@@ -138,6 +146,8 @@ router.get("/getFavoriteList", async (req, res) => {
         output.status = statusCode.SERVICE_STATUS.GET_FAVORITE_LIST_FAIL.status;
         output.description = statusCode.SERVICE_STATUS.GET_FAVORITE_LIST_FAIL.description;
     }
+
+    logger.info('end get favourite list')
     res.send(output);
     return;
 });
@@ -154,7 +164,7 @@ router.get("/checkFavorite", async (req, res) => {
         description: '',
         data: {}
     }
-
+    logger.info('start check Favourite')
     try {
         let userInfo = req.userInfo;
         let objectId = req.query.objectId;
@@ -197,6 +207,7 @@ router.get("/checkFavorite", async (req, res) => {
         output.status = statusCode.SERVICE_STATUS.CHECK_FAVORITE_FAIL.status;
         output.description = statusCode.SERVICE_STATUS.CHECK_FAVORITE_FAIL.description;
     }
+    logger.info('end check Favourite')
     res.send(output);
     return;
 });
@@ -213,6 +224,8 @@ router.get("/getCollectCount", async (req, res) => {
         description: '',
         data: {}
     }
+
+    logger.info('start get collect count')
 
     try {
         let objectId = req.query.objectId;
@@ -236,14 +249,16 @@ router.get("/getCollectCount", async (req, res) => {
 
         output.success = statusCode.SERVICE_STATUS.GET_FAVORITE_LIST_SUCCESS.success;
         output.status = statusCode.SERVICE_STATUS.GET_FAVORITE_LIST_SUCCESS.status;
-        output.description = '获取收藏数成功';
+        output.description = statusCode.SERVICE_STATUS.GET_FAVORITE_LIST_SUCCESS.description;
         output.data.collectCount = count;
     } catch (error) {
         console.log(error);
         output.success = statusCode.SERVICE_STATUS.GET_FAVORITE_LIST_FAIL.success;
         output.status = statusCode.SERVICE_STATUS.GET_FAVORITE_LIST_FAIL.status;
-        output.description = '获取收藏数失败';
+        output.description = statusCode.SERVICE_STATUS.GET_FAVORITE_LIST_FAIL.description;
     }
+
+    logger.info('end get collect count')
     res.send(output);
     return;
 });

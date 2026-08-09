@@ -30,7 +30,7 @@
                         </dl>
                         <dl>
                             <dd>{{ authorReadCount }}</dd>
-                            <dt>阅读</dt>
+                            <dt>说说</dt>
                         </dl>
                     </div>
 
@@ -260,32 +260,45 @@
         const isLogin = !!userStore.token;
 
         const requests = [];
-        // 未登录时不发送 checkLike / checkCollect，默认未点赞、未收藏
+        // 查询失败时（业务失败返回 null，或 HTTP 层异常 reject）统一按未收藏/未点赞处理
+        const safeCollect = noteServerRequest({ ...collectApi.checkFavourite, params: { objectId: propsData.id, type } })
+            .then((res) => {
+                // 仅当请求成功且明确返回已收藏时才置为 true，否则保持默认未收藏
+                if (res) collected.value = !!res.data.isFavorited;
+            })
+            .catch(() => {
+                collected.value = false;
+            });
+
+        const safeLike = noteServerRequest({ ...likeApi.checkLike, params: { objectId: propsData.id, type } })
+            .then((res) => {
+                if (res) liked.value = !!res.data.isLiked;
+            })
+            .catch(() => {
+                liked.value = false;
+            });
+
+        // 未登录时无需查询，直接按未收藏/未点赞处理
         if (isLogin) {
-            requests.push(
-                noteServerRequest({ ...likeApi.checkLike, params: { objectId: propsData.id, type } }).then((res) => {
-                    if (res) liked.value = res.data.isLiked;
-                })
-            );
-            requests.push(
-                noteServerRequest({ ...collectApi.checkCollect, params: { objectId: propsData.id, type } }).then((res) => {
-                    if (res) collected.value = res.data.isFavorited;
-                })
-            );
+            requests.push(safeLike, safeCollect);
         } else {
             liked.value = false;
             collected.value = false;
         }
 
         requests.push(
-            noteServerRequest({ ...likeApi.getLikeCount, params: { objectId: propsData.id, type } }).then((res) => {
-                if (res) likeCount.value = res.data.likeCount;
-            })
+            noteServerRequest({ ...likeApi.getLikeCount, params: { objectId: propsData.id, type } })
+                .then((res) => {
+                    if (res) likeCount.value = res.data.likeCount;
+                })
+                .catch(() => {})
         );
         requests.push(
-            noteServerRequest({ ...commentApi.getCommentCount, params: { objectId: propsData.id, type } }).then((res) => {
-                if (res) commentCount.value = res.data.commentCount;
-            })
+            noteServerRequest({ ...commentApi.getCommentCount, params: { objectId: propsData.id, type } })
+                .then((res) => {
+                    if (res) commentCount.value = res.data.commentCount;
+                })
+                .catch(() => {})
         );
 
         await Promise.all(requests);

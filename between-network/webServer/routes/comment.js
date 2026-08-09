@@ -20,6 +20,7 @@ router.post("/addComment", async (req, res) => {
         data: {}
     }
 
+    logger.info('start add comment')
     try {
         let userInfo = req.userInfo;
         let objectId = req.body.objectId;
@@ -55,6 +56,9 @@ router.post("/addComment", async (req, res) => {
         output.status = statusCode.SERVICE_STATUS.ADD_COMMENT_FAIL.status;
         output.description = statusCode.SERVICE_STATUS.ADD_COMMENT_FAIL.description;
     }
+
+    logger.info('end add comment')
+
     res.send(output);
     return;
 });
@@ -73,6 +77,8 @@ router.get("/getCommentList", async (req, res) => {
         description: '',
         data: []
     }
+
+    logger.info('start get comment list')
 
     try {
         let objectId = req.query.objectId;
@@ -133,6 +139,9 @@ router.get("/getCommentList", async (req, res) => {
         output.status = statusCode.SERVICE_STATUS.GET_COMMENT_LIST_FAIL.status;
         output.description = statusCode.SERVICE_STATUS.GET_COMMENT_LIST_FAIL.description;
     }
+
+    logger.info('end get comment list')
+
     res.send(output);
     return;
 });
@@ -148,6 +157,8 @@ router.post("/deleteComment", async (req, res) => {
         description: '',
         data: {}
     }
+
+    logger.info('start delete comment')
 
     try {
         let userInfo = req.userInfo;
@@ -195,6 +206,9 @@ router.post("/deleteComment", async (req, res) => {
         output.status = statusCode.SERVICE_STATUS.DEL_COMMENT_FAIL.status;
         output.description = statusCode.SERVICE_STATUS.DEL_COMMENT_FAIL.description;
     }
+
+    logger.info('end delete comment')
+
     res.send(output);
     return;
 });
@@ -211,6 +225,8 @@ router.get("/getCommentCount", async (req, res) => {
         description: '',
         data: {}
     }
+
+    logger.info('start get comment count')
 
     try {
         let objectId = req.query.objectId;
@@ -242,6 +258,9 @@ router.get("/getCommentCount", async (req, res) => {
         output.status = statusCode.SERVICE_STATUS.GET_COMMENT_LIST_FAIL.status;
         output.description = '获取评论数失败';
     }
+
+    logger.info('end get comment count')
+
     res.send(output);
     return;
 });
