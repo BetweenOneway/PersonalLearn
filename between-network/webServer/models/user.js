@@ -40,6 +40,11 @@ module.exports = function(sequelize,DataTypes){
         birthday:{
             type:DataTypes.DATE,
             defaultValue: '1949-10-01'
+        },
+        role:{
+            type:DataTypes.INTEGER,
+            defaultValue:0,
+            comment:'用户角色【0：普通用户，1：网站管理员】'
         }
     },{
         freezeTableName: true,

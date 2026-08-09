@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `status` int NOT NULL DEFAULT 1 COMMENT '状态【0：锁定，1：正常】',
   `sex` int(1) DEFAULT 1 COMMENT '0 女 1 男',
   `birthday` date NOT NULL DEFAULT '1949-10-01' COMMENT '出生日期',
+  `role` int NOT NULL DEFAULT 0 COMMENT '用户角色【0：普通用户，1：网站管理员】',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `email`(`email`) USING BTREE COMMENT '唯一不重复'
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = COMPACT;
@@ -219,7 +220,7 @@ SELECT `id`,`title`,`update_time`,`type`,`u_id` FROM note WHERE `STATUS` = 1;
 -- 若通过注册接口创建用户，则无需手填 id（由后端 snowflake 生成）
 -- ----------------------------
 -- 密码为 123456 的 md5 值
-INSERT IGNORE INTO `user` (`id`,`email`, `password`, `nickname`, `head_pic`, `level`, `time`, `status`, `sex`, `birthday`) VALUES (1718348349012345678, 'test@163.com', 'e10adc3949ba59abbe56e057f20f883e', '测试', 'https://cdn.vuetifyjs.com/images/john.jpg', 0, '2023-05-05 15:03:33', 1, 1, '1949-10-01');
+INSERT IGNORE INTO `user` (`id`,`email`, `password`, `nickname`, `head_pic`, `level`, `time`, `status`, `sex`, `birthday`, `role`) VALUES (1718348349012345678, 'test@163.com', 'e10adc3949ba59abbe56e057f20f883e', '测试', 'https://cdn.vuetifyjs.com/images/john.jpg', 0, '2023-05-05 15:03:33', 1, 1, '1949-10-01', 0);
 
 -- ----------------------------
 -- 创建业务用户，仅授予 CRUD 权限
