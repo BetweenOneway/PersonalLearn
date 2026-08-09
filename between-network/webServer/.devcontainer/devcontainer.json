@@ -25,13 +25,14 @@
                 "editor.rulers": [120],
                 "files.insertFinalNewline": true,
                 "terminal.integrated.defaultProfile.linux": "bash",
-                "javascript.preferences.importModuleSpecifier": "relative"
+                "javascript.preferences.importModuleSpecifier": "relative",
+                "remote.autoForwardPorts": false
             }
         }
     },
 
     // ==================== 端口转发 ====================
-    "forwardPorts": [18081, 3306, 6379],
+    "forwardPorts": [18081],
 
     "portsAttributes": {
         "18081": {
@@ -40,11 +41,11 @@
         },
         "3306": {
             "label": "MySQL",
-            "onAutoForward": "silent"
+            "onAutoForward": "ignore"
         },
         "6379": {
             "label": "Redis",
-            "onAutoForward": "silent"
+            "onAutoForward": "ignore"
         }
     },
 
