@@ -35,7 +35,7 @@ const collectApi = {
         dataParam: false,
         successMessage: false
     },
-    checkCollect: {
+    checkFavourite: {
         name: '检查是否已收藏',
         url: '/favorite/checkFavorite',
         method: 'GET',

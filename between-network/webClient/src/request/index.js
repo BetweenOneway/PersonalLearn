@@ -10,6 +10,13 @@ const request = async config =>{
     //加载条开始
     window.$loadingBar.start();
     console.log("start request=>",config.url);
+    //缺少 url 时直接拦截，避免展开 undefined 的 api 对象导致请求打到 baseURL 根路径
+    if(!config.url)
+    {
+        console.error('[request] missing url for api:', config.name || config);
+        window.$loadingBar.error();
+        return Promise.reject(new Error('request url is required'));
+    }
     //如果当前请求没有强制要求获取当前用户信息，则不获取
     if(config.userAuth)
     {

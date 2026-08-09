@@ -164,16 +164,21 @@ router.get("/checkFavorite", async (req, res) => {
         description: '',
         data: {}
     }
-    logger.info('start check Favourite')
+    
     try {
         let userInfo = req.userInfo;
         let objectId = req.query.objectId;
         let type = req.query.type || 1;
 
+        logger.info(`start check Favourite=>${objectId}`)
+
         if (!objectId) {
             output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success;
             output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status;
             output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description;
+            
+            logger.info(`end check Favourite=> no object ${objectId}`)
+
             res.send(output);
             return;
         }
@@ -184,6 +189,9 @@ router.get("/checkFavorite", async (req, res) => {
             output.status = statusCode.SERVICE_STATUS.CHECK_FAVORITE_SUCCESS.status;
             output.description = statusCode.SERVICE_STATUS.CHECK_FAVORITE_SUCCESS.description;
             output.data.isFavorited = false;
+
+            logger.info(`end check Favourite not login=>${JSON.stringify(userInfo)}`)
+
             res.send(output);
             return;
         }
@@ -207,7 +215,9 @@ router.get("/checkFavorite", async (req, res) => {
         output.status = statusCode.SERVICE_STATUS.CHECK_FAVORITE_FAIL.status;
         output.description = statusCode.SERVICE_STATUS.CHECK_FAVORITE_FAIL.description;
     }
+    
     logger.info('end check Favourite')
+
     res.send(output);
     return;
 });
