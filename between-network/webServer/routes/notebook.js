@@ -5,7 +5,8 @@ const { Op } = require("sequelize");
 var sqldb = require('../sqldb');
 
 let statusCode = require("./statusCode")
-const { nextId } = require("../utils/snowflake")
+const { nextId } = require("../utils/snowflake");
+const logger = require("../utils/log");
 
 var router=express.Router();
 
@@ -46,6 +47,7 @@ router.get("/getUserNotebookList",async (req,res)=>{
                 raw:true,
             }
         );
+        logger.info(`get ${notebooks.length} notebooks`)
         output.success = statusCode.SERVICE_STATUS.GET_NOTEBOOK_SUCCESS.success
         output.status = statusCode.SERVICE_STATUS.GET_NOTEBOOK_SUCCESS.status
         output.description = statusCode.SERVICE_STATUS.GET_NOTEBOOK_SUCCESS.description
