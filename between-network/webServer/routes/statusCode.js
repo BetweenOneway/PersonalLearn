@@ -492,6 +492,41 @@ SERVICE_STATUS={
         status:'SERVICE_066',
         description:'获取点赞数失败'
     },
+    SUB_SUCCESS:{
+        success:true,
+        status:'SERVICE_070',
+        description:'订阅成功'
+    },
+    SUB_FAIL:{
+        success:false,
+        status:'SERVICE_071',
+        description:'订阅失败'
+    },
+    UNSUB_SUCCESS:{
+        success:true,
+        status:'SERVICE_072',
+        description:'取消订阅成功'
+    },
+    CHECK_SUB_SUCCESS:{
+        success:true,
+        status:'SERVICE_073',
+        description:'查询订阅状态成功'
+    },
+    CHECK_SUB_FAIL:{
+        success:false,
+        status:'SERVICE_074',
+        description:'查询订阅状态失败'
+    },
+    GET_SUB_COUNT_SUCCESS:{
+        success:true,
+        status:'SERVICE_075',
+        description:'获取订阅数成功'
+    },
+    GET_SUB_COUNT_FAIL:{
+        success:false,
+        status:'SERVICE_076',
+        description:'获取订阅数失败'
+    },
 }
 
 EVENT_LIST = {

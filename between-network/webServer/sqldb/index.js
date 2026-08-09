@@ -15,6 +15,7 @@ const favorite = require('../models/favorite.js')
 const comment = require('../models/comment.js')
 const blacklist = require('../models/blacklist.js')
 const like = require('../models/like.js')
+const subscribe = require('../models/subscribe.js')
 
 var dbSettings = config.get("mysql");
 
@@ -34,6 +35,7 @@ db.Favorite = favorite(db.sequelize,Sequelize.DataTypes);
 db.Comment = comment(db.sequelize,Sequelize.DataTypes);
 db.Blacklist = blacklist(db.sequelize,Sequelize.DataTypes);
 db.Like = like(db.sequelize,Sequelize.DataTypes);
+db.Subscribe = subscribe(db.sequelize,Sequelize.DataTypes);
 
 //建立表关联关系
 Object.keys(db).forEach((modelName) => {

@@ -32,6 +32,10 @@
                             <dd>{{ authorReadCount }}</dd>
                             <dt>说说</dt>
                         </dl>
+                        <dl>
+                            <dd>{{ subscribeCount }}</dd>
+                            <dt>粉丝</dt>
+                        </dl>
                     </div>
 
                     <div class="author-link" @click="goAuthorHome">
@@ -137,7 +141,7 @@
     import noteServerRequest from '@/request';
     import noteApi from '@/request/api/noteApi';
     import userApi from '@/request/api/userApi';
-    import { likeApi, collectApi, commentApi } from '@/request/api/interactionApi';
+    import { likeApi, collectApi, commentApi, subscribeApi } from '@/request/api/interactionApi';
     import { useUserStore } from '@/stores/userStore';
 
     const propsData = defineProps({
@@ -160,6 +164,7 @@
     const likeCount = ref(1);
     const commentCount = ref(0);
     const isSubscribed = ref(false);
+    const subscribeCount = ref(0);
 
     const authorArticleCount = computed(() => '-');
     const authorReadCount = computed(() => {
@@ -238,10 +243,48 @@
         }
     };
 
-    const handleSubscribe = () => {
-        isSubscribed.value = !isSubscribed.value;
-        message.success(isSubscribed.value ? '订阅成功' : '已取消订阅');
+    const handleSubscribe = async () => {
+        const userStore = useUserStore();
+        if (!userStore.token) {
+            message.warning('请先登录后再订阅');
+            return;
+        }
+        if (!authorInfo.value.id) {
+            message.warning('作者信息加载中，请稍后再试');
+            return;
+        }
+
+        const API = {
+            ...subscribeApi.toggleSubscribe,
+            data: { objectId: authorInfo.value.id, type: 1 }
+        };
+        try {
+            const res = await noteServerRequest(API);
+            if (res && res.data) {
+                isSubscribed.value = !!res.data.isSubscribed;
+                // 同步刷新订阅数（粉丝数）
+                subscribeCount.value = isSubscribed.value
+                    ? subscribeCount.value + 1
+                    : Math.max(0, subscribeCount.value - 1);
+                message.success(isSubscribed.value ? '订阅成功' : '已取消订阅');
+            } else {
+                message.error('操作失败，请稍后再试');
+            }
+        } catch (err) {
+            message.error('操作失败，请稍后再试');
+        }
     };
+
+    async function loadSubscribeCount() {
+        if (!authorInfo.value.id) return;
+        const res = await noteServerRequest({
+            ...subscribeApi.getSubscribeCount,
+            params: { objectId: authorInfo.value.id, type: 1 }
+        }).catch(() => null);
+        if (res && res.data) {
+            subscribeCount.value = res.data.subscribeCount ?? 0;
+        }
+    }
 
     const scrollToComment = () => {
         const el = document.getElementById('comment-area');
@@ -278,12 +321,25 @@
                 liked.value = false;
             });
 
+        // 订阅状态查询需作者编号，作者信息加载完成后再发起
+        const safeSubscribe = Promise.resolve().then(async () => {
+            if (!authorInfo.value.id) return;
+            return noteServerRequest({ ...subscribeApi.checkSubscribe, params: { objectId: authorInfo.value.id, type } })
+                .then((res) => {
+                    if (res) isSubscribed.value = !!res.data.isSubscribed;
+                })
+                .catch(() => {
+                    isSubscribed.value = false;
+                });
+        });
+
         // 未登录时无需查询，直接按未收藏/未点赞处理
         if (isLogin) {
-            requests.push(safeLike, safeCollect);
+            requests.push(safeLike, safeCollect, safeSubscribe);
         } else {
             liked.value = false;
             collected.value = false;
+            isSubscribed.value = false;
         }
 
         requests.push(
@@ -329,6 +385,7 @@
         if (!blogRes) return;
         await GetAuthorInfo();
         await LoadInteractionStatus();
+        await loadSubscribeCount();
     });
 
     onUnmounted(() => {

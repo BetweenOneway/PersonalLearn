@@ -202,6 +202,24 @@ CREATE TABLE IF NOT EXISTS `like` (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '点赞表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
+-- Table structure for subscribe
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `subscribe` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+  `u_id` bigint NOT NULL COMMENT '订阅者用户编号（雪花ID）',
+  `object_id` bigint NOT NULL COMMENT '被关注作者(用户)编号（雪花ID）',
+  `type` int NOT NULL DEFAULT 1 COMMENT '订阅类型【1：关注作者】',
+  `time` datetime NOT NULL COMMENT '订阅时间',
+  `status` int NOT NULL DEFAULT 1 COMMENT '状态【0：已取消，1：订阅中】',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_subscribe_user_object_type`(`u_id`, `object_id`, `type`) USING BTREE COMMENT '同一用户不能重复关注同一作者',
+  INDEX `idx_subscribe_object`(`object_id`, `type`) USING BTREE COMMENT '查询某作者的粉丝数',
+  INDEX `idx_subscribe_user_time`(`u_id`, `time`) USING BTREE,
+  CONSTRAINT `subscribe_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `subscribe_object_user_id_fk` FOREIGN KEY (`object_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订阅（关注）表' ROW_FORMAT = COMPACT;
+
+-- ----------------------------
 -- Views
 -- ----------------------------
 CREATE OR REPLACE VIEW file_dumpster AS

@@ -19,6 +19,7 @@ const favorite = require('./routes/favorite');
 const comment = require('./routes/comment');
 const blacklist = require('./routes/blacklist');
 const like = require('./routes/like');
+const subscribe = require('./routes/subscribe');
 
 const sequelizeTest = require("./routes/sequelizeTest")
 
@@ -135,6 +136,8 @@ app.use('/comment',comment);
 app.use('/blacklist',blacklist);
 //点赞
 app.use('/like',like);
+//订阅（关注作者）
+app.use('/subscribe',subscribe);
 //CKEditor编辑器
 app.use("/ckeditor",CKEditor)
 //回收站操作

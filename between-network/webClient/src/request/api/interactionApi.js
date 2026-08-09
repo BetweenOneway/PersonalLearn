@@ -65,5 +65,33 @@ const commentApi = {
     }
 }
 
-export { likeApi, collectApi, commentApi }
-export default { likeApi, collectApi, commentApi }
+const subscribeApi = {
+    toggleSubscribe: {
+        name: '订阅/取消订阅',
+        url: '/subscribe/toggle',
+        method: 'POST',
+        userAuth: true,
+        dataParam: false,
+        successMessage: false
+    },
+    checkSubscribe: {
+        name: '检查是否已订阅',
+        url: '/subscribe/checkSubscribe',
+        method: 'GET',
+        // 需携带登录用户身份才能查询"当前用户"的订阅状态，未登录则不发起此请求
+        userAuth: true,
+        dataParam: false,
+        successMessage: false
+    },
+    getSubscribeCount: {
+        name: '获取订阅数（粉丝数）',
+        url: '/subscribe/getSubscribeCount',
+        method: 'GET',
+        userAuth: false,
+        dataParam: false,
+        successMessage: false
+    }
+}
+
+export { likeApi, collectApi, commentApi, subscribeApi }
+export default { likeApi, collectApi, commentApi, subscribeApi }
