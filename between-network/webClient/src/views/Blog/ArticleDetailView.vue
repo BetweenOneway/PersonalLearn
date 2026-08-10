@@ -28,10 +28,10 @@
                             <dd>{{ authorArticleCount }}</dd>
                             <dt>文章</dt>
                         </dl>
-                        <dl>
+                        <!-- <dl>
                             <dd>{{ authorReadCount }}</dd>
                             <dt>说说</dt>
-                        </dl>
+                        </dl> -->
                         <dl>
                             <dd>{{ subscribeCount }}</dd>
                             <dt>粉丝</dt>
@@ -158,6 +158,7 @@
     let cherryInstance = null;
     let authorInfo = ref({});
     let blogInfo = ref({});
+    const noteInfo = ref({});
 
     const liked = ref(false);
     const collected = ref(false);
@@ -166,7 +167,10 @@
     const isSubscribed = ref(false);
     const subscribeCount = ref(0);
 
-    const authorArticleCount = computed(() => '-');
+    const authorArticleCount = computed(() => {
+        const count = noteInfo.value?.author?.note_count;
+        return (typeof count === 'number' && !isNaN(count)) ? count : '-';
+    });
     const authorReadCount = computed(() => {
         const base = blogInfo.value.content?.length || 0;
         return base > 0 ? Math.floor(base * 1.5) : '-';
@@ -185,7 +189,9 @@
         blogInfo.value.title = responseData.data.title;
         blogInfo.value.update_time = responseData.data.update_time;
         blogInfo.value.content = responseData.data.content;
-        authorInfo.value.id = responseData.data.u_id;
+        //保存完整返回（含 author），供 authorArticleCount 等使用
+        noteInfo.value = responseData.data || {};
+        authorInfo.value.id = noteInfo.value.author?.id ?? responseData.data.u_id;
 
         cherryInstance.setValue(blogInfo.value.content);
         blogContentLoading.value = false;

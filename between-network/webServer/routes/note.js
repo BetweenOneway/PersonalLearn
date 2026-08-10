@@ -823,26 +823,56 @@ router.get("/getPublicNoteInfo",async (req,res)=>{
             output.success = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.success
             output.status = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.status
             output.description = statusCode.SERVICE_STATUS.GET_NOTE_SUCCESS.description
-            output.data = noteInfo;
-            if(!noteInfo.title)
+            output.data = noteInfo.toJSON ? noteInfo.toJSON() : noteInfo;
+            if(!output.data.title)
             {
                 output.data.title = "";
             }
 
-            if(!noteInfo.content)
+            if(!output.data.content)
             {
                 output.data.content = "";
             }
+
+            //附带作者基本信息及文章数
+            try {
+                const authorInfo = await sqldb.User.findOne(
+                    {
+                        attributes: ['id','nickname','head_pic'],
+                        where: { id: noteInfo.u_id }
+                    }
+                );
+                const authorNoteCount = await sqldb.Note.count(
+                    {
+                        where: {
+                            u_id: noteInfo.u_id,
+                            status: { [Op.ne]: 0 }
+                        }
+                    }
+                );
+                if(authorInfo)
+                {
+                    output.data.author = {
+                        id: authorInfo.id,
+                        nickname: authorInfo.nickname || '',
+                        avatar: authorInfo.head_pic || '',
+                        signed: '',
+                        note_count: authorNoteCount
+                    };
+                }
+            } catch (error) {
+                logger.info(`获取作者信息失败:${JSON.stringify(error)}`);
+            }
         }
-        res.send(output);
+        
     } catch (error) {
         logger.info(`Get public note info error:${JSON.stringify(error)}`);
         output.success = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.success
         output.status = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.status
         output.description = statusCode.SERVICE_STATUS.COMMON_EXCEPTION.description
-        res.send(output);
     }
     logger.info("End Get Public Note Info");
+    res.send(output);
     return
 })
 
