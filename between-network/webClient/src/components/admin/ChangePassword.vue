@@ -1,57 +1,82 @@
 <template>
     <n-layout-content embeded class="p-6">
-        <n-flex vertical align="center">
-            <n-steps :current="currentStep" status="process" class="w-10/12 p-3">
+        <n-flex vertical align="center" class="w-full" style="padding-top: 24px;">
+            <n-steps :current="currentStep" status="process" class="w-10/12">
                 <n-step v-for="step in steps" :key="step.title"
                     :title= step.title
                     :description= step.description
                 />
             </n-steps>
-            <n-flex align="start">
-                <n-card class="w-96 shadow-lg" v-if="currentStep !== 3">
-                    <template #header>
-                        <n-h2 class="m-0 font-bold">修改密码</n-h2>
-                    </template>
-                    <n-form ref="formRef" :model="formValue" :rules="formRules">
-                        <n-form-item label="邮箱账号" path="email">
-                            <n-input placeholder="请输入账号" v-model:value="formValue.email" :disabled="currentStep === 2"></n-input>
-                        </n-form-item>
-                        <n-grid cols="3" x-gap="12" v-show="currentStep === 1">
-                            <n-form-item-gi span="2" label="验证码" path="vc">
-                                <n-input placeholder="请输入验证码" v-model:value="formValue.vc"></n-input>
-                            </n-form-item-gi>
-                            <n-form-item-gi >
-                                <n-button block @click="getEmailVC" :disabled="!isEmailMatched || btnStatus.disabled">{{btnStatus.text}}</n-button>
-                            </n-form-item-gi>
-                        </n-grid>
-                        <n-form-item label="新密码" v-show="currentStep === 2" path="password">
-                            <n-input type="password" placeholder="请输入新密码" v-model:value="formValue.password"></n-input>
-                        </n-form-item>
-                        <n-form-item label="确认密码" v-show="currentStep === 2" path="confirmPassword">
-                            <n-input type="password" placeholder="请确认新密码" v-model:value="formValue.confirmPassword"></n-input>
-                        </n-form-item>
-                        <n-form-item :show-label="false" :show-feedback="false">
-                            <n-button block type="success" @click="submit">确定</n-button>
-                        </n-form-item>
-                    </n-form>
-                </n-card>
-                <n-alert v-if="currentStep === 2" :show-icon="false" title="新密码规则如下：">
-                    <n-flex vertical :size="5">
-                        <n-text :type="passwordRule.textMatch? 'success':'default'">1：新密码由字母、数字、特殊字符任意两种组成</n-text>
-                        <n-text :type="passwordRule.length? 'success':'default'">2：新密码长度需在6-12位之间</n-text>
-                    </n-flex>
-                </n-alert>
-                <!--第三步：修改成功提示-->
-                <n-result v-if="currentStep === 3"
-                    status="success"
-                    title="密码修改成功"
-                    description="您的登录密码已更新，请使用新密码重新登录。"
-                >
-                    <template #footer>
-                        <n-button type="primary" @click="relogin">重新登录</n-button>
-                    </template>
-                </n-result>
-            </n-flex>
+            <!--第一步：确认账号信息-->
+            <n-card class="shadow-lg" v-if="currentStep === 1" style="width: 420px; margin: 0 auto;">
+                <template #header>
+                    <n-h2 class="m-0 font-bold text-center">修改密码</n-h2>
+                </template>
+                <n-form ref="formRef" :model="formValue" :rules="formRules">
+                    <n-form-item label="邮箱账号" path="email">
+                        <n-input placeholder="请输入账号" v-model:value="formValue.email"></n-input>
+                    </n-form-item>
+                    <n-grid cols="3" x-gap="12">
+                        <n-form-item-gi span="2" label="验证码" path="vc">
+                            <n-input placeholder="请输入验证码" v-model:value="formValue.vc"></n-input>
+                        </n-form-item-gi>
+                        <n-form-item-gi>
+                            <n-button block @click="getEmailVC" :disabled="!isEmailMatched || btnStatus.disabled">{{btnStatus.text}}</n-button>
+                        </n-form-item-gi>
+                    </n-grid>
+                    <n-form-item :show-label="false" :show-feedback="false">
+                        <n-button block type="success" @click="submit">下一步</n-button>
+                    </n-form-item>
+                </n-form>
+            </n-card>
+
+            <!--第二步：设置新密码（左右栅格布局）-->
+            <n-card class="shadow-lg" v-if="currentStep === 2" style="width: 720px; margin: 0 auto;">
+                <template #header>
+                    <n-h2 class="m-0 font-bold text-center">修改密码</n-h2>
+                </template>
+                <n-form ref="formRef" :model="formValue" :rules="formRules">
+                    <n-grid cols="3" x-gap="24">
+                        <n-gi span="2">
+                            <n-form-item label="邮箱账号" path="email">
+                                <n-input placeholder="请输入账号" v-model:value="formValue.email" disabled></n-input>
+                            </n-form-item>
+                            <n-form-item label="旧密码" path="oldPassword">
+                                <n-input type="password" placeholder="请输入旧密码" v-model:value="formValue.oldPassword"></n-input>
+                            </n-form-item>
+                            <n-form-item label="新密码" path="password">
+                                <n-input type="password" placeholder="请输入新密码" v-model:value="formValue.password"></n-input>
+                            </n-form-item>
+                            <n-form-item label="确认密码" path="confirmPassword">
+                                <n-input type="password" placeholder="请确认新密码" v-model:value="formValue.confirmPassword"></n-input>
+                            </n-form-item>
+                            <n-form-item :show-label="false" :show-feedback="false">
+                                <n-button block type="success" @click="submit">确定</n-button>
+                            </n-form-item>
+                        </n-gi>
+                        <n-gi>
+                            <n-alert :show-icon="false" title="新密码规则如下：" style="margin-top: 4px;">
+                                <n-flex vertical :size="5">
+                                    <n-text :type="passwordRule.textMatch? 'success':'default'">1：新密码由字母、数字、特殊字符任意两种组成</n-text>
+                                    <n-text :type="passwordRule.length? 'success':'default'">2：新密码长度需在6-12位之间</n-text>
+                                </n-flex>
+                            </n-alert>
+                        </n-gi>
+                    </n-grid>
+                </n-form>
+            </n-card>
+
+            <!--第三步：修改成功提示-->
+            <n-result v-if="currentStep === 3"
+                status="success"
+                title="密码修改成功"
+                description="您的登录密码已更新，请使用新密码重新登录。"
+                style="margin: 0 auto;"
+            >
+                <template #footer>
+                    <n-button type="primary" @click="relogin">重新登录</n-button>
+                </template>
+            </n-result>
         </n-flex>
     </n-layout-content>
 </template>
@@ -133,6 +158,7 @@
     const formValue = reactive({
         email:'',
         vc:'',
+        oldPassword:'',
         password:'',
         confirmPassword:''
     });
@@ -163,14 +189,29 @@
             message:"请输入验证码",
             trigger:["input","blur"]
         },
+        oldPassword:{
+            key:'oldPassword',
+            required:true,
+            message:"请输入旧密码",
+            trigger:["input","blur"]
+        },
         password:{
             key:'password',
             required:true,
-            message:"请输入符合要求的密码",
+            message:"新密码格式不符或与旧密码相同",
             trigger:["input","blur"],
             validator:(rule,value)=>{
                 var reg=/^(?![a-zA-Z]+$)(?!\d+$)(?![^\da-zA-Z\s]+$).{6,12}$/;
-                return reg.test(value);
+                if(!reg.test(value))
+                {
+                    return false
+                }
+                //旧密码与新密码不能相同
+                if(formValue.oldPassword && value === formValue.oldPassword)
+                {
+                    return false
+                }
+                return true
             }
         },
         confirmPassword:{
@@ -289,6 +330,7 @@
                         userEmail: formValue.email,
                         verifyCode: formValue.vc,
                         verifyCodeKey: verifyCodeToken.value,
+                        oldPassword: formValue.oldPassword,
                         newPassword: formValue.password
                     }
                     noteServerRequest(API).then(responseData=>{
@@ -299,6 +341,7 @@
                             //先清空表单与验证码，避免敏感信息遗留
                             formValue.email = ''
                             formValue.vc = ''
+                            formValue.oldPassword = ''
                             formValue.password = ''
                             formValue.confirmPassword = ''
                             verifyCodeToken.value = ''

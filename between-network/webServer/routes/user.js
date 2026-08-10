@@ -342,6 +342,7 @@ router.post("/ChangePassword",async (req,res)=>{
     var userEmail = req.body?.userEmail??""
     let verifyCode = req.body?.verifyCode??""
     let verifyCodeKey = req.body?.verifyCodeKey??""   //对应发送验证码时返回的 Redis key（ChangePwdToken:...）
+    let oldPassword = req.body?.oldPassword??""
     let newPassword = req.body?.newPassword??""
 
     let output={
@@ -352,7 +353,7 @@ router.post("/ChangePassword",async (req,res)=>{
 
     try {
         //参数校验
-        if(userEmail.length == 0 || verifyCode.length == 0 || verifyCodeKey.length == 0 || newPassword.length == 0)
+        if(userEmail.length == 0 || verifyCode.length == 0 || verifyCodeKey.length == 0 || oldPassword.length == 0 || newPassword.length == 0)
         {
             output.success = statusCode.SERVICE_STATUS.PARAMS_MISSING.success
             output.status = statusCode.SERVICE_STATUS.PARAMS_MISSING.status
@@ -388,29 +389,48 @@ router.post("/ChangePassword",async (req,res)=>{
                 }
                 else
                 {
-                    let t;
-                    try {
-                        t = await sqldb.sequelize.transaction();
-                        const encryptedPassword = cryptPwd(newPassword)
-                        await sqldb.User.update(
-                            { password: encryptedPassword },
-                            {
-                                where:{ email:userEmail },
-                                transaction: t
-                            }
-                        )
-                        //验证码使用后立即失效
-                        await redisOper.RedisDel(verifyCodeKey)
-                        await t.commit()
-                        output.success = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.success
-                        output.status = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.status
-                        output.description = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.description
-                    } catch (error) {
-                        logger.error(`修改密码出错${error}`)
-                        if (t) t.rollback();
-                        output.success = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.success
-                        output.status = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.status
-                        output.description = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.description
+                    //查询用户信息（用于比对旧密码）
+                    const user = await sqldb.User.findOne({ where:{ email:userEmail } })
+                    //旧密码校验
+                    if(cryptPwd(oldPassword) !== user.password)
+                    {
+                        output.success = statusCode.SERVICE_STATUS.OLD_PWD_WRONG.success
+                        output.status = statusCode.SERVICE_STATUS.OLD_PWD_WRONG.status
+                        output.description = statusCode.SERVICE_STATUS.OLD_PWD_WRONG.description
+                    }
+                    else if(oldPassword === newPassword)
+                    {
+                        //旧密码与新密码不能相同
+                        output.success = statusCode.SERVICE_STATUS.PWD_SAME_AS_OLD.success
+                        output.status = statusCode.SERVICE_STATUS.PWD_SAME_AS_OLD.status
+                        output.description = statusCode.SERVICE_STATUS.PWD_SAME_AS_OLD.description
+                    }
+                    else
+                    {
+                        let t;
+                        try {
+                            t = await sqldb.sequelize.transaction();
+                            const encryptedPassword = cryptPwd(newPassword)
+                            await sqldb.User.update(
+                                { password: encryptedPassword },
+                                {
+                                    where:{ email:userEmail },
+                                    transaction: t
+                                }
+                            )
+                            //验证码使用后立即失效
+                            await redisOper.RedisDel(verifyCodeKey)
+                            await t.commit()
+                            output.success = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.success
+                            output.status = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.status
+                            output.description = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.description
+                        } catch (error) {
+                            logger.error(`修改密码出错${error}`)
+                            if (t) t.rollback();
+                            output.success = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.success
+                            output.status = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.status
+                            output.description = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.description
+                        }
                     }
                 }
             }

@@ -122,6 +122,16 @@ SERVICE_STATUS={
         status:'SERVICE_023',
         description:'密码修改失败'
     },
+    OLD_PWD_WRONG:{
+        success:false,
+        status:'SERVICE_025',
+        description:'旧密码不正确'
+    },
+    PWD_SAME_AS_OLD:{
+        success:false,
+        status:'SERVICE_026',
+        description:'新密码不能与旧密码相同'
+    },
     SEND_EMAIL_VC_FAIL:{
         success:true,
         status:'SERVICE_003',
