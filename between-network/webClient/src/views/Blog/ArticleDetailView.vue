@@ -83,10 +83,56 @@
                 </div>
                 <div ref="editorContainer" class="article-body"></div>
 
-                <!-- 评论区占位 -->
+                <!-- 评论区 -->
                 <div id="comment-area" class="comment-area">
                     <n-divider />
-                    <n-empty description="评论区正在建设中" />
+                    <div class="comment-title">评论 {{ commentList.length }}</div>
+
+                    <!-- 评论输入区 -->
+                    <div class="comment-editor">
+                        <n-input
+                            v-model:value="commentInput"
+                            type="textarea"
+                            placeholder="说点儿什么吧"
+                            :rows="3"
+                            :bordered="true"
+                            :resizable="false"
+                            class="comment-input"
+                        />
+                        <div class="comment-editor-footer">
+                            <n-button
+                                type="primary"
+                                :disabled="!commentInput.trim()"
+                                :loading="submitting"
+                                @click="submitComment"
+                            >
+                                发布
+                            </n-button>
+                        </div>
+                    </div>
+
+                    <!-- 评论列表 -->
+                    <div v-if="commentList.length" class="comment-list">
+                        <div
+                            v-for="item in commentList"
+                            :key="item.id"
+                            class="comment-item"
+                        >
+                            <n-avatar
+                                round
+                                :size="36"
+                                :src="item.avatar || defaultAvatar"
+                            />
+                            <div class="comment-item-body">
+                                <div class="comment-item-header">
+                                    <span class="comment-author">{{ item.author }}</span>
+                                    <span class="comment-time">{{ item.createTime }}</span>
+                                </div>
+                                <div class="comment-content">{{ item.content }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <n-empty v-else description="沙发，虚位以待" class="comment-empty" />
                 </div>
             </main>
 
@@ -166,6 +212,12 @@
     const commentCount = ref(0);
     const isSubscribed = ref(false);
     const subscribeCount = ref(0);
+
+    // 评论区状态
+    const commentList = ref([]);
+    const commentInput = ref('');
+    const submitting = ref(false);
+    const defaultAvatar = 'https://cdn.jsdelivr.net/gh/identicons/identicon.png';
 
     const authorArticleCount = computed(() => {
         const count = noteInfo.value?.author?.note_count;
@@ -303,6 +355,63 @@
         }
     };
 
+    // 加载当前文章评论列表
+    async function loadCommentList() {
+        const res = await noteServerRequest({
+            ...commentApi.getCommentList,
+            params: { objectId: propsData.id, type: 1 }
+        }).catch(() => null);
+        if (res && res.data) {
+            // 后端 data 直接为评论数组，字段：id/content/time/nickname/head_pic/u_id
+            commentList.value = (res.data || []).map(item => ({
+                id: item.id,
+                author: item.nickname || '匿名',
+                avatar: item.head_pic || '',
+                content: item.content,
+                createTime: item.time
+            }));
+            commentCount.value = commentList.value.length;
+        }
+    }
+
+    // 发表评论
+    const submitComment = async () => {
+        const content = commentInput.value.trim();
+        if (!content) return;
+        const userStore = useUserStore();
+        if (!userStore.token) {
+            message.warning('请先登录后再评论');
+            return;
+        }
+        submitting.value = true;
+        try {
+            const res = await noteServerRequest({
+                ...commentApi.addComment,
+                data: { objectId: propsData.id, type: 1, content }
+            });
+            if (res && res.success) {
+                // 后端仅返回 commentId，前端用本地用户信息补全展示
+                const newComment = {
+                    id: res.data.commentId || Date.now(),
+                    author: userStore.nickName || '我',
+                    avatar: userStore.headPic || '',
+                    content,
+                    createTime: new Date().toLocaleString()
+                };
+                commentList.value.unshift(newComment);
+                commentCount.value = commentList.value.length;
+                commentInput.value = '';
+                message.success('评论成功');
+            } else {
+                message.error((res && res.description) || '评论失败，请稍后再试');
+            }
+        } catch (err) {
+            message.error('评论失败，请稍后再试');
+        } finally {
+            submitting.value = false;
+        }
+    };
+
     async function LoadInteractionStatus() {
         let type = 1;
         const userStore = useUserStore();
@@ -392,6 +501,7 @@
         await GetAuthorInfo();
         await LoadInteractionStatus();
         await loadSubscribeCount();
+        await loadCommentList();
     });
 
     onUnmounted(() => {
@@ -607,6 +717,103 @@
 
 .comment-area {
     margin-top: 48px;
+}
+
+/* 评论标题 */
+.comment-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 8px 0 16px;
+}
+
+/* 评论输入区 */
+.comment-editor {
+    background: #fff;
+    border: 1px solid #e8eaed;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.comment-input :deep(.n-input-wrapper) {
+    background: #f5f6f7;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.comment-input :deep(.n-input-wrapper:hover),
+.comment-input :deep(.n-input-wrapper--focus) {
+    background: #eef0f2;
+}
+
+.comment-input :deep(.n-input__textarea-el) {
+    color: #333;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+}
+
+.comment-input :deep(.n-input__placeholder) {
+    color: #999;
+}
+
+.comment-editor-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+/* 评论列表 */
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.comment-item {
+    display: flex;
+    gap: 12px;
+    padding: 16px 4px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-item-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.comment-item-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.comment-author {
+    font-size: 14px;
+    font-weight: 600;
+    color: #357abd;
+}
+
+.comment-time {
+    font-size: 12px;
+    color: #999;
+}
+
+.comment-content {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+    word-break: break-word;
+}
+
+.comment-empty {
+    padding: 40px 0;
 }
 
 /* 修复 cherry-markdown 绝对定位导致溢出，并去掉自带容器样式 */

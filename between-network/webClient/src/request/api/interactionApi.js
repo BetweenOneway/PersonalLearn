@@ -62,6 +62,22 @@ const commentApi = {
         userAuth: false,
         dataParam: false,
         successMessage: false
+    },
+    getCommentList: {
+        name: '获取评论列表',
+        url: '/comment/getCommentList',
+        method: 'GET',
+        userAuth: false,
+        dataParam: false,
+        successMessage: false
+    },
+    addComment: {
+        name: '发表评论',
+        url: '/comment/addComment',
+        method: 'POST',
+        userAuth: true,
+        dataParam: false,
+        successMessage: false
     }
 }
 
