@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 'use strict'
 
 module.exports = function(sequelize,DataTypes){
-    const Favorite = sequelize.define('collect',{
+    const Favorite = sequelize.define('favorite',{
         id:{
             type:DataTypes.BIGINT,
             primaryKey:true,

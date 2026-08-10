@@ -7,6 +7,8 @@ const ejs = require("ejs");
 var mailOper =require("../utils/mail")
 //状态码定义
 
+const { nextId } = require("../utils/snowflake")
+
 var router=express.Router();
 
 const path = require('path')

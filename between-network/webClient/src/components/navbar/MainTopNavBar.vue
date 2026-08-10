@@ -34,6 +34,8 @@
 
             <!--登录按钮-->
             <n-button v-if="user_id === null" tertiary type="primary" @click="showLoginModal">登录</n-button>
+            <!--注册按钮-->
+            <n-button v-if="user_id === null" tertiary type="primary" @click="showRegisterModal">注册</n-button>
             
             <!--分割线-->
             <n-divider v-if="user_id !== null" vertical />
@@ -136,6 +138,10 @@
 
     const showLoginModal = (e)=>{
         loginModalStep.value = 1
+        changeLoginModalShow(true)
+    }
+    const showRegisterModal = (e)=>{
+        loginModalStep.value = 2
         changeLoginModalShow(true)
     }
     function testFunction(){

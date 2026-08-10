@@ -135,9 +135,9 @@ CREATE TABLE IF NOT EXISTS `dumpster` (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '回收站' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
--- Table structure for collect
+-- Table structure for favorite
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS `collect` (
+CREATE TABLE IF NOT EXISTS `favorite` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
   `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
   `object_id` bigint NOT NULL COMMENT '收藏对象编号（雪花ID）',
@@ -146,9 +146,9 @@ CREATE TABLE IF NOT EXISTS `collect` (
   `status` int NOT NULL DEFAULT 1 COMMENT '状态【0：已取消，1：正常】',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_user_object_type`(`u_id`, `object_id`, `type`) USING BTREE COMMENT '同一用户同一对象同一类型只能收藏一次',
-  INDEX `idx_collect_user_time`(`u_id`, `time`) USING BTREE,
-  INDEX `idx_collect_object`(`object_id`, `type`) USING BTREE,
-  CONSTRAINT `collect_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  INDEX `idx_favorite_user_time`(`u_id`, `time`) USING BTREE,
+  INDEX `idx_favorite_object`(`object_id`, `type`) USING BTREE,
+  CONSTRAINT `favorite_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收藏表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
