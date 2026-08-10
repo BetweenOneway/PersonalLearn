@@ -171,10 +171,52 @@
         }
     };
 
+    // 根据当前路由找到对应的菜单项
+    function FindMenuItemByPath(startNode, path)
+    {
+        for (var menuItem of startNode)
+        {
+            if (menuItem.path === path)
+            {
+                return menuItem;
+            }
+            else if (0 != (menuItem?.children?.length ?? 0))
+            {
+                let findResult = FindMenuItemByPath(menuItem.children, path);
+                if (!!findResult)
+                {
+                    return findResult;
+                }
+            }
+        }
+        return undefined;
+    }
+
     function Init()
     {
-        activeTab.value = 'Admin';
-        tabs.value = [{label: '首页',key: 'Admin',path:'/admin'}];
+        const currentPath = router.currentRoute.value.path;
+        // 若当前在 /admin 命中重定向，路径会被改写为 /admin/console
+        const targetPath = currentPath === '/admin' ? '/admin/console' : currentPath;
+        const matchedMenu = FindMenuItemByPath(menuOptions, targetPath);
+
+        if (matchedMenu)
+        {
+            // 根据当前路由恢复对应的 Tab，避免刷新后首页被其他页面覆盖
+            if (!tabs.value.some((tab) => tab.key === matchedMenu.key))
+            {
+                tabs.value.push({ key: matchedMenu.key, label: matchedMenu.label, path: matchedMenu.path });
+            }
+            activeTab.value = matchedMenu.key;
+        }
+        else
+        {
+            // 未匹配到菜单（如直达首页/console）时，确保首页 Tab 存在并激活
+            if (!tabs.value.some((tab) => tab.key === 'Admin'))
+            {
+                tabs.value.push({label: '首页',key: 'Admin',path:'/admin'});
+            }
+            activeTab.value = 'Admin';
+        }
     }
 
     Init();
