@@ -168,6 +168,21 @@ CREATE TABLE IF NOT EXISTS `comment` (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '评论表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
+-- Table structure for moment
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `moment` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+  `u_id` bigint NOT NULL COMMENT '发表说说的用户编号（雪花ID）',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '说说内容',
+  `images` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '说说配图，多个以英文逗号分隔',
+  `time` datetime NOT NULL COMMENT '发布时间',
+  `status` int NULL DEFAULT 1 COMMENT '状态【0：已删除，1：正常】',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_moment_user_time`(`u_id`, `time`) USING BTREE COMMENT '按用户查询说说',
+  CONSTRAINT `moment_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '说说表' ROW_FORMAT = COMPACT;
+
+-- ----------------------------
 -- Table structure for blacklist
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `blacklist` (

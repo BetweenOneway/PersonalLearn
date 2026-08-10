@@ -81,6 +81,25 @@ const commentApi = {
     }
 }
 
+const momentApi = {
+    addMoment: {
+        name: '发表说说',
+        url: '/moment/addMoment',
+        method: 'POST',
+        userAuth: true,
+        dataParam: false,
+        successMessage: false
+    },
+    getMomentList: {
+        name: '获取说说列表',
+        url: '/moment/getMomentList',
+        method: 'GET',
+        userAuth: false,
+        dataParam: false,
+        successMessage: false
+    }
+}
+
 const subscribeApi = {
     toggleSubscribe: {
         name: '订阅/取消订阅',
@@ -109,5 +128,5 @@ const subscribeApi = {
     }
 }
 
-export { likeApi, collectApi, commentApi, subscribeApi }
-export default { likeApi, collectApi, commentApi, subscribeApi }
+export { likeApi, collectApi, commentApi, subscribeApi, momentApi }
+export default { likeApi, collectApi, commentApi, subscribeApi, momentApi }

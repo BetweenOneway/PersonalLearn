@@ -20,6 +20,7 @@ const comment = require('./routes/comment');
 const blacklist = require('./routes/blacklist');
 const like = require('./routes/like');
 const subscribe = require('./routes/subscribe');
+const moment = require('./routes/moment');
 
 const sequelizeTest = require("./routes/sequelizeTest")
 
@@ -138,6 +139,8 @@ app.use('/blacklist',blacklist);
 app.use('/like',like);
 //订阅（关注作者）
 app.use('/subscribe',subscribe);
+//说说
+app.use('/moment',moment);
 //CKEditor编辑器
 app.use("/ckeditor",CKEditor)
 //回收站操作

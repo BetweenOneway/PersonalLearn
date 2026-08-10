@@ -572,6 +572,26 @@ SERVICE_STATUS={
         status:'SERVICE_076',
         description:'获取订阅数失败'
     },
+    ADD_MOMENT_SUCCESS:{
+        success:true,
+        status:'SERVICE_080',
+        description:'发表说说成功'
+    },
+    ADD_MOMENT_FAIL:{
+        success:false,
+        status:'SERVICE_081',
+        description:'发表说说失败'
+    },
+    GET_MOMENT_LIST_SUCCESS:{
+        success:true,
+        status:'SERVICE_082',
+        description:'获取说说列表成功'
+    },
+    GET_MOMENT_LIST_FAIL:{
+        success:false,
+        status:'SERVICE_083',
+        description:'获取说说列表失败'
+    },
 }
 
 EVENT_LIST = {

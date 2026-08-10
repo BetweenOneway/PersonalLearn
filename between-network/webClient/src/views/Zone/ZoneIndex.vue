@@ -80,9 +80,17 @@
                             placeholder="随便说点儿什么"
                             :bordered="false"
                             :resizable="false"
+                            v-model:value="momentInput"
+                            @keydown.ctrl.enter="submitMoment"
                         />
                         <div class="publisher-actions">
-                            <n-button type="primary" class="publisher-action-btn">
+                            <n-button
+                                type="primary"
+                                class="publisher-action-btn"
+                                :disabled="!momentInput.trim()"
+                                :loading="submittingMoment"
+                                @click="submitMoment"
+                            >
                                 随口一说
                             </n-button>
                         </div>
@@ -109,7 +117,19 @@
                             <n-empty v-else description="暂无文章" />
                         </n-tab-pane>
                         <n-tab-pane name="column" tab="说说">
-                            <n-empty description="暂未说说" />
+                            <div v-if="momentList.length" class="moment-list">
+                                <div
+                                    v-for="item in momentList"
+                                    :key="item.id"
+                                    class="moment-item"
+                                >
+                                    <p class="moment-content">{{ item.content }}</p>
+                                    <div class="moment-meta">
+                                        <span class="meta-text">{{ item.time }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <n-empty v-else description="暂未说说" />
                         </n-tab-pane>
                     </n-tabs>
                 </n-card>
@@ -133,6 +153,7 @@
     import noteServerRequest from "@/request";
     import noteApi from "@/request/api/noteApi";
     import userApi from "@/request/api/userApi";
+    import { momentApi } from "@/request/api/interactionApi";
     import { useUserStore } from "@/stores/userStore";
     import { toHerf } from "@/router/go";
 
@@ -159,6 +180,55 @@
 
     // 文章列表数据
     const articleList = ref([]);
+
+    // 说说发布相关
+    const momentInput = ref('');
+    const submittingMoment = ref(false);
+    const momentList = ref([]);
+
+    // 加载说说列表
+    async function loadMoments() {
+        if (!authorId.value) return;
+        try {
+            let API;
+            if (isOwner.value) {
+                // 登录人员即作者：走此分支
+                API = { ...momentApi.getMomentList };
+                const params = { uId: authorId.value, pageIndex: 0, pageSize: 20 };
+                API.params = params;
+            } else {
+                // 登录人员与作者不是同一人：走此分支（目前逻辑一致）
+                API = { ...momentApi.getMomentList };
+                const params = { uId: authorId.value, pageIndex: 0, pageSize: 20 };
+                API.params = params;
+            }
+            const res = await noteServerRequest(API);
+            if (res && res.data) {
+                momentList.value = res.data;
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    // 发表说说：写入后端 moment 表（仅空间主人可见输入框，故作者即当前登录用户）
+    async function submitMoment() {
+        const content = momentInput.value.trim();
+        if (!content || submittingMoment.value) return;
+        submittingMoment.value = true;
+        try {
+            let API = { ...momentApi.addMoment };
+            API.data = { content };
+            const res = await noteServerRequest(API);
+            if (res) {
+                momentInput.value = '';
+                window.$message.success('已发布');
+                loadMoments();
+            }
+        } finally {
+            submittingMoment.value = false;
+        }
+    }
 
     // 作者信息，初始为兜底值，加载完成后由接口数据覆盖
     const userInfo = ref({
@@ -218,6 +288,7 @@
     onMounted(() => {
         loadAuthor();
         loadArticles();
+        loadMoments();
     });
 </script>
 
@@ -427,6 +498,34 @@
     --n-color-hover: #4a90d9;
     --n-color-pressed: #2f6aa3;
     font-weight: 600;
+}
+
+/* 说说列表 */
+.moment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.moment-item {
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+}
+
+.moment-content {
+    margin: 0 0 8px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.moment-meta {
+    font-size: 13px;
+    color: #999;
 }
 
 /* 个人成就 */
