@@ -192,12 +192,12 @@
         try {
             let API;
             if (isOwner.value) {
-                // 登录人员即作者：走此分支
+                // 登录人员即作者：查找本人以及关注的人的说说
                 API = { ...momentApi.getMomentList };
                 const params = { uId: authorId.value, pageIndex: 0, pageSize: 20 };
                 API.params = params;
             } else {
-                // 登录人员与作者不是同一人：走此分支（目前逻辑一致）
+                // 登录人员与作者不是同一人：只查找作者的说说
                 API = { ...momentApi.getMomentList };
                 const params = { uId: authorId.value, pageIndex: 0, pageSize: 20 };
                 API.params = params;
@@ -266,18 +266,34 @@
 
     // 获取当前空间作者的公开文章列表，传入的是作者 id 而非登录用户 id
     async function loadArticles() {
-        if (!authorId.value) return;
-        let API = { ...noteApi.getOpenNoteList };
-        API.params = {
-            pageIndex: 0,
-            pageSize: 20,
-            userId: authorId.value
-        };
-        await noteServerRequest(API).then(responseData => {
-            if (responseData) {
-                articleList.value = responseData.data;
+         if (!authorId.value) return;
+        try {
+            let API;
+            if (isOwner.value) {
+                // 登录人员即作者：查找本人以及关注的人的公开文章
+               API = { ...noteApi.getOpenNoteList };
+                API.params = {
+                    pageIndex: 0,
+                    pageSize: 20,
+                    userId: authorId.value
+                };
+            } else {
+                // 登录人员与作者不是同一人：只查找作者的公开文章
+                API = { ...noteApi.getOpenNoteList };
+                API.params = {
+                    pageIndex: 0,
+                    pageSize: 20,
+                    userId: authorId.value
+                };
             }
-        });
+            await noteServerRequest(API).then(responseData => {
+                if (responseData) {
+                    articleList.value = responseData.data;
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     // 跳转到笔记详情
