@@ -58,6 +58,18 @@ const router = createRouter({
                 component:()=>import("@/components/admin/Recycle.vue"),
                 meta:{title:'回收站'}
             },
+            {
+                path:'myarticles',
+                props:true,
+                component:()=>import("@/components/admin/MyArticles.vue"),
+                meta:{title:'我的文章'}
+            },
+            {
+                path:'mymoments',
+                props:true,
+                component:()=>import("@/components/admin/MyMoments.vue"),
+                meta:{title:'我的说说'}
+            },
         ]
     },
     {

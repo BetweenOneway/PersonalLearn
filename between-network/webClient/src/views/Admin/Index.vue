@@ -77,9 +77,19 @@
             ],
         },
         {
-            label: '笔记管理',
+            label: '内容管理',
             key: 'manage-note',
             children:[
+                {
+                    label: '我的文章',
+                    key: 'my-articles',
+                    path: '/admin/myarticles',
+                },
+                {
+                    label: '我的说说',
+                    key: 'my-moments',
+                    path: '/admin/mymoments',
+                },
                 {
                     label: '回收站',
                     key: 'recycleb',
