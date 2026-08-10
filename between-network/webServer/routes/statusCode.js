@@ -572,6 +572,16 @@ SERVICE_STATUS={
         status:'SERVICE_076',
         description:'获取订阅数失败'
     },
+    GET_USER_NOTE_LIST_SUCCESS:{
+        success:true,
+        status:'SERVICE_090',
+        description:'获取用户文章列表成功'
+    },
+    GET_USER_NOTE_LIST_FAIL:{
+        success:false,
+        status:'SERVICE_091',
+        description:'获取用户文章列表失败'
+    },
     ADD_MOMENT_SUCCESS:{
         success:true,
         status:'SERVICE_080',

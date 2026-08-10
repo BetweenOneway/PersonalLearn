@@ -79,6 +79,22 @@ const noteApi = {
         dataParam:false,
         successMessage:false
     },
+    getUserAllNoteList:{
+        name:'获取我的全部文章',
+        url:'/note/getUserAllNoteList',
+        method:'GET',
+        userAuth:true,
+        dataParam:false,
+        successMessage:false
+    },
+    deleteNote:{
+        name:'删除笔记',
+        url:'/note/deleteNote',
+        method:'POST',
+        userAuth:true,
+        dataParam:false,
+        successMessage:true
+    },
 }
 
 export default noteApi

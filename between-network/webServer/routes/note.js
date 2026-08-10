@@ -424,6 +424,128 @@ router.get("/setNoteOpenStatus",async (req,res)=>{
 })
 
 /**
+ * 获取当前用户的所有文章（已公开 + 未公开，不含已删除）
+ */
+router.get("/getUserAllNoteList", async (req, res) => {
+    let output = {
+        success: true,
+        status: '',
+        description: '',
+        data: []
+    }
+
+    logger.info(`start get user all note list`)
+    try {
+        let userInfo = req.userInfo;
+        const noteList = await sqldb.Note.findAll({
+            attributes: ['id', 'title', 'top', 'update_time', 'status'],
+            where: {
+                u_id: userInfo.id,
+                status: {
+                    [Op.ne]: 0
+                }
+            },
+            order: [['update_time', 'DESC']],
+            raw: true
+        });
+
+        output.success = statusCode.SERVICE_STATUS.GET_USER_NOTE_LIST_SUCCESS.success;
+        output.status = statusCode.SERVICE_STATUS.GET_USER_NOTE_LIST_SUCCESS.status;
+        output.description = statusCode.SERVICE_STATUS.GET_USER_NOTE_LIST_SUCCESS.description;
+        output.data = noteList;
+    } catch (error) {
+        console.log(error);
+        output.success = statusCode.SERVICE_STATUS.GET_USER_NOTE_LIST_FAIL.success;
+        output.status = statusCode.SERVICE_STATUS.GET_USER_NOTE_LIST_FAIL.status;
+        output.description = statusCode.SERVICE_STATUS.GET_USER_NOTE_LIST_FAIL.description;
+    }
+
+    logger.info(`end get user all note list`)
+    res.send(output);
+    return;
+})
+
+/**
+ * 删除（软删除）当前用户的单篇笔记
+ */
+router.post("/deleteNote", async (req, res) => {
+    let output = {
+        success: true,
+        status: '',
+        description: '',
+        data: {}
+    }
+
+    logger.info(`start delete note`)
+    let noteId = req.body.id;
+    if (!noteId) {
+        output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success;
+        output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status;
+        output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description;
+        res.send(output);
+        return;
+    }
+
+    let userInfo = req.userInfo;
+    const t = await sqldb.sequelize.transaction();
+
+    try {
+        let curTime = new Date().toLocaleString();
+        const updateNum = await sqldb.Note.update(
+            {
+                status: 0,
+                update_time: curTime
+            },
+            {
+                where: {
+                    id: noteId,
+                    u_id: userInfo.id,
+                    status: {
+                        [Op.ne]: 0
+                    }
+                },
+                transaction: t
+            }
+        );
+        if (updateNum > 0) {
+            let event = statusCode.EVENT_LIST.NOTE_DEL;
+            await sqldb.operLog.create(
+                {
+                    time: curTime,
+                    event: event.code,
+                    desc: event.desc,
+                    u_id: userInfo.id,
+                    o_id: noteId,
+                    type: 1
+                },
+                {
+                    transaction: t
+                }
+            );
+            t.commit();
+            output.success = statusCode.SERVICE_STATUS.DEL_NOTE_SUCCESS.success;
+            output.status = statusCode.SERVICE_STATUS.DEL_NOTE_SUCCESS.status;
+            output.description = statusCode.SERVICE_STATUS.DEL_NOTE_SUCCESS.description;
+        } else {
+            t.rollback();
+            output.success = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.success;
+            output.status = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.status;
+            output.description = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.description;
+        }
+    } catch (error) {
+        console.log(error);
+        t.rollback();
+        output.success = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.success;
+        output.status = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.status;
+        output.description = statusCode.SERVICE_STATUS.DEL_NOTE_FAIL.description;
+    }
+
+    logger.info(`end delete note`)
+    res.send(output);
+    return;
+})
+
+/**
  * 笔记重命名
  */
 router.post("/renameNote",async (req,res)=>{
