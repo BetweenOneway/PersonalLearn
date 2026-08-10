@@ -72,6 +72,21 @@
             <!-- 右侧主内容 -->
             <div class="zone-main">
                 <n-card class="zone-card">
+                    <div v-if="isOwner" class="publisher-box">
+                        <n-input
+                            class="publisher-input"
+                            type="textarea"
+                            :rows="2"
+                            placeholder="随便说点儿什么"
+                            :bordered="false"
+                            :resizable="false"
+                        />
+                        <div class="publisher-actions">
+                            <n-button type="primary" class="publisher-action-btn">
+                                随口一说
+                            </n-button>
+                        </div>
+                    </div>
                     <n-tabs v-model:value="activeTab" type="line" animated>
                         <n-tab-pane name="article" tab="文章">
                             <div v-if="articleList.length" class="post-list">
@@ -104,7 +119,8 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, computed } from 'vue';
+    import { storeToRefs } from 'pinia';
     import {
         EmojiEventsOutlined,
         VerifiedOutlined,
@@ -117,6 +133,7 @@
     import noteServerRequest from "@/request";
     import noteApi from "@/request/api/noteApi";
     import userApi from "@/request/api/userApi";
+    import { useUserStore } from "@/stores/userStore";
     import { toHerf } from "@/router/go";
 
     const props = defineProps({
@@ -130,6 +147,15 @@
 
     // 当前访问的作者 id，来自路由 /zone/:id，由博客详情页"查看TA的空间"带入
     const authorId = ref(props.id);
+
+    // 当前登录用户信息
+    const userStore = useUserStore();
+    const { id: currentUserId } = storeToRefs(userStore);
+
+    // 只有当前登录用户与该空间作者为同一人时，才显示发布输入框
+    const isOwner = computed(() => {
+        return !!currentUserId.value && currentUserId.value == authorId.value;
+    });
 
     // 文章列表数据
     const articleList = ref([]);
@@ -346,6 +372,61 @@
 
 .zone-card {
     border-radius: 8px;
+}
+
+/* 发布输入框（仅空间主人可见） */
+.publisher-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background: #fff;
+    border: 1px solid #e8eaed;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.publisher-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.publisher-input :deep(.n-input-wrapper) {
+    background: #f5f6f7;
+    border-radius: 8px;
+    padding: 10px 12px;
+    transition: background 0.2s;
+}
+
+.publisher-input :deep(.n-input-wrapper:hover),
+.publisher-input :deep(.n-input-wrapper--focus) {
+    background: #eef0f2;
+}
+
+.publisher-input :deep(.n-input__textarea-el) {
+    color: #333;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+}
+
+.publisher-input :deep(.n-input__placeholder) {
+    color: #999;
+}
+
+.publisher-actions {
+    display: flex;
+    align-items: center;
+    align-self: center;
+    flex-shrink: 0;
+}
+
+.publisher-action-btn {
+    --n-color: #357abd;
+    --n-color-hover: #4a90d9;
+    --n-color-pressed: #2f6aa3;
+    font-weight: 600;
 }
 
 /* 个人成就 */
