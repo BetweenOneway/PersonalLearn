@@ -258,6 +258,223 @@ router.get("/SendVerifyCode",async(req,res)=>{
     res.send(output)
 })
 
+//发送修改密码验证码（邮箱必须已注册）
+router.get("/SendChangePasswordVC",async(req,res)=>{
+    var output={
+        success:true,
+        status:'',
+        description:'',
+        data:{
+            userToken:''
+        }
+    }
+    logger.info(`get change pwd vc code：${JSON.stringify(req.query)}`);
+    var userEmail = req.query.userEmail
+    try {
+        //查询邮箱是否已注册
+        const matchedUserCount = await sqldb.User.count(
+            {
+                where:{
+                    email:userEmail
+                }
+            }
+        )
+        if(matchedUserCount == 0)
+        {
+            //邮箱未注册
+            output.success = statusCode.SERVICE_STATUS.MAIL_NOT_REGISTERED.success
+            output.status=statusCode.SERVICE_STATUS.MAIL_NOT_REGISTERED.status
+            output.description=statusCode.SERVICE_STATUS.MAIL_NOT_REGISTERED.description
+        }
+        else{
+            //生成随机验证码
+            let verifyCode = stringRandom(8, {letters:true,numbers: false,specials:false});
+            try
+            {
+                //将验证码保存到Redis中（使用独立的 key 前缀，避免与注册验证码冲突）
+                const userTokenKey = 'ChangePwdToken:' + userEmail + ":" + crypto.randomUUID({ disableEntropyCache: true })
+
+                await redisOper.RedisSet(userTokenKey,verifyCode,15*60)
+
+                //使用Ejs模板渲染邮件内容
+                const verifyCodeHtml = await ejs.renderFile(
+                    path.join(__dirname, '../views/emails/changePasswordCode.ejs'),
+                    { userEmail: userEmail, verifyCode: verifyCode }
+                );
+
+                //发送邮件
+                let resultInfo = {};
+                mailOper.SendEmail({email:userEmail,subject:"修改密码验证码",text:"",html:verifyCodeHtml},resultInfo)
+                if(0 != resultInfo.statusCode)
+                {
+                    output.success = statusCode.REDIS_STATUS.SET_FAIL.success
+                    output.status = statusCode.REDIS_STATUS.SET_FAIL.status
+                    output.description= statusCode.REDIS_STATUS.SET_FAIL.description
+                }
+                else
+                {
+                    output.success = statusCode.SERVICE_STATUS.SEND_EMAIL_VC_SUCCESS.success
+                    output.status = statusCode.SERVICE_STATUS.SEND_EMAIL_VC_SUCCESS.status
+                    output.description= statusCode.SERVICE_STATUS.SEND_EMAIL_VC_SUCCESS.description
+                    output.data.userToken = userTokenKey
+                }
+            }
+            catch(e)
+            {
+                logger.error(`send change pwd vc mail fail=>${e}`)
+                output.success = statusCode.REDIS_STATUS.SET_FAIL.success
+                output.status = statusCode.REDIS_STATUS.SET_FAIL.status
+                output.description= statusCode.REDIS_STATUS.SET_FAIL.description
+            }
+        }
+    } catch (error) {
+        logger.error(`send change pwd vc mail fail=>${error}`)
+        output.success = statusCode.SERVICE_STATUS.SEND_EMAIL_VC_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.SEND_EMAIL_VC_FAIL.status
+        output.description= statusCode.SERVICE_STATUS.SEND_EMAIL_VC_FAIL.description
+    }
+    res.send(output)
+})
+
+//修改密码（邮箱已注册 + 验证码校验）
+router.post("/ChangePassword",async (req,res)=>{
+    logger.info(`用户修改密码=>${JSON.stringify(req.body)}`);
+    var userEmail = req.body?.userEmail??""
+    let verifyCode = req.body?.verifyCode??""
+    let verifyCodeKey = req.body?.verifyCodeKey??""   //对应发送验证码时返回的 Redis key（ChangePwdToken:...）
+    let newPassword = req.body?.newPassword??""
+
+    let output={
+        success:false,
+        status:"",
+        description:""
+    }
+
+    try {
+        //参数校验
+        if(userEmail.length == 0 || verifyCode.length == 0 || verifyCodeKey.length == 0 || newPassword.length == 0)
+        {
+            output.success = statusCode.SERVICE_STATUS.PARAMS_MISSING.success
+            output.status = statusCode.SERVICE_STATUS.PARAMS_MISSING.status
+            output.description = statusCode.SERVICE_STATUS.PARAMS_MISSING.description
+        }
+        else
+        {
+            //校验验证码：从 Redis 取出发送时保存的验证码并比对
+            let redisVerifyCode = await redisOper.RedisGet(verifyCodeKey)
+            if(redisVerifyCode == null)
+            {
+                //验证码已过期或不存在
+                output.success = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.success
+                output.status = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.status
+                output.description = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.description
+            }
+            else if(redisVerifyCode != verifyCode)
+            {
+                //验证码不匹配
+                output.success = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.success
+                output.status = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.status
+                output.description = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.description
+            }
+            else
+            {
+                //验证码正确，更新密码
+                const matchedUserCount = await sqldb.User.count({ where:{ email:userEmail } })
+                if(matchedUserCount != 1)
+                {
+                    output.success = statusCode.SERVICE_STATUS.MAIL_NOT_REGISTERED.success
+                    output.status = statusCode.SERVICE_STATUS.MAIL_NOT_REGISTERED.status
+                    output.description = statusCode.SERVICE_STATUS.MAIL_NOT_REGISTERED.description
+                }
+                else
+                {
+                    let t;
+                    try {
+                        t = await sqldb.sequelize.transaction();
+                        const encryptedPassword = cryptPwd(newPassword)
+                        await sqldb.User.update(
+                            { password: encryptedPassword },
+                            {
+                                where:{ email:userEmail },
+                                transaction: t
+                            }
+                        )
+                        //验证码使用后立即失效
+                        await redisOper.RedisDel(verifyCodeKey)
+                        await t.commit()
+                        output.success = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.success
+                        output.status = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.status
+                        output.description = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.description
+                    } catch (error) {
+                        logger.error(`修改密码出错${error}`)
+                        if (t) t.rollback();
+                        output.success = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.success
+                        output.status = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.status
+                        output.description = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.description
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        logger.error(`修改密码出错${error}`)
+        output.success = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.description
+    }
+    res.send(output)
+})
+
+//校验验证码（仅核验是否正确，不失效 key，供进入下一步前预校验）
+router.post("/VerifyCode",async (req,res)=>{
+    logger.info(`校验验证码=>${JSON.stringify(req.body)}`);
+    let userEmail = req.body?.userEmail??""
+    let verifyCode = req.body?.verifyCode??""
+    let verifyCodeKey = req.body?.verifyCodeKey??""   //对应发送验证码时返回的 Redis key
+
+    let output={
+        success:false,
+        status:"",
+        description:""
+    }
+
+    try {
+        if(userEmail.length == 0 || verifyCode.length == 0 || verifyCodeKey.length == 0)
+        {
+            output.success = statusCode.SERVICE_STATUS.PARAMS_MISSING.success
+            output.status = statusCode.SERVICE_STATUS.PARAMS_MISSING.status
+            output.description = statusCode.SERVICE_STATUS.PARAMS_MISSING.description
+        }
+        else
+        {
+            let redisVerifyCode = await redisOper.RedisGet(verifyCodeKey)
+            if(redisVerifyCode == null)
+            {
+                output.success = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.success
+                output.status = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.status
+                output.description = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.description
+            }
+            else if(redisVerifyCode != verifyCode)
+            {
+                output.success = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.success
+                output.status = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.status
+                output.description = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.description
+            }
+            else
+            {
+                output.success = statusCode.SERVICE_STATUS.VERIFY_CODE_SUCCESS.success
+                output.status = statusCode.SERVICE_STATUS.VERIFY_CODE_SUCCESS.status
+                output.description = statusCode.SERVICE_STATUS.VERIFY_CODE_SUCCESS.description
+            }
+        }
+    } catch (error) {
+        logger.error(`校验验证码出错${error}`)
+        output.success = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.success
+        output.status = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.status
+        output.description = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.description
+    }
+    res.send(output)
+})
+
 //邮箱注册账号
 router.post("/register",async (req,res)=>{
     logger.info(`用户注册=>${JSON.stringify(req.body)}`);
@@ -266,9 +483,9 @@ router.post("/register",async (req,res)=>{
     let verifyCodeKey = req.body?.verifyCodeKey??""
 
     let output={
-        success:false,
-        status:"",
-        description:""
+        success:SERVICE_STATUS.PARAM_ERROR.success,
+        status:SERVICE_STATUS.PARAM_ERROR.status,
+        description:SERVICE_STATUS.PARAM_ERROR.description
     }
 
     //参数校验
@@ -301,91 +518,102 @@ router.post("/register",async (req,res)=>{
         }
         else
         {
-            let t;
-            //用户注册
-            try {
-                t = await sqldb.sequelize.transaction();
-                let curDate = new Date().toLocaleString();
-                //随机生成初始密码
-                let notEncryptedPassword = stringRandom(8, {letters:true,numbers: false,specials:true});
-                //密码加密
-                let encryptedPassword = cryptPwd(notEncryptedPassword);
-                //随机生成默认用户名
-                let defaultNickname = '用户' + stringRandom(8, {letters:true, numbers:true});
-                //新增用户信息
-                const user = await sqldb.User.create(
-                    {
-                        id:nextId(),
-                        email:userEmail,
-                        password:encryptedPassword,
-                        nickname:defaultNickname,
-                        time:curDate,
-                    },
-                    {
-                        //指定新增哪些字段
-                        fields:['email','password','nickname','time'],
-                        transaction: t
-                    }
-                );
-
-                //获取新增用户ID
-                const users = await sqldb.User.findAll(
-                    {
-                        attributes: ['id'],
-                        where: {
-                            email: userEmail
+            //校验验证码：从 Redis 取出发送时保存的验证码并比对
+            let redisVerifyCode = await redisOper.RedisGet(verifyCodeKey)
+            if(redisVerifyCode == null)
+            {
+                //验证码已过期或不存在
+                output.success = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.success
+                output.status = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.status
+                output.description = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.description
+            }
+            else if(redisVerifyCode != verifyCode)
+            {
+                //验证码不匹配
+                output.success = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.success
+                output.status = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.status
+                output.description = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.description
+            }
+            else
+            {
+                let t;
+                //用户注册
+                try {
+                    t = await sqldb.sequelize.transaction();
+                    let curDate = new Date().toLocaleString();
+                    //随机生成初始密码
+                    let notEncryptedPassword = stringRandom(8, {letters:true,numbers: false,specials:true});
+                    //密码加密
+                    let encryptedPassword = cryptPwd(notEncryptedPassword);
+                    //随机生成默认用户名
+                    let defaultNickname = '用户' + stringRandom(8, {letters:true, numbers:true});
+                    //新增用户信息
+                    const user = await sqldb.User.create(
+                        {
+                            id:nextId(),
+                            email:userEmail,
+                            password:encryptedPassword,
+                            nickname:defaultNickname,
+                            time:curDate,
                         },
-                        transaction: t
-                    }
-                );
-                //记录事件
-                const userLog = await sqldb.UserLog.create(
+                        {
+                            //指定新增哪些字段
+                            fields:['id','email','password','nickname','time'],
+                            transaction: t
+                        }
+                    );
+
+                    //记录事件（直接使用前面生成的雪花ID）
+                    const userLog = await sqldb.UserLog.create(
+                        {
+                            desc:statusCode.EVENT_LIST.USER_REGIST.desc,
+                            time:curDate,
+                            event:statusCode.EVENT_LIST.USER_REGIST.code,
+                            u_id:user.id
+                        },
+                        {
+                            //指定新增哪些字段
+                            fields:['desc','time','event','u_id'],
+                            transaction: t
+                        }
+                    );
+
+                    //使用Ejs模板渲染注册成功邮件内容
+                    const registerHtml = await ejs.renderFile(
+                        path.join(__dirname, '../views/emails/registerSuccess.ejs'),
+                        { userEmail: userEmail, password: notEncryptedPassword }
+                    );
+
+                    //邮箱通知用户新注册账号的密码
+                    let resultInfo = {};
+                    mailOper.SendEmail({email:userEmail,subject:"账号注册成功通知",text:"",html:registerHtml},resultInfo)
+
+                    if(0 != resultInfo.statusCode)
                     {
-                        desc:statusCode.EVENT_LIST.USER_REGIST.desc,
-                        time:curDate,
-                        event:statusCode.EVENT_LIST.USER_REGIST.code,
-                        u_id:users.id
-                    },
-                    {
-                        //指定新增哪些字段
-                        fields:['desc','time','event','u_id'],
-                        transaction: t
+                        logger.error("mail send fail")
+                        output.success = statusCode.SERVICE_STATUS.MAIL_NOTIFICATION.success
+                        output.status = statusCode.SERVICE_STATUS.MAIL_NOTIFICATION.status
+                        output.description = statusCode.SERVICE_STATUS.MAIL_NOTIFICATION.description
+                        t.rollback();
                     }
-                );
-
-                //使用Ejs模板渲染注册成功邮件内容
-                const registerHtml = await ejs.renderFile(
-                    path.join(__dirname, '../views/emails/registerSuccess.ejs'),
-                    { userEmail: userEmail, password: notEncryptedPassword }
-                );
-
-                //邮箱通知用户新注册账号的密码
-                let resultInfo = {};
-                mailOper.SendEmail({email:userEmail,subject:"账号注册成功通知",text:"",html:registerHtml},resultInfo)
-
-                if(0 != resultInfo.statusCode)
-                {
-                    logger.error("mail send fail")
-                    output.success = statusCode.SERVICE_STATUS.MAIL_NOTIFICATION.success
-                    output.status = statusCode.SERVICE_STATUS.MAIL_NOTIFICATION.status
-                    output.description = statusCode.SERVICE_STATUS.MAIL_NOTIFICATION.description
-                    t.rollback();
+                    else
+                    {
+                        logger.info("mail send success,user account register success")
+                        output.success = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.success
+                        output.status = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.status
+                        output.description = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.description
+                        t.commit();
+                        //验证码使用后立即失效，防止重复注册
+                        await redisOper.RedisDel(verifyCodeKey)
+                    }
+                    
+                } catch (error) {
+                    logger.error(`用户注册出错${error}`)
+                    if (t) t.rollback();
+                    output.success = statusCode.SERVICE_STATUS.REGISTER_FAIL.success
+                    output.status = statusCode.SERVICE_STATUS.REGISTER_FAIL.status
+                    output.description = statusCode.SERVICE_STATUS.REGISTER_FAIL.description
                 }
-                else
-                {
-                    logger.info("mail send success,user account register success")
-                    output.success = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.success
-                    output.status = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.status
-                    output.description = statusCode.SERVICE_STATUS.REGISTER_SUCCESS.description
-                    t.commit();
-                }
-                
-            } catch (error) {
-                logger.error(`用户注册出错${error}`)
-                if (t) t.rollback();
-                output.success = statusCode.SERVICE_STATUS.REGISTER_FAIL.success
-                output.status = statusCode.SERVICE_STATUS.REGISTER_FAIL.status
-                output.description = statusCode.SERVICE_STATUS.REGISTER_FAIL.description
             }
         }
     }

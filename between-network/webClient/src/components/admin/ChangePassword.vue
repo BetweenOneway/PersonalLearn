@@ -21,7 +21,7 @@
                                 <n-input placeholder="请输入验证码" v-model:value="formValue.vc"></n-input>
                             </n-form-item-gi>
                             <n-form-item-gi >
-                                <n-button block @click="getEmailVC" :disabled="!isEmailMatched">获取验证码</n-button>
+                                <n-button block @click="getEmailVC" :disabled="!isEmailMatched || btnStatus.disabled">{{btnStatus.text}}</n-button>
                             </n-form-item-gi>
                         </n-grid>
                         <n-form-item label="新密码" v-show="currentStep === 2" path="password">
@@ -41,6 +41,16 @@
                         <n-text :type="passwordRule.length? 'success':'default'">2：新密码长度需在6-12位之间</n-text>
                     </n-flex>
                 </n-alert>
+                <!--第三步：修改成功提示-->
+                <n-result v-if="currentStep === 3"
+                    status="success"
+                    title="密码修改成功"
+                    description="您的登录密码已更新，请使用新密码重新登录。"
+                >
+                    <template #footer>
+                        <n-button type="primary" @click="relogin">重新登录</n-button>
+                    </template>
+                </n-result>
             </n-flex>
         </n-flex>
     </n-layout-content>
@@ -51,6 +61,10 @@
     import { useUserStore } from "@/stores/userStore"
     import { storeToRefs } from 'pinia'
     import { useMessage } from 'naive-ui'
+    import noteServerRequest  from "@/request"
+    import mailApi from "@/request/api/mailApi"
+    import userApi from "@/request/api/userApi"
+    import { useLoginModalStore } from "@/stores/loginModalStore"
 
     const currentStep = ref(1);
 
@@ -60,9 +74,45 @@
 
     const message = useMessage()
 
+    //验证码查询关键词
+    const verifyCodeToken = ref("")
+
+    //获取验证码按钮状态
+    const btnStatus = ref({
+        text:'获取验证码',
+        time:60,//倒计时剩余时间
+        disabled:false, //是否禁用
+        clock:null
+    })
+
+    const btnCountDown = ()=>{
+        btnStatus.value.clock = setInterval(()=>{
+            if(btnStatus.value.time == 1)
+            {
+                //重置按钮状态
+                resetBtnStatus()
+            }
+            else
+            {
+                //需要倒计时
+                btnStatus.value.disabled = true
+                btnStatus.value.time--
+                btnStatus.value.text = btnStatus.value.time + '秒重新获取'
+            }
+        },1000)
+    }
+
+    const resetBtnStatus = ()=>{
+        clearInterval(btnStatus.value.clock);
+
+        btnStatus.value.text = "获取验证码"
+        btnStatus.value.time = 60
+        btnStatus.value.disabled = false
+    }
+
     //判断输入的邮箱是否与当前登录用户邮箱一致
     const isEmailMatched = computed(()=>{
-        return formValue.email.trim().toLowerCase() === (currentUserEmail.value || '').trim().toLowerCase()
+        return (formValue.email || '').trim().toLowerCase() === (currentUserEmail.value || '').trim().toLowerCase()
     })
 
     const steps = [
@@ -103,7 +153,7 @@
                 message:"邮箱与当前登录用户不一致",
                 trigger:["input","blur"],
                 validator:(rule,value)=>{
-                    return value.trim().toLowerCase() === (currentUserEmail.value || '').trim().toLowerCase();
+                    return (value || '').trim().toLowerCase() === (currentUserEmail.value || '').trim().toLowerCase();
                 }
             }
         ],
@@ -144,17 +194,39 @@
 
     const formRef = ref(null);
 
-    const getEmailVC = ()=>{
+    const getEmailVC = async ()=>{
         //邮箱与当前登录用户不一致时，禁止发送验证码
         if(!isEmailMatched.value)
         {
             message.warning("输入的邮箱与当前登录用户邮箱不一致，无法获取验证码")
             return
         }
-        formRef.value?.validate(
-            error=>{},
-            rule=>rule?.key === 'emailFormat' || rule?.key === 'emailMatch'
+        //表单邮箱格式校验
+        await formRef.value?.validate(
+            (errors) => {
+                if (errors) {
+                    throw "表单验证失败"
+                }
+            },
+            //仅校验邮箱格式规则
+            (rule)=>{
+                return rule?.key === 'emailFormat';
+            }
         );
+
+        btnCountDown();
+        //获取请求API
+        let API = {...mailApi.getChangePwdVC}
+        API.params = {
+            userEmail:formValue.email
+        }
+
+        //发送请求
+        noteServerRequest(API).then(responseData =>{
+            if(!responseData) return;
+            //存储验证码关键词
+            verifyCodeToken.value = responseData.data.userToken
+        })
     }
 
     const submit = ()=>{
@@ -166,15 +238,85 @@
                 message.warning("输入的邮箱与当前登录用户邮箱不一致，请检查后重试")
                 return
             }
+            //校验邮箱格式、邮箱匹配、验证码是否已填写
             formRef.value?.validate(
-                error=>{},
+                (errors) => {
+                    if (errors) return;
+                    //未获取验证码时禁止进入下一步
+                    if(!verifyCodeToken.value)
+                    {
+                        message.warning("请先获取验证码")
+                        return
+                    }
+                    //向服务器校验验证码是否正确
+                    let API = {...userApi.verifyCode}
+                    API.data = {
+                        userEmail: formValue.email,
+                        verifyCode: formValue.vc,
+                        verifyCodeKey: verifyCodeToken.value
+                    }
+                    noteServerRequest(API).then(responseData=>{
+                        if(!responseData) return;
+                        if(responseData.success)
+                        {
+                            //验证码匹配，进入第二步
+                            currentStep.value = 2
+                        }
+                        else
+                        {
+                            //验证码不匹配或已过期，给出相应提示
+                            message.warning(responseData.description || "验证码不正确")
+                        }
+                    })
+                },
                 rule=>rule?.key === 'emailFormat' || rule?.key === 'emailMatch' || rule?.key === 'vc'
             );
         }
         else
         {
-            formRef.value?.validate();
+            //第二步：校验新密码与确认密码，并提交修改
+            formRef.value?.validate(
+                (errors) => {
+                    if (errors) return;
+                    if(formValue.password !== formValue.confirmPassword)
+                    {
+                        message.warning("两次输入的密码不一致")
+                        return
+                    }
+                    //提交修改密码请求
+                    let API = {...userApi.changePassword}
+                    API.data = {
+                        userEmail: formValue.email,
+                        verifyCode: formValue.vc,
+                        verifyCodeKey: verifyCodeToken.value,
+                        newPassword: formValue.password
+                    }
+                    noteServerRequest(API).then(responseData=>{
+                        if(!responseData) return;
+                        if(responseData.success)
+                        {
+                            //修改成功，进入第三步“修改成功”页面
+                            //先清空表单与验证码，避免敏感信息遗留
+                            formValue.email = ''
+                            formValue.vc = ''
+                            formValue.password = ''
+                            formValue.confirmPassword = ''
+                            verifyCodeToken.value = ''
+                            btnStatus.value.disabled = false
+                            currentStep.value = 3
+                        }
+                    })
+                }
+            );
         }
+    }
+
+    //重新登录：清空当前登录态并弹出登录框
+    const relogin = ()=>{
+        userStore.resetUserInfo()
+        const loginModalStore = useLoginModalStore()
+        loginModalStore.loginModalStep = 1
+        loginModalStore.changeLoginModalShow(true)
     }
 </script>
 

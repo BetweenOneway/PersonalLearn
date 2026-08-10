@@ -6,6 +6,14 @@ const mailApi = {
         userAuth:false,
         dataParam:false,
         successMessage:true
+    },
+    getChangePwdVC:{
+        name:'获取修改密码验证码',
+        url:'/user/SendChangePasswordVC',
+        method:'GET',
+        userAuth:false,
+        dataParam:false,
+        successMessage:true
     }
 }
 

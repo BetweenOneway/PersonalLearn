@@ -54,6 +54,22 @@ const userApi = {
         userAuth:true,
         dataParam:false,
         successMessage:true
+    },
+    changePassword:{
+        name:'修改密码',
+        url:'/user/ChangePassword',
+        method:'POST',
+        userAuth:false,
+        dataParam:true,
+        successMessage:true
+    },
+    verifyCode:{
+        name:'校验验证码',
+        url:'/user/VerifyCode',
+        method:'POST',
+        userAuth:false,
+        dataParam:true,
+        successMessage:false
     }
 }
 

@@ -85,7 +85,42 @@ SERVICE_STATUS={
     MAIL_USED:{
         success:false,
         status:'SERVICE_002',
-        description:'用户登录成功'
+        description:'邮箱已被注册'
+    },
+    MAIL_NOT_REGISTERED:{
+        success:false,
+        status:'SERVICE_018',
+        description:'该邮箱未注册，无法用于修改密码'
+    },
+    PARAMS_MISSING:{
+        success:false,
+        status:'SERVICE_019',
+        description:'请求参数缺失'
+    },
+    VERIFY_CODE_INVALID:{
+        success:false,
+        status:'SERVICE_020',
+        description:'验证码已过期或不存在'
+    },
+    VERIFY_CODE_WRONG:{
+        success:false,
+        status:'SERVICE_021',
+        description:'验证码不正确'
+    },
+    VERIFY_CODE_SUCCESS:{
+        success:true,
+        status:'SERVICE_024',
+        description:'验证码校验通过'
+    },
+    CHANGE_PWD_SUCCESS:{
+        success:true,
+        status:'SERVICE_022',
+        description:'密码修改成功'
+    },
+    CHANGE_PWD_FAIL:{
+        success:false,
+        status:'SERVICE_023',
+        description:'密码修改失败'
     },
     SEND_EMAIL_VC_FAIL:{
         success:true,
