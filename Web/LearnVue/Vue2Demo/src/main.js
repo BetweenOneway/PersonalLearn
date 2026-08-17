@@ -18,7 +18,7 @@ new Vue({
     }
 })
 
-//Vue挂在的第二种方式，与el效果相同
+//Vue挂载的第二种方式，与el效果相同
 /*
 const vm = new Vue()
 vue.$mount('#app')
