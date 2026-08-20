@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>align-items vs align-content 对比演示</title>
+  <style>
+    * {
+      margin: 10px;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .demo-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 20px 0 10px;
+    }
+
+    /* 公共容器样式：开启换行，形成多行布局 */
+    .flex-box {
+      width: 450px;
+      height: 400px;
+      border: 2px solid #0333;
+      display: flex;
+      flex-wrap: wrap; /* 开启换行，生成多行 */
+      background-color: #f0f0f0;
+    }
+
+    .item {
+      width: 120px;
+      /* 故意给不同高度，方便看出单行内的对齐效果 */
+      min-height: 40px;
+
+      /*这里的flex控制的是item的内容和父容器的flex没关系*/
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #a0c8ff;
+      border: 1px solid #02c5aa;
+    }
+
+    
+    .item:nth-child(2) { min-height: 70px; }
+    .item:nth-child(4) { min-height: 90px; }
+    .item:nth-child(6) { min-height: 50px; }
+   
+
+    /* 第一个演示：只设置align-items: center */
+    .demo-items {
+      align-items: center;
+    }
+
+    /* 第二个演示：只设置align-content: center */
+    .demo-content {
+      align-content: flex-start;
+      align-items: center;
+    }
+
+    .demo-content1 {
+      align-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <h3 class="demo-title">演示1：设置 align-items: center</h3>
+  <div class="flex-box demo-items">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+    <div class="item">6</div>
+    <div class="item">7</div>
+    <div class="item">8</div>
+  </div>
+
+    <h3 class="demo-title">演示2：设置 align-content: center</h3>
+    <div class="flex-box demo-content">
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+        <div class="item">5</div>
+        <div class="item">6</div>
+        <div class="item">7</div>
+        <div class="item">8</div>
+    </div>
+
+    <h3 class="demo-title">演示3：设置 align-content: center</h3>
+    <div class="flex-box demo-content1">
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+    </div>
+</body>
+</html>
