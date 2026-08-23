@@ -50,23 +50,6 @@
                         </div>
                     </n-space>
                 </n-card>
-
-                <n-card class="zone-card" title="原力等级" v-show="false">
-                    <n-space vertical :size="8">
-                        <div class="force-row">
-                            <span class="force-label">原力等级</span>
-                            <span class="force-value">{{ userInfo.forceLevel }}</span>
-                        </div>
-                        <div class="force-row">
-                            <span class="force-label">原力分</span>
-                            <span class="force-value">{{ userInfo.forceScore }}</span>
-                        </div>
-                        <div class="force-row">
-                            <span class="force-label">本月获得</span>
-                            <span class="force-value">{{ userInfo.forceMonth }}</span>
-                        </div>
-                    </n-space>
-                </n-card>
             </div>
 
             <!-- 右侧主内容 -->
@@ -242,10 +225,7 @@
         fans: '60,250',
         follows: '1,973',
         likes: '65,285',
-        collects: '220,065',
-        forceLevel: 9,
-        forceScore: 27779,
-        forceMonth: 1228
+        collects: '220,065'
     });
 
     // 根据 authorId 调用接口获取作者信息，避免通过地址栏传递 author 对象
@@ -579,54 +559,6 @@
 }
 
 .post-item {
-    padding-bottom: 16px;
-    border-bottom: 1px solid #f0f0f2;
-}
-
-.post-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-.post-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #222;
-    cursor: pointer;
-}
-
-.post-title:hover {
-    color: #2080f0;
-}
-
-.post-summary {
-    margin: 8px 0 0;
-    font-size: 13px;
-    line-height: 1.6;
-    color: #666;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.post-meta {
-    margin-top: 10px;
-}
-
-.meta-text {
-    font-size: 13px;
-    color: #999;
-}
-
-/* 文章列表 */
-.post-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.post-item {
     padding: 18px 20px;
     background: #fff;
     border: 1px solid #eef0f4;
@@ -644,6 +576,11 @@
     font-size: 17px;
     font-weight: 600;
     color: #2c3e50;
+    cursor: pointer;
+}
+
+.post-title:hover {
+    color: #2080f0;
 }
 
 .post-summary {
@@ -653,12 +590,18 @@
     color: #666;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
 .post-meta {
     margin-top: 10px;
+}
+
+.meta-text {
+    font-size: 13px;
+    color: #999;
 }
 
 /* 响应式 */

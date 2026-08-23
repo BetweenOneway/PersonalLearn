@@ -140,18 +140,20 @@
         API.timeout = 10000;
         //发送请求
         try {
-            await noteServerRequest(API).then(responseData =>{
-                if(!responseData)
-                {
-                    return;
-                }
-                //关闭登陆对话框
-                changeLoginModalShow(false)
-                //将Redis中的用户token存储到本地
-                //localStorage.setItem("userToken",responseData.userToken)
-                
-                setUserInfo(responseData.userToken,responseData.userInfo)
-            })
+            const responseData = await noteServerRequest(API);
+            if(!responseData)
+            {
+                //后端返回 success:false（如账号密码不匹配）时，封装层返回 null
+                //这里用页面内的错误提示框展示，避免没有任何反馈
+                loginErrorMsg.value = '账号或密码错误，请重新输入';
+                return;
+            }
+            //关闭登陆对话框
+            changeLoginModalShow(false)
+            //将Redis中的用户token存储到本地
+            //localStorage.setItem("userToken",responseData.userToken)
+            
+            setUserInfo(responseData.userToken,responseData.userInfo)
         } catch (error) {
             //网络错误、超时等异常情况
             console.log('登录请求异常:', error);
