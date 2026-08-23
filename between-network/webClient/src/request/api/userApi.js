@@ -63,6 +63,14 @@ const userApi = {
         dataParam:true,
         successMessage:true
     },
+    resetPassword:{
+        name:'找回密码',
+        url:'/user/ResetPassword',
+        method:'POST',
+        userAuth:false,
+        dataParam:true,
+        successMessage:true
+    },
     verifyCode:{
         name:'校验验证码',
         url:'/user/VerifyCode',

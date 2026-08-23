@@ -444,6 +444,94 @@ router.post("/ChangePassword",async (req,res)=>{
     res.send(output)
 })
 
+//找回密码（邮箱已注册 + 验证码校验，不要求旧密码）
+router.post("/ResetPassword",async (req,res)=>{
+    logger.info(`用户找回密码=>${JSON.stringify(req.body)}`);
+    var userEmail = req.body?.userEmail??""
+    let verifyCode = req.body?.verifyCode??""
+    let verifyCodeKey = req.body?.verifyCodeKey??""   //对应发送验证码时返回的 Redis key（ChangePwdToken:...）
+    let newPassword = req.body?.newPassword??""
+
+    let output={
+        success:false,
+        status:"",
+        description:""
+    }
+
+    try {
+        //参数校验（找回密码无需旧密码）
+        if(userEmail.length == 0 || verifyCode.length == 0 || verifyCodeKey.length == 0 || newPassword.length == 0)
+        {
+            output.success = statusCode.SERVICE_STATUS.PARAMS_MISSING.success
+            output.status = statusCode.SERVICE_STATUS.PARAMS_MISSING.status
+            output.description = statusCode.SERVICE_STATUS.PARAMS_MISSING.description
+        }
+        else
+        {
+            //校验验证码：从 Redis 取出发送时保存的验证码并比对
+            let redisVerifyCode = await redisOper.RedisGet(verifyCodeKey)
+            if(redisVerifyCode == null)
+            {
+                //验证码已过期或不存在
+                output.success = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.success
+                output.status = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.status
+                output.description = statusCode.SERVICE_STATUS.VERIFY_CODE_INVALID.description
+            }
+            else if(redisVerifyCode != verifyCode)
+            {
+                //验证码不匹配
+                output.success = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.success
+                output.status = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.status
+                output.description = statusCode.SERVICE_STATUS.VERIFY_CODE_WRONG.description
+            }
+            else
+            {
+                //验证码正确，更新密码
+                const matchedUserCount = await sqldb.User.count({ where:{ email:userEmail } })
+                if(matchedUserCount != 1)
+                {
+                    output.success = statusCode.SERVICE_STATUS.MAIL_NOT_REGISTERED.success
+                    output.status = statusCode.SERVICE_STATUS.MAIL_NOT_REGISTERED.status
+                    output.description = statusCode.SERVICE_STATUS.MAIL_NOT_REGISTERED.description
+                }
+                else
+                {
+                    let t;
+                    try {
+                        t = await sqldb.sequelize.transaction();
+                        const encryptedPassword = cryptPwd(newPassword)
+                        await sqldb.User.update(
+                            { password: encryptedPassword },
+                            {
+                                where:{ email:userEmail },
+                                transaction: t
+                            }
+                        )
+                        //验证码使用后立即失效
+                        await redisOper.RedisDel(verifyCodeKey)
+                        await t.commit()
+                        output.success = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.success
+                        output.status = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.status
+                        output.description = statusCode.SERVICE_STATUS.CHANGE_PWD_SUCCESS.description
+                    } catch (error) {
+                        logger.error(`找回密码出错${error}`)
+                        if (t) t.rollback();
+                        output.success = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.success
+                        output.status = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.status
+                        output.description = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.description
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        logger.error(`找回密码出错${error}`)
+        output.success = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.success
+        output.status = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.status
+        output.description = statusCode.SERVICE_STATUS.CHANGE_PWD_FAIL.description
+    }
+    res.send(output)
+})
+
 //校验验证码（仅核验是否正确，不失效 key，供进入下一步前预校验）
 router.post("/VerifyCode",async (req,res)=>{
     logger.info(`校验验证码=>${JSON.stringify(req.body)}`);

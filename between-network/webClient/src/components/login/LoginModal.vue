@@ -1,6 +1,6 @@
 <template>
     <n-modal v-model:show="showLoginModal" :mask-closeable="false" transform-origin="center" :close-on-esc="false">
-        <div style="width:420px">
+        <div class="login-modal-content">
             <Transition name="bounce" mode="out-in">
                 <component :is="showLoginModalCard" @changeStep="changeLoginModalStep"/>
             </Transition>
@@ -15,6 +15,7 @@
     import Login from '@/components/login/Login.vue'
     import Register from '@/components/login/Register.vue'
     import RegisterSuccess from '@/components/login/RegisterSuccess.vue'
+    import ForgotPassword from '@/components/login/ForgotPassword.vue'
     import {useLoginModalStore} from "@/stores/loginModalStore"
 
     //登录模态框 共享资源对象
@@ -33,8 +34,14 @@
             case 2:
                 return Register;
                 break;
-            default:
+            case 3:
                 return RegisterSuccess;
+                break;
+            case 4:
+                return ForgotPassword;
+                break;
+            default:
+                return Login;
                 break;
         }
     })
@@ -47,6 +54,9 @@
 </script>
 
 <style>
+    .login-modal-content {
+        width: 440px;
+    }
     .bounce-enter-active {
         animation: bounce-in 0.5s;
     }

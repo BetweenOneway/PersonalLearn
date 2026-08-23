@@ -10,7 +10,7 @@
         <!--登录失败提示-->
         <n-alert v-if="loginErrorMsg" type="error" :title="loginErrorMsg" closable @after-leave="loginErrorMsg = ''" style="margin-bottom: 12px;" />
         <!--登录表单-->
-        <n-form :model="loginFormValue" :rules="loginFormRules" ref="loginFormRef">
+        <n-form :model="loginFormValue" :rules="loginFormRules" ref="loginFormRef" class="login-form">
             <n-form-item label="邮箱" path="email" first>
                 <n-input placeholder="请输入邮箱" v-model:value="loginFormValue.email">
                     <template #prefix>
@@ -38,10 +38,27 @@
         </n-form>
 
         <n-space justify="center" style="cursor:pointer">
-            <n-text depth="3">忘记密码</n-text>
+            <n-text depth="3" @click="emits('changeStep',4)">忘记密码</n-text>
         </n-space>
     </n-card>
 </template>
+
+<style scoped>
+    :deep(.n-card) {
+        padding: 28px 32px;
+    }
+    :deep(.n-card-header) {
+        padding-bottom: 8px;
+    }
+    h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 600;
+    }
+    .login-form {
+        margin-top: 8px;
+    }
+</style>
 
 <script setup>
     import {EmailOutlined, LockOpenOutlined} from "@vicons/material"
