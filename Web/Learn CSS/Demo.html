@@ -14,6 +14,7 @@
       --radius: 8px;
       --shadow: 0 2px 12px rgba(0,0,0,0.1);
     }
+
     /* 通配选择器，统一盒模型，清除内外边距默认值 */
     * {
       margin: 0;
@@ -21,18 +22,23 @@
       /* border-box：宽高包含border+padding，业务首选；content-box 默认，宽高仅内容区 */
       box-sizing: border-box;
     }
+
     html {
       font-size: 16px; /* rem基准字号 */
       line-height: 1.5; /* 行高继承，优化文本可读性 */
       scroll-behavior: smooth; /* 锚点平滑滚动 */
     }
+
     body {
       font-family: system-ui, -apple-system, sans-serif; /* 系统无衬线字体，跨平台兼容 */
       color: #333;
       background-color: #f5f7fa;
     }
+
     ul { list-style: none; } /* 清除列表圆点 */
+
     a { text-decoration: none; color: inherit; } /* 清除下划线，颜色继承父级 */
+    
     img { max-width: 100%; display: block; } /* 图片自适应，消除底部空白缝隙 */
 
     /* ===================== 2. 选择器 + 权重优先级示范 ===================== */
