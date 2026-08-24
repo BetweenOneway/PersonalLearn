@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <style>
+            .wrapper {
+                width: 600px;    /* Grid容器总宽：600px */
+                height: 300px;
+                border: 2px solid #333;
+
+                display: grid;
+                /* 定义2列，每列150px → 轨道总宽 = 300px ＜ 容器600px，justify-content 生效 */
+                grid-template-columns: 150px 150px;
+                grid-template-rows: 100px 100px;
+                gap: 8px;
+
+                /* ========= 修改这两行看效果 ========= */
+                justify-content: center; /* 控制的是整个grid单元格在横向上的排列方式（也可以理解成竖直轨道的排列方式） */
+                justify-items: center;/*控制的是项目在单元格内的横向排列*/
+                align-content: center;/*控制的是整个grid单元格在垂直方向上的排列*/
+                align-items: center;/*控制的是项目在单元格内的垂直向排列*/
+            }
+
+            .item {
+                width: 80px;
+                height: 60px;
+                background: #42b983;
+                color: #fff;
+                line-height: 60px;
+                text-align: center;
+            }
+
+            .wrapper .item:nth-child(3){
+                justify-self: start;
+                align-self: start;
+            }
+
+            .flex-container{
+                width: 400px;    /* Grid容器总宽：600px */
+                height: 300px;
+                border: 2px solid #333;
+                display: flex;
+                flex-wrap:wrap;
+                gap: 8px;
+
+                justify-content: center;/*控制的是所有项目在主轴上的排列方式*/
+                align-items: flex-end;/*控制的是所有项目在交叉轴上的排列方式*/
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="item">1</div>
+            <div class="item">2</div>
+            <div class="item">3</div>
+            <div class="item">4</div>
+        </div>
+
+        <div class="flex-container">
+            <div class="item">1</div>
+            <div class="item">2</div>
+            <div class="item">3</div>
+            <div class="item">4</div>
+            <div class="item">5</div>
+            <div class="item">6</div>
+        </div>
+    </body>
+</html>
