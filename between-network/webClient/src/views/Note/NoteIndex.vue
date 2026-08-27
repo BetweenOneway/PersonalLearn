@@ -1,7 +1,7 @@
 <template>
     <div class="note-container">
         <n-layout has-sider style="height: 100%;">
-            <!--笔记本列表及功能页-->
+        <!--笔记本列表及功能页-->
             <!--菜单列-->
             <n-layout-sider
             bordered
@@ -25,7 +25,13 @@
                             </template>
                             <n-menu :options="createMenu" :indent="18" :on-update:value="clickCreateMenu" />
                         </n-popover>
+                        
                         <n-divider style="margin:15px auto"></n-divider>
+                        <div style="padding-left: 28px;">
+                            <n-button text size="large" style="height: 30px;" @click="showDirary" >
+                                日历
+                            </n-button>
+                        </div>
                         <div style="padding-left: 28px;">
                             <n-button text size="large" style="height: 30px;" @click="getRecentNoteList(false)" >
                                 最近文件
@@ -49,9 +55,16 @@
                     </div>
                 </div>
             </n-layout-sider>
+
             <!--笔记列表及编辑器容器-->
             <n-layout-content>
-                <n-layout position="absolute" has-sider v-if="!isRecycleBinView">
+                <n-layout position="absolute" v-if="isCalendarView" class="calendar-layout">
+                    <Dirary></Dirary>
+                </n-layout>
+                <n-layout has-sider v-else-if="isRecycleBinView">
+                    <Dumpster></Dumpster>
+                </n-layout>
+                <n-layout position="absolute" has-sider v-else>
                     <!--笔记列表容器-->
                     <n-layout-sider
                         bordered
@@ -119,9 +132,6 @@
                         :change-state="isChangeEditNote"/>
                     </n-layout-content>
                 </n-layout>
-                <n-layout has-sider v-else>
-                    <Dumpster></Dumpster>
-                </n-layout>
             </n-layout-content>
         </n-layout>
 
@@ -165,6 +175,8 @@
     import Dumpster from "@/components/dumpster/Dumpster.vue";
     import DeleteRemindDialog from "@/components/remind/DeleteRemindDialog.vue";
 
+    import Dirary from "@/components/dirary/Dirary.vue";
+    
     import { useDeleteRemindDialogStore } from "@/stores/deleteRemindDialogStore";
     import { storeToRefs } from 'pinia';
 
@@ -182,6 +194,9 @@
 
     //是否是回收站列表
     const isRecycleBinView = ref(false)
+
+    //是否是日历模式
+    const isCalendarView = ref(false)
 
     //是否显示新建子菜单
     const createMenuShow = ref(false)
@@ -554,6 +569,13 @@
         notebookTree.value.ClearSelectNode();
     }
 
+    //显示笔记界面
+    function showDirary()
+    {
+        isCalendarView.value = true;
+        notebookTree.value.ClearSelectNode();
+    }
+
     async function Init()
     {
         console.log("Note Index view init");
@@ -627,5 +649,14 @@
     .recycle-btn {
         width: calc(100% - 24px);
         padding-left: 28px;
+    }
+
+    /* 日历视图撑满内容区，避免出现滚动条 */
+    .calendar-layout {
+        height: 100%;
+    }
+
+    .calendar-layout > :deep(.n-layout) {
+        height: 100%;
     }
 </style>

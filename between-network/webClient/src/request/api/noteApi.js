@@ -95,6 +95,32 @@ const noteApi = {
         dataParam:false,
         successMessage:true
     },
+
+    // ===== 日记 / 待办（暂保留接口，未实现后端） =====
+    getDiary:{
+        name:'获取日记与待办',
+        url:'/note/getDiary',
+        method:'GET',
+        userAuth:true,
+        dataParam:true,
+        successMessage:false
+    },
+    saveDiary:{
+        name:'保存日记与待办',
+        url:'/note/saveDiary',
+        method:'POST',
+        userAuth:true,
+        dataParam:false,
+        successMessage:true
+    },
+    deleteDiary:{
+        name:'删除日记',
+        url:'/note/deleteDiary',
+        method:'POST',
+        userAuth:true,
+        dataParam:true,
+        successMessage:true
+    },
 }
 
 export default noteApi
