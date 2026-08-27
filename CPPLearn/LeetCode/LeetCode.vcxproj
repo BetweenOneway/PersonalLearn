@@ -139,8 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="index.cpp" />
     <ClCompile Include="MinimumWindowSubstring.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="Index.h" />
+    <ClInclude Include="MinimumWindowSubstring.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
