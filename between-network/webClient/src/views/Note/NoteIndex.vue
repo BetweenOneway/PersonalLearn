@@ -12,7 +12,7 @@
                     <!-- 顶部：新建 + 最近文件 -->
                     <div class="sidebar-top">
                         <!--新增按钮-->
-                        <n-popover v-model:show = "createMenuShow" trigger="click">
+                        <n-popover v-model:show = "createMenuShow" trigger="click" placement="bottom-start">
                             <template #trigger>
                                 <n-button type="primary" text size="large" style="margin-top: 20px;">
                                     <template #icon>

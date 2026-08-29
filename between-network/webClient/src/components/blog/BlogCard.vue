@@ -3,11 +3,7 @@
         <n-card>
             <!-- 顶部：头像 + 标题/作者 -->
             <div class="card-head">
-                <n-avatar :size="48" class="blog-avatar">
-                    <n-icon :size="26">
-                        <FileAltRegular />
-                    </n-icon>
-                </n-avatar>
+
                 <div class="card-head-text">
                     <n-ellipsis line-clamp="1">
                         <span class="card-title" @click.stop="GotoBlogView(blog.id)">
@@ -59,12 +55,14 @@
 .blog-card {
     cursor: pointer;
     border-radius: 8px;
+    height: 100%;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .blog-card :deep(.n-card) {
     border: none;
     border-radius: 8px;
+    height: 100%;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fc 100%);
     transition: box-shadow 0.25s ease;
@@ -86,6 +84,7 @@
     align-items: center;
     gap: 14px;
     margin-bottom: 10px;
+    height: 48px;
 }
 
 .blog-avatar {
@@ -99,7 +98,10 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 4px;
+    height: 100%;
+    overflow: hidden;
 }
 
 .card-title {
@@ -118,11 +120,18 @@
 .card-meta {
     font-size: 12px;
     color: #9ca3af;
+    /* 防止作者名过长换行撑高头部 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* ===== 正文摘要 ===== */
 .card-body {
+    display: block;
     margin-bottom: 14px;
+    /* 锁定 2 行摘要高度，配合 n-ellipsis line-clamp 让所有卡片正文高度一致 */
+    height: calc(13px * 1.7 * 2);
 }
 
 .card-content {
