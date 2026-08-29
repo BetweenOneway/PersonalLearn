@@ -46,46 +46,17 @@
                 size="small"
                 description="暂无待办，点击新增"
               />
-              <n-list v-else>
-                <n-list-item v-for="todo in currentDay.todos" :key="todo.id">
-                  <div class="dirary-todo-item">
-                    <n-checkbox
-                      v-if="!todo.editing"
-                      :checked="todo.done"
-                      @update:checked="val => toggleTodo(todo, val)"
-                    >
-                      <span :class="{ 'todo-done': todo.done }">{{ todo.text }}</span>
-                    </n-checkbox>
-                    <n-input
-                      v-else
-                      v-model:value="todo.text"
-                      size="small"
-                      class="dirary-todo-edit"
-                      :ref="el => setTodoInputRef(el, todo.id)"
-                      @keyup.enter="confirmEditTodo(todo)"
-                    />
-
-                    <div class="dirary-todo-actions">
-                      <template v-if="!todo.editing">
-                        <n-button text size="tiny" type="primary" @click="startEditTodo(todo)">
-                          编辑
-                        </n-button>
-                        <n-button text size="tiny" type="error" @click="removeTodo(todo)">
-                          删除
-                        </n-button>
-                      </template>
-                      <template v-else>
-                        <n-button text size="tiny" type="primary" @click="confirmEditTodo(todo)">
-                          确定
-                        </n-button>
-                        <n-button text size="tiny" @click="cancelEditTodo(todo)">
-                          取消
-                        </n-button>
-                      </template>
-                    </div>
-                  </div>
-                </n-list-item>
-              </n-list>
+              <div v-else class="dirary-todo-list">
+                <TodoItem
+                  v-for="todo in currentDay.todos"
+                  :key="todo.id"
+                  :todo="todo"
+                  :depth="0"
+                  @change="persistCurrent"
+                  @remove="removeTodo"
+                  @cancel="cancelEditTodo"
+                />
+              </div>
             </n-scrollbar>
           </n-collapse-item>
 
@@ -114,12 +85,13 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, nextTick } from "vue";
+import { ref, computed, reactive, provide } from "vue";
 import { useMessage, NIcon } from "naive-ui";
 import { addDays, isYesterday, format } from "date-fns";
 import { AddBoxRound } from "@vicons/material";
 import noteApi from '@/request/api/noteApi';
 import noteServerRequest from '@/request';
+import TodoItem from './TodoItem.vue';
 
 const message = useMessage();
 
@@ -199,28 +171,25 @@ function isDateDisabled(timestamp) {
   return false;
 }
 
-// 待办自增 id
+// 待办自增 id（父子级共用，统一在此生成，通过 provide 提供给递归子组件）
 let todoIdSeq = 1;
-
-// 收集编辑态输入框实例：{ [todoId]: inputComponent }
-const todoInputRefs = {};
-
-function setTodoInputRef(el, id) {
-  if (el) {
-    todoInputRefs[id] = el;
-  } else {
-    delete todoInputRefs[id];
-  }
+function nextTodoId() {
+  return todoIdSeq++;
 }
+// 提供给 TodoItem 递归组件用于生成子项 id
+provide("nextTodoId", nextTodoId);
 
-// 进入编辑模式后将焦点放到输入框
-function focusTodoInput(id) {
-  nextTick(() => {
-    const input = todoInputRefs[id];
-    if (input && typeof input.focus === "function") {
-      input.focus();
+// 在待办树中查找目标节点及其所属父列表
+function findTodoInTree(list, target) {
+  for (let i = 0; i < list.length; i++) {
+    if (list[i] === target) return list;
+    const children = list[i].children;
+    if (children && children.length) {
+      const found = findTodoInTree(children, target);
+      if (found) return found;
     }
-  });
+  }
+  return null;
 }
 
 // 待办发生确认性变更后，自动保存到后端
@@ -234,41 +203,21 @@ async function persistCurrent() {
   }
 }
 
+// 新增顶层待办（默认进入编辑模式）
 function addTodo() {
-  const id = todoIdSeq++;
   currentDay.value.todos.push({
-    id,
+    id: nextTodoId(),
     text: "",
     done: false,
     editing: true,
+    children: [],
+    _expanded: true,
   });
-  focusTodoInput(id);
-}
-
-function toggleTodo(todo, val) {
-  todo.done = val;
   persistCurrent();
 }
 
-function startEditTodo(todo) {
-  todo._backup = todo.text;
-  todo.editing = true;
-  focusTodoInput(todo.id);
-}
-
-function confirmEditTodo(todo) {
-  const text = (todo.text || "").trim();
-  if (!text) {
-    message.warning("待办内容不能为空");
-    return;
-  }
-  todo.text = text;
-  todo.editing = false;
-  persistCurrent();
-}
-
+// 取消编辑：新增空项移除，已有项还原
 function cancelEditTodo(todo) {
-  // 新增项（无备份文本）取消时直接移除，避免留下空待办
   if (todo._backup === undefined) {
     removeTodo(todo);
     return;
@@ -277,10 +226,13 @@ function cancelEditTodo(todo) {
   todo.editing = false;
 }
 
+// 删除待办（支持任意层级）
 function removeTodo(todo) {
-  const list = currentDay.value.todos;
-  const idx = list.findIndex(t => t.id === todo.id);
-  if (idx !== -1) list.splice(idx, 1);
+  const list = findTodoInTree(currentDay.value.todos, todo);
+  if (list) {
+    const idx = list.findIndex(t => t === todo);
+    if (idx !== -1) list.splice(idx, 1);
+  }
   persistCurrent();
 }
 
@@ -415,6 +367,12 @@ async function deleteDiary() {
   flex: 1;
   min-height: 0;
   max-height: 240px;
+}
+
+.dirary-todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .dirary-todo-item {
