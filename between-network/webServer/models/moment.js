@@ -17,10 +17,14 @@ module.exports = function(sequelize,DataTypes){
             }
         },
         content:{
-            type:DataTypes.TEXT
+            type:DataTypes.TEXT,
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_general_ci'
         },
         images:{
             type:DataTypes.STRING(2000),
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_general_ci',
             comment: '说说配图，多个以英文逗号分隔'
         },
         time:{

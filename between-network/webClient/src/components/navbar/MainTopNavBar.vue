@@ -9,7 +9,7 @@
             <n-popover v-model:show = "userMenuShow" trigger="click" width="260px" content-style="padding:10px">
                 <template #trigger>
                     <n-button circle :bordered="false">
-                        <n-avatar v-if="user_id !== null" round :src="head_image==''?'https://cdn.vuetifyjs.com/images/john.jpg':head_image"/>
+                        <n-avatar v-if="user_id !== null" round :src="head_image"/>
                     </n-button>
                 </template>
                 <n-thing :title="userNickName">
@@ -99,7 +99,12 @@
         {
             key:'info-manage',
             icon:renderIcon(AccountBoxFilled),
-            label:'管理'
+            label:'信息管理'
+        },
+        {
+            key:'my-zone',
+            icon:renderIcon(AccountBoxFilled),
+            label:'我的空间'
         },
         {
             key:'sign-out',
@@ -120,6 +125,9 @@
                 break;
             case 'info-manage':
                 toHerf('/admin')
+                break;
+            case 'my-zone':
+                toHerf(`/zone/${user_id.value}`)
                 break;
         }
     }

@@ -174,13 +174,13 @@ CREATE TABLE IF NOT EXISTS `moment` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
   `u_id` bigint NOT NULL COMMENT '发表说说的用户编号（雪花ID）',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '说说内容',
-  `images` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '说说配图，多个以英文逗号分隔',
+  `images` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '说说配图，多个以英文逗号分隔',
   `time` datetime NOT NULL COMMENT '发布时间',
   `status` int NULL DEFAULT 1 COMMENT '状态【0：已删除，1：正常】',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_moment_user_time`(`u_id`, `time`) USING BTREE COMMENT '按用户查询说说',
   CONSTRAINT `moment_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '说说表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '说说表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for blacklist
@@ -295,5 +295,12 @@ INSERT IGNORE INTO `user` (`id`,`email`, `password`, `nickname`, `head_pic`, `le
 CREATE USER IF NOT EXISTS 'cloudnote'@'%' IDENTIFIED BY 'cloudnote123';
 GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, INDEX, REFERENCES ON cloudnote.* TO 'cloudnote'@'%';
 FLUSH PRIVILEGES;
+
+-- ----------------------------
+-- 字符集兜底：将已存在的表/列统一修正为 utf8mb4，支持 emoji 等 4 字节字符
+-- （CREATE TABLE IF NOT EXISTS 不会修改已存在的表，故这里用 ALTER 幂等兜底）
+-- ----------------------------
+ALTER TABLE `moment` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+ALTER TABLE `moment` MODIFY `images` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '说说配图，多个以英文逗号分隔';
 
 SET FOREIGN_KEY_CHECKS = 1;

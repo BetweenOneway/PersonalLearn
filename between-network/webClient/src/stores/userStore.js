@@ -27,7 +27,7 @@ export const useUserStore = defineStore(
             console.log("get user headPic:",headPic.value);
             if(!headPic.value)
             {
-                return "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+                return "https://cdn.vuetifyjs.com/images/john.jpg"
             }
             else{
                 return headPic.value

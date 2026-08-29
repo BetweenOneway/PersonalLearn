@@ -56,16 +56,34 @@
             <div class="zone-main">
                 <n-card class="zone-card">
                     <div v-if="isOwner" class="publisher-box">
-                        <n-input
-                            class="publisher-input"
-                            type="textarea"
-                            :rows="2"
-                            placeholder="随便说点儿什么"
-                            :bordered="false"
-                            :resizable="false"
-                            v-model:value="momentInput"
-                            @keydown.ctrl.enter="submitMoment"
-                        />
+                        <div class="publisher-edit">
+                            <n-input
+                                ref="momentInputRef"
+                                class="publisher-input"
+                                type="textarea"
+                                :rows="2"
+                                placeholder="随便说点儿什么"
+                                :bordered="false"
+                                :resizable="false"
+                                v-model:value="momentInput"
+                                @keydown.ctrl.enter="submitMoment"
+                            />
+                            <n-button
+                                class="publisher-emoji-btn"
+                                circle
+                                tertiary
+                                :focusable="false"
+                                @click.stop="emojiPanelShow = !emojiPanelShow"
+                            >😊</n-button>
+                            <div v-if="emojiPanelShow" class="emoji-panel" @click.stop>
+                                <div
+                                    v-for="emoji in emojiList"
+                                    :key="emoji"
+                                    class="emoji-item"
+                                    @click="insertEmoji(emoji)"
+                                >{{ emoji }}</div>
+                            </div>
+                        </div>
                         <div class="publisher-actions">
                             <n-button
                                 type="primary"
@@ -112,7 +130,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <n-empty v-else description="暂未说说" />
+                            <n-empty v-else description="暂未发表任何说说" />
                         </n-tab-pane>
                     </n-tabs>
                 </n-card>
@@ -122,7 +140,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, computed } from 'vue';
+    import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
     import { storeToRefs } from 'pinia';
     import {
         EmojiEventsOutlined,
@@ -166,8 +184,38 @@
 
     // 说说发布相关
     const momentInput = ref('');
+    const momentInputRef = ref(null);
     const submittingMoment = ref(false);
     const momentList = ref([]);
+
+    // emoji 表情面板
+    const emojiPanelShow = ref(false);
+    const emojiList = [
+        '😀','😁','😂','🤣','😊','😍','😘','😜','🤔','😎','😭','😡',
+        '👍','👎','👌','🙏','👏','💪','🤝','✌️','🤞','❤️','💔','💕',
+        '🔥','⭐','✨','🌟','🎉','🎊','💡','📚','✅','❌','⚡','🌈',
+        '🍻','☕','🍰','🌹','🌸','🍀','🐱','🐶','🚀','💰','📝','🎁'
+    ];
+
+    // 在输入框光标处插入 emoji
+    function insertEmoji(emoji) {
+        const inputEl = momentInputRef.value;
+        const textarea = inputEl
+            ? (inputEl.textareaEl$ || inputEl.textareaElRef || inputEl.textareaEl)
+            : null;
+        const value = momentInput.value;
+        const start = textarea ? textarea.selectionStart : value.length;
+        const end = textarea ? textarea.selectionEnd : value.length;
+        momentInput.value = value.slice(0, start) + emoji + value.slice(end);
+        // 插入后把光标移动到 emoji 之后
+        requestAnimationFrame(() => {
+            if (textarea) {
+                const pos = start + emoji.length;
+                textarea.focus();
+                textarea.setSelectionRange(pos, pos);
+            }
+        });
+    }
 
     // 加载说说列表
     async function loadMoments() {
@@ -285,7 +333,17 @@
         loadAuthor();
         loadArticles();
         loadMoments();
+        document.addEventListener('click', closeEmojiPanelOnOutside);
     });
+
+    onBeforeUnmount(() => {
+        document.removeEventListener('click', closeEmojiPanelOnOutside);
+    });
+
+    // 点击表情面板外部时关闭面板
+    function closeEmojiPanelOnOutside() {
+        if (emojiPanelShow.value) emojiPanelShow.value = false;
+    }
 </script>
 
 <style scoped>
@@ -457,6 +515,62 @@
 .publisher-input {
     flex: 1;
     min-width: 0;
+}
+
+/* 编辑区（输入框 + emoji 按钮 + 面板） */
+.publisher-edit {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.publisher-emoji-btn {
+    flex-shrink: 0;
+    align-self: center;
+    color: #999;
+}
+
+.publisher-emoji-btn:hover {
+    color: #357abd;
+}
+
+/* emoji 选择面板 */
+.emoji-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 20;
+    width: 280px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 8px;
+    padding: 8px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+    background: #fff;
+    border: 1px solid #e8eaed;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.emoji-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.emoji-item:hover {
+    background: #f0f4f8;
 }
 
 .publisher-input :deep(.n-input-wrapper) {
