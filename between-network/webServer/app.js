@@ -21,6 +21,7 @@ const blacklist = require('./routes/blacklist');
 const like = require('./routes/like');
 const subscribe = require('./routes/subscribe');
 const moment = require('./routes/moment');
+const diary = require('./routes/diary');
 
 const sequelizeTest = require("./routes/sequelizeTest")
 
@@ -141,6 +142,8 @@ app.use('/like',like);
 app.use('/subscribe',subscribe);
 //说说
 app.use('/moment',moment);
+//日记与待办事项
+app.use('/diary',diary);
 //CKEditor编辑器
 app.use("/ckeditor",CKEditor)
 //回收站操作

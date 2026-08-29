@@ -235,6 +235,40 @@ CREATE TABLE IF NOT EXISTS `subscribe` (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订阅（关注）表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
+-- Table structure for diary
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `diary` (
+  `id` bigint NOT NULL COMMENT '编号（雪花ID）',
+  `diary_date` date NOT NULL COMMENT '日记所属日期（yyyy-MM-dd）',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '日记内容',
+  `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
+  `create_time` datetime NOT NULL COMMENT '初次创建时间',
+  `update_time` datetime NOT NULL COMMENT '最后修改时间',
+  `status` int NULL DEFAULT 1 COMMENT '状态【0：被删除，1：正常】',
+  `type` int NULL DEFAULT 3 COMMENT '类型【3：日记】',
+  UNIQUE INDEX `diary_pk`(`id`) USING BTREE,
+  UNIQUE INDEX `diary_user_date_uk`(`u_id`, `diary_date`) USING BTREE COMMENT '同一用户同一天仅一篇日记',
+  CONSTRAINT `diary_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '日记表' ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Table structure for todo
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `todo` (
+  `id` bigint NOT NULL COMMENT '编号（雪花ID）',
+  `todo_date` date NOT NULL COMMENT '待办所属日期（yyyy-MM-dd）',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '当天完整待办树的JSON字符串，结构：[{id,text,done,children}]',
+  `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
+  `create_time` datetime NOT NULL COMMENT '初次创建时间',
+  `update_time` datetime NOT NULL COMMENT '最后修改时间',
+  `status` int NULL DEFAULT 1 COMMENT '状态【0：被删除，1：正常】',
+  `type` int NULL DEFAULT 4 COMMENT '类型【4：待办】',
+  UNIQUE INDEX `todo_pk`(`id`) USING BTREE,
+  UNIQUE INDEX `todo_user_date_uk`(`u_id`, `todo_date`) USING BTREE COMMENT '同一用户同一天仅一条待办记录',
+  CONSTRAINT `todo_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '待办事项表（按天存储JSON）' ROW_FORMAT = COMPACT;
+
+-- ----------------------------
 -- Views
 -- ----------------------------
 CREATE OR REPLACE VIEW file_dumpster AS

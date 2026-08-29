@@ -96,30 +96,55 @@ const noteApi = {
         successMessage:true
     },
 
-    // ===== 日记 / 待办（暂保留接口，未实现后端） =====
+    // ===== 日记 / 待办 =====
     getDiary:{
         name:'获取日记与待办',
-        url:'/note/getDiary',
+        url:'/diary/getDiary',
         method:'GET',
         userAuth:true,
-        dataParam:true,
+        dataParam:false,
+        successMessage:false
+    },
+    getDiaryDateList:{
+        name:'获取日记日期列表',
+        url:'/diary/getDiaryDateList',
+        method:'GET',
+        userAuth:true,
+        dataParam:false,
         successMessage:false
     },
     saveDiary:{
-        name:'保存日记与待办',
-        url:'/note/saveDiary',
+        name:'保存日记',
+        url:'/diary/saveDiary',
         method:'POST',
         userAuth:true,
         dataParam:false,
-        successMessage:true
+        successMessage:false
     },
     deleteDiary:{
         name:'删除日记',
-        url:'/note/deleteDiary',
+        url:'/diary/deleteDiary',
         method:'POST',
         userAuth:true,
-        dataParam:true,
-        successMessage:true
+        dataParam:false,
+        successMessage:false
+    },
+    //待办为树形结构，必须以 JSON 提交，故 dataParam 保持 false
+    saveTodo:{
+        name:'保存待办事项',
+        url:'/diary/saveTodo',
+        method:'POST',
+        userAuth:true,
+        dataParam:false,
+        successMessage:false
+    },
+    deleteTodo:{
+        name:'删除待办事项',
+        url:'/diary/deleteTodo',
+        method:'POST',
+        userAuth:true,
+        dataParam:false,
+        successMessage:false
     },
 }
 

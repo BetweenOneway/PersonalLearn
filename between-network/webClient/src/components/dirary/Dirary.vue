@@ -63,7 +63,7 @@
           <!-- 当日日记 -->
           <n-collapse-item title="日记" name="diary">
             <n-input
-              v-model:value="currentDay.diary"
+              v-model:value="diaryContent"
               type="textarea"
               placeholder="记录这一天的故事……"
               :autosize="{ minRows: 4, maxRows: 12 }"
@@ -102,7 +102,7 @@ const selectedDate = ref(null);
 const collapseActive = ref(["todo", "diary"]);
 
 // 各日期的待办与日记数据：来自后端服务器
-// 结构：{ [dateKey]: { todos: [{id,text,done}], diary: string } }
+// 结构：{ [dateKey]: { todos: [{id,text,done,children}], diary: string } }
 const dayMap = reactive({});
 
 // 数据加载状态
@@ -110,7 +110,35 @@ const loading = ref(false);
 // 已向后端请求过的日期集合（避免重复请求）
 const dayLoaded = new Set();
 
-// 向后端加载指定日期的待办与日记（接口已定义，后端暂未实现）
+// 将后端返回的待办树补充上前端交互所需的视图字段（editing / _expanded）
+function decorateTodos(list) {
+  if (!Array.isArray(list)) return [];
+  return list.map(item => ({
+    id: item.id,
+    text: item.text || "",
+    done: item.done === true,
+    editing: false,
+    _expanded: true,
+    children: decorateTodos(item.children),
+  }));
+}
+
+// 提交给后端前剔除仅用于视图的字段，只保留 id/text/done/children
+function serializeTodos(list) {
+  if (!Array.isArray(list)) return [];
+  return list
+    // 仍在编辑中且内容为空的新增项不提交
+    .filter(item => (item.text || "").trim().length > 0)
+    .map(item => ({
+      // 新增项本地 id 以 tmp_ 开头，不提交给后端，由后端生成雪花ID
+      id: typeof item.id === "string" && item.id.startsWith("tmp_") ? undefined : item.id,
+      text: (item.text || "").trim(),
+      done: item.done === true,
+      children: serializeTodos(item.children),
+    }));
+}
+
+// 向后端加载指定日期的待办与日记
 async function loadDiary(key) {
   if (dayLoaded.has(key)) return; // 已请求则不再请求
   dayLoaded.add(key);
@@ -120,42 +148,75 @@ async function loadDiary(key) {
     const API = { ...noteApi.getDiary };
     API.params = { date: key };
     const res = await noteServerRequest(API);
-    // 后端返回结构约定：{ todos: [...], diary: "..." }
-    dayMap[key] = res && res.data
-      ? { todos: res.data.todos || [], diary: res.data.diary || "" }
-      : { todos: [], diary: "" };
+    // 后端返回结构：{ data:{ date, content, todos:[...], update_time } }
+    // 业务失败时拦截器返回 null，此处保持占位的空数据
+    if (res && res.data) {
+      dayMap[key] = {
+        todos: decorateTodos(res.data.todos),
+        diary: res.data.content || "",
+      };
+    }
   } catch (e) {
+    // 网络异常时允许重新加载
+    dayLoaded.delete(key);
     dayMap[key] = { todos: [], diary: "" };
   } finally {
     loading.value = false;
   }
 }
 
-// 向后端保存指定日期的待办与日记（接口已定义，后端暂未实现）
-async function persistDiary(dateKey) {
-  const data = dayMap[dateKey] || { todos: [], diary: "" };
+// 保存指定日期的日记正文
+async function persistDiary(key) {
+  const data = dayMap[key] || { todos: [], diary: "" };
   const API = { ...noteApi.saveDiary };
-  API.data = { date: dateKey, todos: data.todos, diary: data.diary };
-  await noteServerRequest(API);
+  API.data = { date: key, content: data.diary || "" };
+  return await noteServerRequest(API);
 }
 
-// 向后端删除指定日期的日记（接口已定义，后端暂未实现）
-async function persistDeleteDiary(dateKey) {
+// 保存指定日期的待办树（整棵树全量覆盖），并用后端回传的编号刷新本地数据
+async function persistTodos(key) {
+  const data = dayMap[key] || { todos: [], diary: "" };
+  const API = { ...noteApi.saveTodo };
+  API.data = { date: key, todos: serializeTodos(data.todos) };
+  const res = await noteServerRequest(API);
+  // 用后端回传的树覆盖本地，使新增项获得真实雪花ID，避免下次保存重复插入
+  if (res && res.data && Array.isArray(res.data.todos)) {
+    dayMap[key].todos = decorateTodos(res.data.todos);
+  }
+  return res;
+}
+
+// 删除指定日期的日记正文
+async function persistDeleteDiary(key) {
   const API = { ...noteApi.deleteDiary };
-  API.params = { date: dateKey };
-  await noteServerRequest(API);
+  API.data = { date: key };
+  return await noteServerRequest(API);
 }
 
 function dateKey(ts) {
   return format(ts, "yyyy-MM-dd");
 }
 
-// 当前选中日期对应的数据（确保返回可读对象，但不预先写入 dayMap，
-// 以免 loadDiary 误判为已加载）
+// 当前选中日期对应的数据
+// loadDiary 会在 await 之前同步写入占位对象，故选中日期后 dayMap[key] 必然存在，
+// 这里的兜底仅用于未选中日期时保证模板可安全读取
 const currentDay = computed(() => {
   if (!selectedDate.value) return { todos: [], diary: "" };
   const key = dateKey(selectedDate.value);
   return dayMap[key] || { todos: [], diary: "" };
+});
+
+// 日记正文双向绑定：直接写回 dayMap，避免写入 computed 的兜底对象导致输入丢失
+const diaryContent = computed({
+  get() {
+    return currentDay.value.diary || "";
+  },
+  set(val) {
+    if (!selectedDate.value) return;
+    const key = dateKey(selectedDate.value);
+    if (!dayMap[key]) dayMap[key] = { todos: [], diary: "" };
+    dayMap[key].diary = val;
+  }
 });
 
 function formatDate(ts) {
@@ -171,10 +232,11 @@ function isDateDisabled(timestamp) {
   return false;
 }
 
-// 待办自增 id（父子级共用，统一在此生成，通过 provide 提供给递归子组件）
+// 新增待办的本地临时 id（父子级共用，通过 provide 提供给递归子组件）
+// 以 tmp_ 前缀标记，提交时不传给后端，由后端生成雪花ID后回传替换
 let todoIdSeq = 1;
 function nextTodoId() {
-  return todoIdSeq++;
+  return `tmp_${todoIdSeq++}`;
 }
 // 提供给 TodoItem 递归组件用于生成子项 id
 provide("nextTodoId", nextTodoId);
@@ -197,15 +259,19 @@ async function persistCurrent() {
   if (!selectedDate.value) return;
   const key = dateKey(selectedDate.value);
   try {
-    await persistDiary(key);
+    await persistTodos(key);
   } catch (e) {
     message.error("待办保存失败，请稍后重试");
   }
 }
 
 // 新增顶层待办（默认进入编辑模式）
+// 此时内容为空，待用户点击"确定"触发 change 后再保存，避免产生空待办
 function addTodo() {
-  currentDay.value.todos.push({
+  if (!selectedDate.value) return;
+  const key = dateKey(selectedDate.value);
+  if (!dayMap[key]) dayMap[key] = { todos: [], diary: "" };
+  dayMap[key].todos.push({
     id: nextTodoId(),
     text: "",
     done: false,
@@ -213,7 +279,6 @@ function addTodo() {
     children: [],
     _expanded: true,
   });
-  persistCurrent();
 }
 
 // 取消编辑：新增空项移除，已有项还原
@@ -226,23 +291,38 @@ function cancelEditTodo(todo) {
   todo.editing = false;
 }
 
-// 删除待办（支持任意层级）
-function removeTodo(todo) {
+// 删除待办（支持任意层级），子待办由后端级联删除
+async function removeTodo(todo) {
+  if (!selectedDate.value) return;
+  const key = dateKey(selectedDate.value);
   const list = findTodoInTree(currentDay.value.todos, todo);
   if (list) {
     const idx = list.findIndex(t => t === todo);
     if (idx !== -1) list.splice(idx, 1);
   }
-  persistCurrent();
+
+  // 仅本地新增、尚未落库的待办无需请求后端
+  const isLocalOnly = typeof todo.id === "string" && todo.id.startsWith("tmp_");
+  if (isLocalOnly) return;
+
+  try {
+    // 待办整棵树存于一条记录，删除需同时指定日期定位该记录
+    const API = { ...noteApi.deleteTodo };
+    API.data = { date: key, todoId: todo.id };
+    await noteServerRequest(API);
+  } catch (e) {
+    message.error("待办删除失败，请稍后重试");
+  }
 }
 
 // 日记保存 / 删除
+// 业务失败时请求拦截器已弹出提示并返回 null，故仅在成功时提示
 async function saveDiary() {
   if (!selectedDate.value) return;
   const key = dateKey(selectedDate.value);
   try {
-    await persistDiary(key);
-    message.success("日记已保存");
+    const res = await persistDiary(key);
+    if (res) message.success("日记已保存");
   } catch (e) {
     message.error("保存失败，请稍后重试");
   }
@@ -252,8 +332,11 @@ async function deleteDiary() {
   if (!selectedDate.value) return;
   const key = dateKey(selectedDate.value);
   try {
-    await persistDeleteDiary(key);
-    dayMap[key] = { todos: dayMap[key]?.todos || [], diary: "" };
+    const res = await persistDeleteDiary(key);
+    if (!res) return;
+    // 仅清空日记正文，当日待办保持不变
+    if (!dayMap[key]) dayMap[key] = { todos: [], diary: "" };
+    dayMap[key].diary = "";
     message.success("日记已删除");
   } catch (e) {
     message.error("删除失败，请稍后重试");

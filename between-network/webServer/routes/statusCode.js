@@ -602,6 +602,76 @@ SERVICE_STATUS={
         status:'SERVICE_083',
         description:'获取说说列表失败'
     },
+    GET_DIARY_SUCCESS:{
+        success:true,
+        status:'SERVICE_100',
+        description:'获取日记成功'
+    },
+    GET_DIARY_FAIL:{
+        success:false,
+        status:'SERVICE_101',
+        description:'获取日记失败'
+    },
+    SAVE_DIARY_SUCCESS:{
+        success:true,
+        status:'SERVICE_102',
+        description:'保存日记成功'
+    },
+    SAVE_DIARY_FAIL:{
+        success:false,
+        status:'SERVICE_103',
+        description:'保存日记失败'
+    },
+    DELETE_DIARY_SUCCESS:{
+        success:true,
+        status:'SERVICE_104',
+        description:'删除日记成功'
+    },
+    DELETE_DIARY_FAIL:{
+        success:false,
+        status:'SERVICE_105',
+        description:'删除日记失败'
+    },
+    GET_TODO_SUCCESS:{
+        success:true,
+        status:'SERVICE_110',
+        description:'获取待办事项成功'
+    },
+    GET_TODO_FAIL:{
+        success:false,
+        status:'SERVICE_111',
+        description:'获取待办事项失败'
+    },
+    SAVE_TODO_SUCCESS:{
+        success:true,
+        status:'SERVICE_112',
+        description:'保存待办事项成功'
+    },
+    SAVE_TODO_FAIL:{
+        success:false,
+        status:'SERVICE_113',
+        description:'保存待办事项失败'
+    },
+    DELETE_TODO_SUCCESS:{
+        success:true,
+        status:'SERVICE_114',
+        description:'删除待办事项成功'
+    },
+    DELETE_TODO_FAIL:{
+        success:false,
+        status:'SERVICE_115',
+        description:'删除待办事项失败'
+    },
+    GET_DIARY_DATE_LIST_SUCCESS:{
+        success:true,
+        status:'SERVICE_116',
+        description:'获取日记日期列表成功'
+    },
+    GET_DIARY_DATE_LIST_FAIL:{
+        success:false,
+        status:'SERVICE_117',
+        description:'获取日记日期列表失败'
+    },
 }
 
 EVENT_LIST = {
@@ -688,6 +758,22 @@ EVENT_LIST = {
     UPDATE_NOTEBOOK_RELATION:{
         code:'13',
         desc:'更新笔记本关系'
+    },
+    SAVE_DIARY:{
+        code:'20',
+        desc:'保存日记'
+    },
+    DELETE_DIARY:{
+        code:'21',
+        desc:'删除日记'
+    },
+    SAVE_TODO:{
+        code:'22',
+        desc:'保存待办事项'
+    },
+    DELETE_TODO:{
+        code:'23',
+        desc:'删除待办事项'
     },
 }
 
