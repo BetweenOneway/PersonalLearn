@@ -1,7 +1,7 @@
 ﻿#include "Sort.h"
 
 /* 冒泡排序 */
-void bubbleSort(vector<int>& nums) {
+void BubbleSort(vector<int>& nums) {
     // 外循环：未排序区间为 [0, i]
     for (int i = nums.size() - 1; i > 0; i--) {
         // 内循环：将未排序区间 [0, i] 中的最大元素交换至该区间的最右端
@@ -18,7 +18,7 @@ void bubbleSort(vector<int>& nums) {
 /* 选择排序
 * 每次选择一个最大/最小元素
 */
-void selectionSort(vector<int>& nums) {
+void SelectionSort(vector<int>& nums) {
     int n = nums.size();
     // 外循环：未排序区间为 [i, n-1]
     for (int i = 0; i < n - 1; i++) {
@@ -36,7 +36,7 @@ void selectionSort(vector<int>& nums) {
 /* 插入排序
 * 将未排序的元素插入到有序的队列种
 */
-void insertionSort(vector<int>& nums) {
+void InsertionSort(vector<int>& nums) {
     // 外循环：已排序区间为 [0, i-1]
     for (int i = 1; i < nums.size(); i++) {
         int base = nums[i], j = i - 1;
@@ -52,8 +52,7 @@ void insertionSort(vector<int>& nums) {
 /*
 * 归并排序
 */
-
-void Merge(vector<int> a, int left, int mid, int right) {
+void Merge(vector<int>& a, int left, int mid, int right) {
     vector<int> temp;                   //临时数组用于存储排序时的数
     temp.resize(right - left + 1);
     int i = left;                                 //分成两块 i指向左边的数字 j指向右边的数字 
@@ -77,7 +76,7 @@ void Merge(vector<int> a, int left, int mid, int right) {
 }
 
 
-void Merge_Sort(vector<int> a, int left, int right) {
+void Merge_Sort(vector<int>& a, int left, int right) {
     if (left == right)
         return;
 
@@ -86,6 +85,11 @@ void Merge_Sort(vector<int> a, int left, int right) {
     Merge_Sort(a, left, mid);
     Merge_Sort(a, mid + 1, right);
     Merge(a, left, mid, right);      //合并较小规模问题解
+}
+
+void MergeSort(vector<int>& nums)
+{
+    Merge_Sort(nums, 0, nums.size() - 1);
 }
 
 /* 哨兵划分 */
@@ -103,7 +107,7 @@ int partition(vector<int>& nums, int left, int right) {
     return i;                   // 返回基准数的索引
 }
 
-/* 快速排序 */
+
 void quickSort(vector<int>& nums, int left, int right) {
     // 子数组长度为 1 时终止递归
     if (left >= right)
@@ -113,4 +117,53 @@ void quickSort(vector<int>& nums, int left, int right) {
     // 递归左子数组、右子数组
     quickSort(nums, left, pivot - 1);
     quickSort(nums, pivot + 1, right);
+}
+
+/* 快速排序 */
+void QuickSort(vector<int>& nums)
+{
+    quickSort(nums, 0, nums.size() - 1);
+}
+
+/* 调整以 start 为根的子树为大根堆，[start, end] 为堆的有效区间 */
+void HeapAdjust(vector<int>& arr, int start, int end)
+{
+    //tmp保存父节点的值，start保存父节点应该在的索引
+    int tmp = arr[start];
+    int i = 2 * start + 1; // start 的左孩子
+    while (i <= end)
+    {
+        // 取左右孩子中较大者
+        if (i < end && arr[i] < arr[i + 1])
+            i++;
+        if (arr[i] > tmp)
+        {
+            arr[start] = arr[i];
+            start = i;
+            //找左孩子节点
+            i = 2 * i + 1; // 继续向下调整
+        }
+        else
+        {
+            break;
+        }
+    }
+    arr[start] = tmp;
+}
+
+/* 堆排序（升序，使用大根堆） */
+void HeapSort(vector<int>& arr)
+{
+    int len = arr.size();
+    // 从最后一个非叶子结点向上，逐步建立大根堆 
+    //(len - 1 - 1) / 2计算的是最后一个元素的父节点
+    for (int i = (len - 1 - 1) / 2; i >= 0; i--)
+        HeapAdjust(arr, i, len - 1);
+
+    // 反复将堆顶（最大值）交换到末尾，再调整剩余部分
+    for (int i = 0; i < len - 1; i++)
+    {
+        swap(arr[0], arr[len - 1 - i]);
+        HeapAdjust(arr, 0, len - 1 - i - 1);
+    }
 }
