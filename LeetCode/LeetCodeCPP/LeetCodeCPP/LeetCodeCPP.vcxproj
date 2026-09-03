@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{73cd04dc-5d8f-4456-a572-00593f416212}</ProjectGuid>
-    <RootNamespace>LeetCode</RootNamespace>
+    <ProjectGuid>{e22d0bd3-dc05-4c11-8b36-9d887d5dc178}</ProjectGuid>
+    <RootNamespace>LeetCodeCPP</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -140,17 +140,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Graph.cpp" />
-    <ClCompile Include="index.cpp" />
-    <ClCompile Include="MinimumWindowSubstring.cpp" />
-    <ClCompile Include="Sort.cpp" />
-    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="TwoPointers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graph.h" />
-    <ClInclude Include="Index.h" />
-    <ClInclude Include="MinimumWindowSubstring.h" />
-    <ClInclude Include="Sort.h" />
-    <ClInclude Include="Test.h" />
+    <ClInclude Include="TwoPointers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

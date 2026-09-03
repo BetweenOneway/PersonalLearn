@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include "Index.h"
+#include <vector>
+using namespace std;
 
 //冒泡排序
 void BubbleSort(vector<int>& nums);

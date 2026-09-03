@@ -21,9 +21,15 @@
     <ClCompile Include="KDTree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Sort.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KDTree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Sort.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

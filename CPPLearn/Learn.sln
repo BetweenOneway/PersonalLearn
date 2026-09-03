@@ -52,8 +52,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DesignPattern", "DesignPatt
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TraverseLocalDir", "TraverseLocalDir\TraverseLocalDir.vcxproj", "{59B246D9-0D71-426A-9113-3C27FEC9698C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LeetCode", "LeetCode\LeetCode.vcxproj", "{73CD04DC-5D8F-4456-A572-00593F416212}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -316,16 +314,6 @@ Global
 		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Release|x64.Build.0 = Release|x64
 		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Release|x86.ActiveCfg = Release|Win32
 		{59B246D9-0D71-426A-9113-3C27FEC9698C}.Release|x86.Build.0 = Release|Win32
-		{73CD04DC-5D8F-4456-A572-00593F416212}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{73CD04DC-5D8F-4456-A572-00593F416212}.Debug|x64.ActiveCfg = Debug|x64
-		{73CD04DC-5D8F-4456-A572-00593F416212}.Debug|x64.Build.0 = Debug|x64
-		{73CD04DC-5D8F-4456-A572-00593F416212}.Debug|x86.ActiveCfg = Debug|Win32
-		{73CD04DC-5D8F-4456-A572-00593F416212}.Debug|x86.Build.0 = Debug|Win32
-		{73CD04DC-5D8F-4456-A572-00593F416212}.Release|Any CPU.ActiveCfg = Release|Win32
-		{73CD04DC-5D8F-4456-A572-00593F416212}.Release|x64.ActiveCfg = Release|x64
-		{73CD04DC-5D8F-4456-A572-00593F416212}.Release|x64.Build.0 = Release|x64
-		{73CD04DC-5D8F-4456-A572-00593F416212}.Release|x86.ActiveCfg = Release|Win32
-		{73CD04DC-5D8F-4456-A572-00593F416212}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
