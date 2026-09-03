@@ -231,4 +231,24 @@ namespace CLASS_TEST {
     };
 
     void TestPolymorphism();
+
+    namespace DELEGATE_CONSTRUCT {
+        class Base {
+        public:
+            Base();
+            Base(int m) :Base() {
+                m_num = m;
+            }
+        private:
+            int m_num;
+        };
+
+        //class Child :public Base{
+        //public:
+        //    Child();
+        //    Child(int m) :Base(m), Child() {
+        //    }
+        //};
+    }
 }
+
