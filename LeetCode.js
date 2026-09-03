@@ -25,27 +25,25 @@ var judgeSquareSum = function(c) {
  * @return {boolean}
  */
 var validPalindrome = function(s) {
-    let ret = IsPalindrome(s);
-	if(!ret)
-	{
-		for(let i=0;i<s.length;i++)
-		{
-			let newS = s.slice(0, i) + s.slice(i + 1);
-			if(IsPalindrome(newS))
-			{
-				ret = true;
-				break;
-			}
-		}
-	}
-	return ret;
+    let l =0,r=s.length-1;
+    while(l<r)
+    {
+        if(s.charAt(l) == s.charAt(r))
+        {
+            l++;
+            r--;
+        }
+        else
+        {
+            return IsPalindrome(s,l,r-1) || IsPalindrome(s,l+1,r);
+        }
+    }
+    return true
 };
 
-function IsPalindrome(s)
+function IsPalindrome(s,start,end)
 {
-	let num = s.length / 2;
-	let l = 0,r = s.length - 1;
-	for(let i=0;i<num;i++)
+	for(let l = start,r = end;l<r;)
 	{
 		if(s.charAt(l) != s.charAt(r))
 		{
