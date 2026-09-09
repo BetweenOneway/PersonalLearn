@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+python-consul2
+requests
+grpcio
+grpcio-tools

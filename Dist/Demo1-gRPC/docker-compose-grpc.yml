@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  consul:
+    image: consul:1.15
+    ports:
+      - "8500:8500"
+    command: ["consul", "agent", "-server", "-bootstrap", "-ui", "-client=0.0.0.0"]
+    networks:
+      - dist-net
+
+  calc-grpc1:
+    build:
+      context: .
+    command: python service_calc_grpc.py
+    depends_on:
+      - consul
+    networks:
+      - dist-net
+
+  calc-grpc2:
+    build:
+      context: .
+    command: python service_calc_grpc.py
+    depends_on:
+      - consul
+    networks:
+      - dist-net
+
+  gateway-grpc:
+    build:
+      context: .
+    command: python gateway_grpc.py
+    ports:
+      - "9000:9000"
+    depends_on:
+      - consul
+      - calc-grpc1
+      - calc-grpc2
+    networks:
+      - dist-net
+
+networks:
+  dist-net:

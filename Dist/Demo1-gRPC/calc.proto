@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+service CalcService {
+  rpc Add (CalcRequest) returns (CalcResponse);
+  rpc Sub (CalcRequest) returns (CalcResponse);
+}
+
+message CalcRequest {
+  double a = 1;
+  double b = 2;
+}
+
+message CalcResponse {
+  double result = 1;
+  string server_addr = 2;
+}
