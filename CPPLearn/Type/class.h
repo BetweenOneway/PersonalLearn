@@ -1,4 +1,9 @@
 ﻿#pragma once
+#include <iostream>
+#include <random>
+#include <memory>
+using namespace std;
+
 namespace CLASS_TEST {
     class BaseClass {
     public:
@@ -235,20 +240,73 @@ namespace CLASS_TEST {
     namespace DELEGATE_CONSTRUCT {
         class Base {
         public:
-            Base();
-            Base(int m) :Base() {
-                m_num = m;
+            Base(int& m):m_num(m) {
+                cout << "Base params construct" << endl;
+            }
+            void Add(int num = 10)
+            {
+                m_num += num;
+            }
+        public:
+            int& m_num;
+        };
+
+        class Child :public Base{
+        public:
+            Child(int& m) :Base(m) {
+                cout << "Child params construct" << endl;
+            }
+        };
+    }
+
+    void TestDelegateConstruct();
+
+    namespace INCLUDE_EACH {
+        class Pointer : public std::enable_shared_from_this<Pointer>{
+        public:
+            Pointer(int num,std::pair<std::shared_ptr<Pointer>, std::shared_ptr<Pointer>>& pairPointer)
+            :m_pairPointer(pairPointer){
+                m_num = num;
+            }
+            void Run() {
+                if(m_num/2 == 0)
+                {
+                    m_pairPointer.first = shared_from_this();
+                }
+                else
+                {
+                    m_pairPointer.second = shared_from_this();
+                }
             }
         private:
+            std::pair<std::shared_ptr<Pointer>, std::shared_ptr<Pointer>>& m_pairPointer;
             int m_num;
         };
 
-        //class Child :public Base{
-        //public:
-        //    Child();
-        //    Child(int m) :Base(m), Child() {
-        //    }
-        //};
+        class Container {
+        public:
+            Container() {
+                
+            }
+            void Func() {
+                // 随机设备，获取真随机种子
+                std::random_device rd;
+                // 引擎，用 rd 作为种子
+                std::mt19937 gen(rd());
+
+                // 分布：闭区间 [1, 100]
+                std::uniform_int_distribution<int> dist(1, 100);
+
+                int x = dist(gen);
+
+                m_pointer = nullptr;
+                m_pointer = std::make_shared<Pointer>(x,m_pairPointer);
+                m_pointer->Run();
+            }
+        private:
+            std::shared_ptr<Pointer> m_pointer;
+            std::pair<std::shared_ptr<Pointer>, std::shared_ptr<Pointer>> m_pairPointer;
+        };
     }
 }
 

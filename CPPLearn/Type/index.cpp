@@ -313,7 +313,8 @@ void testClass()
     //CLASS_TEST::testClassScope();
     //CLASS_TEST::testFirendClass();
     //CLASS_TEST::testClassOverride();
-    CLASS_TEST::TestPolymorphism();
+    //CLASS_TEST::TestPolymorphism();
+    CLASS_TEST::TestDelegateConstruct();
 }
 
 void testStruct()
@@ -404,7 +405,7 @@ void testException()
 
 int main()
 {
-    //testClass();
+    testClass();
     //testException();
     //testTypeOf();
     //testFileOper();

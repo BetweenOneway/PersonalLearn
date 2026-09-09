@@ -442,4 +442,29 @@ namespace CLASS_TEST {
         // d.accessA(a); // 编译报错：'int A::secret' is private
         return 0;
     }
+
+    class TestClass {
+    public:
+        TestClass() {
+            myNum = 10;
+        }
+        void Test();
+    private:
+        int myNum;
+    };
+
+    //支持将成员变量作为参数传递，引用的情况下，子类的改变会影响父类
+    void TestClass::Test()
+    {
+        DELEGATE_CONSTRUCT::Child childClass(myNum);
+        childClass.Add(myNum);
+        cout << "myNum=" << myNum << ",m_num=" << childClass.m_num << endl;
+    }
+
+    void TestDelegateConstruct() {
+       
+        TestClass testClass;
+        testClass.Test();
+        
+    }
 }
