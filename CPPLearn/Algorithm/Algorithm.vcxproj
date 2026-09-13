@@ -143,11 +143,13 @@
     <ClCompile Include="index.cpp" />
     <ClCompile Include="KDTree.cpp" />
     <ClCompile Include="Sort.cpp" />
+    <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graph.h" />
     <ClInclude Include="KDTree.h" />
     <ClInclude Include="Sort.h" />
+    <ClInclude Include="Test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

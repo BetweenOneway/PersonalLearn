@@ -75,7 +75,6 @@ void Merge(vector<int>& a, int left, int mid, int right) {
         a[m] = temp[n];
 }
 
-
 void Merge_Sort(vector<int>& a, int left, int right) {
     if (left == right)
         return;
@@ -95,18 +94,25 @@ void MergeSort(vector<int>& nums)
 /* 哨兵划分 */
 int partition(vector<int>& nums, int left, int right) {
     // 以 nums[left] 为基准数
+    int base = nums[left];
     int i = left, j = right;
     while (i < j) {
-        while (i < j && nums[j] >= nums[left])
-            j--;                // 从右向左找首个小于基准数的元素
-        while (i < j && nums[i] <= nums[left])
-            i++;                // 从左向右找首个大于基准数的元素
+        //必须先右侧，再左侧
+
+        // 从右向左找首个小于基准数的元素
+        while (i < j && nums[j] >= base)
+            j--;
+
+        // 从左向右找首个大于基准数的元素
+        while (i < j && nums[i] <= base)
+            i++;
+
         swap(nums[i], nums[j]); // 交换这两个元素
     }
+    //成立的前提是:在 i、j 相遇的那个点,nums[i] 必须是"从左往右最后一个 < 基准 的位置"
     swap(nums[i], nums[left]);  // 将基准数交换至两子数组的分界线
     return i;                   // 返回基准数的索引
 }
-
 
 void quickSort(vector<int>& nums, int left, int right) {
     // 子数组长度为 1 时终止递归
@@ -124,6 +130,7 @@ void QuickSort(vector<int>& nums)
 {
     quickSort(nums, 0, nums.size() - 1);
 }
+
 
 /* 调整以 start 为根的子树为大根堆，[start, end] 为堆的有效区间 */
 void HeapAdjust(vector<int>& arr, int start, int end)

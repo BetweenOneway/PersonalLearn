@@ -1,7 +1,9 @@
 ﻿#include <iostream>
-#include "KDTree.h"
+#include "Test.h"
 
 int main()
 {
-    TestKDTree();
+    //TestKDTree();
+    TestQuickSort();
+    return 0;
 }
