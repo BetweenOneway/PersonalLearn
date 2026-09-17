@@ -308,5 +308,30 @@ namespace CLASS_TEST {
             std::pair<std::shared_ptr<Pointer>, std::shared_ptr<Pointer>> m_pairPointer;
         };
     }
+
+    namespace DIAMOND_INHERITANCE {
+        class Base {
+        public:
+            Base(int v) { cout<<"Base("<<v<<")"<<endl; }
+        };
+
+        // 虚继承！A虚继承Base
+        class A : virtual public Base {
+        public:
+            A() : Base(10) { cout << "A()"<<endl; }
+        };
+
+        //class C : public A {
+        // public:
+        //    C() { printf("C()\n"); }
+        //};
+
+        class C : public A {
+        public:
+            C() : Base(20) { cout<<"C()"<<endl; } // ✅ 最底层类C负责构造虚基类Base
+        };
+    }
+
+    void TestDiamondInheritance();
 }
 

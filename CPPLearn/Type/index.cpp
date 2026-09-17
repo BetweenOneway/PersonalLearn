@@ -314,7 +314,8 @@ void testClass()
     //CLASS_TEST::testFirendClass();
     //CLASS_TEST::testClassOverride();
     //CLASS_TEST::TestPolymorphism();
-    CLASS_TEST::TestDelegateConstruct();
+    //CLASS_TEST::TestDelegateConstruct();
+    CLASS_TEST::TestDiamondInheritance();
 }
 
 void testStruct()
@@ -425,7 +426,7 @@ int main()
 
     //testFunction();
 
-    TEST_TEMPLATE::Test1();
+    //TEST_TEMPLATE::Test1();
 
     //std::cout << STATIC_TEST::num << std::endl;
     system("pause");

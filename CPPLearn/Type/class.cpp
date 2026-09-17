@@ -467,4 +467,9 @@ namespace CLASS_TEST {
         testClass.Test();
         
     }
+
+    void TestDiamondInheritance()
+    {
+        DIAMOND_INHERITANCE::C c;
+    }
 }
