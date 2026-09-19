@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 //LeetCode 605
@@ -45,4 +46,31 @@ void TestCanPlaceFlowers()
     vector<int> flowerBed = {1, 0, 0, 0, 1, 0, 0};
     int num = 2;
     cout << boolalpha << canPlaceFlowers(flowerBed, num)<<endl;
+}
+
+int findMinArrowShots(vector<vector<int>>& points) {
+    if (points.empty()) {
+        return 0;
+    }
+    //按右边界从小到大排序
+    sort(points.begin(), points.end(), [](const vector<int>& u, const vector<int>& v) {
+        return u[1] < v[1];
+        });
+    int pos = points[0][1];
+    int ans = 1;
+    for (const vector<int>& balloon : points) {
+        //如果当前球的左边界超过了上一个球的右边界，表示需要新的箭
+        if (balloon[0] > pos) {
+            pos = balloon[1];
+            ++ans;
+        }
+    }
+    return ans;
+}
+
+void TestFindArrowShots()
+{
+    vector<vector<int>> ballons = { {10, 16} ,{2, 8},{1, 6},{7, 12 }};
+
+    cout<<findMinArrowShots(ballons)<<endl;
 }

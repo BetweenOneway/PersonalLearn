@@ -2,6 +2,7 @@
 
 int main()
 {
-	TestCanPlaceFlowers();
+	//TestCanPlaceFlowers();
+	TestFindArrowShots();
 	return 0;
 }
