@@ -21,12 +21,21 @@
     <ClCompile Include="TwoPointers.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Greedy.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Index.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graph.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="TwoPointers.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TestFunction.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
