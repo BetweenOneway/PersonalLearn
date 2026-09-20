@@ -404,9 +404,15 @@ void testException()
     EXCEPTION::testException();
 }
 
+void testTemplate()
+{
+    //TEST_TEMPLATE::Test1();
+    TEMPLATE_VAR_ARGS::TestFoldExpression();
+}
+
 int main()
 {
-    testClass();
+    //testClass();
     //testException();
     //testTypeOf();
     //testFileOper();
@@ -423,12 +429,10 @@ int main()
     //testType();
     //testString();
     //testMacro();
-
     //testFunction();
 
-    //TEST_TEMPLATE::Test1();
+    testTemplate();
 
-    //std::cout << STATIC_TEST::num << std::endl;
     system("pause");
     return 0;
 }

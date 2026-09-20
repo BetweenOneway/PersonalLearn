@@ -29,3 +29,26 @@ namespace TEST_TEMPLATE
         return 0;
     }
 }
+
+namespace TEMPLATE_VAR_ARGS
+{
+    template<typename... Args>
+    auto right_fold(Args... args) {
+        return (args - ...);
+    }
+    // right_fold(10, 3, 2) → 10 - (3 - 2) = 10 -1 =9
+
+    //一元左折叠
+    template<typename... Args>
+    auto left_fold(Args... args) {
+        return (... - args);
+    }
+
+    void TestFoldExpression()
+    {
+        //2
+        std::cout << right_fold<int>(10, 9, 8, 7)<<std::endl;
+        //-14
+        std::cout << left_fold<int>(10, 9, 8, 7) << std::endl;
+    }
+}
