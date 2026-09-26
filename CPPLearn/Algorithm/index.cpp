@@ -4,6 +4,7 @@
 int main()
 {
     //TestKDTree();
-    TestQuickSort();
+    //TestQuickSort();
+    TestSigleNumber();
     return 0;
 }

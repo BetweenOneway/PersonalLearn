@@ -3,6 +3,7 @@ using namespace std;
 
 #include "KDTree.h"
 #include "Sort.h"
+#include "Other.h"
 
 int TestKDTree() {
     // 示例：生成2D随机测试数据
@@ -49,5 +50,12 @@ int TestQuickSort()
     {
         cout << num<<" ";
     }
+    return 0;
+}
+
+int TestSigleNumber()
+{
+    vector<int> nums{1,1,1,2,3,3,3};
+    cout << OTHER::singleNumber(nums)<<endl;
     return 0;
 }

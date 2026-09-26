@@ -142,12 +142,14 @@
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="index.cpp" />
     <ClCompile Include="KDTree.cpp" />
+    <ClCompile Include="Other.cpp" />
     <ClCompile Include="Sort.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graph.h" />
     <ClInclude Include="KDTree.h" />
+    <ClInclude Include="Other.h" />
     <ClInclude Include="Sort.h" />
     <ClInclude Include="Test.h" />
   </ItemGroup>
