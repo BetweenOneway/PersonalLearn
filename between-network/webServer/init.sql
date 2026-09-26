@@ -269,6 +269,48 @@ CREATE TABLE IF NOT EXISTS `todo` (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '待办事项表（按天存储JSON）' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
+-- Table structure for feedback_demand
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `feedback_demand` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+  `u_id` bigint NULL COMMENT '提交人编号（雪花ID）',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '需求正文',
+  `contact` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系方式（邮箱 / 手机号），选填',
+  `step` int NOT NULL DEFAULT 0 COMMENT '流转步骤【0：需求提交，1：需求评审，2：需求排期，3：需求研发，4：需求发布】',
+  `progress` int NOT NULL DEFAULT 0 COMMENT '整体进度百分比【0-100】',
+  `vote` int NOT NULL DEFAULT 0 COMMENT '期待人数',
+  `time` datetime NULL DEFAULT NULL COMMENT '提交时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后更新时间',
+  `status` int NOT NULL DEFAULT 1 COMMENT '状态【0：已删除，1：正常】',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_feedback_demand_user_time`(`u_id`, `time`) USING BTREE,
+  INDEX `idx_feedback_demand_step_time`(`step`, `time`) USING BTREE,
+  INDEX `idx_feedback_demand_status_time`(`status`, `time`) USING BTREE,
+  CONSTRAINT `feedback_demand_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户需求表' ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Table structure for feedback_issue
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `feedback_issue` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+  `u_id` bigint NULL COMMENT '提交人编号（雪花ID）',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '问题描述',
+  `contact` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系方式（邮箱 / 手机号），选填',
+  `level` int NOT NULL DEFAULT 1 COMMENT '严重程度【1：轻微，2：一般，3：严重】',
+  `handle_status` int NOT NULL DEFAULT 0 COMMENT '处理状态【0：待确认，1：处理中，2：待验证，3：已修复】',
+  `handle_desc` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '处理说明',
+  `time` datetime NULL DEFAULT NULL COMMENT '提交时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后更新时间',
+  `status` int NOT NULL DEFAULT 1 COMMENT '状态【0：已删除，1：正常】',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_feedback_issue_user_time`(`u_id`, `time`) USING BTREE,
+  INDEX `idx_feedback_issue_handle_time`(`handle_status`, `time`) USING BTREE,
+  INDEX `idx_feedback_issue_status_time`(`status`, `time`) USING BTREE,
+  CONSTRAINT `feedback_issue_user_id_fk` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户问题表' ROW_FORMAT = COMPACT;
+
+-- ----------------------------
 -- Views
 -- ----------------------------
 CREATE OR REPLACE VIEW file_dumpster AS

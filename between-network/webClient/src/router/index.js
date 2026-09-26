@@ -73,6 +73,22 @@ const router = createRouter({
         ]
     },
     {
+        path: '/devlog',
+        component: ()=>import("@/views/DevLog/DevLogIndex.vue"),
+        meta:{title:'开发日志'},
+    },
+    {
+        path: '/feedback',
+        component: ()=>import("@/views/Feedback/FeedbackIndex.vue"),
+        meta:{title:'用户反馈'},
+    },
+    {
+        path: '/feedback/demand/:id',
+        props:true,
+        component: ()=>import("@/views/Feedback/DemandDetailView.vue"),
+        meta:{title:'需求详情'},
+    },
+    {
         path: '/blog',
         component: ()=>import("@/views/Blog/BlogIndexView.vue"),
         meta:{title:'博客页'},

@@ -672,6 +672,56 @@ SERVICE_STATUS={
         status:'SERVICE_117',
         description:'获取日记日期列表失败'
     },
+    ADD_FEEDBACK_SUCCESS:{
+        success:true,
+        status:'SERVICE_120',
+        description:'提交反馈成功'
+    },
+    ADD_FEEDBACK_FAIL:{
+        success:false,
+        status:'SERVICE_121',
+        description:'提交反馈失败'
+    },
+    GET_FEEDBACK_LIST_SUCCESS:{
+        success:true,
+        status:'SERVICE_122',
+        description:'获取反馈列表成功'
+    },
+    GET_FEEDBACK_LIST_FAIL:{
+        success:false,
+        status:'SERVICE_123',
+        description:'获取反馈列表失败'
+    },
+    GET_FEEDBACK_DETAIL_SUCCESS:{
+        success:true,
+        status:'SERVICE_124',
+        description:'获取反馈详情成功'
+    },
+    GET_FEEDBACK_DETAIL_FAIL:{
+        success:false,
+        status:'SERVICE_125',
+        description:'获取反馈详情失败'
+    },
+    ADD_FEEDBACK_COMMENT_SUCCESS:{
+        success:true,
+        status:'SERVICE_126',
+        description:'发表反馈评论成功'
+    },
+    ADD_FEEDBACK_COMMENT_FAIL:{
+        success:false,
+        status:'SERVICE_127',
+        description:'发表反馈评论失败'
+    },
+    VOTE_FEEDBACK_SUCCESS:{
+        success:true,
+        status:'SERVICE_128',
+        description:'需求投票成功'
+    },
+    VOTE_FEEDBACK_FAIL:{
+        success:false,
+        status:'SERVICE_129',
+        description:'需求投票失败'
+    },
 }
 
 EVENT_LIST = {

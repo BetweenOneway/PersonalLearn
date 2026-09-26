@@ -19,6 +19,8 @@ const subscribe = require('../models/subscribe.js')
 const moment = require('../models/moment.js')
 const diary = require('../models/diary.js')
 const todo = require('../models/todo.js')
+const feedbackDemand = require('../models/feedbackDemand.js')
+const feedbackIssue = require('../models/feedbackIssue.js')
 
 var dbSettings = config.get("mysql");
 
@@ -42,6 +44,8 @@ db.Subscribe = subscribe(db.sequelize,Sequelize.DataTypes);
 db.Moment = moment(db.sequelize,Sequelize.DataTypes);
 db.Diary = diary(db.sequelize,Sequelize.DataTypes);
 db.Todo = todo(db.sequelize,Sequelize.DataTypes);
+db.FeedbackDemand = feedbackDemand(db.sequelize,Sequelize.DataTypes);
+db.FeedbackIssue = feedbackIssue(db.sequelize,Sequelize.DataTypes);
 
 //建立表关联关系
 Object.keys(db).forEach((modelName) => {

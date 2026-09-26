@@ -22,6 +22,7 @@ const like = require('./routes/like');
 const subscribe = require('./routes/subscribe');
 const moment = require('./routes/moment');
 const diary = require('./routes/diary');
+const feedback = require('./routes/feedback');
 
 const sequelizeTest = require("./routes/sequelizeTest")
 
@@ -144,6 +145,8 @@ app.use('/subscribe',subscribe);
 app.use('/moment',moment);
 //日记与待办事项
 app.use('/diary',diary);
+//用户反馈（需求与问题）
+app.use('/feedback',feedback);
 //CKEditor编辑器
 app.use("/ckeditor",CKEditor)
 //回收站操作
