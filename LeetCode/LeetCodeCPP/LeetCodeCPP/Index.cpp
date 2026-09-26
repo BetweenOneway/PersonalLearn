@@ -3,6 +3,7 @@
 int main()
 {
 	//TestCanPlaceFlowers();
-	TestFindArrowShots();
+	//TestFindArrowShots();
+	TestPartitionLabels();
 	return 0;
 }
