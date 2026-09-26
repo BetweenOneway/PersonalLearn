@@ -71,5 +71,12 @@
     width: 100%;
     height: calc(100vh - var(--nav-bar-height));
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/*页面内容不足一屏时，让路由页面撑满剩余空间，footer 始终贴底*/
+.scroll-box > :first-child {
+    flex: 1 0 auto;
 }
 </style>
