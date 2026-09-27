@@ -56,44 +56,80 @@
             <div class="zone-main">
                 <n-card class="zone-card">
                     <div v-if="isOwner" class="publisher-box">
-                        <div class="publisher-edit">
+                        <!-- 第一行：输入区通栏，右侧为图片/链接工具列 -->
+                        <div class="publisher-top">
                             <n-input
                                 ref="momentInputRef"
                                 class="publisher-input"
                                 type="textarea"
                                 :rows="2"
-                                placeholder="随便说点儿什么"
+                                placeholder="说点儿什么吧"
                                 :bordered="false"
                                 :resizable="false"
                                 v-model:value="momentInput"
                                 @keydown.ctrl.enter="submitMoment"
                             />
-                            <n-button
-                                class="publisher-emoji-btn"
-                                circle
-                                tertiary
-                                :focusable="false"
-                                @click.stop="emojiPanelShow = !emojiPanelShow"
-                            >😊</n-button>
-                            <div v-if="emojiPanelShow" class="emoji-panel" @click.stop>
-                                <div
-                                    v-for="emoji in emojiList"
-                                    :key="emoji"
-                                    class="emoji-item"
-                                    @click="insertEmoji(emoji)"
-                                >{{ emoji }}</div>
+                            <div class="publisher-attach">
+                                <button
+                                    class="attach-btn"
+                                    title="图片"
+                                    @click="notifyTodo('图片')"
+                                >
+                                    <n-icon :size="20" :component="ImageOutlined" />
+                                </button>
+                                <div class="attach-divider"></div>
+                                <button
+                                    class="attach-btn"
+                                    title="链接"
+                                    @click="notifyTodo('链接')"
+                                >
+                                    <n-icon :size="20" :component="LinkOutlined" />
+                                </button>
                             </div>
                         </div>
-                        <div class="publisher-actions">
-                            <n-button
-                                type="primary"
-                                class="publisher-action-btn"
-                                :disabled="!momentInput.trim()"
-                                :loading="submittingMoment"
-                                @click="submitMoment"
-                            >
-                                随口一说
-                            </n-button>
+                        <!-- 第二行：左侧表情/@/话题 工具条，右侧可见范围 + 发布 -->
+                        <div class="publisher-bottom">
+                            <div class="publisher-tools">
+                                <div class="publisher-emoji-wrap">
+                                    <button
+                                        class="tool-btn"
+                                        title="表情"
+                                        @click.stop="emojiPanelShow = !emojiPanelShow"
+                                    >
+                                        <n-icon :size="20" :component="InsertEmoticonOutlined" />
+                                    </button>
+                                    <div v-if="emojiPanelShow" class="emoji-panel" @click.stop>
+                                        <div
+                                            v-for="emoji in emojiList"
+                                            :key="emoji"
+                                            class="emoji-item"
+                                            @click="insertEmoji(emoji)"
+                                        >{{ emoji }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="publisher-right">
+                                <span class="scope-label">可见范围：</span>
+                                <n-popselect
+                                    v-model:value="momentScope"
+                                    :options="scopeOptions"
+                                    trigger="click"
+                                >
+                                    <button class="scope-btn">
+                                        {{ scopeText }}
+                                        <n-icon :size="16" :component="ArrowDropDownFilled" />
+                                    </button>
+                                </n-popselect>
+                                <n-button
+                                    type="primary"
+                                    class="publisher-action-btn"
+                                    :disabled="!momentInput.trim()"
+                                    :loading="submittingMoment"
+                                    @click="submitMoment"
+                                >
+                                    发表
+                                </n-button>
+                            </div>
                         </div>
                     </div>
                     <n-tabs v-model:value="activeTab" type="line" animated>
@@ -148,7 +184,11 @@
         FavoriteBorderOutlined,
         StarBorderOutlined,
         WorkspacePremiumOutlined,
-        NightsStayOutlined
+        NightsStayOutlined,
+        ImageOutlined,
+        LinkOutlined,
+        InsertEmoticonOutlined,
+        ArrowDropDownFilled
     } from '@vicons/material';
 
     import noteServerRequest from "@/request";
@@ -187,6 +227,15 @@
     const momentInputRef = ref(null);
     const submittingMoment = ref(false);
     const momentList = ref([]);
+    // 可见范围下拉：public=所有人可见，private=仅自己可见
+    const momentScope = ref('public');
+    const scopeOptions = [
+        { label: '所有人可见', value: 'public' },
+        { label: '仅自己可见', value: 'private' }
+    ];
+    const scopeText = computed(
+        () => scopeOptions.find(o => o.value === momentScope.value)?.label || '所有人可见'
+    );
 
     // emoji 表情面板
     const emojiPanelShow = ref(false);
@@ -197,8 +246,8 @@
         '🍻','☕','🍰','🌹','🌸','🍀','🐱','🐶','🚀','💰','📝','🎁'
     ];
 
-    // 在输入框光标处插入 emoji
-    function insertEmoji(emoji) {
+    // 在输入框光标处插入文本（emoji / @ / # 共用）
+    function insertText(text) {
         const inputEl = momentInputRef.value;
         const textarea = inputEl
             ? (inputEl.textareaEl$ || inputEl.textareaElRef || inputEl.textareaEl)
@@ -206,15 +255,24 @@
         const value = momentInput.value;
         const start = textarea ? textarea.selectionStart : value.length;
         const end = textarea ? textarea.selectionEnd : value.length;
-        momentInput.value = value.slice(0, start) + emoji + value.slice(end);
-        // 插入后把光标移动到 emoji 之后
+        momentInput.value = value.slice(0, start) + text + value.slice(end);
+        // 插入后把光标移动到插入内容之后
         requestAnimationFrame(() => {
             if (textarea) {
-                const pos = start + emoji.length;
+                const pos = start + text.length;
                 textarea.focus();
                 textarea.setSelectionRange(pos, pos);
             }
         });
+    }
+
+    function insertEmoji(emoji) {
+        insertText(emoji);
+    }
+
+    // 图片/链接等占位功能提示
+    function notifyTodo(name) {
+        window.$message?.info(`${name}功能开发中，敬请期待`);
     }
 
     // 加载说说列表
@@ -249,10 +307,12 @@
         submittingMoment.value = true;
         try {
             let API = { ...momentApi.addMoment };
-            API.data = { content };
+            // 可见范围：仅自己可见=私有(1)，所有人可见=公开(2)
+            API.data = { content, status: momentScope.value === 'private' ? 1 : 2 };
             const res = await noteServerRequest(API);
             if (res) {
                 momentInput.value = '';
+                momentScope.value = 'public';
                 window.$message.success('已发布');
                 loadMoments();
             }
@@ -502,7 +562,8 @@
 /* 发布输入框（仅空间主人可见） */
 .publisher-box {
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: stretch;
     gap: 12px;
     padding: 16px;
     margin-bottom: 16px;
@@ -517,31 +578,126 @@
     min-width: 0;
 }
 
-/* 编辑区（输入框 + emoji 按钮 + 面板） */
-.publisher-edit {
-    position: relative;
-    flex: 1;
-    min-width: 0;
+/* 第一行：输入区通栏 + 右侧图片/链接工具列 */
+.publisher-top {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 8px;
 }
 
-.publisher-emoji-btn {
-    flex-shrink: 0;
-    align-self: center;
-    color: #999;
+/* 右侧工具列：图片 / 链接，中间以竖线分隔 */
+.publisher-attach {
+    display: flex;
+    align-items: center;
+    gap: 2px;
 }
 
-.publisher-emoji-btn:hover {
+.attach-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: transparent;
+    color: #8a94a6;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.attach-btn:hover {
+    background: #f0f4f8;
     color: #357abd;
 }
 
-/* emoji 选择面板 */
+.attach-divider {
+    width: 1px;
+    height: 18px;
+    background: #e0e4ea;
+}
+
+/* 第二行：左侧表情/@/话题工具条 + 右侧可见范围与发布按钮 */
+.publisher-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.publisher-tools {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tool-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    color: #8a94a6;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.tool-btn:hover {
+    background: #f0f4f8;
+    color: #357abd;
+}
+
+/* @ 与 # 文字按钮 */
+.tool-text {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* 右侧：可见范围 + 发表按钮 */
+.publisher-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.scope-label {
+    color: #8a94a6;
+    font-size: 13px;
+}
+
+.scope-btn {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 8px;
+    border: none;
+    background: transparent;
+    color: #555;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.scope-btn:hover {
+    background: #f0f4f8;
+}
+
+/* emoji 按钮外层，作为表情面板的定位锚点 */
+.publisher-emoji-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* emoji 选择面板（锚定到左下角 emoji 按钮，向右展开） */
 .emoji-panel {
     position: absolute;
     top: 100%;
     left: 0;
+    right: auto;
     z-index: 20;
     width: 280px;
     max-height: 200px;
@@ -594,13 +750,6 @@
 
 .publisher-input :deep(.n-input__placeholder) {
     color: #999;
-}
-
-.publisher-actions {
-    display: flex;
-    align-items: center;
-    align-self: center;
-    flex-shrink: 0;
 }
 
 .publisher-action-btn {

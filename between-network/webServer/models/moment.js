@@ -33,7 +33,7 @@ module.exports = function(sequelize,DataTypes){
         status:{
             type:DataTypes.INTEGER,
             defaultValue:1,
-            comment: '状态【0：已删除，1：正常】'
+            comment: '状态【0：已删除，1：正常/私有，2：公开】'
         }
     },{
         freezeTableName: true,

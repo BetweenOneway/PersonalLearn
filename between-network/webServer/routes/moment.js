@@ -25,6 +25,11 @@ router.post("/addMoment", async (req, res) => {
         let userInfo = req.userInfo;
         let content = req.body.content;
         let images = req.body.images || null;
+        // 可见性：勾选「仅自己可见」=私有(1)，未勾选=公开(2)，缺省按公开处理
+        let targetStatus = parseInt(req.body.status);
+        if (targetStatus !== 1 && targetStatus !== 2) {
+            targetStatus = 2;
+        }
 
         if (!content || content.trim().length === 0) {
             output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success;
@@ -40,7 +45,7 @@ router.post("/addMoment", async (req, res) => {
             content: content,
             images: images,
             time: new Date(),
-            status: 1
+            status: targetStatus
         });
 
         output.success = statusCode.SERVICE_STATUS.ADD_MOMENT_SUCCESS.success;
@@ -93,7 +98,7 @@ router.get("/getMomentList", async (req, res) => {
         const { count, rows } = await sqldb.Moment.findAndCountAll({
             where: {
                 u_id: uId,
-                status: 1
+                status: { [Op.ne]: 0 }
             },
             include: [
                 {
@@ -114,6 +119,7 @@ router.get("/getMomentList", async (req, res) => {
                 content: row.content,
                 images: row.images,
                 time: row.time,
+                status: row.status,
                 u_id: row.u_id,
                 nickname: row.User ? row.User.nickname : '',
                 head_pic: row.User ? row.User.head_pic : ''
@@ -136,6 +142,135 @@ router.get("/getMomentList", async (req, res) => {
     }
 
     logger.info('end get moment list')
+
+    res.send(output);
+    return;
+});
+
+/**
+ * 删除说说（软删除，仅作者本人可操作）
+ * momentId 说说编号
+ */
+router.post("/deleteMoment", async (req, res) => {
+    var output = {
+        success: true,
+        status: '',
+        description: '',
+        data: {}
+    }
+
+    logger.info('start delete moment')
+    try {
+        let userInfo = req.userInfo;
+        let momentId = req.body.momentId;
+
+        if (!userInfo || !userInfo.id) {
+            output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success;
+            output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status;
+            output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description;
+            res.send(output);
+            return;
+        }
+
+        if (!momentId) {
+            output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success;
+            output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status;
+            output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description;
+            res.send(output);
+            return;
+        }
+
+        const moment = await sqldb.Moment.findOne({
+            where: { id: momentId, u_id: userInfo.id, status: 1 }
+        });
+
+        if (!moment) {
+            output.success = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.success;
+            output.status = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.status;
+            output.description = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.description;
+            res.send(output);
+            return;
+        }
+
+        await moment.update({ status: 0 });
+
+        output.success = statusCode.SERVICE_STATUS.DELETE_MOMENT_SUCCESS.success;
+        output.status = statusCode.SERVICE_STATUS.DELETE_MOMENT_SUCCESS.status;
+        output.description = statusCode.SERVICE_STATUS.DELETE_MOMENT_SUCCESS.description;
+    } catch (error) {
+        console.log(error);
+        output.success = statusCode.SERVICE_STATUS.DELETE_MOMENT_FAIL.success;
+        output.status = statusCode.SERVICE_STATUS.DELETE_MOMENT_FAIL.status;
+        output.description = statusCode.SERVICE_STATUS.DELETE_MOMENT_FAIL.description;
+    }
+
+    logger.info('end delete moment')
+
+    res.send(output);
+    return;
+});
+
+/**
+ * 更新说说可见性（仅作者本人可操作）
+ * momentId    说说编号
+ * targetStatus 目标状态【1：私有/仅自己可见，2：公开】
+ */
+router.post("/updateMomentStatus", async (req, res) => {
+    var output = {
+        success: true,
+        status: '',
+        description: '',
+        data: {}
+    }
+
+    logger.info('start update moment status')
+    try {
+        let userInfo = req.userInfo;
+        let momentId = req.body.momentId;
+        let targetStatus = parseInt(req.body.targetStatus);
+
+        if (!userInfo || !userInfo.id) {
+            output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success;
+            output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status;
+            output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description;
+            res.send(output);
+            return;
+        }
+
+        if (!momentId || (targetStatus !== 1 && targetStatus !== 2)) {
+            output.success = statusCode.REDIS_STATUS.PARAM_ERROR.success;
+            output.status = statusCode.REDIS_STATUS.PARAM_ERROR.status;
+            output.description = statusCode.REDIS_STATUS.PARAM_ERROR.description;
+            res.send(output);
+            return;
+        }
+
+        const moment = await sqldb.Moment.findOne({
+            where: { id: momentId, u_id: userInfo.id, status: { [Op.ne]: 0 } }
+        });
+
+        if (!moment) {
+            output.success = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.success;
+            output.status = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.status;
+            output.description = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.description;
+            res.send(output);
+            return;
+        }
+
+        await moment.update({ status: targetStatus });
+
+        output.success = statusCode.SERVICE_STATUS.UPDATE_MOMENT_STATUS_SUCCESS.success;
+        output.status = statusCode.SERVICE_STATUS.UPDATE_MOMENT_STATUS_SUCCESS.status;
+        output.description = statusCode.SERVICE_STATUS.UPDATE_MOMENT_STATUS_SUCCESS.description;
+        output.data = { status: targetStatus };
+    } catch (error) {
+        console.log(error);
+        output.success = statusCode.SERVICE_STATUS.UPDATE_MOMENT_STATUS_FAIL.success;
+        output.status = statusCode.SERVICE_STATUS.UPDATE_MOMENT_STATUS_FAIL.status;
+        output.description = statusCode.SERVICE_STATUS.UPDATE_MOMENT_STATUS_FAIL.description;
+    }
+
+    logger.info('end update moment status')
 
     res.send(output);
     return;

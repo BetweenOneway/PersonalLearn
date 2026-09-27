@@ -97,6 +97,22 @@ const momentApi = {
         userAuth: false,
         dataParam: false,
         successMessage: false
+    },
+    deleteMoment: {
+        name: '删除说说',
+        url: '/moment/deleteMoment',
+        method: 'POST',
+        userAuth: true,
+        dataParam: false,
+        successMessage: true
+    },
+    updateMomentStatus: {
+        name: '更新说说可见性',
+        url: '/moment/updateMomentStatus',
+        method: 'POST',
+        userAuth: true,
+        dataParam: false,
+        successMessage: true
     }
 }
 

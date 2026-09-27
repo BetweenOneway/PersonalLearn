@@ -602,6 +602,26 @@ SERVICE_STATUS={
         status:'SERVICE_083',
         description:'获取说说列表失败'
     },
+    DELETE_MOMENT_SUCCESS:{
+        success:true,
+        status:'SERVICE_084',
+        description:'删除说说成功'
+    },
+    DELETE_MOMENT_FAIL:{
+        success:false,
+        status:'SERVICE_085',
+        description:'删除说说失败'
+    },
+    UPDATE_MOMENT_STATUS_SUCCESS:{
+        success:true,
+        status:'SERVICE_086',
+        description:'更新说说可见性成功'
+    },
+    UPDATE_MOMENT_STATUS_FAIL:{
+        success:false,
+        status:'SERVICE_087',
+        description:'更新说说可见性失败'
+    },
     GET_DIARY_SUCCESS:{
         success:true,
         status:'SERVICE_100',
