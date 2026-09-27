@@ -113,6 +113,30 @@ const momentApi = {
         userAuth: true,
         dataParam: false,
         successMessage: true
+    },
+    getDeletedMomentList: {
+        name: '获取已删除说说列表',
+        url: '/moment/getDeletedMomentList',
+        method: 'GET',
+        userAuth: true,
+        dataParam: false,
+        successMessage: false
+    },
+    restoreMoment: {
+        name: '恢复说说',
+        url: '/moment/restoreMoment',
+        method: 'POST',
+        userAuth: true,
+        dataParam: false,
+        successMessage: true
+    },
+    deleteMomentPermanent: {
+        name: '彻底删除说说',
+        url: '/moment/deleteMomentPermanent',
+        method: 'POST',
+        userAuth: true,
+        dataParam: false,
+        successMessage: true
     }
 }
 

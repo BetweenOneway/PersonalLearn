@@ -29,10 +29,8 @@
     import {NTag,NSpace,NButton,NText, useMessage} from 'naive-ui'
     import noteServerRequest  from "@/request"
     import fileDumpsterApi from "@/request/api/dumpsterApi";
-    import fileApi from '@/request/api/fileApi';
-
     import DeleteRemindDialog from "@/components/remind/DeleteRemindDialog.vue";
-    import { useDeleteRemindDialogStore } from "@/stores/deleteRemindDialogStore";
+    import {useDeleteRemindDialogStore} from '@/stores/deleteRemindDialogStore'
 
     const deleteRemindDialogStore = useDeleteRemindDialogStore();
     const {showFromDumpsterSingle,showFromDumpsterMulti} = deleteRemindDialogStore;

@@ -622,6 +622,36 @@ SERVICE_STATUS={
         status:'SERVICE_087',
         description:'更新说说可见性失败'
     },
+    GET_DELETED_MOMENT_LIST_SUCCESS:{
+        success:true,
+        status:'SERVICE_088',
+        description:'获取已删除说说列表成功'
+    },
+    GET_DELETED_MOMENT_LIST_FAIL:{
+        success:false,
+        status:'SERVICE_089',
+        description:'获取已删除说说列表失败'
+    },
+    RESTORE_MOMENT_SUCCESS:{
+        success:true,
+        status:'SERVICE_090',
+        description:'恢复说说成功'
+    },
+    RESTORE_MOMENT_FAIL:{
+        success:false,
+        status:'SERVICE_091',
+        description:'恢复说说失败'
+    },
+    DELETE_MOMENT_PERMANENT_SUCCESS:{
+        success:true,
+        status:'SERVICE_092',
+        description:'彻底删除说说成功'
+    },
+    DELETE_MOMENT_PERMANENT_FAIL:{
+        success:false,
+        status:'SERVICE_093',
+        description:'彻底删除说说失败'
+    },
     GET_DIARY_SUCCESS:{
         success:true,
         status:'SERVICE_100',

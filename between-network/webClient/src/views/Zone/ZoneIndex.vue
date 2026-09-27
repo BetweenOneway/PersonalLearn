@@ -279,18 +279,14 @@
     async function loadMoments() {
         if (!authorId.value) return;
         try {
-            let API;
-            if (isOwner.value) {
-                // 登录人员即作者：查找本人以及关注的人的说说
-                API = { ...momentApi.getMomentList };
-                const params = { uId: authorId.value, pageIndex: 0, pageSize: 20 };
-                API.params = params;
-            } else {
-                // 登录人员与作者不是同一人：只查找作者的说说
-                API = { ...momentApi.getMomentList };
-                const params = { uId: authorId.value, pageIndex: 0, pageSize: 20 };
-                API.params = params;
+            let API = { ...momentApi.getMomentList };
+            const params = { uId: authorId.value, pageIndex: 0, pageSize: 20 };
+            // 作者本人：查询所有未删除的说说（status 不传，后端默认排除 0）
+            // 非作者（访客）：只查询公开说说（status=2）
+            if (!isOwner.value) {
+                params.status = 2;
             }
+            API.params = params;
             const res = await noteServerRequest(API);
             if (res && res.data) {
                 momentList.value = res.data;
