@@ -35,7 +35,7 @@ export const getDemandStatus = (step, progress)=>{
     return demandStepMap[Number(step)] ?? demandStepMap[0];
 };
 
-//数据库不再保存标题，列表与详情展示时取正文首行作为标题
+//早期数据没有 title 字段，取正文首行兜底作为标题
 export const getContentTitle = (content, maxLength = 30)=>{
     if(!content) return '未命名反馈';
     const firstLine = String(content).split(/\r?\n/).find(text=>text.trim().length > 0) ?? '';
@@ -50,7 +50,7 @@ export const formatDemandList = (list = [])=>{
         const demandStatus = getDemandStatus(item.step, item.progress);
         return {
             ...item,
-            title: getContentTitle(item.content),
+            title: item.title || getContentTitle(item.content),
             date: formatTime(item.time),
             status: demandStatus.status,
             tagType: demandStatus.tagType,
@@ -66,7 +66,7 @@ export const formatIssueList = (list = [])=>{
         const handleStatus = issueStatusMap[Number(item.handle_status)] ?? issueStatusMap[0];
         return {
             ...item,
-            title: getContentTitle(item.content),
+            title: item.title || getContentTitle(item.content),
             date: formatTime(item.time),
             levelText: level.text,
             levelTagType: level.tagType,

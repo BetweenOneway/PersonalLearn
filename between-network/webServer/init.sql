@@ -274,6 +274,7 @@ CREATE TABLE IF NOT EXISTS `todo` (
 CREATE TABLE IF NOT EXISTS `feedback_demand` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
   `u_id` bigint NULL COMMENT '提交人编号（雪花ID）',
+  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '需求标题',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '需求正文',
   `contact` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系方式（邮箱 / 手机号），选填',
   `step` int NOT NULL DEFAULT 0 COMMENT '流转步骤【0：需求提交，1：需求评审，2：需求排期，3：需求研发，4：需求发布】',
@@ -295,6 +296,7 @@ CREATE TABLE IF NOT EXISTS `feedback_demand` (
 CREATE TABLE IF NOT EXISTS `feedback_issue` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
   `u_id` bigint NULL COMMENT '提交人编号（雪花ID）',
+  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '问题标题',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '问题描述',
   `contact` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系方式（邮箱 / 手机号），选填',
   `level` int NOT NULL DEFAULT 1 COMMENT '严重程度【1：轻微，2：一般，3：严重】',
@@ -344,5 +346,9 @@ FLUSH PRIVILEGES;
 -- ----------------------------
 ALTER TABLE `moment` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `moment` MODIFY `images` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '说说配图，多个以英文逗号分隔';
+
+-- 反馈表补回 title 字段（已在上方 CREATE TABLE 中声明，这里是给已存在的表兜底）
+ALTER TABLE `feedback_demand` ADD COLUMN `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '需求标题' AFTER `u_id`;
+ALTER TABLE `feedback_issue` ADD COLUMN `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '问题标题' AFTER `u_id`;
 
 SET FOREIGN_KEY_CHECKS = 1;

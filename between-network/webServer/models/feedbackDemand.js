@@ -21,6 +21,13 @@ module.exports = function(sequelize,DataTypes){
             },
             comment:'提交人编号（雪花ID）'
         },
+        title:{
+            type:DataTypes.STRING(100),
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_general_ci',
+            defaultValue:'',
+            comment:'需求标题'
+        },
         content:{
             type:DataTypes.TEXT('long'),
             charset: 'utf8mb4',

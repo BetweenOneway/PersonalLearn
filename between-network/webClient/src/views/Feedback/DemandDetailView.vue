@@ -29,7 +29,8 @@
         <template v-else>
             <!--顶部：需求流转步骤-->
             <n-card :bordered="false" class="panel-card steps-card">
-                <n-steps :current="currentStep" :status="stepStatus" size="medium">
+                <!--n-steps 的 current 从 1 开始计数，而 demand.step 是 0 基，故 +1 对齐-->
+                <n-steps :current="currentStep + 1" :status="stepStatus" size="medium">
                     <n-step
                         v-for="(stepName,index) in demandSteps"
                         :key="stepName"
@@ -195,15 +196,22 @@
         if(!responseData) return;
 
         const detail = responseData.data;
+        console.log('get Demand detail=>',detail)
         demand.value = {
             ...detail,
-            title: getContentTitle(detail.content),
+            //显式解析关键数值字段：后端字段缺失或类型异常时，
+            //保证 step / progress / vote 始终为有效数字，避免步骤条与进度展示错乱
+            step: Number(detail.step) || 0,
+            progress: Number(detail.progress) || 0,
+            vote: Number(detail.vote) || 0,
+            title: detail.title || getContentTitle(detail.content),
             date: formatTime(detail.time),
             comments: (detail.comments ?? []).map(comment=>({
                 ...comment,
                 commentTime: formatCommentTime(comment.time)
             }))
         };
+        console.log('get Demand detail parsed demand=>',demand.value)
     }
 
     //发表评论

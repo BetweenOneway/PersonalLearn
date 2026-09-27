@@ -11,6 +11,15 @@
                                 placeholder="请选择反馈类型"
                             />
                         </n-form-item>
+                        <n-form-item label="反馈标题" path="title">
+                            <n-input
+                                v-model:value="formData.title"
+                                placeholder="一句话概括你的需求或问题"
+                                maxlength="50"
+                                show-count
+                                clearable
+                            />
+                        </n-form-item>
                         <n-form-item v-if="!isDemand" label="严重程度" path="level">
                             <n-select
                                 v-model:value="formData.level"
@@ -109,6 +118,19 @@
             message: '请选择反馈类型',
             trigger: ['blur', 'change']
         },
+        title: [
+            {
+                required: true,
+                message: '请填写反馈标题',
+                trigger: ['input', 'blur']
+            },
+            {
+                min: 2,
+                max: 50,
+                message: '标题长度 2-50 个字符',
+                trigger: ['input', 'blur']
+            }
+        ],
         content: [
             {
                 required: true,
@@ -126,6 +148,7 @@
     //重置表单
     const resetForm = ()=>{
         formData.type = 'suggestion';
+        formData.title = '';
         formData.level = 2;
         formData.contact = '';
         formData.content = '';
@@ -145,6 +168,7 @@
             {
                 let API = {...feedbackApi.addDemand};
                 API.data = {
+                    title: formData.title,
                     content: formData.content,
                     contact: formData.contact
                 };
@@ -156,6 +180,7 @@
             {
                 let API = {...feedbackApi.addIssue};
                 API.data = {
+                    title: formData.title,
                     content: formData.content,
                     contact: formData.contact,
                     level: formData.level

@@ -69,14 +69,18 @@
 
 .scroll-box {
     width: 100%;
-    height: calc(100vh - var(--nav-bar-height));
+    /*用 min-height 而非固定 height：内容多时正常滚动，内容少时撑满视口*/
+    min-height: calc(100vh - var(--nav-bar-height));
     overflow: auto;
     display: flex;
     flex-direction: column;
 }
 
-/*页面内容不足一屏时，让路由页面撑满剩余空间，footer 始终贴底*/
-.scroll-box > :first-child {
-    flex: 1 0 auto;
+/*页面内容不足一屏时，把 footer 推到视口底部。
+  注意：不要把路由页面设为 flex:1，否则其高度被拉伸为确定值，
+  页面内 height:100% 的卡片（如需求详情的步骤卡片）会被撑满整页，
+  把后续内容挤到 footer 之下*/
+.scroll-box > .page-footer {
+    margin-top: auto;
 }
 </style>

@@ -18,6 +18,7 @@ const LIKE_TYPE_DEMAND = 3;
 
 /**
  * 提交需求
+ * title 需求标题
  * content 需求正文
  * contact 联系方式（选填）
  */
@@ -32,8 +33,17 @@ router.post("/addDemand", async (req, res) => {
     logger.info('start add feedback demand')
     try {
         let userInfo = req.userInfo;
+        let title = req.body.title;
         let content = req.body.content;
         let contact = req.body.contact || '';
+
+        if (!title || title.trim().length === 0) {
+            output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success;
+            output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status;
+            output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description;
+            res.send(output);
+            return;
+        }
 
         if (!content || content.trim().length === 0) {
             output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success;
@@ -47,6 +57,7 @@ router.post("/addDemand", async (req, res) => {
 
         const newDemand = await sqldb.FeedbackDemand.create({
             u_id: userInfo ? userInfo.id : null,
+            title: title.trim(),
             content: content,
             contact: contact,
             step: 0,          // 初始为「需求提交」
@@ -76,6 +87,7 @@ router.post("/addDemand", async (req, res) => {
 
 /**
  * 提交问题
+ * title 问题标题
  * content 问题描述
  * contact 联系方式（选填）
  * level 严重程度【1：轻微，2：一般，3：严重】
@@ -91,9 +103,18 @@ router.post("/addIssue", async (req, res) => {
     logger.info('start add feedback issue')
     try {
         let userInfo = req.userInfo;
+        let title = req.body.title;
         let content = req.body.content;
         let contact = req.body.contact || '';
         let level = parseInt(req.body.level) || 1;
+
+        if (!title || title.trim().length === 0) {
+            output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success;
+            output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status;
+            output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description;
+            res.send(output);
+            return;
+        }
 
         if (!content || content.trim().length === 0) {
             output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success;
@@ -112,6 +133,7 @@ router.post("/addIssue", async (req, res) => {
 
         const newIssue = await sqldb.FeedbackIssue.create({
             u_id: userInfo ? userInfo.id : null,
+            title: title.trim(),
             content: content,
             contact: contact,
             level: level,
@@ -176,6 +198,7 @@ router.get("/getDemandList", async (req, res) => {
         for (let row of rows) {
             demandList.push({
                 id: row.id,
+                title: row.title,
                 content: row.content,
                 step: row.step,
                 progress: row.progress,
@@ -244,6 +267,7 @@ router.get("/getIssueList", async (req, res) => {
         for (let row of rows) {
             issueList.push({
                 id: row.id,
+                title: row.title,
                 content: row.content,
                 level: row.level,
                 handle_status: row.handle_status,
@@ -352,6 +376,7 @@ router.get("/getDemandDetail", async (req, res) => {
         output.description = statusCode.SERVICE_STATUS.GET_FEEDBACK_DETAIL_SUCCESS.description;
         output.data = {
             id: demand.id,
+            title: demand.title,
             content: demand.content,
             contact: demand.contact,
             step: demand.step,
