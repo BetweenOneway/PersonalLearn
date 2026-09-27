@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `memo` (
 -- Table structure for oper_log
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `oper_log` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+    `id` bigint NOT NULL COMMENT '编号（雪花ID，业务层生成，避免 URL 暴露连续自增）',
     `time` datetime NOT NULL COMMENT '时间',
     `event` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '事件',
     `desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '描述',
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `oper_log` (
 -- Table structure for user_log
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `user_log` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+    `id` bigint NOT NULL COMMENT '编号（雪花ID，业务层生成，避免 URL 暴露连续自增）',
     `desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '描述',
     `time` datetime NOT NULL COMMENT '时间',
     `event` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '事件',
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `user_log` (
 -- Table structure for dumpster
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `dumpster` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+    `id` bigint NOT NULL COMMENT '编号（雪花ID，业务层生成，避免 URL 暴露连续自增）',
     `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
     `object_id` bigint NOT NULL COMMENT '目标编号（雪花ID）',
     `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '目标名称',
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `dumpster` (
 -- Table structure for favorite
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `favorite` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+    `id` bigint NOT NULL COMMENT '编号（雪花ID，业务层生成，避免 URL 暴露连续自增）',
     `u_id` bigint NOT NULL COMMENT '用户编号（雪花ID）',
     `object_id` bigint NOT NULL COMMENT '收藏对象编号（雪花ID）',
     `type` int NOT NULL DEFAULT 1 COMMENT '对象类型【1：笔记，2：便签】',
@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `favorite` (
 -- Table structure for comment
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `comment` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+    `id` bigint NOT NULL COMMENT '编号（雪花ID，业务层生成，避免 URL 暴露连续自增）',
     `u_id` bigint NOT NULL COMMENT '谁评论了（雪花ID）',
     `object_id` bigint NOT NULL COMMENT '对什么做了评论（雪花ID）',
     `type` int NOT NULL DEFAULT 1 COMMENT '对象类型【1：笔记，2：便签】',
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `comment` (
 -- Table structure for moment
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `moment` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+    `id` bigint NOT NULL COMMENT '编号（雪花ID，业务层生成，避免 URL 暴露连续自增）',
     `u_id` bigint NOT NULL COMMENT '发表说说的用户编号（雪花ID）',
     `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '说说内容',
     `images` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '说说配图，多个以英文逗号分隔',
@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `moment` (
 -- Table structure for blacklist
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `blacklist` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+    `id` bigint NOT NULL COMMENT '编号（雪花ID，业务层生成，避免 URL 暴露连续自增）',
     `u_id` bigint NOT NULL COMMENT '拉黑发起人用户编号（雪花ID）',
     `target_u_id` bigint NOT NULL COMMENT '被拉黑用户编号（雪花ID）',
     `reason` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '拉黑原因',
@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
 -- Table structure for `like`
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `like` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+    `id` bigint NOT NULL COMMENT '编号（雪花ID，业务层生成，避免 URL 暴露连续自增）',
     `u_id` bigint NOT NULL COMMENT '点赞用户编号（雪花ID）',
     `object_id` bigint NOT NULL COMMENT '点赞对象编号（雪花ID）',
     `type` int NOT NULL DEFAULT 1 COMMENT '对象类型【1：笔记，2：便签】',
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `like` (
 -- Table structure for subscribe
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `subscribe` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+    `id` bigint NOT NULL COMMENT '编号（雪花ID，业务层生成，避免 URL 暴露连续自增）',
     `u_id` bigint NOT NULL COMMENT '订阅者用户编号（雪花ID）',
     `object_id` bigint NOT NULL COMMENT '被关注作者(用户)编号（雪花ID）',
     `type` int NOT NULL DEFAULT 1 COMMENT '订阅类型【1：关注作者】',
@@ -273,11 +273,12 @@ CREATE TABLE IF NOT EXISTS `todo` (
 -- Table structure for feedback_demand
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `feedback_demand` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+    `id` bigint NOT NULL COMMENT '编号（雪花ID，业务层生成，避免 URL 暴露连续自增）',
     `u_id` bigint NULL COMMENT '提交人编号（雪花ID）',
     `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '需求标题',
     `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '需求正文',
     `contact` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系方式（邮箱 / 手机号），选填',
+    `attachments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '附件地址列表（JSON 数组，选填）',
     `step` int NOT NULL DEFAULT 0 COMMENT '流转步骤【0：需求提交，1：需求评审，2：需求排期，3：需求研发，4：需求发布】',
     `progress` int NOT NULL DEFAULT 0 COMMENT '整体进度百分比【0-100】',
     `vote` int NOT NULL DEFAULT 0 COMMENT '期待人数',
@@ -295,11 +296,12 @@ CREATE TABLE IF NOT EXISTS `feedback_demand` (
 -- Table structure for feedback_issue
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `feedback_issue` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号（自增）',
+    `id` bigint NOT NULL COMMENT '编号（雪花ID，业务层生成，避免 URL 暴露连续自增）',
     `u_id` bigint NULL COMMENT '提交人编号（雪花ID）',
     `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '问题标题',
     `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '问题描述',
     `contact` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系方式（邮箱 / 手机号），选填',
+    `attachments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '附件地址列表（JSON 数组，选填）',
     `level` int NOT NULL DEFAULT 1 COMMENT '严重程度【1：轻微，2：一般，3：严重】',
     `handle_status` int NOT NULL DEFAULT 0 COMMENT '处理状态【0：待确认，1：处理中，2：待验证，3：已修复】',
     `handle_desc` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '处理说明',
@@ -426,5 +428,12 @@ ADD COLUMN `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 
 ALTER TABLE `feedback_issue`
 ADD COLUMN `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '问题标题' AFTER `u_id`;
+
+-- 反馈表补回 attachments 字段（已在上方 CREATE TABLE 中声明，这里是给已存在的表兜底）
+ALTER TABLE `feedback_demand`
+ADD COLUMN `attachments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '附件地址列表（JSON 数组，选填）' AFTER `contact`;
+
+ALTER TABLE `feedback_issue`
+ADD COLUMN `attachments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '附件地址列表（JSON 数组，选填）' AFTER `contact`;
 
 SET FOREIGN_KEY_CHECKS = 1;

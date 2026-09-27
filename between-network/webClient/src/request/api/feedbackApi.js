@@ -15,6 +15,14 @@ const feedbackApi = {
         dataParam:false,
         successMessage:true
     },
+    uploadAttachment:{
+        name:'上传反馈附件',
+        url:'/feedback/uploadAttachment',
+        method:'POST',
+        userAuth:true,
+        dataParam:false,
+        successMessage:false
+    },
     getDemandList:{
         name:'获取需求列表',
         url:'/feedback/getDemandList',

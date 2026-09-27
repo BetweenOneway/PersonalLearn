@@ -45,6 +45,42 @@
                                 :autosize="{minRows:6,maxRows:12}"
                             />
                         </n-form-item>
+                        <n-form-item label="附件">
+                            <div class="attachment-area">
+                                <n-button tertiary size="small" :disabled="uploading" @click="triggerFileInput">
+                                    <template #icon>
+                                        <n-icon :component="AttachFileOutlined" />
+                                    </template>
+                                    添加附件
+                                </n-button>
+                                <input
+                                    ref="fileInputRef"
+                                    type="file"
+                                    multiple
+                                    class="file-input-hidden"
+                                    @change="onFileChange"
+                                />
+                                <div v-if="attachments.length" class="attachment-list">
+                                    <div
+                                        v-for="(file, idx) in attachments"
+                                        :key="idx"
+                                        class="attachment-item"
+                                    >
+                                        <n-icon :size="16" :component="InsertDriveFileOutlined" class="attachment-icon" />
+                                        <span class="attachment-name" :title="file.name">{{ file.name }}</span>
+                                        <span class="attachment-size">{{ formatSize(file.size) }}</span>
+                                        <n-button
+                                            text
+                                            size="tiny"
+                                            type="error"
+                                            :disabled="uploading"
+                                            @click="removeAttachment(idx)"
+                                        >移除</n-button>
+                                    </div>
+                                </div>
+                                <span v-else class="attachment-tip">支持图片、日志等文件，选填</span>
+                            </div>
+                        </n-form-item>
                         <n-space align="center">
                             <n-button type="primary" :loading="submitting" @click="submitFeedback">
                                 {{ isDemand ? '提交需求' : '提交问题' }}
@@ -78,6 +114,7 @@
 
 <script setup>
     import { ref, reactive, computed } from 'vue';
+    import { AttachFileOutlined, InsertDriveFileOutlined } from '@vicons/material';
     import noteServerRequest from "@/request";
     import feedbackApi from '@/request/api/feedbackApi';
 
@@ -85,6 +122,11 @@
 
     const formRef = ref(null);
     const submitting = ref(false);
+
+    //附件相关
+    const fileInputRef = ref(null);
+    const attachments = ref([]); // 选中的 File 对象列表
+    const uploading = ref(false);
 
     //表单数据
     const formData = reactive({
@@ -152,6 +194,67 @@
         formData.level = 2;
         formData.contact = '';
         formData.content = '';
+        attachments.value = [];
+        if(fileInputRef.value) fileInputRef.value.value = '';
+    };
+
+    //点击「添加附件」触发隐藏的文件选择框
+    const triggerFileInput = ()=>{
+        fileInputRef.value?.click();
+    };
+
+    //选择文件后加入附件列表（不去重，支持同名多次添加）
+    const onFileChange = (e)=>{
+        const files = e.target.files;
+        if(files && files.length)
+        {
+            for(let i=0;i<files.length;i++)
+            {
+                attachments.value.push(files[i]);
+            }
+        }
+        //清空 input，保证删除后仍可重新选择同一文件
+        e.target.value = '';
+    };
+
+    //移除某个附件
+    const removeAttachment = (idx)=>{
+        attachments.value.splice(idx, 1);
+    };
+
+    //格式化文件大小
+    const formatSize = (bytes)=>{
+        if(!bytes && bytes !== 0) return '';
+        if(bytes < 1024) return bytes + ' B';
+        if(bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+    };
+
+    //把附件上传到服务器，返回可访问地址数组
+    const uploadAttachments = async ()=>{
+        if(attachments.value.length === 0) return [];
+        uploading.value = true;
+        try {
+            const fd = new FormData();
+            for(const file of attachments.value)
+            {
+                fd.append('attachments', file);
+            }
+            let API = {...feedbackApi.uploadAttachment};
+            API.data = fd;
+            const res = await noteServerRequest(API);
+            if(!res || !res.data || !res.data.urls)
+            {
+                window.$message?.error('附件上传失败');
+                return null;
+            }
+            return res.data.urls;
+        } catch (error) {
+            window.$message?.error('附件上传异常');
+            return null;
+        } finally {
+            uploading.value = false;
+        }
     };
 
     //提交反馈
@@ -164,13 +267,19 @@
 
         submitting.value = true;
         try {
+            //先上传附件，拿到可访问地址
+            const urls = await uploadAttachments();
+            if(urls === null) return; // 上传失败则中止提交
+            const attachmentStr = urls.length ? JSON.stringify(urls) : '';
+
             if(isDemand.value)
             {
                 let API = {...feedbackApi.addDemand};
                 API.data = {
                     title: formData.title,
                     content: formData.content,
-                    contact: formData.contact
+                    contact: formData.contact,
+                    attachments: attachmentStr
                 };
                 const responseData = await noteServerRequest(API);
                 if(!responseData) return;
@@ -183,7 +292,8 @@
                     title: formData.title,
                     content: formData.content,
                     contact: formData.contact,
-                    level: formData.level
+                    level: formData.level,
+                    attachments: attachmentStr
                 };
                 const responseData = await noteServerRequest(API);
                 if(!responseData) return;
@@ -199,5 +309,56 @@
 <style scoped>
     .feedback-card {
         height: 100%;
+    }
+
+    .attachment-area {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    /* 隐藏原生文件输入框 */
+    .file-input-hidden {
+        display: none;
+    }
+
+    .attachment-tip {
+        color: #8a94a6;
+        font-size: 12px;
+    }
+
+    .attachment-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .attachment-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        background: #f5f7fa;
+        border-radius: 6px;
+        font-size: 13px;
+    }
+
+    .attachment-icon {
+        color: #357abd;
+        flex-shrink: 0;
+    }
+
+    .attachment-name {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #333;
+    }
+
+    .attachment-size {
+        color: #8a94a6;
+        flex-shrink: 0;
     }
 </style>

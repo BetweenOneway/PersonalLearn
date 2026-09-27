@@ -772,6 +772,16 @@ SERVICE_STATUS={
         status:'SERVICE_129',
         description:'需求投票失败'
     },
+    UPLOAD_FEEDBACK_ATTACHMENT_SUCCESS:{
+        success:true,
+        status:'SERVICE_130',
+        description:'上传反馈附件成功'
+    },
+    UPLOAD_FEEDBACK_ATTACHMENT_FAIL:{
+        success:false,
+        status:'SERVICE_131',
+        description:'上传反馈附件失败'
+    },
 }
 
 EVENT_LIST = {

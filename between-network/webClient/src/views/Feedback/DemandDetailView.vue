@@ -60,6 +60,34 @@
                                 {{ paragraph }}
                             </p>
                         </n-space>
+                        <!--附件：有则展示，无则不显示-->
+                        <template v-if="demandAttachments.length">
+                            <n-divider />
+                            <div class="attachment-block">
+                                <n-text depth="3" class="attachment-label">附件</n-text>
+                                <div class="attachment-grid">
+                                    <a
+                                        v-for="(url,idx) in demandAttachments"
+                                        :key="idx"
+                                        :href="url"
+                                        target="_blank"
+                                        rel="noopener"
+                                        class="attachment-item"
+                                    >
+                                        <img
+                                            v-if="isImage(url)"
+                                            :src="url"
+                                            class="attachment-thumb"
+                                            alt="附件"
+                                        />
+                                        <div v-else class="attachment-file">
+                                            <n-icon :size="28" :component="InsertDriveFileOutlined" />
+                                            <span class="attachment-file-name">{{ attachmentName(url) }}</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </template>
                     </n-card>
                 </n-gi>
 
@@ -143,7 +171,7 @@
 <script setup>
     import { computed, ref } from 'vue';
     import { useRoute } from 'vue-router';
-    import { ArrowBackRound } from '@vicons/material';
+    import { ArrowBackRound, InsertDriveFileOutlined } from '@vicons/material';
     import { toHerf } from '@/router/go';
     import noteServerRequest from '@/request';
     import feedbackApi from '@/request/api/feedbackApi';
@@ -182,6 +210,31 @@
         if(!demand.value?.content) return [];
         return String(demand.value.content).split(/\r?\n/).filter(text=>text.trim().length > 0);
     });
+
+    //附件地址列表：后端以 JSON 字符串存储，这里解析为数组（无附件则为空）
+    const demandAttachments = computed(()=>{
+        const raw = demand.value?.attachments;
+        if(!raw) return [];
+        let list = [];
+        if(typeof raw === 'string'){
+            try { list = JSON.parse(raw); } catch(e){ list = []; }
+        } else if(Array.isArray(raw)){
+            list = raw;
+        }
+        return Array.isArray(list) ? list : [];
+    });
+
+    //判断附件是否为图片（用于缩略图预览）
+    const isImage = (url)=>{
+        return /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(url || '');
+    };
+
+    //从附件地址中提取文件名
+    const attachmentName = (url)=>{
+        if(!url) return '';
+        const clean = url.split('?')[0];
+        return clean.substring(clean.lastIndexOf('/') + 1);
+    };
 
     //获取需求详情
     async function getDemandDetail()
@@ -302,6 +355,66 @@
     .content-paragraph {
         margin: 0;
         line-height: 1.8;
+    }
+
+    .attachment-block {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .attachment-label {
+        font-size: 13px;
+    }
+
+    .attachment-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .attachment-item {
+        display: block;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e6e9ef;
+        background: #f7f9fc;
+        text-decoration: none;
+        transition: box-shadow 0.15s, transform 0.15s;
+    }
+
+    .attachment-item:hover {
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        transform: translateY(-1px);
+    }
+
+    .attachment-thumb {
+        display: block;
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+    }
+
+    .attachment-file {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 120px;
+        height: 120px;
+        padding: 8px;
+        color: #357abd;
+    }
+
+    .attachment-file-name {
+        max-width: 104px;
+        font-size: 12px;
+        color: #555;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .stage-text {

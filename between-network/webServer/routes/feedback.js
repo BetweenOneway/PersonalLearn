@@ -1,10 +1,20 @@
 const express = require("express");
 const { Op } = require("sequelize");
+const path = require("path");
+const fs = require("fs");
 
 var sqldb = require('../sqldb');
 let statusCode = require("./statusCode");
+const { nextId } = require("../utils/snowflake");
 
 var router = express.Router();
+
+// 判断目录是否存在，不存在则创建
+function checkDirectory(dirPath) {
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
+    }
+}
 
 /**
  * 评论对象类型：3 表示需求（1：笔记，2：便签）
@@ -36,6 +46,13 @@ router.post("/addDemand", async (req, res) => {
         let title = req.body.title;
         let content = req.body.content;
         let contact = req.body.contact || '';
+        // 附件地址列表（前端上传后回传的 JSON 字符串）
+        let attachments = '';
+        if (req.body.attachments) {
+            attachments = Array.isArray(req.body.attachments)
+                ? JSON.stringify(req.body.attachments)
+                : req.body.attachments;
+        }
 
         if (!title || title.trim().length === 0) {
             output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success;
@@ -56,10 +73,12 @@ router.post("/addDemand", async (req, res) => {
         let curTime = new Date().toLocaleString();
 
         const newDemand = await sqldb.FeedbackDemand.create({
+            id: nextId(),
             u_id: userInfo ? userInfo.id : null,
             title: title.trim(),
             content: content,
             contact: contact,
+            attachments: attachments,
             step: 0,          // 初始为「需求提交」
             progress: 0,
             vote: 0,
@@ -107,6 +126,13 @@ router.post("/addIssue", async (req, res) => {
         let content = req.body.content;
         let contact = req.body.contact || '';
         let level = parseInt(req.body.level) || 1;
+        // 附件地址列表（前端上传后回传的 JSON 字符串）
+        let attachments = '';
+        if (req.body.attachments) {
+            attachments = Array.isArray(req.body.attachments)
+                ? JSON.stringify(req.body.attachments)
+                : req.body.attachments;
+        }
 
         if (!title || title.trim().length === 0) {
             output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success;
@@ -132,10 +158,12 @@ router.post("/addIssue", async (req, res) => {
         let curTime = new Date().toLocaleString();
 
         const newIssue = await sqldb.FeedbackIssue.create({
+            id: nextId(),
             u_id: userInfo ? userInfo.id : null,
             title: title.trim(),
             content: content,
             contact: contact,
+            attachments: attachments,
             level: level,
             handle_status: 0,   // 初始为「待确认」
             time: curTime,
@@ -156,6 +184,72 @@ router.post("/addIssue", async (req, res) => {
 
     logger.info('end add feedback issue')
 
+    res.send(output);
+    return;
+});
+
+/**
+ * 上传反馈附件（支持多文件）
+ * 字段名：attachments
+ * 返回 data.urls：附件可访问地址数组
+ */
+router.post("/uploadAttachment", async (req, res) => {
+    var output = {
+        success: true,
+        status: '',
+        description: '',
+        data: { urls: [] }
+    }
+
+    logger.info('start upload feedback attachment')
+    try {
+        if (!req.files || !req.files.attachments) {
+            output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success;
+            output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status;
+            output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description;
+            res.send(output);
+            return;
+        }
+
+        // 统一为数组，兼容单文件与多文件
+        const uploaded = req.files.attachments;
+        const fileArr = Array.isArray(uploaded) ? uploaded : [uploaded];
+
+        // 存储目录：public/imgs/feedback
+        const fileStorePath = path.join(path.dirname(__dirname), 'public', 'imgs/feedback');
+        checkDirectory(fileStorePath);
+
+        const urls = [];
+        for (let file of fileArr) {
+            let fileName = file.name || 'file';
+            let suffixArr = fileName.split('.');
+            let suffix = suffixArr.length > 1 ? suffixArr[suffixArr.length - 1] : '';
+            // 文件名：时间戳 + 随机串 + 后缀，避免重名覆盖
+            let storageFileName = 'feedback-' + Date.now() + '-' + Math.floor(Math.random() * 1e6) + (suffix ? '.' + suffix : '');
+
+            await new Promise((resolve, reject) => {
+                file.mv(fileStorePath + '/' + storageFileName, err => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+
+            let fileURL = req.protocol + '://' + req.get('host') + '/imgs/feedback/' + storageFileName;
+            urls.push(fileURL);
+        }
+
+        output.success = statusCode.SERVICE_STATUS.UPLOAD_FEEDBACK_ATTACHMENT_SUCCESS.success;
+        output.status = statusCode.SERVICE_STATUS.UPLOAD_FEEDBACK_ATTACHMENT_SUCCESS.status;
+        output.description = statusCode.SERVICE_STATUS.UPLOAD_FEEDBACK_ATTACHMENT_SUCCESS.description;
+        output.data.urls = urls;
+    } catch (error) {
+        console.log(error);
+        output.success = statusCode.SERVICE_STATUS.UPLOAD_FEEDBACK_ATTACHMENT_FAIL.success;
+        output.status = statusCode.SERVICE_STATUS.UPLOAD_FEEDBACK_ATTACHMENT_FAIL.status;
+        output.description = statusCode.SERVICE_STATUS.UPLOAD_FEEDBACK_ATTACHMENT_FAIL.description;
+    }
+
+    logger.info('end upload feedback attachment')
     res.send(output);
     return;
 });
@@ -200,6 +294,7 @@ router.get("/getDemandList", async (req, res) => {
                 id: row.id,
                 title: row.title,
                 content: row.content,
+                attachments: row.attachments || '',
                 step: row.step,
                 progress: row.progress,
                 vote: row.vote,
@@ -269,6 +364,7 @@ router.get("/getIssueList", async (req, res) => {
                 id: row.id,
                 title: row.title,
                 content: row.content,
+                attachments: row.attachments || '',
                 level: row.level,
                 handle_status: row.handle_status,
                 handle_desc: row.handle_desc,
@@ -379,6 +475,7 @@ router.get("/getDemandDetail", async (req, res) => {
             title: demand.title,
             content: demand.content,
             contact: demand.contact,
+            attachments: demand.attachments || '',
             step: demand.step,
             progress: demand.progress,
             vote: demand.vote,

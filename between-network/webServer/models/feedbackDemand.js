@@ -11,7 +11,8 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.BIGINT,
             primaryKey:true,
             allowNull:false,
-            autoIncrement:true
+            autoIncrement:false,
+            comment:'编号（雪花ID，业务层生成，避免 URL 暴露连续自增）'
         },
         u_id:{
             type:DataTypes.BIGINT,
@@ -37,6 +38,12 @@ module.exports = function(sequelize,DataTypes){
         contact:{
             type:DataTypes.STRING(64),
             comment:'联系方式（邮箱 / 手机号），选填'
+        },
+        attachments:{
+            type:DataTypes.TEXT('long'),
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_general_ci',
+            comment:'附件地址列表（JSON 数组，选填）'
         },
         step:{
             type:DataTypes.INTEGER,

@@ -10,9 +10,21 @@
                     text
                     class="nav-center-item"
                     :type="activeNav === 'home' ? 'primary' : 'default'"
-                    @mouseenter="hideCoBuildPanel"
+                    @mouseenter="hideAllPanels"
                     @click="toNavRoute('/')"
                 >首页</n-button>
+                <n-button
+                    text
+                    class="nav-center-item"
+                    :class="{ 'nav-center-dropdown--open': openFunctionPanelShow }"
+                    :type="openFunctionActive || openFunctionPanelShow ? 'primary' : 'default'"
+                    @mouseenter="showOpenFunctionPanel"
+                    @mouseleave="delayHideOpenFunctionPanel"
+                    @click="toNavRoute('/note')"
+                >
+                    开放功能
+                    <n-icon size="16" :component="KeyboardArrowDownRound" class="nav-caret" />
+                </n-button>
                 <n-button
                     text
                     class="nav-center-item"
@@ -100,6 +112,30 @@
                 </div>
             </div>
         </transition>
+
+        <!--开发功能下拉面板：铺满顶栏宽度-->
+        <transition name="mega-fade">
+            <div
+                v-show="openFunctionPanelShow"
+                class="mega-panel"
+                :class="{ 'mega-panel--dark': isDarkTheme }"
+                @mouseenter="showOpenFunctionPanel"
+                @mouseleave="delayHideOpenFunctionPanel"
+            >
+                <div class="mega-panel-inner">
+                    <div class="mega-item" @click="toNavRoute('/note')">
+                        <div class="mega-item-title">云笔记</div>
+                        <n-text depth="3" class="mega-item-desc">记录灵感与知识，随时随地云同步</n-text>
+                        <span class="mega-item-go">前往查看 →</span>
+                    </div>
+                    <div class="mega-item" @click="goMyZone">
+                        <div class="mega-item-title">我的空间</div>
+                        <n-text depth="3" class="mega-item-desc">查看与分享你的动态、文章与说说</n-text>
+                        <span class="mega-item-go">立即前往 →</span>
+                    </div>
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -141,6 +177,8 @@
 
     //中部导航当前选中项
     const activeNav = computed(()=>{
+        if(route.path.startsWith('/note')) return 'note'
+        if(route.path.startsWith('/zone')) return 'zone'
         if(route.path.startsWith('/feedback')) return 'feedback'
         if(route.path.startsWith('/devlog')) return 'devlog'
         if(route.path === '/') return 'home'
@@ -150,12 +188,21 @@
     //共享共建下拉菜单是否处于选中态（开发日志/用户反馈都算）
     const coBuildActive = computed(()=> activeNav.value === 'feedback' || activeNav.value === 'devlog')
 
+    //开发功能下拉菜单是否处于选中态（云笔记/我的空间都算）
+    const openFunctionActive = computed(()=> activeNav.value === 'note' || activeNav.value === 'zone')
+
     //点击中部导航跳转
     const toNavRoute = (path)=>{
-        hideCoBuildPanel();
+        hideAllPanels();
         //已经在当前页面则不再重复跳转
         if(route.path === path) return
         toHerf(path)
+    }
+
+    //收起所有下拉面板（鼠标移到其他导航项时）
+    const hideAllPanels = ()=>{
+        hideCoBuildPanel();
+        hideDevPanel();
     }
 
     //共享共建下拉面板显示状态
@@ -180,8 +227,44 @@
         coBuildPanelShow.value = false
     }
 
+    //开发功能下拉面板显示状态
+    const openFunctionPanelShow = ref(false)
+    let devHideTimer = null
+
+    const showOpenFunctionPanel = ()=>{
+        clearTimeout(coBuildHideTimer)
+        clearTimeout(devHideTimer)
+        coBuildPanelShow.value = false // 同时只展开一个面板
+        openFunctionPanelShow.value = true
+    }
+
+    const delayHideOpenFunctionPanel = ()=>{
+        clearTimeout(devHideTimer)
+        devHideTimer = setTimeout(()=>{
+            openFunctionPanelShow.value = false
+        }, 200)
+    }
+
+    const hideDevPanel = ()=>{
+        clearTimeout(devHideTimer)
+        openFunctionPanelShow.value = false
+    }
+
+    //跳转我的空间（未登录则引导登录）
+    const goMyZone = ()=>{
+        hideAllPanels()
+        if(user_id.value === null){
+            showLoginModal()
+            return
+        }
+        const zonePath = `/zone/${user_id.value}`
+        if(route.path === zonePath) return
+        toHerf(zonePath)
+    }
+
     onBeforeUnmount(()=>{
         clearTimeout(coBuildHideTimer)
+        clearTimeout(devHideTimer)
     })
 
     //是否显示用户菜单
