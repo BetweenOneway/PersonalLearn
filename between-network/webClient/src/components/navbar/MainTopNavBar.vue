@@ -1,105 +1,105 @@
 <template>
     <div class="top-nav-root">
-    <n-space justify="space-between" align="center" style="height: 100%;">
-        <a href="/">
-            <n-image :src="logoDarkImage"></n-image>
-        </a>
-        <!--中部导航-->
-        <n-space align="center" :wrap-item="false" :size="28">
-            <n-button
-                text
-                class="nav-center-item"
-                :type="activeNav === 'home' ? 'primary' : 'default'"
-                @mouseenter="hideCoBuildPanel"
-                @click="toNavRoute('/')"
-            >首页</n-button>
-            <n-button
-                text
-                class="nav-center-item"
-                :class="{ 'nav-center-dropdown--open': coBuildPanelShow }"
-                :type="coBuildActive || coBuildPanelShow ? 'primary' : 'default'"
+        <n-space justify="space-between" align="center" style="height: 100%;">
+            <a href="/">
+                <n-image :src="logoDarkImage"></n-image>
+            </a>
+            <!--中部导航-->
+            <n-space align="center" :wrap-item="false" :size="28">
+                <n-button
+                    text
+                    class="nav-center-item"
+                    :type="activeNav === 'home' ? 'primary' : 'default'"
+                    @mouseenter="hideCoBuildPanel"
+                    @click="toNavRoute('/')"
+                >首页</n-button>
+                <n-button
+                    text
+                    class="nav-center-item"
+                    :class="{ 'nav-center-dropdown--open': coBuildPanelShow }"
+                    :type="coBuildActive || coBuildPanelShow ? 'primary' : 'default'"
+                    @mouseenter="showCoBuildPanel"
+                    @mouseleave="delayHideCoBuildPanel"
+                    @click="toNavRoute('/feedback')"
+                >
+                    共享共建
+                    <n-icon size="16" :component="KeyboardArrowDownRound" class="nav-caret" />
+                </n-button>
+            </n-space>
+
+            <n-space align="center" :wrap-item="false">
+                <!--头像-->
+                <n-popover v-model:show = "userMenuShow" trigger="click" width="260px" content-style="padding:10px">
+                    <template #trigger>
+                        <n-button circle :bordered="false">
+                            <n-avatar v-if="user_id !== null" round :src="head_image"/>
+                        </n-button>
+                    </template>
+                    <n-thing :title="userNickName">
+                        <!--头像-->
+                        <template #avatar>
+                            <n-avatar size="large" round :src="head_image" style="position:relative;top:3px"/>
+                        </template>
+                        <!--简介-->
+                        <template #description>
+                            <n-space align="center">
+                                <n-tag :bordered="false" :type="userLevel.theme" size="small">{{ userLevel.text }}</n-tag>
+                                <n-text depth="3">2099-12-31 到期</n-text>
+                            </n-space>
+                        </template>
+                        <template #default>
+                            <n-divider style="margin:5px auto"/>
+                            <!--菜单选项-->
+                            <n-menu :options="userMenu" :indent="18" :on-update:value="clickUserMenu" />
+                        </template>
+                    </n-thing>
+                </n-popover>
+
+                <!--登录按钮-->
+                <n-button v-if="user_id === null" tertiary type="primary" @click="showLoginModal">登录</n-button>
+                <!--注册按钮-->
+                <n-button v-if="user_id === null" tertiary type="primary" @click="showRegisterModal">注册</n-button>
+                
+                <!--分割线-->
+                <n-divider v-if="user_id !== null" vertical />
+                <!--消息-->
+                <n-badge dot processing type="success" :offset="[-8,4]">
+                    <n-button circle tertiary>
+                        <n-icon size="18" :component="NotificationsNoneOutlined" />
+                    </n-button>
+                </n-badge>
+
+                <!--主题按钮-->
+                <n-button circle tertiary @click="changeTheme(!isDarkTheme)">
+                    <n-icon size="18" :component="theme.icon" />
+                </n-button>
+                
+            </n-space>
+        </n-space>
+
+        <!--共享共建下拉面板：铺满顶栏宽度-->
+        <transition name="mega-fade">
+            <div
+                v-show="coBuildPanelShow"
+                class="mega-panel"
+                :class="{ 'mega-panel--dark': isDarkTheme }"
                 @mouseenter="showCoBuildPanel"
                 @mouseleave="delayHideCoBuildPanel"
-                @click="toNavRoute('/feedback')"
             >
-                共享共建
-                <n-icon size="16" :component="KeyboardArrowDownRound" class="nav-caret" />
-            </n-button>
-        </n-space>
-
-        <n-space align="center" :wrap-item="false">
-            <!--头像-->
-            <n-popover v-model:show = "userMenuShow" trigger="click" width="260px" content-style="padding:10px">
-                <template #trigger>
-                    <n-button circle :bordered="false">
-                        <n-avatar v-if="user_id !== null" round :src="head_image"/>
-                    </n-button>
-                </template>
-                <n-thing :title="userNickName">
-                    <!--头像-->
-                    <template #avatar>
-                        <n-avatar size="large" round :src="head_image" style="position:relative;top:3px"/>
-                    </template>
-                    <!--简介-->
-                    <template #description>
-                        <n-space align="center">
-                            <n-tag :bordered="false" :type="userLevel.theme" size="small">{{ userLevel.text }}</n-tag>
-                            <n-text depth="3">2099-12-31 到期</n-text>
-                        </n-space>
-                    </template>
-                    <template #default>
-                        <n-divider style="margin:5px auto"/>
-                        <!--菜单选项-->
-                        <n-menu :options="userMenu" :indent="18" :on-update:value="clickUserMenu" />
-                    </template>
-                </n-thing>
-            </n-popover>
-
-            <!--登录按钮-->
-            <n-button v-if="user_id === null" tertiary type="primary" @click="showLoginModal">登录</n-button>
-            <!--注册按钮-->
-            <n-button v-if="user_id === null" tertiary type="primary" @click="showRegisterModal">注册</n-button>
-            
-            <!--分割线-->
-            <n-divider v-if="user_id !== null" vertical />
-            <!--消息-->
-            <n-badge dot processing type="success" :offset="[-8,4]">
-                <n-button circle tertiary>
-                    <n-icon size="18" :component="NotificationsNoneOutlined" />
-                </n-button>
-            </n-badge>
-
-            <!--主题按钮-->
-            <n-button circle tertiary @click="changeTheme(!isDarkTheme)">
-                <n-icon size="18" :component="theme.icon" />
-            </n-button>
-            
-        </n-space>
-    </n-space>
-
-    <!--共享共建下拉面板：铺满顶栏宽度-->
-    <transition name="mega-fade">
-        <div
-            v-show="coBuildPanelShow"
-            class="mega-panel"
-            :class="{ 'mega-panel--dark': isDarkTheme }"
-            @mouseenter="showCoBuildPanel"
-            @mouseleave="delayHideCoBuildPanel"
-        >
-            <div class="mega-panel-inner">
-                <div class="mega-item" @click="toNavRoute('/devlog')">
-                    <div class="mega-item-title">开发日志</div>
-                    <n-text depth="3" class="mega-item-desc">记录每一次版本迭代与功能更新</n-text>
-                    <span class="mega-item-go">前往查看 →</span>
-                </div>
-                <div class="mega-item" @click="toNavRoute('/feedback')">
-                    <div class="mega-item-title">用户反馈</div>
-                    <n-text depth="3" class="mega-item-desc">提交你的需求与遇到的问题</n-text>
-                    <span class="mega-item-go">立即反馈 →</span>
+                <div class="mega-panel-inner">
+                    <div class="mega-item" @click="toNavRoute('/devlog')">
+                        <div class="mega-item-title">开发日志</div>
+                        <n-text depth="3" class="mega-item-desc">记录每一次版本迭代与功能更新</n-text>
+                        <span class="mega-item-go">前往查看 →</span>
+                    </div>
+                    <div class="mega-item" @click="toNavRoute('/feedback')">
+                        <div class="mega-item-title">用户反馈</div>
+                        <n-text depth="3" class="mega-item-desc">提交你的需求与遇到的问题</n-text>
+                        <span class="mega-item-go">立即反馈 →</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </transition>
+        </transition>
     </div>
 </template>
 

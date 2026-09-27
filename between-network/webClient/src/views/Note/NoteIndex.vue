@@ -44,15 +44,15 @@
                         <NotebookTree ref="notebookTree" @NotebookNumChange="NotebookNumChanged" @NotebookChanged="notebookChanged"/>
                     </div>
 
-                    <!-- 底部：回收站 -->
-                    <div class="sidebar-bottom">
+                    <!-- 底部：回收站 暂时屏蔽-->
+                    <!-- <div class="sidebar-bottom">
                         <n-button size="small" quaternary @click="showRecycleBin" class="recycle-btn">
                             <template #icon>
                                 <n-icon size="18" :component="DeleteOutlineRound"/>
                             </template>
                             回收站
                         </n-button>
-                    </div>
+                    </div> -->
                 </div>
             </n-layout-sider>
 
