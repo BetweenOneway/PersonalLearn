@@ -47,9 +47,25 @@ const feedbackApi = {
         dataParam:false,
         successMessage:false
     },
+    getIssueDetail:{
+        name:'获取问题详情',
+        url:'/feedback/getIssueDetail',
+        method:'GET',
+        userAuth:false,
+        dataParam:false,
+        successMessage:false
+    },
     addComment:{
         name:'发表需求评论',
         url:'/feedback/addComment',
+        method:'POST',
+        userAuth:true,
+        dataParam:false,
+        successMessage:true
+    },
+    addIssueComment:{
+        name:'发表问题评论',
+        url:'/feedback/addIssueComment',
         method:'POST',
         userAuth:true,
         dataParam:false,

@@ -22,6 +22,11 @@ function checkDirectory(dirPath) {
 const COMMENT_TYPE_DEMAND = 3;
 
 /**
+ * 评论对象类型：4 表示问题反馈
+ */
+const COMMENT_TYPE_ISSUE = 4;
+
+/**
  * 点赞对象类型：3 表示需求（1：笔记，2：便签）
  */
 const LIKE_TYPE_DEMAND = 3;
@@ -498,6 +503,109 @@ router.get("/getDemandDetail", async (req, res) => {
 });
 
 /**
+ * 获取问题详情（含评论）
+ * issueId 问题编号
+ */
+router.get("/getIssueDetail", async (req, res) => {
+    var output = {
+        success: true,
+        status: '',
+        description: '',
+        data: {}
+    }
+
+    logger.info('start get feedback issue detail')
+
+    try {
+        let issueId = req.query.issueId;
+
+        if (!issueId) {
+            output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success;
+            output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status;
+            output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description;
+            res.send(output);
+            return;
+        }
+
+        const issue = await sqldb.FeedbackIssue.findOne({
+            where: { id: issueId, status: 1 },
+            include: [
+                {
+                    model: sqldb.User,
+                    as: 'User',
+                    attributes: ['id', 'nickname', 'head_pic']
+                }
+            ]
+        });
+
+        if (!issue) {
+            output.success = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.success;
+            output.status = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.status;
+            output.description = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.description;
+            res.send(output);
+            return;
+        }
+
+        //问题下的评论
+        const comments = await sqldb.Comment.findAll({
+            where: {
+                object_id: issueId,
+                type: COMMENT_TYPE_ISSUE,
+                status: 1
+            },
+            include: [
+                {
+                    model: sqldb.User,
+                    as: 'User',
+                    attributes: ['id', 'nickname', 'head_pic']
+                }
+            ],
+            order: [['time', 'ASC']]
+        });
+
+        let commentList = [];
+        for (let comment of comments) {
+            commentList.push({
+                id: comment.id,
+                content: comment.content,
+                time: comment.time,
+                u_id: comment.u_id,
+                user: comment.User ? comment.User.nickname : '匿名用户',
+                head_pic: comment.User ? comment.User.head_pic : ''
+            });
+        }
+
+        output.success = statusCode.SERVICE_STATUS.GET_FEEDBACK_DETAIL_SUCCESS.success;
+        output.status = statusCode.SERVICE_STATUS.GET_FEEDBACK_DETAIL_SUCCESS.status;
+        output.description = statusCode.SERVICE_STATUS.GET_FEEDBACK_DETAIL_SUCCESS.description;
+        output.data = {
+            id: issue.id,
+            title: issue.title,
+            content: issue.content,
+            contact: issue.contact,
+            attachments: issue.attachments || '',
+            level: issue.level,
+            handle_status: issue.handle_status,
+            handle_desc: issue.handle_desc || '',
+            time: issue.time,
+            u_id: issue.u_id,
+            submitter: issue.User ? issue.User.nickname : '匿名用户',
+            comments: commentList
+        };
+    } catch (error) {
+        console.log(error);
+        output.success = statusCode.SERVICE_STATUS.GET_FEEDBACK_DETAIL_FAIL.success;
+        output.status = statusCode.SERVICE_STATUS.GET_FEEDBACK_DETAIL_FAIL.status;
+        output.description = statusCode.SERVICE_STATUS.GET_FEEDBACK_DETAIL_FAIL.description;
+    }
+
+    logger.info('end get feedback issue detail')
+
+    res.send(output);
+    return;
+});
+
+/**
  * 发表需求评论
  * demandId 需求编号
  * content 评论内容
@@ -560,6 +668,74 @@ router.post("/addComment", async (req, res) => {
     }
 
     logger.info('end add feedback comment')
+
+    res.send(output);
+    return;
+});
+
+/**
+ * 发表问题评论
+ * issueId 问题编号
+ * content 评论内容
+ */
+router.post("/addIssueComment", async (req, res) => {
+    var output = {
+        success: true,
+        status: '',
+        description: '',
+        data: {}
+    }
+
+    logger.info('start add feedback issue comment')
+
+    try {
+        let userInfo = req.userInfo;
+        let issueId = req.body.issueId;
+        let content = req.body.content;
+
+        if (!issueId || !content || content.trim().length === 0) {
+            output.success = statusCode.SERVICE_STATUS.PARAM_ERROR.success;
+            output.status = statusCode.SERVICE_STATUS.PARAM_ERROR.status;
+            output.description = statusCode.SERVICE_STATUS.PARAM_ERROR.description;
+            res.send(output);
+            return;
+        }
+
+        const issue = await sqldb.FeedbackIssue.findOne({
+            where: { id: issueId, status: 1 }
+        });
+
+        if (!issue) {
+            output.success = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.success;
+            output.status = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.status;
+            output.description = statusCode.SERVICE_STATUS.RESOURCE_NOT_FOUND.description;
+            res.send(output);
+            return;
+        }
+
+        let curTime = new Date().toLocaleString();
+
+        const newComment = await sqldb.Comment.create({
+            u_id: userInfo ? userInfo.id : null,
+            object_id: issueId,
+            type: COMMENT_TYPE_ISSUE,
+            content: content,
+            time: curTime,
+            status: 1
+        });
+
+        output.success = statusCode.SERVICE_STATUS.ADD_FEEDBACK_COMMENT_SUCCESS.success;
+        output.status = statusCode.SERVICE_STATUS.ADD_FEEDBACK_COMMENT_SUCCESS.status;
+        output.description = statusCode.SERVICE_STATUS.ADD_FEEDBACK_COMMENT_SUCCESS.description;
+        output.data.commentId = newComment.id;
+    } catch (error) {
+        console.log(error);
+        output.success = statusCode.SERVICE_STATUS.ADD_FEEDBACK_COMMENT_FAIL.success;
+        output.status = statusCode.SERVICE_STATUS.ADD_FEEDBACK_COMMENT_FAIL.status;
+        output.description = statusCode.SERVICE_STATUS.ADD_FEEDBACK_COMMENT_FAIL.description;
+    }
+
+    logger.info('end add feedback issue comment')
 
     res.send(output);
     return;

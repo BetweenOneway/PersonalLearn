@@ -59,8 +59,14 @@
                 <n-card title="问题反应" :bordered="false" class="panel-card">
                     <n-empty v-if="issueList.length === 0" description="还没有问题反馈" />
                     <n-list v-else hoverable clickable>
-                        <n-list-item v-for="issue in issueList" :key="issue.id">
-                            <n-thing :title="issue.title" :description="issue.date">
+                        <n-list-item v-for="issue in issueList" :key="issue.id" @click="toIssueDetail(issue.id)">
+                            <n-thing>
+                                <template #header>
+                                    <span class="issue-title">{{ issue.title }}</span>
+                                </template>
+                                <template #description>
+                                    <span>{{ issue.date }}</span>
+                                </template>
                                 <template #header-extra>
                                     <n-space align="center" :size="8">
                                         <n-tag :type="issue.levelTagType" size="small" :bordered="false">{{ issue.levelText }}</n-tag>
@@ -107,6 +113,11 @@
     //点击需求名称进入需求详情页
     const toDemandDetail = (id)=>{
         toHerf(`/feedback/demand/${id}`);
+    };
+
+    //点击问题标题进入问题详情页
+    const toIssueDetail = (id)=>{
+        toHerf(`/feedback/issue/${id}`);
     };
 
     //获取需求列表
@@ -212,5 +223,16 @@
     .demand-date {
         font-size: 13px;
         white-space: nowrap;
+    }
+
+    .issue-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #18a058;
+        cursor: pointer;
+    }
+
+    .issue-title:hover {
+        text-decoration: underline;
     }
 </style>

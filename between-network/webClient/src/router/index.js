@@ -89,6 +89,12 @@ const router = createRouter({
         meta:{title:'需求详情'},
     },
     {
+        path: '/feedback/issue/:id',
+        props:true,
+        component: ()=>import("@/views/Feedback/IssueDetailView.vue"),
+        meta:{title:'问题详情'},
+    },
+    {
         path: '/blog',
         component: ()=>import("@/views/Blog/BlogIndexView.vue"),
         meta:{title:'博客页'},

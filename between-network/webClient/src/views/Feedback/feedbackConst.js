@@ -35,6 +35,22 @@ export const getDemandStatus = (step, progress)=>{
     return demandStepMap[Number(step)] ?? demandStepMap[0];
 };
 
+//问题处理流转步骤（与后端 feedback_issue.handle_status 一致）
+export const issueSteps = ['待确认', '处理中', '待验证', '已修复'];
+
+//问题步骤描述
+export const issueStepDescriptions = [
+    '已收到问题反馈，等待处理人员确认',
+    '处理人员已确认，正在排查与修复',
+    '问题已修复，等待提交人验证',
+    '问题已修复并验证通过'
+];
+
+//根据问题处理状态计算展示用的状态
+export const getIssueStatus = (handleStatus)=>{
+    return issueStatusMap[Number(handleStatus)] ?? issueStatusMap[0];
+};
+
 //早期数据没有 title 字段，取正文首行兜底作为标题
 export const getContentTitle = (content, maxLength = 30)=>{
     if(!content) return '未命名反馈';
