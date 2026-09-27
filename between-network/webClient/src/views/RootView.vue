@@ -28,12 +28,13 @@
     import PageFooter from '@/components/home/PageFooter.vue';
     import { useThemeStore } from '@/stores/themeStore';
     import { storeToRefs } from 'pinia';
-    import { useLoadingBar, useMessage } from 'naive-ui';
+    import { useLoadingBar, useMessage, useDialog } from 'naive-ui';
 
     const themeStore = useThemeStore();
     const { isDarkTheme } = storeToRefs(themeStore);
 
     window.$message = useMessage();
+    window.$dialog = useDialog();
     window.$loadingBar = useLoadingBar();
 </script>
 

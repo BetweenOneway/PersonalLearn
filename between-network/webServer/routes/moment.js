@@ -181,7 +181,7 @@ router.post("/deleteMoment", async (req, res) => {
         }
 
         const moment = await sqldb.Moment.findOne({
-            where: { id: momentId, u_id: userInfo.id, status: 1 }
+            where: { id: momentId, u_id: userInfo.id, status: { [Op.ne]: 0 } }
         });
 
         if (!moment) {

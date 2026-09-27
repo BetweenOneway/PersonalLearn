@@ -135,14 +135,14 @@
                 if (row.status === 1) {
                     buttons.push(h(NButton, {
                         size: 'small',
-                        type: 'success',
+                        type: 'info',
                         tertiary: true,
                         onClick: () => handleUpdateStatus(row, 2)
                     }, { default: () => '公开' }));
                 } else if (row.status === 2) {
                     buttons.push(h(NButton, {
                         size: 'small',
-                        type: 'default',
+                        type: 'info',
                         tertiary: true,
                         onClick: () => handleUpdateStatus(row, 1)
                     }, { default: () => '仅自己可见' }));
