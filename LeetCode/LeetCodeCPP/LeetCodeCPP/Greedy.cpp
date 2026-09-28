@@ -146,3 +146,23 @@ void TestPartitionLabels()
         std::cout << "Correct Case 1!" << std::endl;
     }
 }
+
+//LeetCode 122
+/*
+* 第一个思路：二维数组，统计每一天买卖的收益，然后取连续区间内的最大值
+* 第二个思路：价格从低到高排序，
+* 前两种方法都要多次遍历效率低
+* 所谓的贪心就是命中了所有的上涨区间。也可以换成计算所有上涨区间差的和。
+*/
+int maxProfit(vector<int>& prices) {
+    int profit = 0;
+    for (int i=1;i<prices.size();i++)
+    {
+        int curProfit = prices.at(i) - prices.at(i - 1);
+        if (curProfit > 0)
+        {
+            profit = profit + curProfit;
+        }
+    }
+    return profit;
+}
