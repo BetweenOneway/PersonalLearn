@@ -43,13 +43,6 @@ bool canPlaceFlowers(vector<int>& flowerbed, int n) {
     return planted == n ? true : false;
 }
 
-void TestCanPlaceFlowers()
-{
-    vector<int> flowerBed = {1, 0, 0, 0, 1, 0, 0};
-    int num = 2;
-    cout << boolalpha << canPlaceFlowers(flowerBed, num)<<endl;
-}
-
 //LeetCode 452
 int findMinArrowShots(vector<vector<int>>& points) {
     if (points.empty()) {
@@ -69,13 +62,6 @@ int findMinArrowShots(vector<vector<int>>& points) {
         }
     }
     return ans;
-}
-
-void TestFindArrowShots()
-{
-    vector<vector<int>> ballons = { {10, 16} ,{2, 8},{1, 6},{7, 12 }};
-
-    cout<<findMinArrowShots(ballons)<<endl;
 }
 
 //LeetCode 763
@@ -124,27 +110,6 @@ vector<int> partitionLabels(string s) {
         }
     }
     return res;
-}
-
-void TestPartitionLabels()
-{
-    string s("ababcbacadefegdehijhklij");
-    std::vector<int> correctResult1{ 9,7,8 };
-    std::vector<int> result = partitionLabels(s);
-
-    if (result == correctResult1)
-    {
-        std::cout << "Correct Case 1!" << std::endl;
-    }
-
-    s = "eccbbbbdec";
-    std::vector<int> correctResult2{ 10 };
-    result = partitionLabels(s);
-
-    if (result == correctResult2)
-    {
-        std::cout << "Correct Case 1!" << std::endl;
-    }
 }
 
 //LeetCode 122
