@@ -11,3 +11,5 @@ struct ListNode {
 
 ListNode* detectCycle(ListNode* head);
 string minWindow(string S, string T);
+
+int mySqrt(int x);

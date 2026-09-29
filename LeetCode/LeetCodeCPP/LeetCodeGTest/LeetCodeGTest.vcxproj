@@ -37,6 +37,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="test.cpp" />
+    <ClCompile Include="TestTwoPointers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LeetCodeLib\LeetCodeLib.vcxproj">

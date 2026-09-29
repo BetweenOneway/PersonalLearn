@@ -120,7 +120,6 @@
   <ItemGroup>
     <ClInclude Include="Graph.h" />
     <ClInclude Include="Greedy.h" />
-    <ClInclude Include="TestFunction.h" />
     <ClInclude Include="TwoPointers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -56,3 +56,51 @@ string minWindow(string S, string T) {
 	}
 	return min_size > S.size() ? "" : S.substr(min_l, min_size);
 }
+
+//LeetCode #69
+int mySqrt(int x) {
+	if (x == 0 || x==1) return x;
+
+	int l = 1, r = x;
+	int mid = 0;
+
+	while (l <= r)
+	{
+		mid = l + (r - l) / 2;
+		if (false)
+		{
+			//»áÔ½½ç
+			int powMid = mid * mid;
+			if (powMid == x)
+			{
+				return mid;
+			}
+			if (powMid > x)
+			{
+				r = mid - 1;
+			}
+			else
+			{
+				l = mid + 1;
+			}
+		}
+		else
+		{
+			int sqrt = x / mid;
+			if (sqrt == mid)
+			{
+				return mid;
+			}
+			if (sqrt < mid)
+			{
+				r = mid - 1;
+			}
+			else
+			{
+				l = mid + 1;
+			}
+		}
+	}
+
+	return r;
+}

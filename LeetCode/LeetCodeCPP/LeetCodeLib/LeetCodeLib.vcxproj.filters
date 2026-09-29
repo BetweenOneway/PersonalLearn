@@ -28,9 +28,6 @@
     <ClInclude Include="Greedy.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="TestFunction.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="TwoPointers.h">
       <Filter>头文件</Filter>
     </ClInclude>

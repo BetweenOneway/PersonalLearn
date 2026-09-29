@@ -1,7 +1,5 @@
 #include "gtest/gtest.h"
 #include "Greedy.h"
-#include "Graph.h"
-#include "TwoPointers.h"
 
 TEST(Greedy,LeetCode605)
 {
