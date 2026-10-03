@@ -2,7 +2,7 @@
 using namespace std;
 
 //LeetCode #33
-int Search33(const vecot<int>& nums,int target)
+int Search33(const vecot<int>& nums,const int target)
 {
 	int l=0,r=nums.size();
 	while(l<r)
@@ -42,21 +42,27 @@ int Search33(const vecot<int>& nums,int target)
 }
 
 //LeetCode #81
-bool Search(const vecot<int>& nums,int target)
+bool Search81(const vecot<int>& nums,const int target)
 {
-	int l=0,r=nums.size()-1;
-	while(l<=r)
+	int l=0,r=nums.size();
+	while(l<r)
 	{
 		int mid = l + (r-l)/2;
 		if(nums[mid] == target){
 			return true;
 		}
+		//相对于上面的第33题，这里因为允许重复数字，所以存在了一种可能性，即两端相等的情况 所以要跳过
+		if(nums[l] == nums[mid] && nums[mid]==nums[r-1])
+		{
+			l++;
+			r--;
+		}
 		//左区间有序
-		if(nums[l]<=nums[mid])
+		else if(nums[l]<=nums[mid])
 		{
 			if(nums[l]<=target && target<nums[mid])
 			{
-				r=mid-1;
+				r=mid;
 			}
 			else
 			{
@@ -64,21 +70,16 @@ bool Search(const vecot<int>& nums,int target)
 			}
 		}
 		//右区间有序
-		else if(nums[mid]<=nums[r])
+		else
 		{
-			if(nums[mid]>target && target<=nums[r-1])
+			if(nums[mid]<target && target<=nums[r-1])
 			{
 				l=mid+1;
 			}
 			else
 			{
-				r=mid-1;
+				r=mid;
 			}
-		}
-		else
-		{
-			l++;
-			r++;
 		}
 	}
 	return false;
