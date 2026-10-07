@@ -36,6 +36,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="TestBinarySearch.cpp" />
     <ClCompile Include="TestGreedy.cpp" />
     <ClCompile Include="TestTwoPointers.cpp" />
   </ItemGroup>

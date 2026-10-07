@@ -113,11 +113,13 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BinarySearch.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Greedy.cpp" />
     <ClCompile Include="TwoPointers.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BinarySearch.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="Greedy.h" />
     <ClInclude Include="TwoPointers.h" />
