@@ -1,76 +1,4 @@
-#include <cstdlib>
-#include <ctime>
-using namespace std;
-
 #include "Sort.h"
-
-// 三路快排 arr[l...r]
-void quickSort3Way(vector<int>& arr, int l, int r)
-{
-	if (l >= r) return;
-
-	int pivot = arr[l];
-	// lt: <pivot区间右边界；gt: >pivot区间左边界
-	int lt = l;
-	int gt = r;
-	int i = l + 1;
-
-	while (i <= gt)
-	{
-		if (arr[i] < pivot)
-		{
-			swap(arr[i], arr[lt]);
-			lt++;
-			i++;
-		}
-		else if (arr[i] > pivot)
-		{
-			swap(arr[i], arr[gt]);
-			gt--;
-		}
-		else // arr[i] == pivot，直接跳过
-		{
-			i++;
-		}
-	}
-	// [l, lt-1] < pivot
-	// [lt, gt]   = pivot
-	// [gt+1, r]  > pivot
-	quickSort3Way(arr, l, lt - 1);
-	quickSort3Way(arr, gt + 1, r);
-}
-
-void quickSort3Way(vector<int>& nums)
-{
-	quickSort3Way(nums, 0, nums.size() - 1);
-}
-
-void quickSort(vector<int>& arr, int l, int r)
-{
-	if (l >= r) return;
-	// 随机选基准，交换到最左边
-	int randIdx = l + rand() % (r - l + 1);
-	swap(arr[l], arr[randIdx]);
-	int pivot = arr[l];
-
-	int i = l, j = r;
-	while (i < j)
-	{
-		while (i < j && arr[j] > pivot) j--;
-		while (i < j && arr[i] < pivot) i++;
-		if (i < j) swap(arr[i], arr[j]);
-	}
-	arr[l] = arr[i];
-	arr[i] = pivot;
-
-	quickSort(arr, l, i - 1);
-	quickSort(arr, i + 1, r);
-}
-
-void QuickSort(vector<int>& nums)
-{
-	quickSort(nums, 0, nums.size() - 1);
-}
 
 int quickSelection1(vector<int>& nums, int l, int r)
 {
@@ -144,4 +72,9 @@ int quickselect(vector<int>& nums, int l, int r, int k) {
 int findKthLargest(vector<int>& nums, int k) {
 	int n = nums.size();
 	return quickselect(nums, 0, n - 1, n - k);
+}
+
+//LeetCode #75
+void sortColors(vector<int>& nums) {
+
 }

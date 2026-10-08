@@ -12,5 +12,7 @@ void InsertionSort(vector<int>& nums);
 void MergeSort(vector<int>& nums);
 //快速排序
 void QuickSort(vector<int>& nums);
+//三路快排
+void QuickSort3Way(vector<int>& nums);
 //堆排序
 void HeapSort(vector<int>& nums);
