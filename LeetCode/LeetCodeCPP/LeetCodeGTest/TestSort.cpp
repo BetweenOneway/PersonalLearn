@@ -18,3 +18,21 @@ TEST(Sort, LeetCode215)
 	expectTarget = 6;
 	EXPECT_EQ(expectTarget, findKthLargest(inputNums, k));
 }
+
+TEST(Sort, LeetCode75)
+{
+	vector<int> inputNums = {2, 0, 2, 1, 1, 0};
+	vector<int> expectTarget = { 0, 0, 1, 1, 2, 2 };
+	
+	sortColors(inputNums);
+	
+	EXPECT_EQ(expectTarget, inputNums);
+
+	inputNums = { 2, 0, 1 };
+	expectTarget = { 0, 1, 2 };
+
+	sortColors(inputNums);
+
+	EXPECT_EQ(expectTarget, inputNums);
+
+}

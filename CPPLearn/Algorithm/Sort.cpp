@@ -140,6 +140,7 @@ void QuickSort(vector<int>& nums)
     quickSort(nums, 0, nums.size() - 1);
 }
 
+//快速排序的第二种写法
 void quickSortTwoPointers(vector<int>& arr, int l, int r)
 {
 	if (l >= r) return;

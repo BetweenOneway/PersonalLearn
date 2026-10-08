@@ -74,7 +74,42 @@ int findKthLargest(vector<int>& nums, int k) {
 	return quickselect(nums, 0, n - 1, n - k);
 }
 
+void quickSort3Way(vector<int>& nums, int left, int right)
+{
+	if (left >= right) return;
+	
+	int base = nums[left];
+	int lt = left;
+	int gt = right;
+	
+	int index = left+1;
+
+	while (index <= gt)
+	{
+		if (nums[index] < base)
+		{
+			swap(nums[index], nums[lt]);
+			lt++;
+			//这里是因为换到index位置上的值实际是base值，所以不需要比较了
+			index++;
+		}
+		else if (nums[index] > base)
+		{
+			swap(nums[index], nums[gt]);
+			//这里为什么不index++呢？因为换到index位置上的值还没有比较过
+			gt--;
+		}
+		else
+		{
+			index++;
+		}
+	}
+	//[lt,gt]区间内是等于base的值
+	quickSort3Way(nums, left, lt - 1);
+	quickSort3Way(nums, gt + 1, right);
+}
+
 //LeetCode #75
 void sortColors(vector<int>& nums) {
-
+	quickSort3Way(nums, 0, nums.size() - 1);
 }
