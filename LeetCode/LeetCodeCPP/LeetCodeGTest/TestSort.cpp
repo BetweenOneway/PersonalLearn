@@ -36,3 +36,17 @@ TEST(Sort, LeetCode75)
 	EXPECT_EQ(expectTarget, inputNums);
 
 }
+
+TEST(Sort, LeetCode347)
+{
+	vector<int> nums = { 1, 1, 1, 2, 2, 3 };
+	int k = 2;
+
+	vector<int> result = { 1, 2 };
+	EXPECT_EQ(result, topKFrequent(nums, k));
+
+	nums = { 1, 2, 1, 2, 1, 2, 3, 1, 3, 2 }; 
+	k = 2;
+	result = { 1, 2 };
+	EXPECT_EQ(result, topKFrequent(nums, k));
+}

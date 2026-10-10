@@ -1,3 +1,7 @@
+#include <unordered_map>
+#include <algorithm>
+using namespace std;
+
 #include "Sort.h"
 
 int quickSelection1(vector<int>& nums, int l, int r)
@@ -112,4 +116,36 @@ void quickSort3Way(vector<int>& nums, int left, int right)
 //LeetCode #75
 void sortColors(vector<int>& nums) {
 	quickSort3Way(nums, 0, nums.size() - 1);
+}
+
+//LeetCode #347
+vector<int> topKFrequent(vector<int>& nums, int k) {
+	unordered_map<int, int> kv;
+	for (auto& num : nums)
+	{
+		if (kv.find(num) != kv.end())
+		{
+			kv[num]++;
+		}
+		else
+		{
+			kv[num] = 1;
+		}
+	}
+
+	std::vector<pair<int, int>> vecKv;
+	for (const auto& it : kv)
+	{
+		vecKv.push_back(it);
+	}
+
+	sort(vecKv.begin(), vecKv.end(), [](pair<int, int>& prev, pair<int, int>& next) {return prev.second > next.second; });
+
+	std::vector<int> result;
+	for (int i = 0; i < k; i++)
+	{
+		result.push_back(vecKv[i].first);
+	}
+
+	return result;
 }
