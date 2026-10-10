@@ -38,6 +38,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TestBinarySearch.cpp" />
     <ClCompile Include="TestGreedy.cpp" />
+    <ClCompile Include="TestSearch.cpp" />
     <ClCompile Include="TestSort.cpp" />
     <ClCompile Include="TestTwoPointers.cpp" />
   </ItemGroup>

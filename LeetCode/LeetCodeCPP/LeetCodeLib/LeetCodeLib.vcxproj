@@ -116,6 +116,7 @@
     <ClCompile Include="BinarySearch.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Greedy.cpp" />
+    <ClCompile Include="Search.cpp" />
     <ClCompile Include="Sort.cpp" />
     <ClCompile Include="TwoPointers.cpp" />
   </ItemGroup>
@@ -123,6 +124,7 @@
     <ClInclude Include="BinarySearch.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="Greedy.h" />
+    <ClInclude Include="Search.h" />
     <ClInclude Include="Sort.h" />
     <ClInclude Include="TwoPointers.h" />
   </ItemGroup>
