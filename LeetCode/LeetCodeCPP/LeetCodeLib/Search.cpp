@@ -41,3 +41,31 @@ int maxAreaOfIsland(vector<vector<int>>& grid)
 
 	return maxArea;
 }
+
+void DFS(vector<vector<int>>& isConnected, vector<bool>& isVisited, int kth)
+{
+	isVisited[kth] = true;
+	for (int i = 0; i < isConnected.size(); i++)
+	{
+		if (isConnected[kth][i] == 1 && !isVisited[i])
+		{
+			DFS(isConnected, isVisited, i);
+		}
+	}
+}
+
+//LeetCode #547
+int findCircleNum(vector<vector<int>>& isConnected)
+{
+	int n = isConnected.size(), count = 0;
+	vector<bool> isVisited(n,false);
+	for (int i = 0; i < n; i++)
+	{
+		if (false == isVisited[i])
+		{
+			DFS(isConnected, isVisited, i);
+			count++;
+		}
+	}
+	return count;
+}
