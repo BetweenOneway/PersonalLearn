@@ -23,45 +23,46 @@ const cookieExpires = () => {
     return d.toGMTString()
 }
 
-// 自定义中间件，用于处理 JWT 验证
-// app.use((req, res, next) => {
-//     // 定义不需要验证的路径
-//     let pathArr = [
-//         '/login/userLogin', // 用户登录路径
-//         '/login/refresh' // 刷新 token 的路径
-//     ]
+// 自定义中间件，用于处理 JWT 验证 
+//这是另外一个测试项 如果测试cookie，需要将它注释掉
+app.use((req, res, next) => {
+    // 定义不需要验证的路径
+    let pathArr = [
+        '/login/userLogin', // 用户登录路径
+        '/login/refresh' // 刷新 token 的路径
+    ]
     
-//     // 如果请求路径在不需要验证的路径中，直接调用 next() 继续处理
-//     if (pathArr.includes(req.path)) {
-//         return next()
-//     }
+    // 如果请求路径在不需要验证的路径中，直接调用 next() 继续处理
+    if (pathArr.includes(req.path)) {
+        return next()
+    }
 
-//     // 获取请求头中的 accessToken 和 refreshToken
-//     const accessToken = req.headers.accesstoken; // 注意：这里的 'accesstoken' 虽然前端传过来是驼峰命名法'accessToken'
-//     const refreshToken = req.headers.refreshtoken; //但是这里也要全部小写，http的机制导致
+    // 获取请求头中的 accessToken 和 refreshToken
+    const accessToken = req.headers.accesstoken; // 注意：这里的 'accesstoken' 虽然前端传过来是驼峰命名法'accessToken'
+    const refreshToken = req.headers.refreshtoken; //但是这里也要全部小写，http的机制导致
 
-//     // 判断 refreshToken 是否过期
-//     try {
-//         jwt.verify(refreshToken, 'VUESERVER'); // 验证 refreshToken
-//     } catch (error) {
-//         console.log(error); // 打印错误信息
-//         return res.status(403).send({ message: 'Forbidden' }); // 如果验证失败，返回 403 Forbidden
-//     }
+    // 判断 refreshToken 是否过期
+    try {
+        jwt.verify(refreshToken, 'VUESERVER'); // 验证 refreshToken
+    } catch (error) {
+        console.log(error); // 打印错误信息
+        return res.status(403).send({ message: 'Forbidden' }); // 如果验证失败，返回 403 Forbidden
+    }
 
-//     // 如果没有 accessToken，返回 401 Unauthorized
-//     if (!accessToken) {
-//         return res.status(401).send({ message: 'Unauthorized' });
-//     }
+    // 如果没有 accessToken，返回 401 Unauthorized
+    if (!accessToken) {
+        return res.status(401).send({ message: 'Unauthorized' });
+    }
 
-//     // 验证 accessToken
-//     try {
-//         const user = jwt.verify(accessToken, 'VUESERVER'); // 验证 accessToken
-//         res.locals.user = user; // 将用户信息存储在 res.locals 中，供后续中间件使用
-//         return next(); // 验证成功，调用 next() 继续处理请求
-//     } catch (error) {
-//         return res.status(401).send({ message: 'Unauthorized' }); // 如果验证失败，返回 401 Unauthorized
-//     }
-// })
+    // 验证 accessToken
+    try {
+        const user = jwt.verify(accessToken, 'VUESERVER'); // 验证 accessToken
+        res.locals.user = user; // 将用户信息存储在 res.locals 中，供后续中间件使用
+        return next(); // 验证成功，调用 next() 继续处理请求
+    } catch (error) {
+        return res.status(401).send({ message: 'Unauthorized' }); // 如果验证失败，返回 401 Unauthorized
+    }
+})
 
 app.use(express.json()); // 解析 JSON 格式的请求体
 app.use(express.urlencoded({ extended: false })); // 解析 URL 编码的请求体
