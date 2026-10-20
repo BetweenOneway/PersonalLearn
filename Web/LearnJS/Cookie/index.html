@@ -171,6 +171,67 @@
                 sessionStorage.clear();
             }
 
+            // ===== HttpOnly / SameSite / Secure 演示 =====
+            // 种下带不同属性的 cookie
+            async function setDemoCookies()
+            {
+                await fetch('http://localhost:18081/cookie-demo/set', {
+                    method: 'GET',
+                    credentials: 'include' // 跨域携带凭证（含 cookie）
+                });
+                console.log('已请求 /cookie-demo/set，请打开 Application 面板查看各 Cookie 属性');
+            }
+
+            // 对比：服务端收到了哪些 + 前端 JS 能读到哪些
+            async function readDemoCookies()
+            {
+                const res = await fetch('http://localhost:18081/cookie-demo/read', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                const text = await res.text();
+                // 服务端收到的（HttpOnly 也会在这里，因为它随请求发出）
+                console.log('【服务端收到的 Cookie】', text);
+                // 前端 JS 读到的（HttpOnly 不会出现；注意：localhost 下 Secure 仍可保存，
+                // 只有用非 loopback 主机或 HTTPS 时 Secure 才会被浏览器拦截）
+                console.log('【前端 JS 读到的 Cookie】', document.cookie);
+            }
+
+            // ===== Cookie path 属性演示（地址使用 localhost 域）=====
+            // 种下不同 path 的 cookie
+            async function setPathCookies()
+            {
+                await fetch('http://localhost:18081/path-demo/set', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                console.log('已请求 /path-demo/set，请打开 Application 面板查看各 Cookie 的 path');
+            }
+
+            // 访问 /path-demo/foo，查看只携带了哪些 cookie
+            async function readPathFoo()
+            {
+                const res = await fetch('http://localhost:18081/path-demo/foo', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                const text = await res.text();
+                console.log('【请求 /path-demo/foo 服务端收到】', text);
+                console.log('【请求 /path-demo/foo 前端 JS 读到】', document.cookie);
+            }
+
+            // 访问 /path-demo/bar，查看只携带了哪些 cookie
+            async function readPathBar()
+            {
+                const res = await fetch('http://localhost:18081/path-demo/bar', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                const text = await res.text();
+                console.log('【请求 /path-demo/bar 服务端收到】', text);
+                console.log('【请求 /path-demo/bar 前端 JS 读到】', document.cookie);
+            }
+
         </script>
     </head>
     <body>
@@ -180,6 +241,19 @@
             <button onclick="getServerCookieByAjax()">getServerCookieByAjax</button>
             <button onclick="getServerCookieByFetch()">getServerCookieByFetch</button>
             <button onclick="getServerCookieByjQuery()">getServerCookieByjQuery</button>
+        </fieldset>
+
+        <fieldset>
+            <legend>HttpOnly / SameSite / Secure 演示</legend>
+            <button onclick="setDemoCookies()">setDemoCookies</button>
+            <button onclick="readDemoCookies()">readDemoCookies</button>
+        </fieldset>
+
+        <fieldset>
+            <legend>Cookie path 演示（localhost 域）</legend>
+            <button onclick="setPathCookies()">setPathCookies</button>
+            <button onclick="readPathFoo()">readPathFoo</button>
+            <button onclick="readPathBar()">readPathBar</button>
         </fieldset>
         
         <fieldset>
