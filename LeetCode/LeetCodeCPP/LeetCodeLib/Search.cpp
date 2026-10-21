@@ -69,3 +69,68 @@ int findCircleNum(vector<vector<int>>& isConnected)
 	}
 	return count;
 }
+
+//LeetCode #417 
+//求解输入数据中，有哪些数据，从当前位置出发，既可以流入大西洋，也可以流入太平洋
+
+void DFS417(const vector<vector<int>>& heights, vector<vector<bool>>& canReach, const int row, const int col)
+{
+	if (canReach[row][col])
+	{
+		return;
+	}
+
+	canReach[row][col] = true;
+	vector<int> direction{ -1,0,1,0,-1 };
+	for (int i = 0; i < direction.size() - 1; i++)
+	{
+		int curRow = row + direction[i];
+		int curCol = col + direction[i + 1];
+		if (curRow >= 0 && curRow < heights.size()
+			&& curCol >= 0 && curCol < heights[curRow].size()
+			&& heights[row][col] <= heights[curRow][curCol])
+		{
+			DFS417(heights, canReach, curRow, curCol);
+		}
+	}
+}
+
+//输入数据是一个m*n的矩阵
+vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+	if (heights.empty() || heights.at(0).empty())
+	{
+		return {};
+	}
+
+	int m = heights.size();
+	int n = heights.at(0).size();
+	vector<vector<bool>> canReachPacific(m,vector<bool>(n,false));
+	vector<vector<bool>> canReachAtlantic(m, vector<bool>(n, false));
+
+	for (int i = 0; i < n; i++)
+	{
+		DFS417(heights, canReachAtlantic, 0, i);
+		DFS417(heights, canReachPacific, m-1, i);
+	}
+
+	for (int i = 0; i < m; i++)
+	{
+		DFS417(heights, canReachAtlantic, i, 0);
+		DFS417(heights, canReachPacific, i, n - 1);
+	}
+
+	vector<vector<int>> ans;
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (canReachPacific[i][j] == true
+				&& canReachAtlantic[i][j] == true)
+			{
+				ans.push_back({ i,j });
+			}
+		}
+	}
+
+	return ans;
+}
