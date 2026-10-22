@@ -134,3 +134,28 @@ vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
 
 	return ans;
 }
+
+//LeetCode #46
+//toFillPos表示，目前要填第几位
+void backtrack(vector<int>& nums, int toFillPos, vector<vector<int>>& ans)
+{
+	if (toFillPos == nums.size() - 1)
+	{
+		ans.push_back(nums);
+	}
+
+	for (int i = toFillPos; i < nums.size(); i++)
+	{
+		swap(nums[i], nums[toFillPos]);
+		backtrack(nums, toFillPos + 1, ans);
+		swap(nums[i], nums[toFillPos]);
+	}
+}
+
+//这个解法实际上是回溯和DFS的组合
+vector<vector<int>> permute(vector<int>& nums) 
+{
+	vector<vector<int>> ans;
+	backtrack(nums, 0, ans);
+	return ans;
+}
