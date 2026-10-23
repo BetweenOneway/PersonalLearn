@@ -159,3 +159,27 @@ vector<vector<int>> permute(vector<int>& nums)
 	backtrack(nums, 0, ans);
 	return ans;
 }
+
+void backtrack77(vector<vector<int>>& ans,vector<int>& combine,int n,int k,int pos)
+{
+	if (combine.size() == k)
+	{
+		ans.push_back(combine);
+		return;
+	}
+
+	for (int i = pos; i <= n; i++)
+	{
+		combine.push_back(i);
+		backtrack77(ans, combine, n, k, i+1);
+		combine.pop_back();
+	}
+}
+
+//LeetCode #77
+vector<vector<int>> combine(int n, int k) {
+	vector<vector<int>> ans;
+	vector<int> combine;
+	backtrack77(ans, combine, n, k, 1);
+	return ans;
+}

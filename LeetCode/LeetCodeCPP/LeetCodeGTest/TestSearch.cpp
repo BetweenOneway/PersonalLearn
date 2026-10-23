@@ -81,3 +81,32 @@ TEST(Search, LeetCode46)
 	
 	checkResult(expectResult, actualResult);
 }
+
+TEST(Search, LeetCode77)
+{
+	auto checkResult = [](vector<vector<int>>& expectResult, vector<vector<int>>& actualResult) {
+		EXPECT_EQ(actualResult.size(), expectResult.size());
+
+		for (int i = 0; i < expectResult.size(); i++)
+		{
+			EXPECT_NE(std::find(actualResult.begin(), actualResult.end(), expectResult.at(i)), actualResult.end());
+		}
+	};
+
+	int n = 4, k = 2;
+	vector<vector<int>> expectResult = {
+		{2, 4},{3, 4},{2, 3},{1, 2},{1, 3},{1, 4},
+	};
+	vector<vector<int>> actualResult = combine(n,k);
+
+	checkResult(expectResult, actualResult);
+
+	n = 1, k = 1;
+	expectResult = {
+		{1}
+	};
+
+	actualResult = combine(n, k);
+
+	checkResult(expectResult, actualResult);
+}

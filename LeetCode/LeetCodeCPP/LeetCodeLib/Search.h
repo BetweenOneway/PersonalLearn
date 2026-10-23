@@ -13,3 +13,6 @@ vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights);
 
 //LeetCode #46
 vector<vector<int>> permute(vector<int>& nums);
+
+//LeetCode #77
+vector<vector<int>> combine(int n, int k);
