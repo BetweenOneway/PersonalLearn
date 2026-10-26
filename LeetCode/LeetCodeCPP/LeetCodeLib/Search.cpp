@@ -183,3 +183,52 @@ vector<vector<int>> combine(int n, int k) {
 	backtrack77(ans, combine, n, k, 1);
 	return ans;
 }
+
+void backtrack79(int i,int j,int curPos,bool& found, vector<vector<bool>>& isVisited, const vector<vector<char>>& board, const string word)
+{
+	//越界
+	if (i < 0 || i >= board.size() || j < 0 || j >= board[0].size())
+	{
+		return;
+	}
+
+	//找到、已访问
+	if (found || isVisited[i][j] || board[i][j] != word[curPos])
+	{
+		return;
+	}
+
+	if (curPos == word.size() - 1)
+	{
+		found = true;
+		return;
+	}
+	isVisited[i][j] = true;
+	
+	backtrack79(i+1, j, curPos+1,found, isVisited, board, word);
+	backtrack79(i-1, j, curPos + 1, found, isVisited, board, word);
+	backtrack79(i, j+1, curPos + 1, found, isVisited, board, word);
+	backtrack79(i, j-1, curPos + 1, found, isVisited, board, word);
+
+	isVisited[i][j] = false;
+}
+
+//LeetCode #79
+//DFS+回溯的写法
+bool exist(vector<vector<char>>& board, string word) {
+	int row = board.size(), col = board[0].size();
+	vector<vector<bool>> isVisited(row, vector<bool>(col, false));
+
+	int curPos = 0;
+	bool found = false;
+
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+		{
+			backtrack79(i, j, curPos, found, isVisited, board, word);
+		}
+	}
+
+	return found;
+}

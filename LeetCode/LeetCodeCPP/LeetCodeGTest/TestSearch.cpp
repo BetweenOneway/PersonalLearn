@@ -110,3 +110,33 @@ TEST(Search, LeetCode77)
 
 	checkResult(expectResult, actualResult);
 }
+
+TEST(Search, LeetCode79)
+{
+	vector<vector<char>> board = { 
+		{'A', 'B', 'C', 'E'} ,
+		{'S', 'F', 'C', 'S'},
+		{'A', 'D', 'E', 'E'} 
+	};
+
+	string word = "ABCCED";
+
+	EXPECT_TRUE(exist(board, word));
+
+	board = { 
+		{'A', 'B', 'C', 'E'} ,
+		{'S', 'F', 'C', 'S'},
+		{'A', 'D', 'E', 'E'} 
+	};
+	word = "SEE";
+	
+	EXPECT_TRUE(exist(board, word));
+
+	board = { 
+		{'A', 'B', 'C', 'E'} ,
+		{'S', 'F', 'C', 'S'},
+		{'A', 'D', 'E', 'E'} 
+	};
+	word = "ABCB";
+	EXPECT_FALSE(exist(board, word));
+}

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 using namespace std;
 
 //LeetCode #695
@@ -16,3 +17,6 @@ vector<vector<int>> permute(vector<int>& nums);
 
 //LeetCode #77
 vector<vector<int>> combine(int n, int k);
+
+//LeetCode #79
+bool exist(vector<vector<char>>& board, string word);
