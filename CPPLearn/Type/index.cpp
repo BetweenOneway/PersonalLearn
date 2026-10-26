@@ -385,7 +385,8 @@ void testStream()
 void testFunction()
 {
     //FUNCTION::testFunction();
-    FUNCTION::testImplicitConvention();
+    //FUNCTION::testImplicitConvention();
+    FUNCTION::TestHash();
 }
 
 void testFileOper()
@@ -429,9 +430,9 @@ int main()
     //testType();
     //testString();
     //testMacro();
-    //testFunction();
+    testFunction();
 
-    testTemplate();
+    //testTemplate();
 
     system("pause");
     return 0;
