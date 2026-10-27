@@ -20,3 +20,6 @@ vector<vector<int>> combine(int n, int k);
 
 //LeetCode #79
 bool exist(vector<vector<char>>& board, string word);
+
+//
+vector<vector<string>> solveNQueens(int n);

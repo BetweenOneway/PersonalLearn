@@ -140,3 +140,21 @@ TEST(Search, LeetCode79)
 	word = "ABCB";
 	EXPECT_FALSE(exist(board, word));
 }
+
+TEST(Search, LeetCode51)
+{
+	int n = 4;
+	vector<vector<string>> expectResult = { 
+		{".Q..", "...Q", "Q...", "..Q."} ,
+		{"..Q.", "Q...", "...Q", ".Q.."} 
+	};
+
+	vector<vector<string>> actualResult = solveNQueens(n);
+	EXPECT_EQ(expectResult, actualResult);
+
+	n = 1;
+	expectResult = { {"Q"} };
+
+	actualResult = solveNQueens(n);
+	EXPECT_EQ(expectResult, actualResult);
+}

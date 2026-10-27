@@ -232,3 +232,80 @@ bool exist(vector<vector<char>>& board, string word) {
 
 	return found;
 }
+
+void backtrack51(vector<vector<string>>& result, vector<vector<int>>& status,int n,int row)
+{
+	if (row >= n)
+	{
+		vector<string> curResult;
+
+		//组合答案
+		for (int i = 0; i < n; i++)
+		{
+			string str(n, '.');
+			for (int j = 0; j < n; j++)
+			{
+				if (status[i][j] == 1)
+				{
+					str[j] = 'Q';
+					curResult.push_back(str);
+					break;
+				}
+			}
+		}
+		result.push_back(curResult);
+		return;
+	}
+
+	//在第row行，尝试所有列
+	for (int i = 0; i < n; i++)
+	{
+		bool canPlace = true;
+		for (int j = 1; j <=row; j++)
+		{
+			int curRow = row - j;
+			int prevCol = i - j,nextCol = i+j;
+			if (curRow >=0)
+			{
+				if (status[curRow][i] == 1)
+				{
+					canPlace = false;
+					break;
+				}
+				//左斜
+				if (prevCol >= 0) 
+				{
+					if (status[curRow][prevCol] == 1)
+					{
+						canPlace = false;
+						break;
+					}
+				}
+				//右斜
+				if (nextCol >= 0 && nextCol < n)
+				{
+					if (status[curRow][nextCol] == 1)
+					{
+						canPlace = false;
+						break;
+					}
+				}
+			}
+		}
+		if (canPlace)
+		{
+			status[row][i] = 1;
+			backtrack51(result,status, n, row + 1);
+			status[row][i] = 0;
+		}
+	}
+}
+
+//LeetCode #51
+vector<vector<string>> solveNQueens(int n) {
+	vector<vector<int>> status(n,vector<int>(n,0));
+	vector<vector<string>> result;
+
+	backtrack51(result, status, n, 0);
+	return result;
+}
