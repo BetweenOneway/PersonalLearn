@@ -27,6 +27,7 @@ namespace STATIC_TEST {
 #include "exception.h"
 
 #include "template.h"
+#include "Memory.h"
 
 enum class Color:int {
     Red,
@@ -430,10 +431,10 @@ int main()
     //testType();
     //testString();
     //testMacro();
-    testFunction();
-
+    //testFunction();
     //testTemplate();
 
+    MemoryTest::TestMemory();
     system("pause");
     return 0;
 }

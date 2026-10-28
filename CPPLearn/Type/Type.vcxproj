@@ -151,6 +151,7 @@
     <ClCompile Include="hash.cpp" />
     <ClCompile Include="lambda.cpp" />
     <ClCompile Include="macro.cpp" />
+    <ClCompile Include="Memory.cpp" />
     <ClCompile Include="refOper.cpp" />
     <ClCompile Include="staic.cpp" />
     <ClCompile Include="stream.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="exception.h" />
     <ClInclude Include="fileOper.h" />
     <ClInclude Include="function.h" />
+    <ClInclude Include="Memory.h" />
     <ClInclude Include="static.h" />
     <ClInclude Include="stream.h" />
     <ClInclude Include="stringOper.h" />
