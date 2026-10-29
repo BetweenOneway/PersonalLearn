@@ -23,3 +23,6 @@ bool exist(vector<vector<char>>& board, string word);
 
 //
 vector<vector<string>> solveNQueens(int n);
+
+//LeetCode #934
+int shortestBridge(vector<vector<int>>& grid);

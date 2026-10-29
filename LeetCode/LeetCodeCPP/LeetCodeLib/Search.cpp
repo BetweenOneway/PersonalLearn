@@ -1,4 +1,6 @@
 #include "Search.h"
+#include <queue>
+using namespace std;
 
 int DFS(vector<vector<int>>& grid, int row, int col)
 {
@@ -308,4 +310,104 @@ vector<vector<string>> solveNQueens(int n) {
 
 	backtrack51(result, status, n, 0);
 	return result;
+}
+
+void DFS934(vector<vector<int>>& grid, queue<pair<int, int>>& nbrWater,int row,int col)
+{
+	int m = grid.size(), n = grid[0].size();
+	if (row < 0 || col < 0 || row >= m || col >= n)
+	{
+		return;
+	}
+
+	//重复找到之前的岛
+	if (grid[row][col] == 2)
+	{
+		return;
+	}
+	
+	//找到岛改标记
+	if (grid[row][col] == 1)
+	{
+		grid[row][col] = 2;
+	}
+
+	//找到相邻水域，无需继续深入
+	if (grid[row][col] == 0)
+	{
+		nbrWater.push({ row,col });
+		return;
+	}
+
+	//遍历四个方向
+	vector<int> direction{ 0,-1,0,1,0 };
+	for (int i = 0; i < 4; i++)
+	{
+		DFS934(grid, nbrWater, row + direction[i], col + direction[i + 1]);
+	}
+}
+
+//LeetCode #934
+int shortestBridge(vector<vector<int>>& grid) {
+	int m = grid.size(), n = grid[0].size();
+
+	//相邻水域
+	queue<pair<int, int>> nbrWater;
+	//遍历第一个岛 并标记相邻水域
+	bool found = false;
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (grid[i][j] == 1)
+			{
+				DFS934(grid, nbrWater,i,j);
+				found = true;
+				break;
+			}
+		}
+		if (found) break;
+	}
+
+	int level = 0;
+	while (!nbrWater.empty())
+	{
+		level++;
+		int maxSize = nbrWater.size();
+		while (maxSize > 0)
+		{
+			pair<int, int> curWater = nbrWater.front();
+			int row = curWater.first, col = curWater.second;
+
+			vector<int> direction{ 0,-1,0,1,0 };
+			for (int i = 0; i < 4; i++)
+			{
+				int curRow = row + direction[i];
+				int curCol = col + direction[i + 1];
+				//越界
+				if (curRow < 0 || curCol < 0 || curRow >= m || curCol >= n)
+				{
+					continue;
+				}
+				//找到之前的岛
+				if (grid[curRow][curCol] == 2)
+				{
+					continue;
+				}
+				//找到第二座岛
+				if (grid[curRow][curCol] == 1)
+				{
+					return level;
+				}
+				//已经找过，或者已经翻转
+				grid[curRow][curCol] = 2;
+				nbrWater.push({ curRow,curCol });
+			}
+
+			nbrWater.pop();
+			maxSize--;
+		}
+	}
+
+	return level;
 }

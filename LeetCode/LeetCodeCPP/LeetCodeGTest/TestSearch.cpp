@@ -158,3 +158,31 @@ TEST(Search, LeetCode51)
 	actualResult = solveNQueens(n);
 	EXPECT_EQ(expectResult, actualResult);
 }
+
+TEST(Search, LeetCode934)
+{
+	vector<vector<int>> grid = { 
+		{0, 1} ,
+		{1, 0} 
+	};
+	int expectResult = 1;
+	EXPECT_EQ(expectResult, shortestBridge(grid));
+
+	grid = { 
+		{0, 1, 0},
+		{0, 0, 0},
+		{0, 0, 1} 
+	};
+	expectResult = 2;
+	EXPECT_EQ(expectResult, shortestBridge(grid));
+
+	grid = { 
+		{1, 1, 1, 1, 1},
+		{1, 0, 0, 0, 1},
+		{1, 0, 1, 0, 1},
+		{1, 0, 0, 0, 1},
+		{1, 1, 1, 1, 1} 
+	};
+	expectResult = 1;
+	EXPECT_EQ(expectResult, shortestBridge(grid));
+}
