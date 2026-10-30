@@ -411,3 +411,67 @@ int shortestBridge(vector<vector<int>>& grid) {
 
 	return level;
 }
+
+void DFS126(vector<vector<string>>& ans,vector<string> curPath,vector<bool>& isVisited,const vector<string>& wordList,const string curWord,const string endWord)
+{
+	if (curWord == endWord)
+	{
+		ans.push_back(curPath);
+		return;
+	}
+
+	auto checkMatch = [](string a, string b)->bool {
+		if (a.length() != b.length()) return false;
+		int num = 0;
+		for (int i = 0; i < a.length(); i++)
+		{
+			if (a[i] != b[i]) num++;
+		}
+		if (num > 1) return false;
+		return true;
+	};
+
+	for (int i = 0; i < isVisited.size(); i++)
+	{
+		if (isVisited[i]) continue;
+		if (checkMatch(curWord,wordList[i]))
+		{
+			isVisited[i] = true;
+			curPath.push_back(wordList[i]);
+			DFS126(ans, curPath, isVisited, wordList, wordList[i], endWord);
+			isVisited[i] = false;
+			curPath.pop_back();
+		}
+	}
+}
+
+vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList)
+{
+	vector<vector<string>> ans;
+	vector<vector<string>> fullAns;
+	vector<bool> isVisited(wordList.size(), false);
+
+	vector<string> curPath;
+	curPath.push_back(beginWord);
+	for (int i = 0; i < isVisited.size(); i++)
+	{
+		if (beginWord == wordList[i])
+		{
+			isVisited[i] = true;
+		}
+	}
+	DFS126(fullAns, curPath, isVisited, wordList, beginWord, endWord);
+	if (!fullAns.empty())
+	{
+		std::sort(fullAns.begin(), fullAns.end(), [](vector<string> a, vector<string> b) {return a.size() < b.size(); });
+		int minLength = fullAns.front().size();
+		for (int i = 0; i < fullAns.size(); i++)
+		{
+			if (fullAns.at(i).size() <= minLength)
+			{
+				ans.push_back(fullAns.at(i));
+			}
+		}
+	}
+	return ans;
+}

@@ -26,3 +26,6 @@ vector<vector<string>> solveNQueens(int n);
 
 //LeetCode #934
 int shortestBridge(vector<vector<int>>& grid);
+
+//LeetCode #126
+vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList);
