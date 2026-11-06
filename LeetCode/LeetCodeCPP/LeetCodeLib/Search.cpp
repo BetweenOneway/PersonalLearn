@@ -1,5 +1,6 @@
 #include "Search.h"
 #include <queue>
+#include <set>
 #include <unordered_map>
 #include <unordered_set>
 using namespace std;
@@ -479,7 +480,7 @@ vector<vector<string>> findLadders1(string beginWord, string endWord, vector<str
 	return ans;
 }
 
-void backtracking(const string& src, const string& dst, unordered_map<string,
+void backtracking1(const string& src, const string& dst, unordered_map<string,
 	vector<string>> &next, vector<string>& path, vector<vector<string>>& ans) {
 	if (src == dst) {
 		ans.push_back(path);
@@ -487,14 +488,13 @@ void backtracking(const string& src, const string& dst, unordered_map<string,
 	}
 	for (const auto& s : next[src]) {
 		path.push_back(s);
-		backtracking(s, dst, next, path, ans);
+		backtracking1(s, dst, next, path, ans);
 		path.pop_back();
 	}
 }
 
 //还是超时
-vector<vector<string>> findLadders(string beginWord, string endWord, vector<
-	string>& wordList) {
+vector<vector<string>> findLadders2(string beginWord, string endWord, vector<string>& wordList) {
 	vector<vector<string>> ans;
 	unordered_set<string> dict;
 	for (const auto& w : wordList) {
@@ -545,7 +545,97 @@ vector<vector<string>> findLadders(string beginWord, string endWord, vector<
 	}
 	if (found) {
 		vector<string> path = { beginWord };
-		backtracking(beginWord, endWord, next, path, ans);
+		backtracking1(beginWord, endWord, next, path, ans);
 	}
 	return ans;
+}
+
+void backtrack126(vector<vector<string>>& res, const string& Node, unordered_map<string, unordered_set<string>>& from,
+	vector<string>& path) {
+	if (from[Node].empty()) {
+		res.push_back({ path.rbegin(), path.rend() });
+		return;
+	}
+	for (const string& Parent : from[Node]) {
+		path.push_back(Parent);
+		backtrack126(res, Parent, from, path);
+		path.pop_back();
+	}
+}
+
+vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+	vector<vector<string>> res;
+	// 因为需要快速判断扩展出的单词是否在 wordList 里，因此需要将 wordList 存入哈希表，这里命名为「字典」
+	unordered_set<string> dict = { wordList.begin(), wordList.end() };
+	// 修改以后看一下，如果根本就不在 dict 里面，跳过
+	if (dict.find(endWord) == dict.end()) {
+		return res;
+	}
+	
+	dict.erase(beginWord);
+
+	// 第 1 步：广度优先搜索建图
+	// 记录扩展出的单词是在第几次扩展的时候得到的，key：单词，value：在广度优先搜索的第几层
+	unordered_map<string, int> steps = { {beginWord, 0} };
+	// 记录了单词是从哪些单词扩展而来，可以认为是从key到value，也可以理解成从value到key
+	unordered_map<string, unordered_set<string>> from = { {beginWord, {}} };
+	int step = 0;
+	//endword是否在wordList中
+	bool found = false;
+	queue<string> q = queue<string>{ {beginWord} };
+	int wordLen = beginWord.length();
+	//BFS搜索
+	while (!q.empty()) {
+		step++;
+		int size = q.size();
+		//遍历当前层
+		for (int i = 0; i < size; i++) 
+		{
+			const string currWord = move(q.front());
+			string nextWord = currWord;
+			q.pop();
+			// 将每一位替换成 26 个小写英文字母
+			for (int j = 0; j < wordLen; ++j) 
+			{
+				const char origin = nextWord[j];
+				for (char c = 'a'; c <= 'z'; ++c) 
+				{
+					nextWord[j] = c;
+					//之前到达过
+					//只有同一层才有效，如果在这之前到达，那么就走回头路了；如果在之后到达，说明还没到
+					if (steps[nextWord] == step) {
+						from[nextWord].insert(currWord);
+					}
+					//不在字典中，跳过
+					if (dict.find(nextWord) == dict.end()) {
+						continue;
+					}
+					// 如果从一个单词扩展出来的单词以前遍历过，新的这个距离一定更远，为了避免搜索到已经遍历到，且距离更远的单词，需要将它从 dict 中删除
+					// 这里可能误删后面的前驱，所以这里必须要在前面的if steps的判断之后
+					dict.erase(nextWord);
+					// 广度优先，新的分支进队列
+					q.push(nextWord);
+					// 记录 nextWord 从 currWord 而来
+					from[nextWord].insert(currWord);
+					// 记录 nextWord 的 step
+					steps[nextWord] = step;
+					if (nextWord == endWord) {
+						found = true;
+					}
+				}
+				//还原回去，每次只替换一个字符
+				nextWord[j] = origin;
+			}
+		}
+		//这一层已经找到endword，因为是BFS，所以这一层一定是最短的，结束查找
+		if (found) {
+			break;
+		}
+	}
+	// 存在解，并生成解
+	if (found) {
+		vector<string> Path = { endWord };
+		backtrack126(res, endWord, from, Path);
+	}
+	return res;
 }
