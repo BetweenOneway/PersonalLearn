@@ -569,3 +569,76 @@ vector<vector<string>> findLadders(string beginWord, string endWord, vector<stri
 	}
 	return res;
 }
+
+// LeetCode #130
+void solve(vector<vector<char>>& board) {
+	int m = board.size();
+	int n = board[0].size();
+
+	queue<pair<int, int>> q;
+
+	//标记四条边上的区域 边上属于未被包裹的，标记出来
+	for (int i = 0; i < m; i++)
+	{
+		if (board[i][0] == 'O')
+		{
+			board[i][0] = 'A';
+			q.emplace(i, 0);
+		}
+		if (board[i][n-1] == 'O')
+		{
+			board[i][n-1] = 'A';
+			q.emplace(i, n - 1);
+		}
+	}
+	for (int i = 0; i < n; i++)
+	{
+		if (board[0][i] == 'O')
+		{
+			q.emplace(0, i);
+			board[0][i] = 'A';
+		}
+		if (board[m - 1][i] == 'O')
+		{
+			q.emplace(m - 1, i);
+			board[m - 1][i] = 'A';
+		}
+	}
+
+	//从边往内找，和边相连的一定是未被包裹的
+	while (!q.empty())
+	{
+		pair<int, int> p = q.front();
+		q.pop();
+		int row = p.first, col = p.second;
+		vector<int> direction{ -1,0,1,0,-1 };
+		for (int i = 0; i < direction.size() - 1; i++)
+		{
+			int curRow = row + direction[i];
+			int curCol = col + direction[i + 1];
+			if (curRow >= 0 && curRow < m
+				&& curCol >= 0 && curCol < n
+				&& board[curRow][curCol]=='O')
+			{
+				q.emplace(curRow, curCol);
+				board[curRow][curCol] = 'A';
+			}
+		}
+	}
+
+	//除了标记为未被包裹的，其他都是被包裹的
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (board[i][j] == 'A')
+			{
+				board[i][j] = 'O';
+			}
+			else if (board[i][j] == 'O')
+			{
+				board[i][j] = 'X';
+			}
+		}
+	}
+}

@@ -29,3 +29,6 @@ int shortestBridge(vector<vector<int>>& grid);
 
 //LeetCode #126
 vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList);
+
+// LeetCode #130
+void solve(vector<vector<char>>& board);

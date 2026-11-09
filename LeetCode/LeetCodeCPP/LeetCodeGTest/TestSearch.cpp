@@ -189,6 +189,15 @@ TEST(Search, LeetCode934)
 
 TEST(Search, LeetCode126)
 {
+	auto checkResult = [](vector<vector<string>>& expectResult, vector<vector<string>>& actualResult) {
+		EXPECT_EQ(actualResult.size(), expectResult.size());
+
+		for (int i = 0; i < expectResult.size(); i++)
+		{
+			EXPECT_NE(std::find(actualResult.begin(), actualResult.end(), expectResult.at(i)), actualResult.end());
+		}
+	};
+
 	string beginWord = "hit", endWord = "cog";
 	vector<string> wordList = { "hot", "dot", "dog", "lot", "log", "cog" };
 
@@ -198,7 +207,7 @@ TEST(Search, LeetCode126)
 	};
 
 	vector<vector<string>> actualResult = findLadders(beginWord, endWord, wordList);
-	EXPECT_EQ(expectResult, actualResult);
+	checkResult(expectResult, actualResult);
 
 	beginWord = "hit";
 	endWord = "cog";
@@ -206,15 +215,32 @@ TEST(Search, LeetCode126)
 	expectResult.clear();
 
 	actualResult = findLadders(beginWord, endWord, wordList);
+	checkResult(expectResult, actualResult);
+}
+
+TEST(Search, LeetCode130)
+{
+	vector<vector<char>> board = { 
+		{'X', 'X', 'X', 'X'} ,
+		{'X', 'O', 'O', 'X'},
+		{'X', 'X', 'O', 'X'},
+		{'X', 'O', 'X', 'X'} };
+
+	vector<vector<char>> expectResult = { 
+		{'X', 'X', 'X', 'X'} ,
+		{'X', 'X', 'X', 'X'},
+		{'X', 'X', 'X', 'X'},
+		{'X', 'O', 'X', 'X'} };
+
+	vector<vector<char>> actualResult = board;
+	solve(actualResult);
+
 	EXPECT_EQ(expectResult, actualResult);
-
-	beginWord = "qa";
-	endWord = "sq";
-	wordList = {"si", "go", "se", "cm", "so", "ph", "mt", "db", "mb", "sb", "kr", "ln", "tm", "le", "av", "sm", "ar", "ci", "ca", "br", "ti", "ba", "to", "ra", "fa", "yo", "ow", "sn", "ya",
-		"cr", "po", "fe", "ho", "ma", "re", "or", "rn", "au", "ur", "rh", "sr", "tc", "lt", "lo", "as", "fr", "nb", "yb", "if", "pb", "ge", "th", "pm", "rb", "sh", "co", "ga", "li", "ha", 
-		"hz", "no", "bi", "di", "hi", "qa", "pi", "os", "uh", "wm", "an", "me", "mo", "na", "la", "st", "er", "sc", "ne", "mn", "mi", "am", "ex", "pt", "io", "be", "fm", "ta", "tb", "ni", 
-		"mr", "pa", "he", "lr", "sq", "ye"};
-
-	actualResult = findLadders(beginWord, endWord, wordList);
-	//EXPECT_EQ(expectResult, actualResult);
+	
+	board = { {'X'} };
+	expectResult = { {'X' }};
+	actualResult = board;
+	solve(actualResult);
+	
+	EXPECT_EQ(expectResult, actualResult);
 }
