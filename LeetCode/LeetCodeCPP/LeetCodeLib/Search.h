@@ -32,3 +32,18 @@ vector<vector<string>> findLadders(string beginWord, string endWord, vector<stri
 
 // LeetCode #130
 void solve(vector<vector<char>>& board);
+
+/*
+* Definition for a binary tree node.
+*/
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+
+//LeetCode #257
+vector<string> binaryTreePaths(TreeNode* root);

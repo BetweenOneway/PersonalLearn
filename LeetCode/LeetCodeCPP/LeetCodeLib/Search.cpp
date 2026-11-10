@@ -3,6 +3,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <sstream>
 using namespace std;
 
 int DFS(vector<vector<int>>& grid, int row, int col)
@@ -641,4 +642,48 @@ void solve(vector<vector<char>>& board) {
 			}
 		}
 	}
+}
+ 
+void DFS257(vector<string>& ans,string curAns,TreeNode* root)
+{
+	stringstream ss;
+	ss.str("");
+	if (curAns.length() != 0)
+	{
+		ss << curAns << "->" << root->val;
+	}
+	else
+	{
+		ss << root->val;
+	}
+	curAns = ss.str();
+
+	if (root->left == nullptr && root->right ==nullptr)
+	{
+		ans.push_back(curAns);
+		return;
+	}
+
+	if (root->left != nullptr)
+	{
+		DFS257(ans, curAns, root->left);
+	}
+	if (root->right != nullptr)
+	{
+		DFS257(ans, curAns, root->right);
+	}
+}
+
+void DFS257(vector<string>& ans, TreeNode* root)
+{
+	string curAns;
+	DFS257(ans, curAns, root);
+}
+
+//LeetCode #257
+vector<string> binaryTreePaths(TreeNode* root) {
+	vector<string> ans;
+
+	DFS257(ans, root);
+	return ans;
 }

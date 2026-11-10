@@ -244,3 +244,71 @@ TEST(Search, LeetCode130)
 	
 	EXPECT_EQ(expectResult, actualResult);
 }
+
+TEST(Search, LeetCode257)
+{
+	auto buildBinaryTree = [](const vector<int>& vals)->TreeNode* {
+		if (vals.empty()) return nullptr;
+
+		vector<TreeNode*> nodeArr;
+		nodeArr.resize(vals.size());
+
+		for (size_t i = 0; i < vals.size(); i++)
+		{
+			if (-1 == vals[i])
+			{
+				nodeArr[i] = nullptr;
+			}
+			else
+			{
+				nodeArr[i] = new TreeNode(vals[i]);
+			}
+			if (i != 0)
+			{
+
+				size_t parentIndex = (i - 1) / 2;
+				if (nodeArr[parentIndex] == nullptr)
+					continue;
+				size_t leftChildIndex = 2 * parentIndex + 1;
+				size_t rightChildIndex = 2 * parentIndex + 2;
+				if (leftChildIndex == i)
+				{
+					nodeArr[parentIndex]->left = nodeArr[i];
+				}
+				else if (rightChildIndex == i)
+				{
+					nodeArr[parentIndex]->right = nodeArr[i];
+				}
+			}
+		}
+
+		return nodeArr[0];
+	};
+
+	// 递归释放二叉树（C++14泛型lambda，C++11不能用这个递归lambda）
+	auto freeTree = [](auto&& self, TreeNode* node) -> void {
+		if (!node) return;
+		self(self, node->left);
+		self(self, node->right);
+		delete node;
+	};
+
+	//这里的-1表示null
+	vector<int> vals = { 1, 2, 3, -1, 5 };
+
+	TreeNode* root = buildBinaryTree(vals);
+
+	vector<string> expectResult = { "1->2->5", "1->3" };
+	vector<string> actualResult = binaryTreePaths(root);
+	EXPECT_EQ(expectResult, actualResult);
+	freeTree(freeTree,root);
+	root = nullptr;
+
+	vals = { 1};
+	root = buildBinaryTree(vals);
+	expectResult = { "1" };
+	actualResult = binaryTreePaths(root);
+	EXPECT_EQ(expectResult, actualResult);
+	freeTree(freeTree, root);
+	root = nullptr;
+}
