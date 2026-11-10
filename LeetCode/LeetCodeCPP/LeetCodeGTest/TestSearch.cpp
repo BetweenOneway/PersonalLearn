@@ -285,7 +285,7 @@ TEST(Search, LeetCode257)
 		return nodeArr[0];
 	};
 
-	// 递归释放二叉树（C++14泛型lambda，C++11不能用这个递归lambda）
+	// 递归释放二叉树（lambda无法自调用）（C++14泛型lambda，C++11不能用这个递归lambda）
 	auto freeTree = [](auto&& self, TreeNode* node) -> void {
 		if (!node) return;
 		self(self, node->left);
