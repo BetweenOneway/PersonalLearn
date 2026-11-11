@@ -264,16 +264,17 @@ void backtrack51(vector<vector<string>>& result, vector<vector<int>>& status,int
 	}
 
 	//在第row行，尝试所有列
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; i++)//列
 	{
 		bool canPlace = true;
 		for (int j = 1; j <=row; j++)
 		{
-			int curRow = row - j;
+			int prevRow = row - j;
 			int prevCol = i - j,nextCol = i+j;
-			if (curRow >=0)
+			if (prevRow >=0)
 			{
-				if (status[curRow][i] == 1)
+				//同一列 上方
+				if (status[prevRow][i] == 1)
 				{
 					canPlace = false;
 					break;
@@ -281,7 +282,7 @@ void backtrack51(vector<vector<string>>& result, vector<vector<int>>& status,int
 				//左斜
 				if (prevCol >= 0) 
 				{
-					if (status[curRow][prevCol] == 1)
+					if (status[prevRow][prevCol] == 1)
 					{
 						canPlace = false;
 						break;
@@ -290,7 +291,7 @@ void backtrack51(vector<vector<string>>& result, vector<vector<int>>& status,int
 				//右斜
 				if (nextCol >= 0 && nextCol < n)
 				{
-					if (status[curRow][nextCol] == 1)
+					if (status[prevRow][nextCol] == 1)
 					{
 						canPlace = false;
 						break;
@@ -685,5 +686,92 @@ vector<string> binaryTreePaths(TreeNode* root) {
 	vector<string> ans;
 
 	DFS257(ans, root);
+	return ans;
+}
+
+void DFS47(set<vector<int>>& ans, vector<vector<int>>& status,const vector<int>& nums,int n,int row)
+{
+	if (row >= n)
+	{
+		vector<int> result;
+		//排完了，输出结果
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				if (status[i][j])
+				{
+					result.emplace_back(nums[j]);
+				}
+			}
+		}
+		ans.insert(result);
+		return;
+	}
+
+	//在第row行尝试所有列
+	for (int i = 0; i < n; i++)
+	{
+		bool canPlace = true;
+		for (int j = 1; j <= row; j++)
+		{
+			int prevRow = row - j;
+			if (status[prevRow][i])
+			{
+				canPlace = false;
+				break;
+			}
+		}
+		if (canPlace)
+		{
+			status[row][i] = 1;
+			DFS47(ans, status, nums, n, row + 1);
+			status[row][i] = 0;
+		}
+	}
+}
+
+void backtrack47(vector<int>& nums, vector<vector<int>>& ans, vector<int> vis,int idx, vector<int>& perm) {
+	if (idx == nums.size()) {
+		ans.emplace_back(perm);
+		return;
+	}
+	for (int i = 0; i < (int)nums.size(); ++i) {
+		//去重核心逻辑，重复是因为相同的数字被调换次序而产生
+		//这里是固定了取值次序
+		if (vis[i] 
+			|| (i > 0 && nums[i] == nums[i - 1] && !vis[i - 1])) {
+			continue;
+		}
+		perm.emplace_back(nums[i]);
+		vis[i] = 1;
+		backtrack47(nums, ans,vis, idx + 1, perm);
+		vis[i] = 0;
+		perm.pop_back();
+	}
+}
+
+//LeetCode #47
+vector<vector<int>> permuteUnique(vector<int>& nums) {
+	vector<vector<int>> ans;
+	if (true)
+	{
+		vector<int> vis;
+		vector<int> perm;
+		vis.resize(nums.size());
+		//重要
+		sort(nums.begin(), nums.end());
+		backtrack47(nums, ans,vis, 0, perm);
+	}
+	else
+	{
+		set<vector<int>> setAns;
+		int n = nums.size();
+		vector<vector<int>> status(n, vector<int>(n, 0));
+
+		DFS47(setAns, status, nums, n, 0);
+
+		ans.assign(setAns.begin(), setAns.end());
+	}
 	return ans;
 }

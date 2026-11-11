@@ -47,3 +47,6 @@ struct TreeNode {
 
 //LeetCode #257
 vector<string> binaryTreePaths(TreeNode* root);
+
+//LeetCode #47
+vector<vector<int>> permuteUnique(vector<int>& nums);

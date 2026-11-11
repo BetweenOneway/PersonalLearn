@@ -12,7 +12,6 @@ TEST(Search, LeetCode695)
 	EXPECT_EQ(expectResult, maxAreaOfIsland(inputNums));
 }
 
-
 TEST(Search, LeetCode547)
 {
 	vector<vector<int>> inputNums =
@@ -311,4 +310,30 @@ TEST(Search, LeetCode257)
 	EXPECT_EQ(expectResult, actualResult);
 	freeTree(freeTree, root);
 	root = nullptr;
+}
+
+TEST(Search, LeetCode47)
+{
+	auto checkResult = [](vector<vector<int>>& expectResult, vector<vector<int>>& actualResult) {
+		EXPECT_EQ(actualResult.size(), expectResult.size());
+
+		for (int i = 0; i < expectResult.size(); i++)
+		{
+			EXPECT_NE(std::find(actualResult.begin(), actualResult.end(), expectResult.at(i)), actualResult.end());
+		}
+	};
+
+	vector<int> nums = {1, 1, 2};
+	vector<vector<int>> expectResult = { 
+		{1, 1, 2} ,
+		{1, 2, 1},
+		{2, 1, 1} };
+
+	vector<vector<int>> actualResult = permuteUnique(nums);
+	checkResult(expectResult, actualResult);
+
+	nums = { 1, 2, 3 };
+	expectResult = { {1,2,3} ,{1,3,2},{2,1,3},{2,3,1},{3,1,2},{3,2,1} };
+	actualResult = permuteUnique(nums);
+	checkResult(expectResult, actualResult);
 }
