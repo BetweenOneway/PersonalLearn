@@ -775,3 +775,9 @@ vector<vector<int>> permuteUnique(vector<int>& nums) {
 	}
 	return ans;
 }
+
+//LeetCode #40
+vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+	vector<vector<int>> ans;
+	return ans;
+}

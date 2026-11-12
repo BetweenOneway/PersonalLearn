@@ -1,6 +1,16 @@
 #include "gtest/gtest.h"
 #include "Search.h"
 
+template<typename T1>
+void CheckResult(vector<vector<T1>>& expectResult, vector<vector<T1>>& actualResult) {
+	EXPECT_EQ(actualResult.size(), expectResult.size());
+
+	for (int i = 0; i < expectResult.size(); i++)
+	{
+		EXPECT_NE(std::find(actualResult.begin(), actualResult.end(), expectResult.at(i)), actualResult.end());
+	}
+}
+
 TEST(Search, LeetCode695)
 {
 	vector<vector<int>> inputNums =
@@ -53,52 +63,34 @@ TEST(Search, LeetCode417)
 
 TEST(Search, LeetCode46)
 {
-	auto checkResult = [](vector<vector<int>>& expectResult, vector<vector<int>>& actualResult) {
-		EXPECT_EQ(actualResult.size(), expectResult.size());
-
-		for (int i = 0; i < expectResult.size(); i++)
-		{
-			EXPECT_NE(std::find(actualResult.begin(), actualResult.end(), expectResult.at(i)), actualResult.end());
-		}
-	};
-
 	vector<int> nums = { 1, 2, 3 };
 	vector<vector<int>> expectResult = { {1, 2, 3} ,{1, 3, 2},{2, 1, 3},{2, 3, 1},{3, 1, 2},{3, 2, 1} };
 	vector<vector<int>> actualResult = permute(nums);
 	
-	checkResult(expectResult, actualResult);
+	CheckResult(expectResult, actualResult);
 
 	nums = { 0, 1 };
 	expectResult = { {0, 1} ,{1, 0} };
 	actualResult = permute(nums);
 
-	checkResult(expectResult, actualResult);
+	CheckResult(expectResult, actualResult);
 
 	nums = { 1 };
 	expectResult = { {1} };
 	actualResult = permute(nums);
 	
-	checkResult(expectResult, actualResult);
+	CheckResult(expectResult, actualResult);
 }
 
 TEST(Search, LeetCode77)
 {
-	auto checkResult = [](vector<vector<int>>& expectResult, vector<vector<int>>& actualResult) {
-		EXPECT_EQ(actualResult.size(), expectResult.size());
-
-		for (int i = 0; i < expectResult.size(); i++)
-		{
-			EXPECT_NE(std::find(actualResult.begin(), actualResult.end(), expectResult.at(i)), actualResult.end());
-		}
-	};
-
 	int n = 4, k = 2;
 	vector<vector<int>> expectResult = {
 		{2, 4},{3, 4},{2, 3},{1, 2},{1, 3},{1, 4},
 	};
 	vector<vector<int>> actualResult = combine(n,k);
 
-	checkResult(expectResult, actualResult);
+	CheckResult(expectResult, actualResult);
 
 	n = 1, k = 1;
 	expectResult = {
@@ -107,7 +99,7 @@ TEST(Search, LeetCode77)
 
 	actualResult = combine(n, k);
 
-	checkResult(expectResult, actualResult);
+	CheckResult(expectResult, actualResult);
 }
 
 TEST(Search, LeetCode79)
@@ -188,15 +180,6 @@ TEST(Search, LeetCode934)
 
 TEST(Search, LeetCode126)
 {
-	auto checkResult = [](vector<vector<string>>& expectResult, vector<vector<string>>& actualResult) {
-		EXPECT_EQ(actualResult.size(), expectResult.size());
-
-		for (int i = 0; i < expectResult.size(); i++)
-		{
-			EXPECT_NE(std::find(actualResult.begin(), actualResult.end(), expectResult.at(i)), actualResult.end());
-		}
-	};
-
 	string beginWord = "hit", endWord = "cog";
 	vector<string> wordList = { "hot", "dot", "dog", "lot", "log", "cog" };
 
@@ -206,7 +189,7 @@ TEST(Search, LeetCode126)
 	};
 
 	vector<vector<string>> actualResult = findLadders(beginWord, endWord, wordList);
-	checkResult(expectResult, actualResult);
+	CheckResult(expectResult, actualResult);
 
 	beginWord = "hit";
 	endWord = "cog";
@@ -214,7 +197,7 @@ TEST(Search, LeetCode126)
 	expectResult.clear();
 
 	actualResult = findLadders(beginWord, endWord, wordList);
-	checkResult(expectResult, actualResult);
+	CheckResult(expectResult, actualResult);
 }
 
 TEST(Search, LeetCode130)
@@ -314,26 +297,44 @@ TEST(Search, LeetCode257)
 
 TEST(Search, LeetCode47)
 {
-	auto checkResult = [](vector<vector<int>>& expectResult, vector<vector<int>>& actualResult) {
-		EXPECT_EQ(actualResult.size(), expectResult.size());
-
-		for (int i = 0; i < expectResult.size(); i++)
-		{
-			EXPECT_NE(std::find(actualResult.begin(), actualResult.end(), expectResult.at(i)), actualResult.end());
-		}
-	};
-
 	vector<int> nums = {1, 1, 2};
 	vector<vector<int>> expectResult = { 
 		{1, 1, 2} ,
 		{1, 2, 1},
-		{2, 1, 1} };
+		{2, 1, 1} 
+	};
 
 	vector<vector<int>> actualResult = permuteUnique(nums);
-	checkResult(expectResult, actualResult);
+	CheckResult(expectResult, actualResult);
 
 	nums = { 1, 2, 3 };
 	expectResult = { {1,2,3} ,{1,3,2},{2,1,3},{2,3,1},{3,1,2},{3,2,1} };
 	actualResult = permuteUnique(nums);
-	checkResult(expectResult, actualResult);
+	CheckResult(expectResult, actualResult);
+}
+
+TEST(Search, LeetCode40)
+{
+	vector<int> candidates = { 10, 1, 2, 7, 6, 1, 5 }; 
+	int target = 8;
+	vector<vector<int>> expectResult = {
+		{1, 1, 6} ,
+		{1, 2, 5},
+		{1, 7},
+		{2, 6}
+	};
+	vector<vector<int>> actualResult = combinationSum2(candidates, target);
+
+	CheckResult(actualResult, expectResult);
+
+	candidates = { 2, 5, 2, 1, 2 };
+	target = 5;
+	expectResult = {
+		{1, 2, 2} ,
+		{5}
+	};
+
+	actualResult = combinationSum2(candidates, target);
+
+	CheckResult(actualResult, expectResult);
 }
