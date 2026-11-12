@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <sstream>
+#include <numeric>
 using namespace std;
 
 int DFS(vector<vector<int>>& grid, int row, int col)
@@ -740,7 +741,8 @@ void backtrack47(vector<int>& nums, vector<vector<int>>& ans, vector<int> vis,in
 		//去重核心逻辑，重复是因为相同的数字被调换次序而产生
 		//这里是固定了取值次序
 		if (vis[i] 
-			|| (i > 0 && nums[i] == nums[i - 1] && !vis[i - 1])) {
+			|| (i > 0 && nums[i] == nums[i - 1] && !vis[i - 1])) 
+		{
 			continue;
 		}
 		perm.emplace_back(nums[i]);
@@ -776,8 +778,40 @@ vector<vector<int>> permuteUnique(vector<int>& nums) {
 	return ans;
 }
 
+void backtrack40(vector<vector<int>>& ans,vector<int>& curAns, vector<bool>& isVisited, const int start,const vector<int>& candidates,const int target) {
+	int curSum = accumulate(curAns.begin(), curAns.end(), 0);
+	if (curSum == target)
+	{
+		ans.push_back(curAns);
+		return;
+	}
+	if (curSum > target)
+	{
+		return;
+	}
+	for (int i = start; i < candidates.size(); i++)
+	{
+		if (isVisited[i]
+			|| (i> start && candidates[i-1]==candidates[i] && !isVisited[i-1]))
+		{
+			continue;
+		}
+		curAns.push_back(candidates[i]);
+		isVisited[i] = true;
+		backtrack40(ans, curAns, isVisited, i+1,candidates, target);
+		curAns.pop_back();
+		isVisited[i] = false;
+	}
+}
+
 //LeetCode #40
 vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
 	vector<vector<int>> ans;
+
+	vector<bool> isVisited(candidates.size(), false);
+	vector<int> curAns;
+	sort(candidates.begin(), candidates.end());
+	backtrack40(ans, curAns, isVisited, 0,candidates, target);
+
 	return ans;
 }
