@@ -815,3 +815,84 @@ vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
 
 	return ans;
 }
+
+bool backtrack37(vector<vector<char>>& board, const int index)
+{
+	int maxIndex = board.size() * board.size();
+
+	if (index >= maxIndex)
+	{
+		return true;
+	}
+	
+	auto canPlace = [&](int val,const int curRow,const int curCol) ->bool{
+		char ch = '0' + val;
+		
+		//同行、同列不重复
+		for (int i = 0; i < 9; i++)
+		{
+			if (board[curRow][i] == ch
+				|| board[i][curCol] == ch)
+			{
+				return false;
+			}
+		}
+		//3*3范围内不允许重复
+		int startRow = (curRow / 3) * 3;
+		int endRow = (curRow / 3 + 1) * 3;
+		int startCol = (curCol / 3) * 3;
+		int endCol = (curCol / 3 + 1) * 3;
+		for (int row = startRow; row < endRow; row++)
+		{
+			for (int col = startCol; col < endCol; col++)
+			{
+				if (board[row][col] == ch)
+				{
+					return false;
+				}
+			}
+		}
+		if (board[curRow][curCol] == '.')
+		{
+			return true;
+		}
+		return false;
+	};
+
+	for (int curIndex = index; curIndex < maxIndex; curIndex++)
+	{
+		int curRow = curIndex / board.size();
+		int curCol = curIndex % board.size();
+
+		if (board[curRow][curCol] != '.')
+		{
+			continue;
+		}
+
+		//尝试从1到9
+		int i = 1;
+		for (; i <= 9; i++)
+		{
+			if (canPlace(i,curRow,curCol))
+			{
+				board[curRow][curCol] = '0' + i;
+				if (backtrack37(board, curIndex + 1))
+				{
+					return true;
+				}
+				board[curRow][curCol] = '.';
+			}
+		}
+		if (i > 9)
+		{
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+//LeetCode #37
+void solveSudoku(vector<vector<char>>& board) {
+	backtrack37(board, 0);
+}
