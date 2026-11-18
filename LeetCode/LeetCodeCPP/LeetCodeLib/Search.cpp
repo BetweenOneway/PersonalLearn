@@ -896,3 +896,66 @@ bool backtrack37(vector<vector<char>>& board, const int index)
 void solveSudoku(vector<vector<char>>& board) {
 	backtrack37(board, 0);
 }
+
+//LeetCode #310
+vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+	if (n == 1)
+	{
+		return { 0 };
+	}
+
+	//邻接表，记录谁和谁相连
+	vector<vector<int>> adj(n);
+	//记录点的度（有几个节点连接）
+	vector<int> deg(n, 0);
+	for (const auto& edge : edges)
+	{
+		int pointA = edge[0], pointB = edge[1];
+		adj[pointA].push_back(pointB);
+		adj[pointB].push_back(pointA);
+		deg[pointA]++;
+		deg[pointB]++;
+	}
+
+	queue<int> leaf;
+	//找出第一层叶子节点
+	for (int i = 0; i < n; i++)
+	{
+		if (deg[i] == 1)
+		{
+			leaf.push(i);
+		}
+	}
+
+	int remainSize = n;
+	//结果可能是一个，也可能是两个，所以>2就要继续删除
+	while (remainSize >2)
+	{
+		//逐层删除叶子节点
+		int qSize = leaf.size();
+		remainSize = remainSize - qSize;
+		for (int i = 0; i < qSize; i++)
+		{
+			int node = leaf.front();
+			leaf.pop();
+			//与该叶子节点相邻的节点，减少度数
+			for (auto& i : adj[node])
+			{
+				if (--deg[i] == 1)
+				{
+					leaf.push(i);
+				}
+			}
+		}
+	}
+
+	//最后的leaf就是结果
+	//将队列转换成结果输出
+	vector<int> ans;
+	while (!leaf.empty())
+	{
+		ans.push_back(leaf.front());
+		leaf.pop();
+	}
+	return ans;
+}

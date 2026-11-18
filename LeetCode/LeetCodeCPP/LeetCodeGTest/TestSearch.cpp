@@ -368,3 +368,30 @@ TEST(Search, LeetCode37)
 
 	CheckResult(expectResult, board);
 }
+
+TEST(Search, LeetCode310)
+{
+	int treeNum = 4;
+	vector<vector<int>> edges = { {1, 0} ,{1, 2},{1, 3} };
+	vector<int> expectResult{ 1 };
+
+	vector<int> actualResult = findMinHeightTrees(treeNum, edges);
+	
+	EXPECT_EQ(expectResult, actualResult);
+
+	treeNum = 6;
+	edges = { {3, 0} ,{3, 1},{3, 2},{3, 4},{5, 4} };
+	expectResult = { 3,4 };
+
+	actualResult = findMinHeightTrees(treeNum, edges);
+
+	EXPECT_EQ(expectResult, actualResult);
+
+	treeNum = 3;
+	edges = { {0, 1},{0, 2} };
+	expectResult = { 0 };
+
+	actualResult = findMinHeightTrees(treeNum, edges);
+
+	EXPECT_EQ(expectResult, actualResult);
+}

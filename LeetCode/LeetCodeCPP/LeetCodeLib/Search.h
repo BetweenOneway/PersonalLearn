@@ -63,3 +63,6 @@ vector<vector<int>> combinationSum2(vector<int>& candidates, int target);
 数独部分空格内已填入了数字，空白格用 '.' 表示。
 */
 void solveSudoku(vector<vector<char>>& board);
+
+//LeetCode #310
+vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges);
