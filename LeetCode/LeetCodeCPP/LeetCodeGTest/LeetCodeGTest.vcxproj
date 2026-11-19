@@ -37,6 +37,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TestBinarySearch.cpp" />
+    <ClCompile Include="TestDP.cpp" />
     <ClCompile Include="TestGreedy.cpp" />
     <ClCompile Include="TestSearch.cpp" />
     <ClCompile Include="TestSort.cpp" />
