@@ -24,3 +24,14 @@ TEST(DP, LeetCode198)
 	expectResult = 12;
 	EXPECT_EQ(expectResult, rob(nums));
 }
+
+TEST(DP, LeetCode413)
+{
+	vector<int> nums = { 1, 2, 3, 4 };
+	int expectResult = 3;
+	EXPECT_EQ(expectResult, numberOfArithmeticSlices(nums));
+
+	nums = { 1};
+	expectResult = 0;
+	EXPECT_EQ(expectResult, numberOfArithmeticSlices(nums));
+}

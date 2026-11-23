@@ -9,3 +9,6 @@ int climbStairsRec(int n);
 
 //LeetCode #198
 int rob(vector<int>& nums);
+
+//LeetCode #413
+int numberOfArithmeticSlices(vector<int>& nums);

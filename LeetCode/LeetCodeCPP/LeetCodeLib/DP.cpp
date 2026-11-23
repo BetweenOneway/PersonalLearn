@@ -1,5 +1,6 @@
 #include "DP.h"
 #include <vector>
+#include <numeric>
 using namespace std;
 
 void backtrack70(int& ans, int cur, int step, int n)
@@ -72,5 +73,23 @@ int rob(vector<int>& nums)
 	delete[] rob;
 
 	return result;
+}
+
+//LeetCode #413
+int numberOfArithmeticSlices(vector<int>& nums) {
+	int n = nums.size();
+	if (n < 3) return 0;
+	vector<int> dp(n, 0);
+	for (int i = 2; i < n; i++)
+	{
+		if (nums[i] - nums[i - 1] == nums[i - 1] - nums[i - 2])
+		{
+			//所有之前以i-1为结尾的等差数列，都可以以i为结尾
+			//同时多了一个i,i-1,i-2的等差数列，所以是dp[i-1]+1
+			dp[i] = dp[i - 1] + 1;
+		}
+	}
+
+	return accumulate(dp.begin(), dp.end(), 0);
 }
 
