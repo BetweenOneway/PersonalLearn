@@ -46,3 +46,31 @@ int climbStairs(int n) {
 	return dp[n];
 }
 
+//LeetCode #198
+int rob(vector<int>& nums)
+{
+	int length = nums.size();
+	if (0 == length)
+	{
+		return 0;
+	}
+	if (1 == length)
+	{
+		return nums[0];
+	}
+
+	int* rob = new int[length]();
+	rob[0] = nums[0];
+
+	rob[1] = max(nums[0], nums[1]);
+
+	for (int i = 2; i < length; i++)
+	{
+		rob[i] = max(nums[i] + rob[i - 2], rob[i - 1]);
+	}
+	int result = rob[length - 1];
+	delete[] rob;
+
+	return result;
+}
+
