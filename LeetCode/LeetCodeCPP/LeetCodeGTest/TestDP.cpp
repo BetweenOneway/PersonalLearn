@@ -35,3 +35,25 @@ TEST(DP, LeetCode413)
 	expectResult = 0;
 	EXPECT_EQ(expectResult, numberOfArithmeticSlices(nums));
 }
+
+TEST(DP, LeetCode64)
+{
+	vector<vector<int>> grid = { 
+		{1,3,1} ,
+		{1,5,1},
+		{4,2,1} 
+	};
+	int expectResult = 7;
+	EXPECT_EQ(expectResult, minPathSum(grid));
+
+	grid = {
+		{1,2,3},
+		{4,5,6}
+	};
+	expectResult = 12;
+	EXPECT_EQ(expectResult, minPathSum(grid));
+
+	grid = { {9, 1, 4, 8} };
+	expectResult = 22;
+	EXPECT_EQ(expectResult, minPathSum(grid));
+}

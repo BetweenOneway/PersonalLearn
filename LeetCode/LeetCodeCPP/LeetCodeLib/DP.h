@@ -12,3 +12,6 @@ int rob(vector<int>& nums);
 
 //LeetCode #413
 int numberOfArithmeticSlices(vector<int>& nums);
+
+//LeetCode #64
+int minPathSum(vector<vector<int>>& grid);
