@@ -123,6 +123,7 @@ int minPathSum(vector<vector<int>>& grid) {
 	int ans = 0;
 	if (false)
 	{
+		//回溯法，可以解决，但是大数据速度会慢，会超时
 		ans = grid.front().front();
 		if (nRow > 1 || nCol > 1)
 		{
@@ -160,5 +161,12 @@ int minPathSum(vector<vector<int>>& grid) {
 
 		ans = dp[nRow - 1][nCol - 1];
 	}
+	return ans;
+}
+
+//LeetCode #542
+vector<vector<int>> updateMatrix(vector<vector<int>>& mat) 
+{
+	vector<vector<int>> ans;
 	return ans;
 }

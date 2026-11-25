@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "DP.h"
+#include "CommonFunction.hpp"
 
 TEST(DP, LeetCode70)
 {
@@ -56,4 +57,35 @@ TEST(DP, LeetCode64)
 	grid = { {9, 1, 4, 8} };
 	expectResult = 22;
 	EXPECT_EQ(expectResult, minPathSum(grid));
+}
+
+TEST(DP, LeetCode542)
+{
+	vector<vector<int>> mat = { 
+		{0, 0, 0} ,
+		{0, 1, 0},
+		{0, 0, 0} 
+	};
+	vector<vector<int>> expectOutput = { 
+		{0, 0, 0} ,
+		{0, 1, 0},
+		{0, 0, 0} 
+	};
+	vector<vector<int>> actualResult = updateMatrix(mat);
+
+	CheckResult(expectOutput, actualResult);
+
+	mat = { 
+		{0, 0, 0} ,
+		{0, 1, 0},
+		{1, 1, 1} 
+	};
+	expectOutput = { 
+		{0, 0, 0} ,
+		{0, 1, 0},
+		{1, 2, 1} 
+	};
+
+	actualResult = updateMatrix(mat);
+	CheckResult(expectOutput, actualResult);
 }

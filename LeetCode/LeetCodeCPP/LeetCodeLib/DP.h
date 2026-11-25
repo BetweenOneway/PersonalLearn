@@ -15,3 +15,6 @@ int numberOfArithmeticSlices(vector<int>& nums);
 
 //LeetCode #64
 int minPathSum(vector<vector<int>>& grid);
+
+//LeetCode #542
+vector<vector<int>> updateMatrix(vector<vector<int>>& mat);
