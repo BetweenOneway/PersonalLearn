@@ -1,6 +1,7 @@
 #include "DP.h"
 #include <vector>
 #include <set>
+#include <queue>
 #include <numeric>
 using namespace std;
 
@@ -164,9 +165,72 @@ int minPathSum(vector<vector<int>>& grid) {
 	return ans;
 }
 
+//LeetCode #542 广度优先解法
+vector<vector<int>> bfs542(vector<vector<int>>& mat)
+{
+	int nRow = mat.size();
+	int nCol = mat.front().size();
+
+	vector<vector<int>> ans(nRow, vector<int>(nCol, 0));
+
+	vector<vector<bool>> isVisited(nRow, vector<bool>(nCol, false));
+
+	queue<pair<int,int>> bfsQ;
+	for (int i = 0; i < nRow; i++)
+	{
+		for (int j = 0; j < nCol; j++)
+		{
+			if (mat.at(i).at(j) == 0)
+			{
+				bfsQ.emplace(i,j);
+				isVisited.at(i).at(j) = true;
+			}
+		}
+	}
+
+	while (!bfsQ.empty())
+	{
+		auto& cord = bfsQ.front();
+		//这里要先获取值再pop
+		int row = cord.first;
+		int col = cord.second;
+		bfsQ.pop();
+
+		vector<int> direction{ -1,0,1,0,-1 };
+		for (int i = 0; i < direction.size() - 1; i++)
+		{
+			int curRow = row + direction[i];
+			int curCol = col + direction[i + 1];
+			//要先判断是否访问越界，再判断是否访问过，否则会报越界异常
+			if (curRow >= 0 && curRow < nRow
+				&& curCol >= 0 && curCol < nCol
+				&& isVisited.at(curRow).at(curCol) == false)
+			{
+				isVisited.at(curRow).at(curCol) = true;
+				bfsQ.emplace(curRow, curCol);
+				ans.at(curRow).at(curCol) = ans.at(row).at(col) + 1;
+			}
+		}
+	}
+	return ans;
+}
+
+vector<vector<int>> dp542(vector<vector<int>>& mat)
+{
+	int nRow = mat.size();
+	int nCol = mat.front().size();
+
+	vector<vector<int>> ans(nRow, vector<int>(nCol, 0));
+	return ans;
+}
+
 //LeetCode #542
 vector<vector<int>> updateMatrix(vector<vector<int>>& mat) 
 {
-	vector<vector<int>> ans;
-	return ans;
+	if (true)
+	{
+		return bfs542(mat);
+	}
+
+	return dp542(mat);
 }
