@@ -220,14 +220,72 @@ vector<vector<int>> dp542(vector<vector<int>>& mat)
 	int nRow = mat.size();
 	int nCol = mat.front().size();
 
-	vector<vector<int>> ans(nRow, vector<int>(nCol, 0));
+	vector<vector<int>> ans(nRow, vector<int>(nCol, numeric_limits<int>::max()-1));
+	for (int i = 0; i < nRow; i++)
+	{
+		for (int j = 0; j < nCol; j++)
+		{
+			if (mat.at(i).at(j) == 0)
+			{
+				ans.at(i).at(j) = 0;
+			}
+		}
+	}
+
+	//这里的上/下/左/右，指的是最短路径来源
+
+	//来源：上+左；遍历方向：左上->右下
+	for (int i = 0; i < nRow;i++)
+	{
+		for (int j = 0; j < nCol; j++)
+		{
+			//为什么直接+1，因为如果前置是无效值，那么是当前的无效值更小
+			//如果前置值是有效值，那么+1，一定比无效值更小，实现数据更新
+			//i-1表示最小值来源上方；j-1表示最小值来源左侧
+			if (i - 1 >= 0) ans[i][j] = min(ans[i][j], ans[i - 1][j] + 1);
+			if (j - 1 >= 0) ans[i][j] = min(ans[i][j], ans[i][j - 1] + 1);
+		}
+	}
+
+	//来源：下+右；遍历：右下->左上
+	for (int i = nRow-1; i >= 0; i--)
+	{
+		for (int j = nCol-1; j >= 0; j--)
+		{
+			if (i + 1 < nRow) ans[i][j] = min(ans[i][j], ans[i + 1][j] + 1);
+			if (j + 1 < nCol) ans[i][j] = min(ans[i][j], ans[i][j + 1] + 1);
+		}
+	}
+
+	//两对方向中，仅需计算一对即可
+	
+	//来源：上+右
+	for (int i = 0; i < nRow; i++)
+	{
+		for (int j = nCol-1; j > 0; j--)
+		{
+			if (i - 1 >= 0) ans[i][j] = min(ans[i][j], ans[i - 1][j] + 1);
+			if (j + 1 < nCol) ans[i][j] = min(ans[i][j], ans[i][j + 1] + 1);
+
+		}
+	}
+
+	//来源：下+左
+	for (int i = nRow -1; i >= 0; i--)
+	{
+		for (int j = 0; j < nCol; j++)
+		{
+			if (i + 1 < nRow)ans[i][j] = min(ans[i][j], ans[i + 1][j] + 1);
+			if (j - 1 >= 0) ans[i][j] = min(ans[i][j], ans[i][j - 1] + 1);
+		}
+	}
 	return ans;
 }
 
 //LeetCode #542
 vector<vector<int>> updateMatrix(vector<vector<int>>& mat) 
 {
-	if (true)
+	if (false)
 	{
 		return bfs542(mat);
 	}
